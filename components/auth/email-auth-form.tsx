@@ -7,7 +7,7 @@ import { createClient } from "@/lib/supabase/client";
 
 export const DEMO_ACCOUNT = {
   email: "demo@lanpya.app",
-  password: "REDACTED",
+  password: "LanPya-Demo-2026!",
 } as const;
 
 export function EmailAuthForm({ locale, demoRequested }: { locale: string; demoRequested: boolean }) {
