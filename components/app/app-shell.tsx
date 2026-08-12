@@ -8,6 +8,14 @@ const NAV = [
   ["profile", "Profile", "ပရိုဖိုင်"],
 ] as const;
 
+const MOBILE_NAV = [
+  { path: "today", en: "Today", my: "ဒီနေ့", icon: "📍" },
+  { path: "roadmap", en: "Roadmap", my: "လမ်း", icon: "🗺" },
+  { path: "missions/responsive-profile-card", en: "Mission", my: "လုပ်ငန်း", icon: "🎯" },
+  { path: "proof", en: "Proof", my: "သက်သေ", icon: "✓" },
+  { path: "profile", en: "Profile", my: "ပရိုဖိုင်", icon: "👤" },
+] as const;
+
 export function AppShell({ children, profile, roles, locale }: { children: React.ReactNode; profile: Profile; roles: Set<string>; locale: string }) {
   return (
     <div className="app-shell">
@@ -24,6 +32,14 @@ export function AppShell({ children, profile, roles, locale }: { children: React
         <header className="topbar"><div><span className="eyebrow">FRONTEND DEVELOPER PATH</span><strong>{profile.alias} · {profile.weeklyHours}/week</strong></div><div className="topbar-actions"><Link className="avatar" href="/app/profile" aria-label="Open profile">{profile.alias.slice(0, 2).toUpperCase()}</Link></div></header>
         {children}
       </main>
+      <nav className="mobile-nav" aria-label="Mobile navigation">
+        {MOBILE_NAV.map((item) => (
+          <Link key={item.path} href={`/app/${item.path}`} className="mobile-nav-link">
+            <span className="mobile-nav-icon">{item.icon}</span>
+            <span>{locale === "my" ? item.my : item.en}</span>
+          </Link>
+        ))}
+      </nav>
     </div>
   );
 }

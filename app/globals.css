@@ -3041,6 +3041,8 @@ fieldset {
     height: 66px;
     grid-template-columns: repeat(5, 1fr);
     background: rgba(15, 23, 42, 0.98);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
     border-top: 1px solid rgba(255, 255, 255, 0.09);
   }
 
@@ -3049,7 +3051,7 @@ fieldset {
     height: calc(66px + env(safe-area-inset-bottom, 0px));
   }
 
-  .mobile-nav button {
+  .mobile-nav-link {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -3058,16 +3060,23 @@ fieldset {
     color: #8fa0b5;
     font-size: 8px;
     font-weight: 700;
-    background: transparent;
-    border: 0;
+    text-decoration: none;
     min-height: 44px;
+    transition: color 160ms ease, background-color 160ms ease;
   }
 
-  .mobile-nav button span {
-    font-size: 7px;
+  .mobile-nav-icon {
+    font-size: 18px;
+    line-height: 1;
   }
 
-  .mobile-nav button.active {
+  .mobile-nav-link span:last-child {
+    font-size: 9px;
+    letter-spacing: .02em;
+  }
+
+  .mobile-nav-link:hover,
+  .mobile-nav-link.active {
     color: var(--yellow);
     background: rgba(255, 255, 255, 0.05);
   }
