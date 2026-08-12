@@ -66,8 +66,10 @@ for (const operation of operations) {
   if (error) throw error;
 }
 
-const milestoneIds = [1, 2, 3, 4, 5, 6, 7].map((position) =>
-  `11000000-0000-0000-0000-${String(position).padStart(12, "0")}`,
+// Frontend track has 12 milestones (positions 1–12).
+// Demo state: steps 1–2 verified, step 3 active (responsive-css), steps 4–12 upcoming.
+const milestoneIds = Array.from({ length: 12 }, (_, i) =>
+  `11000000-0000-0000-0000-${String(i + 1).padStart(12, "0")}`,
 );
 
 const { error: progressError } = await supabase.from("milestone_progress").upsert(

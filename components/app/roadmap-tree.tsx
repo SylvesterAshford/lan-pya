@@ -13,57 +13,6 @@ type RoadmapDetail = {
   estimate: string;
 };
 
-const ROADMAP_DETAILS: Record<string, RoadmapDetail> = {
-  orientation: {
-    leftLabel: "Understand",
-    left: ["Browser & web", "Editor setup"],
-    rightLabel: "Practice",
-    right: ["Files & terminal", "Web terminology"],
-    estimate: "1–2 weeks",
-  },
-  "semantic-html": {
-    leftLabel: "Learn",
-    left: ["Page structure", "Forms & labels"],
-    rightLabel: "Practice",
-    right: ["Accessibility basics", "Profile page"],
-    estimate: "2–3 weeks",
-  },
-  "responsive-css": {
-    leftLabel: "Learn",
-    left: ["Cascade & spacing", "Flexbox & Grid"],
-    rightLabel: "Build",
-    right: ["Mobile-first layout", "Responsive card"],
-    estimate: "3–4 weeks",
-  },
-  javascript: {
-    leftLabel: "Learn",
-    left: ["Data & functions", "Events & DOM"],
-    rightLabel: "Build",
-    right: ["Debugging", "Opportunity tracker"],
-    estimate: "4–6 weeks",
-  },
-  "git-deploy": {
-    leftLabel: "Learn",
-    left: ["Git workflow", "GitHub repository"],
-    rightLabel: "Publish",
-    right: ["Project README", "Live deployment"],
-    estimate: "2–3 weeks",
-  },
-  "api-quality": {
-    leftLabel: "Learn",
-    left: ["Fetch & JSON", "Loading & errors"],
-    rightLabel: "Strengthen",
-    right: ["Keyboard access", "Performance"],
-    estimate: "4–5 weeks",
-  },
-  "hiring-capstone": {
-    leftLabel: "Combine",
-    left: ["Product decisions", "Iteration"],
-    rightLabel: "Present",
-    right: ["Portfolio story", "Partner brief"],
-    estimate: "4–6 weeks",
-  },
-};
 
 const STATUS_LABELS: Record<Milestone["status"], string> = {
   complete: "Verified",
@@ -82,7 +31,8 @@ function detailFor(milestone: Milestone): RoadmapDetail {
       estimate: milestone.estimate ?? "Self-paced",
     };
   }
-  return ROADMAP_DETAILS[milestone.key] ?? {
+  // Fallback for milestones that only carry title/description/proof (e.g. from DB rows).
+  return {
     leftLabel: "Learn",
     left: [milestone.description],
     rightLabel: "Prove",
@@ -111,7 +61,7 @@ export function RoadmapTree({ milestones }: { milestones: Milestone[] }) {
 
   return (
     <div className="roadmap-workspace">
-      <section className="roadmap-canvas" aria-label="Frontend learning roadmap">
+      <section className="roadmap-canvas" aria-label="Learning roadmap">
         <header className="roadmap-toolbar">
           <div className="roadmap-progress-copy">
             <span>{completedCount} of {milestones.length} milestones verified</span>
