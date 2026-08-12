@@ -1,0 +1,13 @@
+{
+  "name": "Lan Pya — From Map to Proof",
+  "short_name": "Lan Pya",
+  "description": "A bilingual career roadmap and evidence platform for Myanmar learners.",
+  "start_url": "/en/",
+  "display": "standalone",
+  "background_color": "#f8fafc",
+  "theme_color": "#0f172a",
+  "lang": "en",
+  "icons": [
+    { "src": "/favicon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" }
+  ]
+}

@@ -1,62 +1,122 @@
 # Lan Pya — From Map to Proof
 
-Lan Pya is a hackathon-ready career-guidance prototype for Myanmar youth. It turns a broad career goal into one clear next action, a real mission, transparent developmental feedback, portable proof, and readiness-tagged opportunities.
+Lan Pya is a bilingual, proof-first career platform for Myanmar learners. The alpha ships one operational Frontend Developer path: placement, seven visible milestones, a real responsive-profile-card mission, deterministic checks, human review, revocable proof sharing, and explainable opportunity readiness.
 
-The working prototype is built around one complete loop:
+The production stack is Next.js 16 on Vercel and Supabase Auth/Postgres/RLS/Queues/Cron/Edge Functions. Google OAuth is handled only through Supabase Auth.
 
-1. **Choose** an honest starting point.
-2. **Build** a real-world mission.
-3. **Prove** skills with inspectable evidence and a published rubric.
-4. **Connect** to opportunities with visible readiness gaps.
+## What works
 
-## Prototype flows
-
-- Three-step learner onboarding and explainable placement
-- “Today” dashboard with one recommended next action
+- English/Myanmar locale routing and a responsive PWA shell
+- Google signup/login with Supabase PKCE
+- Private onboarding and evidence-based starting placement
 - Seven-milestone Frontend Developer roadmap
-- Responsive profile-card mission with private evidence submission
-- Clearly labeled deterministic prototype review
-- Private Proof Profile with evidence and sharing controls
-- Opportunities filtered by Ready now, Build toward, and Explore
-- Device-local persistence and one-click ready-made demo
-- Responsive desktop and mobile layouts
+- Offline, per-user mission drafts in IndexedDB with 30-day expiry
+- Transactional submission plus durable PGMQ evaluation jobs
+- Allowlisted URL checks; custom domains are explicitly inconclusive
+- Human reviewer claim, rubric decision, feedback, and proof creation
+- Private proof by default; fragment-token exchange to a short-lived HttpOnly viewing session
+- Readiness cards showing supported evidence, gaps, and unknowns
+- Reviewer/admin roles, audit events, deletion intake, and seeded/live provenance
+- Clearly labeled seeded content that is excluded from live verification metrics
 
-This is intentionally a frontend prototype. It does not upload files, create production accounts, perform expert verification, or send applications to real organizers. Those boundaries are labeled in the interface.
+## Local setup
 
-## Run locally
-
-Prerequisite: Node.js `>=22.13.0`.
+Requirements: Node.js 22+, Docker Desktop, and the Supabase CLI included in this project.
 
 ```bash
 npm install
+cp .env.example .env.local
+npx supabase start
+npx supabase db reset
 npm run dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000).
+Copy the local Supabase URL and publishable key printed by `supabase start` into `.env.local`. Open `http://localhost:3000/en`; `/en/demo` works without authentication.
 
-For the fastest pitch walkthrough, choose **Open ready-made demo** on the welcome screen.
+## Google OAuth
 
-## Verify
+In Google Cloud, create a Web OAuth client and use this authorized redirect URI:
 
-```bash
-npm run lint
-npm test
+```text
+https://<project-ref>.supabase.co/auth/v1/callback
 ```
 
-`npm test` creates the production build, renders the worker output, checks launch metadata and project assets, and verifies that the core proof loop and prototype trust labels remain present.
+In Supabase Dashboard → Authentication → Providers, enable Google and add the client ID/secret. Under URL Configuration set:
 
-## Product and design sources
+- Site URL: the production Vercel URL
+- Redirect URLs: `http://localhost:3000/auth/callback` and `https://<vercel-domain>/auth/callback`
 
-- [PRODUCT_PLAN.md](./PRODUCT_PLAN.md) — product strategy, pilot operating model, metrics, risks, and Aug 20 hackathon plan
-- [DESIGN.md](./DESIGN.md) — approved visual system, exact palette, type, spacing, layout, and motion guidance
-- [CLAUDE.md](./CLAUDE.md) — implementation guardrails for future contributors
+## Supabase production setup
 
-## Brand system
+Link the free Supabase project, apply schema plus seeded examples, deploy the evaluator, then add the recovery secrets:
 
-- Deep Navy `#0F172A` — trust, professionalism, career
-- Teal `#0F766E` — growth, learning, technology
-- Warm Yellow `#F59E0B` — direction, achievement, opportunity
-- Soft White `#F8FAFC` — clean application canvas
-- Slate `#334155` — readable body text
+```bash
+npx supabase login
+npx supabase link --project-ref <project-ref>
+npx supabase db push --include-seed
+npx supabase functions deploy process-evaluations --no-verify-jwt
+npx supabase secrets set CRON_SECRET=<long-random-secret>
+```
 
-Typography uses Plus Jakarta Sans with Padauk for Myanmar script support.
+In the Supabase SQL editor, store the same dispatch values in Vault:
+
+```sql
+select vault.create_secret('https://<project-ref>.supabase.co', 'project_url');
+select vault.create_secret('<same-long-random-secret>', 'cron_secret');
+```
+
+The app triggers evaluation immediately after submission. Supabase Cron recovers and dispatches queued/failed jobs every minute. Vercel Cron is not used.
+
+To promote an existing account for testing, use its Auth user UUID:
+
+```sql
+insert into public.memberships(user_id, role)
+values ('<auth-user-uuid>', 'reviewer')
+on conflict (user_id, role) do update set status = 'active';
+```
+
+Use `admin` instead of `reviewer` for the operations console.
+
+## Vercel deployment
+
+Import the repository into Vercel and set these environment variables for Production and Preview:
+
+- `NEXT_PUBLIC_SITE_URL`
+- `NEXT_PUBLIC_SUPABASE_URL`
+- `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`
+- `SUPABASE_SECRET_KEY` (server only; legacy `SUPABASE_SERVICE_ROLE_KEY` also works)
+- `CRON_SECRET` (server only)
+- `AI_FEEDBACK_ENABLED=false`
+
+Then deploy normally. The service-role and cron secrets must never use the `NEXT_PUBLIC_` prefix.
+
+## Verification
+
+```bash
+npm run test:fast       # lint, TypeScript, unit tests
+npm run test:critical   # fast checks + critical Chromium journeys
+npm run test:db         # pgTAP RLS/workflow checks against local Supabase
+npm run test:functions  # Deno URL-policy tests
+npm run test:e2e        # Chromium, Firefox, WebKit + axe
+npm run build
+```
+
+The Google OAuth path requires a manual staging check because browser automation should not own a real Google account.
+
+## Trust boundaries
+
+- Automated feedback never creates verified proof.
+- Reviewers use explicit security-definer workflow functions; direct mutations remain blocked by RLS.
+- Arbitrary deployment hosts are not fetched automatically, preventing the checker from becoming an SSRF proxy.
+- Public proof secrets live in URL fragments, which are not sent in request paths. They are exchanged once for a 15-minute HttpOnly cookie.
+- The service worker never caches authenticated pages, API responses, review/admin screens, or proof views.
+- Seeded demonstration records carry `data_origin = seeded_demo` and are excluded from live human-verification metrics.
+
+## Key paths
+
+- `app/[locale]` — localized App Router UI
+- `app/api` — validated workflow endpoints
+- `supabase/migrations` — schema, RLS, RPCs, queue, cron, audit pipeline
+- `supabase/functions/process-evaluations` — deterministic evidence checker
+- `supabase/seed.sql` — versioned curriculum and labeled example opportunities
+- `tests` and `supabase/tests` — unit, E2E, accessibility, and RLS coverage

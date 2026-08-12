@@ -1,46 +1,57 @@
 {
-  "name": "lan-pya-hackathon-prototype",
+  "name": "lan-pya",
   "version": "0.1.0",
   "private": true,
   "engines": {
-    "node": ">=22.13.0"
+    "node": "22.x"
   },
   "scripts": {
-    "dev": "WRANGLER_LOG_PATH=.wrangler/wrangler.log vinext dev",
-    "build": "WRANGLER_LOG_PATH=.wrangler/wrangler.log vinext build",
-    "start": "WRANGLER_LOG_PATH=.wrangler/wrangler.log vinext start",
-    "test": "npm run build && node --test tests/rendered-html.test.mjs",
-    "lint": "eslint . --ignore-pattern dist --ignore-pattern .next",
-    "db:generate": "drizzle-kit generate"
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "eslint . --ignore-pattern .next --ignore-pattern coverage --ignore-pattern supabase/.temp",
+    "typecheck": "tsc --noEmit",
+    "test": "npm run test:fast",
+    "test:unit": "vitest run",
+    "test:db": "supabase test db",
+    "test:functions": "deno test supabase/functions/tests --allow-env --allow-net",
+    "test:e2e": "playwright test",
+    "test:fast": "npm run lint && npm run typecheck && npm run test:unit",
+    "test:critical": "npm run test:fast && playwright test --project=chromium --grep @critical",
+    "test:release": "npm run test:fast && npm run test:functions && npm run test:e2e",
+    "demo:provision": "node scripts/provision-demo-account.mjs",
+    "db:types": "supabase gen types typescript --local > lib/supabase/database.types.ts"
   },
   "dependencies": {
-    "drizzle-orm": "0.45.2",
+    "@supabase/ssr": "^0.8.0",
+    "@supabase/supabase-js": "^2.99.1",
+    "next": "^16.3.0",
+    "next-intl": "^4.8.3",
     "react": "19.2.6",
-    "react-dom": "19.2.6"
+    "react-dom": "19.2.6",
+    "zod": "^4.3.6"
   },
   "devDependencies": {
-    "@cloudflare/vite-plugin": "1.37.1",
+    "@axe-core/playwright": "^4.11.1",
     "@eslint/js": "9.39.4",
-    "@next/eslint-plugin-next": "16.2.6",
-    "@tailwindcss/postcss": "4.2.1",
+    "@next/eslint-plugin-next": "^16.3.0",
+    "@playwright/test": "^1.58.2",
+    "@testing-library/jest-dom": "^6.9.1",
+    "@testing-library/react": "^16.3.2",
+    "@testing-library/user-event": "^14.6.1",
     "@types/node": "22.19.19",
     "@types/react": "19.2.14",
     "@types/react-dom": "19.2.3",
-    "@vitejs/plugin-react": "6.0.2",
-    "@vitejs/plugin-rsc": "0.5.26",
-    "drizzle-kit": "0.31.10",
     "eslint": "9.39.4",
     "eslint-plugin-jsx-a11y": "6.10.2",
     "eslint-plugin-react": "7.37.5",
     "eslint-plugin-react-hooks": "7.1.1",
     "globals": "16.4.0",
-    "react-server-dom-webpack": "19.2.6",
-    "tailwindcss": "4.2.1",
+    "jsdom": "^28.0.0",
+    "supabase": "^2.76.15",
     "typescript": "5.9.3",
     "typescript-eslint": "8.59.3",
-    "vinext": "1.0.0-beta.2",
-    "vite": "8.0.13",
-    "wrangler": "4.92.0"
+    "vitest": "^4.0.18"
   },
   "type": "module"
 }

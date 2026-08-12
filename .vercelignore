@@ -1,0 +1,7 @@
+docs/
+output/
+/supabase/
+tests/
+coverage/
+playwright-report/
+test-results/

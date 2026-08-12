@@ -1,0 +1,69 @@
+{
+  "Brand": {
+    "tagline": "From Map to Proof",
+    "prototype": "Operational alpha"
+  },
+  "Marketing": {
+    "kicker": "CAREER CLARITY FOR MYANMAR YOUTH",
+    "titleStart": "Stop collecting advice.",
+    "titleEnd": "Start building proof.",
+    "body": "Lan Pya turns one career goal into a clear next step, real work, trusted feedback, and an opportunity you can act on.",
+    "primary": "Start my path",
+    "secondary": "Use the demo account",
+    "privacy": "Private by default",
+    "transparent": "No opaque career score",
+    "free": "Free for learners",
+    "thisWeek": "THIS WEEK",
+    "mission": "Build a responsive profile card",
+    "missionBody": "Turn HTML and CSS into one inspectable piece of work.",
+    "evidence": "Evidence, not just a badge",
+    "evidenceBody": "Every claim links to the work and review method.",
+    "connected": "ONE CONNECTED EXPERIENCE",
+    "screensTitle": "From first question to proof you can share.",
+    "screensBody": "Roadmap, mission, review, proof, and opportunities stay connected in one trusted workspace."
+  },
+  "Auth": {
+    "title": "Sign in to your roadmap",
+    "body": "Use your email and password, create an account, or continue securely with Google.",
+    "signIn": "Sign in",
+    "createAccount": "Create account",
+    "modeLabel": "Choose sign in or create account",
+    "email": "Email",
+    "password": "Password",
+    "working": "Please wait…",
+    "or": "or continue with",
+    "invalidCredentials": "That email and password do not match. Check them and try again.",
+    "checkEmail": "Check your email to confirm your account, then return here to sign in.",
+    "demoKicker": "TRY THE COMPLETE APP",
+    "demoTitle": "Demo account",
+    "demoBody": "Use the same signed-in product with a prepared roadmap, progress, proof, and opportunities.",
+    "fillDemo": "Fill demo email and password",
+    "demoReady": "Demo credentials are ready. Select Sign in to enter the app.",
+    "google": "Continue with Google",
+    "providerUnavailable": "Google sign-in is temporarily unavailable. Use email and password instead.",
+    "privacy": "Your email is used for account access and is never shown in shared proof by default.",
+    "error": "Sign-in could not start. Please try again."
+  },
+  "Nav": {
+    "today": "Today",
+    "roadmap": "Roadmap",
+    "mission": "Mission",
+    "proof": "Proof",
+    "opportunities": "Opportunities",
+    "profile": "Profile",
+    "review": "Review",
+    "admin": "Admin",
+    "privacy": "Privacy",
+    "logout": "Log out",
+    "language": "မြန်မာ"
+  },
+  "Common": {
+    "loading": "Loading…",
+    "retry": "Try again",
+    "save": "Save",
+    "continue": "Continue",
+    "back": "Back",
+    "demo": "Seeded demonstration data",
+    "live": "Live learner data"
+  }
+}
