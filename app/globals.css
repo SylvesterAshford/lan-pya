@@ -3400,63 +3400,90 @@ a { color: inherit; text-decoration: none; }
 .auth-shell {
   display: grid;
   min-height: 100svh;
-  grid-template-columns: minmax(360px, .82fr) minmax(520px, 1.18fr);
+  grid-template-columns: minmax(340px, .78fr) minmax(480px, 1.22fr);
   background: #fff;
 }
 
-/* Brand panel — deep navy gradient with animated decorative elements */
+/* Brand panel — centered content with rich ambient effects */
 .auth-brand-panel {
   position: relative;
   display: flex;
-  min-height: 100%;
   overflow: hidden;
   flex-direction: column;
-  justify-content: space-between;
-  padding: clamp(34px, 5vw, 72px);
+  justify-content: center;
+  gap: 0;
+  padding: clamp(32px, 4vw, 60px);
   color: #fff;
   background:
-    radial-gradient(circle at 75% 28%, rgba(245, 158, 11, .25), transparent 24%),
-    radial-gradient(circle at 20% 85%, rgba(15, 118, 110, .22), transparent 30%),
-    linear-gradient(152deg, #041322 0%, #0a2d46 55%, #0f766e 160%);
+    radial-gradient(ellipse at 70% 20%, rgba(245, 158, 11, .18), transparent 40%),
+    radial-gradient(ellipse at 25% 80%, rgba(15, 118, 110, .25), transparent 40%),
+    radial-gradient(ellipse at 50% 50%, rgba(15, 50, 80, .6), transparent 80%),
+    linear-gradient(165deg, #031020 0%, #071e36 40%, #0d3a4f 100%);
 }
 
-/* Decorative grid pattern overlay */
+/* Concentric decorative rings */
 .auth-brand-panel::before {
   position: absolute;
-  inset: 0;
-  background:
-    radial-gradient(circle at 68% 35%, rgba(15, 118, 110, .35) 0%, transparent 45%),
-    repeating-linear-gradient(0deg, transparent, transparent 58px, rgba(255, 255, 255, .025) 58px, rgba(255, 255, 255, .025) 59px),
-    repeating-linear-gradient(90deg, transparent, transparent 58px, rgba(255, 255, 255, .025) 58px, rgba(255, 255, 255, .025) 59px);
+  top: 50%;
+  left: 55%;
+  width: clamp(300px, 38vw, 520px);
+  aspect-ratio: 1;
+  border: 1px solid rgba(255, 255, 255, .06);
+  border-radius: 50%;
+  box-shadow:
+    0 0 0 40px rgba(255, 255, 255, .025),
+    0 0 0 80px rgba(255, 255, 255, .015),
+    0 0 0 140px rgba(255, 255, 255, .008);
   content: "";
+  transform: translate(-30%, -50%);
   pointer-events: none;
 }
 
-/* Animated floating glow orb */
+/* Ambient glow — centered, large, soft */
 .auth-brand-panel::after {
   position: absolute;
-  right: 8%;
-  bottom: 15%;
-  width: clamp(180px, 22vw, 320px);
+  top: 30%;
+  right: -5%;
+  width: clamp(200px, 28vw, 380px);
   aspect-ratio: 1;
-  background: radial-gradient(circle, rgba(245, 158, 11, .18) 0%, rgba(15, 118, 110, .12) 40%, transparent 70%);
+  background: radial-gradient(circle, rgba(15, 118, 110, .22) 0%, rgba(245, 158, 11, .08) 50%, transparent 70%);
   border-radius: 50%;
   content: "";
-  filter: blur(40px);
-  animation: float-glow 8s ease-in-out infinite;
+  filter: blur(50px);
+  animation: float-glow 10s ease-in-out infinite;
   pointer-events: none;
 }
 
 .auth-brand-panel > * { position: relative; z-index: 1; }
 
+/* Brand lockup — top of the centered content */
+.auth-brand-panel > .brand-lockup {
+  margin-bottom: 0;
+}
+
+.auth-brand-panel .brand-lockup::after {
+  display: inline-block;
+  width: 7px;
+  height: 7px;
+  margin-left: 8px;
+  vertical-align: middle;
+  background: var(--yellow);
+  border-radius: 50%;
+  content: "";
+  animation: pulse-ring 2.5s ease-in-out infinite;
+}
+
+/* Hero copy block — directly below logo, tight spacing */
 .auth-brand-panel > div {
-  max-width: 540px;
-  padding-bottom: 8vh;
+  max-width: 420px;
+  margin-top: 32px;
   animation: fade-in-up 600ms ease-out 200ms both;
 }
 
 .auth-brand-panel .hero-kicker {
   color: #73d4ca;
+  font-size: 10px;
+  letter-spacing: .2em;
   background: linear-gradient(90deg, #73d4ca 30%, #f59e0b 50%, #73d4ca 70%);
   background-size: 200% 100%;
   background-clip: text;
@@ -3466,95 +3493,102 @@ a { color: inherit; text-decoration: none; }
 }
 
 .auth-brand-panel h1 {
-  margin: 20px 0 0;
-  font-size: clamp(38px, 5.3vw, 76px);
+  margin: 16px 0 0;
+  font-size: clamp(34px, 4.5vw, 62px);
+  font-weight: 800;
   letter-spacing: -.055em;
-  line-height: .98;
-  text-shadow: 0 2px 30px rgba(0, 0, 0, .2);
+  line-height: 1.0;
+  text-shadow: 0 4px 40px rgba(0, 0, 0, .3);
 }
 
 .auth-brand-panel h1 em {
   color: var(--yellow);
   font-style: normal;
-  text-shadow: 0 0 40px rgba(245, 158, 11, .25);
+  text-shadow: 0 0 50px rgba(245, 158, 11, .3);
 }
 
-/* Yellow accent dot with pulse */
-.auth-brand-panel .brand-lockup::after {
-  display: inline-block;
-  width: 8px;
-  height: 8px;
-  margin-left: 10px;
-  vertical-align: middle;
-  background: var(--yellow);
-  border-radius: 50%;
-  content: "";
-  animation: pulse-ring 2.5s ease-in-out infinite;
+/* Decorative feature cards on brand panel */
+.auth-brand-features {
+  display: flex;
+  gap: 10px;
+  margin-top: 28px;
 }
 
-/* Form panel — subtle gradient background */
+.auth-brand-features span {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 12px;
+  color: rgba(255, 255, 255, .75);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: .03em;
+  background: rgba(255, 255, 255, .07);
+  border: 1px solid rgba(255, 255, 255, .1);
+  border-radius: 999px;
+  backdrop-filter: blur(8px);
+}
+
+.auth-brand-features span::before {
+  content: "✓";
+  color: #53d6c8;
+  font-weight: 800;
+}
+
+/* Form panel — scrollable, centered */
 .auth-form-panel {
   display: grid;
   min-width: 0;
-  padding: clamp(30px, 7vw, 96px);
+  padding: clamp(24px, 5vw, 64px) clamp(24px, 5vw, 80px);
   place-items: center;
+  overflow-y: auto;
   background:
-    radial-gradient(ellipse at 80% 0%, rgba(15, 118, 110, .04), transparent 50%),
-    radial-gradient(ellipse at 20% 100%, rgba(245, 158, 11, .03), transparent 50%),
-    linear-gradient(150deg, #fff 0%, #f8fafc 50%, #f1f5f9 100%);
+    radial-gradient(ellipse at 80% 0%, rgba(15, 118, 110, .03), transparent 50%),
+    linear-gradient(160deg, #fff 0%, #f9fafb 60%, #f3f5f8 100%);
 }
 
-/* Auth card — glassmorphism with subtle border glow */
+/* Auth card — clean elevated card */
 .auth-card {
-  width: min(100%, 490px);
-  padding: clamp(28px, 4vw, 44px);
-  background: rgba(255, 255, 255, .82);
-  border: 1px solid rgba(226, 232, 240, .7);
-  border-radius: 18px;
-  box-shadow:
-    0 1px 3px rgba(15, 23, 42, .04),
-    0 12px 42px rgba(15, 23, 42, .07),
-    inset 0 1px 0 rgba(255, 255, 255, .9);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
+  width: min(100%, 460px);
   animation: fade-in-up 500ms ease-out 100ms both;
 }
 
 .auth-card > .eyebrow {
-  margin-bottom: 12px;
-  animation: fade-in-up 400ms ease-out 250ms both;
+  margin-bottom: 8px;
+  animation: fade-in-up 400ms ease-out 200ms both;
 }
 
 .auth-card > h1 {
-  margin: 0 0 12px;
+  margin: 0 0 8px;
   color: var(--navy);
-  font-size: clamp(30px, 4vw, 46px);
-  letter-spacing: -.05em;
-  line-height: 1.06;
-  animation: fade-in-up 400ms ease-out 300ms both;
+  font-size: clamp(26px, 3.5vw, 38px);
+  letter-spacing: -.04em;
+  line-height: 1.1;
+  animation: fade-in-up 400ms ease-out 250ms both;
 }
 
 .auth-card > p {
   color: var(--muted);
-  font-size: 15px;
-  line-height: 1.65;
-  animation: fade-in-up 400ms ease-out 350ms both;
+  font-size: 14px;
+  line-height: 1.6;
+  margin-bottom: 4px;
+  animation: fade-in-up 400ms ease-out 300ms both;
 }
 
 .auth-action-stack {
   display: grid;
-  gap: 12px;
-  margin-top: 30px;
+  gap: 10px;
+  margin-top: 24px;
 }
 
-/* Google sign-in mark — branded circle */
+/* Google sign-in mark */
 .google-mark {
   display: grid;
-  width: 26px;
-  height: 26px;
+  width: 24px;
+  height: 24px;
   place-items: center;
   color: #fff;
-  font-size: 12px;
+  font-size: 11px;
   font-weight: 900;
   background: rgba(255, 255, 255, .15);
   border: 1px solid rgba(255, 255, 255, .25);
@@ -3567,11 +3601,11 @@ a { color: inherit; text-decoration: none; }
 }
 
 .provider-note {
-  padding: 12px 14px;
+  padding: 10px 12px;
   margin: 0;
   color: #8a5a00;
-  font-size: 12px;
-  line-height: 1.55;
+  font-size: 11px;
+  line-height: 1.5;
   background: var(--yellow-soft);
   border-left: 3px solid var(--yellow);
   border-radius: 5px;
@@ -3580,16 +3614,17 @@ a { color: inherit; text-decoration: none; }
 .auth-card .form-error { margin: 0; }
 
 .privacy-copy {
-  padding-top: 18px;
-  margin: 18px 0 0;
+  padding-top: 14px;
+  margin: 14px 0 0;
   color: var(--muted);
-  font-size: 13px;
+  font-size: 12px;
+  line-height: 1.5;
   border-top: 1px solid var(--line);
 }
 
 .configuration-note {
-  padding: 16px;
-  margin-top: 26px;
+  padding: 14px;
+  margin-top: 20px;
   color: var(--slate);
   background: var(--yellow-soft);
   border-left: 3px solid var(--yellow);
@@ -3597,33 +3632,34 @@ a { color: inherit; text-decoration: none; }
 }
 
 .configuration-note strong, .configuration-note p { display: block; }
-.configuration-note p { margin: 5px 0 0; color: var(--muted); font-size: 12px; line-height: 1.55; }
+.configuration-note p { margin: 4px 0 0; color: var(--muted); font-size: 12px; line-height: 1.5; }
 
-/* Email auth block with staggered entrance */
+/* Email auth block — tighter spacing */
 .email-auth-block {
   display: grid;
-  gap: 14px;
-  margin-top: 28px;
-  animation: fade-in-up 400ms ease-out 400ms both;
+  gap: 12px;
+  margin-top: 20px;
+  animation: fade-in-up 400ms ease-out 350ms both;
 }
 
 /* Mode switch — polished pill toggle */
 .auth-mode-switch {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  padding: 4px;
+  padding: 3px;
   background: linear-gradient(135deg, #eef2f7 0%, #e8edf4 100%);
   border: 1px solid rgba(226, 232, 240, .6);
-  border-radius: 11px;
+  border-radius: 10px;
 }
 
 .auth-mode-switch button {
-  min-height: 42px;
+  min-height: 40px;
   color: var(--muted);
+  font-size: 13px;
   font-weight: 750;
   background: transparent;
   border: 0;
-  border-radius: 8px;
+  border-radius: 7px;
   transition: color 200ms ease, background-color 200ms ease, box-shadow 200ms ease, transform 100ms ease;
 }
 
@@ -3642,47 +3678,46 @@ a { color: inherit; text-decoration: none; }
   transform: scale(.97);
 }
 
-/* Form inputs — premium feel */
+/* Form inputs */
 .email-auth-form {
   display: grid;
-  gap: 9px;
+  gap: 6px;
 }
 
 .email-auth-form label {
-  margin-top: 4px;
+  margin-top: 2px;
   color: var(--navy);
   font-size: 12px;
   font-weight: 750;
 }
 
 .email-auth-form .text-input {
-  background: rgba(255, 255, 255, .9);
+  min-height: 44px;
+  background: #fff;
   border-color: rgba(203, 213, 225, .7);
   box-shadow: inset 0 1px 2px rgba(15, 23, 42, .04);
-  transition: border-color 200ms ease, box-shadow 200ms ease, background-color 200ms ease;
+  transition: border-color 200ms ease, box-shadow 200ms ease;
 }
 
 .email-auth-form .text-input:hover {
   border-color: var(--line-strong);
-  background: #fff;
 }
 
 .email-auth-form .text-input:focus {
-  background: #fff;
   border-color: var(--teal);
   box-shadow: 0 0 0 3px rgba(15, 118, 110, .1), inset 0 1px 2px rgba(15, 23, 42, .02);
 }
 
 .email-auth-form .button {
-  margin-top: 7px;
+  margin-top: 4px;
 }
 
-/* Auth divider — gradient fade */
+/* Auth divider */
 .auth-divider {
   display: flex;
   align-items: center;
-  gap: 14px;
-  margin: 21px 0 0;
+  gap: 12px;
+  margin: 16px 0 0;
   color: var(--muted);
   font-size: 10px;
   font-weight: 700;
@@ -3698,22 +3733,22 @@ a { color: inherit; text-decoration: none; }
 }
 
 .auth-action-stack {
-  margin-top: 14px;
-  animation: fade-in-up 400ms ease-out 500ms both;
+  margin-top: 10px;
+  animation: fade-in-up 400ms ease-out 450ms both;
 }
 
-/* Demo card — elevated with hover effect */
+/* Demo card — compact */
 .demo-login-card {
   display: grid;
-  gap: 12px;
-  padding: 18px;
-  margin-top: 6px;
+  gap: 10px;
+  padding: 14px;
+  margin-top: 4px;
   background: linear-gradient(145deg, #f8fafc, #f1f5f9);
   border: 1px solid var(--line);
-  border-radius: 12px;
+  border-radius: 10px;
   box-shadow: 0 1px 3px rgba(15, 23, 42, .03);
   transition: border-color 200ms ease, box-shadow 300ms ease, transform 200ms ease;
-  animation: fade-in-up 400ms ease-out 550ms both;
+  animation: fade-in-up 400ms ease-out 500ms both;
 }
 
 .demo-login-card:hover {
@@ -3724,30 +3759,31 @@ a { color: inherit; text-decoration: none; }
 
 .demo-login-card strong {
   display: block;
-  margin-top: 4px;
+  margin-top: 2px;
   color: var(--navy);
+  font-size: 13px;
 }
 
 .demo-login-card p {
-  margin: 4px 0 0;
+  margin: 2px 0 0;
   color: var(--muted);
   font-size: 11px;
-  line-height: 1.55;
+  line-height: 1.45;
 }
 
 .demo-login-card dl {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 8px;
+  gap: 6px;
   margin: 0;
 }
 
 .demo-login-card dl div {
   min-width: 0;
-  padding: 10px;
+  padding: 8px 10px;
   background: rgba(255, 255, 255, .9);
   border: 1px solid var(--line);
-  border-radius: 7px;
+  border-radius: 6px;
   transition: border-color 160ms ease;
 }
 
@@ -3987,33 +4023,39 @@ dt { color:var(--muted); font-size:9px; font-weight:800; text-transform:uppercas
 }
 
 @media (max-width: 920px) {
-  /* Auth — stack vertically with shorter brand panel */
+  /* Auth — stack vertically */
   .auth-shell { grid-template-columns: 1fr; }
   .auth-brand-panel {
-    min-height: 320px;
-    padding: 36px 32px;
+    padding: 40px 28px 36px;
     text-align: center;
     align-items: center;
   }
   .auth-brand-panel > div {
-    padding: 50px 0 0;
-    max-width: 480px;
+    margin-top: 24px;
+    max-width: 500px;
   }
   .auth-brand-panel h1 {
-    font-size: clamp(34px, 10vw, 54px);
+    font-size: clamp(30px, 8vw, 48px);
+  }
+  .auth-brand-panel::before {
+    width: 280px;
+    left: 50%;
+    transform: translate(-50%, -50%);
   }
   .auth-brand-panel::after {
-    right: 50%;
-    bottom: -10%;
-    transform: translateX(50%);
-    width: 200px;
+    top: 20%;
+    right: -10%;
+    width: 180px;
+  }
+  .auth-brand-features {
+    justify-content: center;
+    flex-wrap: wrap;
   }
   .auth-form-panel {
-    padding: 48px 28px 60px;
+    padding: 36px 24px 48px;
   }
   .auth-card {
-    padding: 28px 24px;
-    border-radius: 16px;
+    width: min(100%, 440px);
   }
 
   /* App shell — sidebar to top bar transition */
@@ -4046,26 +4088,29 @@ dt { color:var(--muted); font-size:9px; font-weight:800; text-transform:uppercas
 }
 
 @media (max-width: 650px) {
-  /* Auth — compact card and full-width elements */
+  /* Auth — compact for mobile */
   .auth-brand-panel {
-    min-height: 260px;
-    padding: 28px 20px;
+    padding: 28px 20px 24px;
   }
   .auth-brand-panel > div {
-    padding-top: 36px;
+    margin-top: 18px;
   }
   .auth-brand-panel h1 {
-    font-size: clamp(30px, 9vw, 42px);
+    font-size: clamp(26px, 8vw, 38px);
+  }
+  .auth-brand-features {
+    gap: 6px;
+    margin-top: 18px;
+  }
+  .auth-brand-features span {
+    padding: 5px 9px;
+    font-size: 9px;
   }
   .auth-form-panel {
-    padding: 32px 18px 48px;
-  }
-  .auth-card {
-    padding: 24px 18px;
-    border-radius: 14px;
+    padding: 28px 16px 40px;
   }
   .auth-card > h1 {
-    font-size: clamp(26px, 7vw, 34px);
+    font-size: clamp(24px, 7vw, 32px);
   }
   .auth-mode-switch button {
     min-height: 44px;
@@ -4121,25 +4166,24 @@ dt { color:var(--muted); font-size:9px; font-weight:800; text-transform:uppercas
 /* Small phones — 375px and below */
 @media (max-width: 400px) {
   .auth-brand-panel {
-    min-height: 220px;
-    padding: 24px 16px;
+    padding: 22px 14px 18px;
   }
   .auth-brand-panel > div {
-    padding-top: 28px;
+    margin-top: 14px;
   }
   .auth-brand-panel h1 {
-    font-size: 28px;
-  }
-  .auth-form-panel {
-    padding: 24px 14px 40px;
-  }
-  .auth-card {
-    padding: 20px 14px;
-  }
-  .auth-card > h1 {
     font-size: 24px;
   }
+  .auth-brand-features {
+    display: none;
+  }
+  .auth-form-panel {
+    padding: 22px 12px 36px;
+  }
+  .auth-card > h1 {
+    font-size: 22px;
+  }
   .demo-login-card {
-    padding: 14px;
+    padding: 12px;
   }
 }

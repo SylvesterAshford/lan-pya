@@ -21,6 +21,7 @@ export default async function LoginPage({ params, searchParams }: { params: Prom
       <section className="auth-brand-panel">
         <Link href="/" className="brand-lockup static light"><span className="brand-mark">လ</span><span><strong>Lan Pya</strong><small>လမ်းပြ</small></span></Link>
         <div><span className="hero-kicker">FROM MAP TO PROOF</span><h1>Your career.<br />Your evidence.<br /><em>Your next door.</em></h1></div>
+        <div className="auth-brand-features"><span>Free forever</span><span>Transparent</span><span>Private by default</span></div>
       </section>
       <section className="auth-form-panel">
         <div className="auth-card">
