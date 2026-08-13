@@ -1,10 +1,24 @@
 import type { Metadata, Viewport } from "next";
+import { Padauk, Plus_Jakarta_Sans } from "next/font/google";
 import { NextIntlClientProvider, hasLocale } from "next-intl";
 import { getMessages, setRequestLocale } from "next-intl/server";
 import { notFound } from "next/navigation";
 import { routing } from "@/i18n/routing";
 import { ServiceWorkerRegistration } from "@/components/pwa/service-worker-registration";
 import "../globals.css";
+
+const plusJakartaSans = Plus_Jakarta_Sans({
+  subsets: ["latin"],
+  display: "swap",
+  variable: "--font-ui",
+});
+
+const padauk = Padauk({
+  subsets: ["myanmar"],
+  weight: ["400", "700"],
+  display: "swap",
+  variable: "--font-myanmar",
+});
 
 export const metadata: Metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000"),
@@ -44,8 +58,8 @@ export default async function LocaleLayout({
   const messages = await getMessages();
 
   return (
-    <html lang={locale}>
-      <body>
+    <html lang={locale} data-scroll-behavior="smooth">
+      <body className={`${plusJakartaSans.variable} ${padauk.variable} ${locale === "my" ? padauk.className : plusJakartaSans.className}`}>
         <NextIntlClientProvider messages={messages}>
           {children}
           <ServiceWorkerRegistration />

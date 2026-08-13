@@ -3,8 +3,8 @@ import AxeBuilder from "@axe-core/playwright";
 
 test("@critical marketing opens the signed-in demo account flow", async ({ page }) => {
   await page.goto("/en");
-  await expect(page.getByRole("heading", { level: 1 })).toContainText("From direction");
-  await page.getByRole("link", { name: /demo account/i }).click();
+  await expect(page.getByRole("heading", { level: 1 })).toContainText("Stop collecting advice");
+  await page.getByRole("link", { name: "Use the demo account", exact: true }).click();
   await expect(page).toHaveURL(/\/en\/login\?demo=1/);
   if (await page.getByLabel("Email").count()) {
     await expect(page.getByLabel("Email")).toHaveValue("demo@lanpya.app");

@@ -7,7 +7,7 @@ describe("seeded demonstration invariants", () => {
   it("never disguises demo proof as live", () => expect(DEMO_PROOF.dataOrigin).toBe("seeded_demo"));
   it("labels every demo opportunity", () => expect(DEMO_OPPORTUNITIES.every((item) => item.dataOrigin === "seeded_demo")).toBe(true));
   it("explains readiness without a magic score", () => expect(new Set(DEMO_OPPORTUNITIES.map((item) => item.readiness))).toEqual(new Set(["Ready now", "Build toward", "Cannot determine"])));
-  it("includes every approved career track", () => expect(CAREER_TRACKS.map((track) => track.key)).toEqual(["frontend-developer", "full-stack-developer", "ai-data-analyst"]));
+  it("includes every approved career track", () => expect(CAREER_TRACKS.map((track) => track.key)).toEqual(["frontend-developer", "full-stack-developer", "ai-data-analyst", "content-creator"]));
   it("covers production skills rather than stopping at beginner syntax", () => {
     const allTitles = CAREER_TRACKS.flatMap((track) => track.milestones.map((milestone) => milestone.title)).join(" ");
     expect(allTitles).toMatch(/Testing, accessibility and performance/);

@@ -1,18 +1,52 @@
+import { ArrowRight, CheckCircle2, CircleDashed, LockKeyhole } from "lucide-react";
 import { Link } from "@/i18n/navigation";
-import { getRoadmap } from "@/lib/data/app-data";
-import { DIGITAL_PATH_PREVIEWS } from "@/lib/domain/career-tracks";
+import { StartMissionButton } from "@/components/missions/start-mission-button";
+import { requireUser } from "@/lib/auth";
+import { getActivePathDashboard, getRoadmap } from "@/lib/data/app-data";
+import { getAppCopy, localizeCareerTerm, localizeRoadmapMilestone } from "@/lib/i18n/app-copy";
 
-export default async function BuildPage({ searchParams }: { searchParams: Promise<{ path?: string }> }) {
-  const { path: requestedPath } = await searchParams;
-  const selectedPath = DIGITAL_PATH_PREVIEWS.find((item) => item.key === requestedPath) ?? DIGITAL_PATH_PREVIEWS[0];
-  const roadmap = await getRoadmap();
-  const nextStage = roadmap.find((item) => item.status === "active" || item.status === "next") ?? roadmap[0];
-  return (
-    <div className="app-page build-page">
-      <section className="page-heading"><span className="eyebrow">BUILD & EARN PROOF</span><h1>One mission at a time.</h1><p>Choose a clear brief, make something real, and submit evidence when you are ready. Points celebrate momentum; proof shows what you can do.</p></section>
-      <section className="build-hero panel"><div><span className="eyebrow">NEXT QUEST · FRONTEND</span><h2>{nextStage?.proof ?? "Responsive Profile Card"}</h2><p>{nextStage?.description ?? "Build a responsive, accessible interface for a real learner."}</p><div className="quest-tags"><span>+100 XP</span><span>1–2 weeks</span><span>Human review</span></div></div><Link className="button primary" href="/app/missions/responsive-profile-card">Continue quest →</Link></section>
-      <section className="path-section"><div className="section-heading"><div><span className="eyebrow">{selectedPath.status === "controlled_pilot" ? "CONTROLLED PILOT" : "PATH PREVIEW"}</span><h2>{selectedPath.title}</h2></div><Link className="text-link" href="/app/paths">Change path →</Link></div><div className="pilot-layout"><article className="panel pilot-brief"><span className={`status-tag ${selectedPath.status === "controlled_pilot" ? "pilot" : "preview"}`}>{selectedPath.status === "controlled_pilot" ? "Controlled pilot" : "Coming next"}</span><h3>{selectedPath.firstMission}</h3><p>{selectedPath.outcome}</p><ol className="quest-list">{selectedPath.stages.map((stage, index) => <li key={stage}><span>{String(index + 1).padStart(2, "0")}</span><div><strong>{stage}</strong><small>{index === 0 ? "Start here" : index === selectedPath.stages.length - 1 ? "Portfolio outcome" : "Future stage"}</small></div></li>)}</ol>{selectedPath.status === "controlled_pilot" ? <Link className="button gold" href="/app/missions/content-creator-awareness">Open pilot brief →</Link> : <Link className="button outline" href="/app/paths">See path details →</Link>}</article><aside className="panel pilot-note"><span className="eyebrow">HOW IT WORKS</span><h3>Progress should feel visible.</h3><p>Every mission has a clear deliverable, a small proof checklist, and a next step. Preview paths show the intended shape until their mission briefs and review capacity are ready.</p><div className="quest-row"><span className="quest-status active" /> <strong>{selectedPath.status === "controlled_pilot" ? "Brief ready" : "Path mapped"}</strong><small>{selectedPath.status === "controlled_pilot" ? "Choose a real audience and problem" : "Mission design is being validated"}</small></div><div className="quest-row"><span className="quest-status locked" /> <strong>Submit evidence</strong><small>Unlocks when the path opens</small></div></aside></div></section>
-      <section className="path-section"><div className="section-heading"><div><span className="eyebrow">MISSION LIBRARY</span><h2>What you can build next</h2></div></div><div className="mission-library"><article className="panel"><span className="status-tag success">Ready</span><h3>Responsive Profile Card</h3><p>Semantic HTML, responsive CSS, and accessible interaction.</p><Link className="text-link" href="/app/missions/responsive-profile-card">Open mission →</Link></article><article className="panel"><span className="status-tag pilot">Pilot</span><h3>Three-piece awareness campaign</h3><p>Audience research, a short script, and mobile-first publishing evidence.</p><Link className="text-link" href="/app/missions/content-creator-awareness">Open mission →</Link></article><article className="panel muted-card"><span className="status-tag preview">Coming next</span><h3>Thirty-second vertical story edit</h3><p>Video editing, captions, sound, and client-ready delivery.</p><Link className="text-link" href="/app/paths">See path preview →</Link></article></div></section>
-    </div>
-  );
+const missionHref: Record<string, string> = {
+  "responsive-profile-card": "/app/missions/responsive-profile-card",
+  "content-creator-awareness": "/app/missions/content-creator-awareness",
+};
+
+function missionStateCopy(c: ReturnType<typeof getAppCopy>, state: string, submissionState: string | null) {
+  if (submissionState === "changes_requested") return { label: c.build.needsChanges, detail: c.build.needsChangesDetail, action: c.build.revise };
+  if (submissionState?.includes("review") || submissionState?.includes("deterministic")) return { label: c.build.inReview, detail: c.build.inReviewDetail, action: c.build.viewSubmission };
+  if (state === "active") return { label: c.build.inProgress, detail: c.build.inProgressDetail, action: c.build.continueMission };
+  if (state === "paused") return { label: c.build.paused, detail: c.build.pausedDetail, action: c.build.resume };
+  return { label: c.build.available, detail: c.build.availableDetail, action: c.build.start };
+}
+
+export default async function BuildPage({ params }: { params: Promise<{ locale: string }> }) {
+  const { locale } = await params;
+  await requireUser(locale);
+  const c = getAppCopy(locale);
+  const dashboard = await getActivePathDashboard();
+  if (!dashboard.activePath || !dashboard.nextMission) {
+    return <div className="app-page build-page"><section className="empty-path-state panel"><CircleDashed size={24} aria-hidden="true" /><span className="eyebrow">{c.today.build}</span><h1>{c.build.emptyTitle}</h1><p>{c.build.emptyBody}</p><Link className="button primary" href="/app/paths">{c.build.choosePath}</Link></section></div>;
+  }
+
+  const roadmap = (await getRoadmap(dashboard.activePath.key)).map((stage) => localizeRoadmapMilestone(locale, stage));
+  const mission = dashboard.nextMission;
+  const state = missionStateCopy(c, mission.workState, mission.submissionState);
+  const pathTitle = localizeCareerTerm(locale, dashboard.activePath.key, dashboard.activePath.title);
+  const missionTitle = localizeCareerTerm(locale, mission.key, mission.title);
+  const href = missionHref[mission.key] ?? "/app/paths";
+  const currentIndex = Math.max(0, roadmap.findIndex((item) => item.status === "active" || item.status === "next"));
+  const visibleStages = roadmap.slice(currentIndex, currentIndex + 3);
+
+  return <div className="app-page build-page">
+    <section className="page-heading compact-heading"><span className="eyebrow">{c.today.build} · {pathTitle}</span><h1>{c.build.title}</h1><p>{c.build.body}</p></section>
+    <section className="mission-focus panel">
+      <div className="mission-focus-status"><span className={`status-tag ${state.label === c.build.inReview ? "pilot" : state.label === c.build.needsChanges ? "warning" : "success"}`}>{state.label}</span><span>{dashboard.activePath.availability === "controlled_pilot" ? c.paths.pilot : c.build.operational}</span></div>
+      <div className="mission-focus-copy"><span className="eyebrow">{c.build.nextQuest} · +100 XP</span><h2>{missionTitle}</h2><p>{state.detail}</p><div className="quest-tags"><span>{c.today.portfolioEvidence}</span><span>{dashboard.activePath.availability === "controlled_pilot" ? c.build.phoneFriendly : c.build.laptop}</span><span>{c.today.humanReview}</span></div></div>
+      {mission.workState === "available" || mission.workState === "paused" ? <StartMissionButton locale={locale} missionKey={mission.key} href={href} label={state.action} /> : <Link className="button primary" href={href}>{state.action} <ArrowRight size={18} aria-hidden="true" /></Link>}
+    </section>
+    <section className="build-path-spine" aria-label={`${dashboard.activePath.title} stages`}>
+      <div className="section-heading"><div><span className="eyebrow">{c.build.yourPath}</span><h2>{c.build.after}</h2></div><Link className="text-link" href="/app/paths">{c.build.changePath}</Link></div>
+      <ol>{visibleStages.map((stage, index) => <li key={stage.key} className={index === 0 ? "current" : "upcoming"}><span className="spine-node">{index === 0 ? <CheckCircle2 size={17} aria-hidden="true" /> : <LockKeyhole size={16} aria-hidden="true" />}</span><div><strong>{stage.title}</strong><small>{index === 0 ? `${c.build.currentStage} · ${stage.proof}` : stage.proof}</small></div></li>)}</ol>
+    </section>
+    {dashboard.pausedWork.length ? <section className="paused-work panel"><span className="eyebrow">{c.build.pausedWork}</span><h2>{c.build.pausedTitle}</h2><div>{dashboard.pausedWork.map((work) => <Link key={work.missionKey} href="/app/paths"><span><strong>{localizeCareerTerm(locale, work.missionKey, work.missionTitle)}</strong><small>{localizeCareerTerm(locale, work.pathKey, work.pathTitle)}</small></span><ArrowRight size={18} aria-hidden="true" /></Link>)}</div></section> : null}
+  </div>;
 }

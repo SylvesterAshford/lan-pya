@@ -54,17 +54,27 @@ const AI_DATA: Milestone[] = [
   stage({ key: "analyst-capstone", order: 13, title: "Analytics portfolio capstone", description: "Answer a real stakeholder question from raw data through recommendation and reproducible evidence.", proof: "Partner-reviewed analytics case study", leftLabel: "Deliver", left: ["Question to dataset", "Analysis to decision"], rightLabel: "Present", right: ["Portfolio case study", "Case interview practice"], estimate: "7–9 weeks" }),
 ];
 
+const CONTENT_CREATOR: Milestone[] = [
+  stage({ key: "content-awareness-campaign", order: 1, title: "Audience and problem research", description: "Choose one specific audience, learn what they need, and turn that evidence into a useful campaign direction.", proof: "Audience and campaign brief", leftLabel: "Research", left: ["Audience interviews", "Problem evidence"], rightLabel: "Frame", right: ["Campaign goal", "Ethical boundaries"], estimate: "1–2 weeks" }),
+  stage({ key: "content-story-system", order: 2, title: "Story and scripting", description: "Shape one clear message into connected pieces that fit the audience and channel.", proof: "Three-piece story and script set", leftLabel: "Write", left: ["Hook and structure", "Voice and clarity"], rightLabel: "Plan", right: ["Content series", "Call to action"], estimate: "1–2 weeks" }),
+  stage({ key: "content-mobile-production", order: 3, title: "Mobile production", description: "Produce clear, platform-native content with a dependable phone-first workflow.", proof: "Published-ready visual and video drafts", leftLabel: "Capture", left: ["Framing and light", "Clean audio"], rightLabel: "Edit", right: ["Pacing and layout", "Export quality"], estimate: "2–3 weeks" }),
+  stage({ key: "content-safe-publishing", order: 4, title: "Accessible and safe publishing", description: "Publish content people can understand and trust without hiding sources, uncertainty, or material AI assistance.", proof: "Accessible publishing checklist", leftLabel: "Include", left: ["Captions and text", "Readable structure"], rightLabel: "Protect", right: ["Source disclosure", "Consent and safety"], estimate: "1–2 weeks" }),
+  stage({ key: "content-case-study", order: 5, title: "Campaign case study", description: "Package the campaign, audience evidence, decisions, results, and lessons into portfolio-ready proof.", proof: "Partner-reviewed campaign case study", leftLabel: "Measure", left: ["Useful signals", "Audience response"], rightLabel: "Explain", right: ["Decision rationale", "Portfolio narrative"], estimate: "2–3 weeks" }),
+];
+
 FRONTEND[0].status = "complete";
 FRONTEND[1].status = "complete";
 FRONTEND[2].status = "active";
 FRONTEND[3].status = "next";
 FULL_STACK[0].status = "next";
 AI_DATA[0].status = "next";
+CONTENT_CREATOR[0].status = "active";
 
 export const CAREER_TRACKS: CareerTrack[] = [
   { key: "frontend-developer", title: "Frontend Developer", shortTitle: "Frontend", description: "Build accessible, responsive, production-quality web interfaces.", outcome: "From web foundations to a partner-reviewed frontend product.", milestones: FRONTEND },
   { key: "full-stack-developer", title: "Full-Stack Developer", shortTitle: "Full-Stack", description: "Build and operate complete products across browser, server, data, and cloud.", outcome: "From client-server foundations to a production full-stack system.", milestones: FULL_STACK },
   { key: "ai-data-analyst", title: "AI & Data Analyst", shortTitle: "AI & Data", description: "Turn data into responsible analysis, decisions, dashboards, and evaluated AI workflows.", outcome: "From data literacy to a partner-reviewed analytics case study.", milestones: AI_DATA },
+  { key: "content-creator", title: "Content Creator & Social Media Storyteller", shortTitle: "Content Creator", description: "Explain useful ideas through clear, ethical, platform-native content.", outcome: "From audience research to a partner-reviewed campaign case study.", milestones: CONTENT_CREATOR },
 ];
 
 export const DIGITAL_PATH_PREVIEWS: CareerPathPreview[] = [
@@ -130,7 +140,11 @@ export function mergeTrackMilestones(trackKey: string, rows: Milestone[]) {
   const catalog = getCareerTrack(trackKey).milestones;
   if (!rows.length) return catalog;
   const statusByKey = new Map(rows.map((row) => [row.key, row.status]));
-  const merged = catalog.map((item) => ({ ...item, status: statusByKey.get(item.key) ?? item.status }));
+  const merged = catalog.map((item) => {
+    const storedStatus = statusByKey.get(item.key);
+    const keepCreatorPilotActive = trackKey === "content-creator" && item.status === "active" && storedStatus !== "complete";
+    return { ...item, status: keepCreatorPilotActive ? "active" as const : storedStatus ?? item.status };
+  });
   const activeIndex = merged.findIndex((item) => item.status === "active");
   if (activeIndex >= 0 && merged[activeIndex + 1]?.status === "upcoming") merged[activeIndex + 1].status = "next";
   if (activeIndex < 0 && !merged.some((item) => item.status === "complete") && merged[0]?.status === "upcoming") merged[0].status = "next";

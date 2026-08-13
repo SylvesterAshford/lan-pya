@@ -25,6 +25,51 @@ export type Profile = {
   dataOrigin: DataOrigin;
 };
 
+export type CareerPathAvailability = "operational" | "controlled_pilot" | "preview";
+
+export type CareerPreferences = {
+  interests: string[];
+  preferredWork: "make" | "explain" | "design" | "analyze" | "organize" | "grow" | "not_sure";
+  immediateGoal: "explore" | "freelance" | "internship" | "portfolio" | "first_job" | "not_sure";
+  deviceAccess: "phone_only" | "phone_and_laptop" | "laptop" | "not_sure";
+  connectivity: "reliable" | "limited" | "not_sure";
+  priorExperience: string[];
+};
+
+export type ActivePath = {
+  key: string;
+  title: string;
+  description: string;
+  availability: CareerPathAvailability;
+};
+
+export type PausedMissionWork = {
+  missionKey: string;
+  missionTitle: string;
+  pathKey: string;
+  pathTitle: string;
+};
+
+export type ActivePathDashboard = {
+  activePath: ActivePath | null;
+  progressPercent: number;
+  completedMilestones: number;
+  totalMilestones: number;
+  verifiedCount: number;
+  streakDays: number;
+  xp: number;
+  level: number;
+  xpToNext: number;
+  nextMission: {
+    key: string;
+    title: string;
+    brief: Record<string, unknown>;
+    workState: "available" | "active" | "paused";
+    submissionState: SubmissionState | null;
+  } | null;
+  pausedWork: PausedMissionWork[];
+};
+
 export type Milestone = {
   key: string;
   order: number;
@@ -40,7 +85,7 @@ export type Milestone = {
 };
 
 export type CareerTrack = {
-  key: "frontend-developer" | "full-stack-developer" | "ai-data-analyst";
+  key: string;
   title: string;
   shortTitle: string;
   description: string;

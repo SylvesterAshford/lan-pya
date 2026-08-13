@@ -2,133 +2,147 @@
 
 ## Product Context
 
-- **What this is:** A career-navigation and evidence platform that turns one career goal into a clear next action, real work, transparent feedback, and opportunity readiness.
-- **Who it is for:** Myanmar university students, recent graduates, and self-learners pursuing their first credible career proof.
-- **Space/industry:** Career guidance, skills development, portfolio evidence, and early-career opportunity discovery.
-- **Project type:** Responsive web app and dashboard with a concise marketing entry screen.
-- **Memorable idea:** **From Map to Proof.** The interface should feel like direction becoming evidence.
+- **What this is:** A bilingual career-navigation and evidence web app that turns one career goal into a clear next action, practical work, trusted proof, and relevant opportunities.
+- **Who it is for:** Myanmar university students, recent graduates, and self-learners pursuing their first credible digital-career proof.
+- **Project type:** Responsive web app with learner, reviewer, and administrator workspaces.
+- **Memorable idea:** **From Map to Proof.** A learner should remember one visible path and the next step on it.
 
 ## Aesthetic Direction
 
-- **Direction:** Guided Momentum
-- **Decoration level:** Intentional
-- **Mood:** Professional enough for employers, encouraging enough for a learner who feels lost, and concrete enough that progress never feels imaginary.
-- **Reference sources:** The user-provided Lan Pya screen board, logo, and `Lan Pya Web.dc.html` wireframe.
-- **Visual motif:** Directional paths, milestone nodes, and arrow movement taken from the Lan Pya logo. Use these sparingly where a journey or transition is being explained.
+- **Direction:** Quiet Guidance.
+- **Decoration level:** Minimal.
+- **Mood:** Calm, capable, local, and honest. The interface should feel like a maintained map rather than a course marketplace or a game dashboard.
+- **Primary reference:** The founder-supplied `Lan Pya Web.dc.html` and its screenshots. Use its compact navigation, focused dashboard, simple roadmap catalog, connected node canvas, concise opportunity feed, and profile-owned preferences.
+- **Light-first:** Preserve the approved Soft White application canvas. The reference's dark surfaces inform composition and density, not the shipped theme.
 
 ### Safe choices
 
-- Clean Soft White work surfaces with a Deep Navy navigation rail
-- Familiar cards, clear labels, left-aligned content, and compact dashboard summaries
-- Teal for active navigation, progress, and learning states
-- Strong visual distinction between learner work, trust evidence, and opportunity listings
+- A compact 60px top navigation on desktop and four-item bottom navigation on mobile.
+- Familiar left-aligned content, persistent labels, concise lists, and one dominant action per screen.
+- Teal for navigation, progress, links, and active learning states.
+- Strong text labels for seeded, live, verified, pending, and preview states.
 
 ### Deliberate risks
 
-- Warm Yellow is reserved for the one most useful action or time-sensitive opportunity, so the eye always knows where to go next.
-- Bilingual Burmese/English microcopy appears inside the real interface hierarchy rather than in a separate language layer.
-- Roadmap views use directional composition and milestone rhythm rather than reducing the journey to a generic progress bar.
+- **Four primary destinations only:** Home, Roadmaps, Opportunities, and Me. Missions open from roadmap milestones; portfolio, privacy, language, and account controls live under Me. The extra contextual click is worth the lower cognitive load.
+- **Less information above the fold:** The home screen shows the current path, one next mission, three upcoming milestones, and deadlines. Secondary explanation moves behind the relevant action.
+- **A real roadmap canvas:** Connected nodes and forks carry the core experience instead of card grids or a generic percentage bar.
+
+## Information Architecture
+
+### Primary navigation
+
+1. **Home:** resume work, current progress, next milestones, and nearby deadlines.
+2. **Roadmaps:** active path first, browse all paths on demand, then open the connected roadmap canvas.
+3. **Opportunities:** deadline-led feed with compact provenance and readiness detail.
+4. **Me:** career profile, personalization, portfolio proof, language, privacy, and account controls.
+
+### Contextual flows
+
+- A roadmap milestone opens its mission brief.
+- Mission brief, deliverables, proof requirements, submission, status, feedback, and revision form one linear workflow.
+- Verified missions become portfolio records automatically; sharing and revocation live under Me.
+- Reviewer and administrator links appear as compact role-specific utilities, not learner destinations.
 
 ## Typography
 
-- **Display/Hero:** Plus Jakarta Sans, 700–800 — contemporary and confident without feeling like institutional software.
-- **Body:** Plus Jakarta Sans, 400–600 — keeps product copy and dashboard density visually coherent.
-- **Burmese:** Padauk, 400–700 — designed for Burmese forms and already present in the supplied HTML reference.
-- **UI/Labels:** Plus Jakarta Sans, 600–700 with modest letter spacing for small uppercase labels.
-- **Data/Tables:** DM Sans with tabular numerals when dense numeric comparison is needed; Plus Jakarta Sans is acceptable for the prototype.
-- **Code/URLs:** Geist Mono or JetBrains Mono.
-- **Loading:** Google Fonts during the prototype, with `sans-serif` and local Burmese fallbacks for offline resilience. Self-host before production.
+- **English display, body, and UI:** Plus Jakarta Sans, 400–800.
+- **Burmese display, body, and UI:** Padauk, 400–700.
+- **Data:** Plus Jakarta Sans with tabular numerals.
+- **Code and URLs:** Geist Mono or JetBrains Mono.
+- **Loading:** Use `next/font` for production font delivery.
 
-### Type scale
+### Product type scale
 
-- Display: 56px / 1.05 desktop, 40px mobile
-- H1: 38px / 1.12 desktop, 30px mobile
-- H2: 26px / 1.2
-- H3: 18px / 1.3
-- Body large: 17px / 1.65
-- Body: 15px / 1.6
-- Small: 13px / 1.45
-- Label: 11px / 1.3, uppercase Latin only
+- Page title: 24px / 1.25 desktop, 22px / 1.35 mobile.
+- Section title: 18px / 1.35.
+- Card or list title: 15–16px / 1.4.
+- Body: 14px / 1.6 English; 15px / 1.7 Burmese.
+- Supporting text: 12.5–13px / 1.55.
+- Metadata: 11–12px / 1.45.
+- Compact label: 11px / 1.35; uppercase Latin only.
+- Marketing pages may use larger display sizes. Marketing typography must not leak into the authenticated app.
+
+English and Burmese must preserve equivalent hierarchy and perceived size. Burmese may use one additional pixel and increased line height, never a different structural scale.
 
 ## Color
 
-- **Approach:** Balanced. Navy establishes trust, teal carries learning and progress, and yellow is rare directional energy.
-- **Primary / Deep Navy:** `#0F172A` — navigation, hero background, high-trust headings.
-- **Secondary / Teal:** `#0F766E` — active navigation, progress, links, learning state.
-- **Accent / Warm Yellow:** `#F59E0B` — primary next action, opportunity urgency, and directional highlights only.
-- **Background / Soft White:** `#F8FAFC` — app canvas.
-- **Surface:** `#FFFFFF` — cards, forms, proof packets.
-- **Text / Slate:** `#334155` — body and secondary headings.
-- **Text strong:** `#0F172A` — titles and data.
-- **Muted:** `#64748B` — metadata and supporting copy.
-- **Line:** `#E2E8F0` — card and control borders.
-- **Teal tint:** `#E6F4F2` — active navigation and progress backgrounds.
-- **Yellow tint:** `#FFF7DF` — next-action and deadline context.
-- **Success:** `#16A34A` — completed, passed, verified state only.
-- **Error:** `#DC2626` — destructive or failed state only.
-- **Info:** `#2563EB` — neutral system information.
+- **Approach:** Restrained. Navy establishes trust, Teal carries learning, and Yellow marks the one most useful action or urgent deadline.
+- **Primary / Deep Navy:** `#0F172A`.
+- **Secondary / Teal:** `#0F766E`.
+- **Accent / Warm Yellow:** `#F59E0B`.
+- **Background / Soft White:** `#F8FAFC`.
+- **Surface:** `#FFFFFF`.
+- **Text / Slate:** `#334155`.
+- **Muted:** `#64748B`.
+- **Line:** `#E2E8F0`.
+- **Line strong:** `#CBD5E1`.
+- **Teal tint:** `#E6F4F2`.
+- **Yellow tint:** `#FFF7DF`.
+- **Success:** `#16A34A`.
+- **Error:** `#DC2626`.
+- **Info:** `#2563EB`.
 
 ### Color rules
 
-- Never use yellow for every button. One primary yellow action per major viewport is the maximum.
-- Teal is not a success color. It means active, learning, or in progress.
-- A trust tier always includes text and an icon/initial; color alone never communicates verification.
-- Sponsored opportunities use an explicit label, not a special trust color.
-- The prototype is light-first. A dark theme can be designed later rather than mechanically inverting the palette.
+- Maximum one Yellow primary action in a major viewport.
+- Teal means active, selected, learning, or in progress. Green means completed or verified.
+- Every status includes text and, where useful, an icon. Color never carries meaning alone.
+- No gradients, decorative glow, glass, or tinted shadows in the authenticated workspace.
 
 ## Spacing
 
-- **Base unit:** 4px
-- **Density:** Comfortable dashboard density
-- **Scale:** 2xs 4px, xs 8px, sm 12px, md 16px, lg 24px, xl 32px, 2xl 48px, 3xl 64px, 4xl 96px
-- **Card padding:** 20–28px desktop, 16–20px mobile
-- **Page gutters:** 40px desktop, 24px tablet, 16px mobile
+- **Base unit:** 4px.
+- **Density:** Compact-comfortable.
+- **Scale:** 4, 8, 12, 16, 20, 24, 32, 40, 48, 64px.
+- **Page gutters:** 24px desktop and tablet, 16px mobile.
+- **Section rhythm:** 24–32px.
+- **Card/list padding:** 16–20px desktop, 14–16px mobile.
 
 ## Layout
 
-- **Approach:** Hybrid. Marketing entry may use a strong asymmetric hero; the app uses a disciplined dashboard grid.
-- **App shell:** 232–256px navy sidebar on desktop, compact top bar, bottom navigation on mobile.
-- **Grid:** 12 columns desktop, 8 tablet, 4 mobile.
-- **Max content width:** 1240px for app content, 1160px for marketing content.
-- **Border radius:** controls 8px, cards 10–12px, large feature surfaces 16px, pills 999px.
-- **Borders:** 1px cool-slate line. Use shadows lightly and only to clarify layer or focus.
-- **Information hierarchy:** current action first, path second, opportunity third, achievement/gamification last.
+- **Approach:** Grid-disciplined application workspace.
+- **Desktop shell:** Sticky 60px top navigation, centered 1100px maximum workspace.
+- **Mobile shell:** Compact top brand row plus fixed four-item bottom navigation; content reserves safe-area space.
+- **Dashboard:** Two columns only when secondary content remains scannable; stack at 760px.
+- **Roadmap:** 860px content canvas with a node graph; mobile converts the graph to one vertical spine without losing branches or status.
+- **Opportunities:** Single concise feed ordered by deadline. Filters scroll horizontally on mobile.
+- **Border radius:** 8px controls, 10–12px cards and panels, full radius only for compact status/filter chips.
+- **Elevation:** Borders first. Use a small offset shadow only for overlays, selected floating details, and mobile bottom navigation.
 
 ## Components
 
-- **Primary action:** Warm Yellow background, Deep Navy text, 8px radius, strong label.
-- **Secondary action:** Teal background, white text.
-- **Tertiary action:** White/transparent with slate border; teal label on hover.
-- **Cards:** White surface, slate border, minimal shadow, left-aligned copy.
-- **Progress:** Teal track; green only after completion.
-- **Readiness labels:** Ready now = green; Build toward = warm yellow; Explore = slate/blue.
-- **Evidence record:** evaluator tier, date, rubric version, and evidence link remain visually grouped.
-- **Forms:** 44–48px controls, persistent labels, clear error below the field, visible keyboard focus.
+- **Primary action:** Teal background with white text. Yellow is reserved for the single urgent or directional action.
+- **Secondary action:** White surface, Slate text, and a strong line border.
+- **Cards:** Use only where grouping needs a boundary. Prefer rows, sections, and whitespace over grids of equal cards.
+- **Progress:** A thin Teal track. Green only after verified completion.
+- **Roadmap node:** Stage and milestone rectangles connected by visible paths. Completed nodes are green-tinted, active nodes use Yellow tint, future nodes stay neutral.
+- **Forms:** 44–48px controls, persistent labels, inline recovery text, visible keyboard focus.
+- **Icons:** Lucide outlined icons at 16, 18, 20, or 24px with consistent stroke weight. No emoji or generic decorative icon tiles.
 
 ## Motion
 
-- **Approach:** Minimal-functional
-- **Easing:** enter `ease-out`, exit `ease-in`, movement `ease-in-out`
-- **Duration:** micro 80ms, short 160ms, medium 240ms, long 400ms
-- **Use:** assessment progression, mission evaluation status, drawer/card expansion, toast confirmation.
-- **Avoid:** scroll choreography, bouncing rewards, ambient motion, and celebratory animation that competes with the learner’s work.
+- **Approach:** Minimal-functional.
+- **Easing:** enter `ease-out`, exit `ease-in`, movement `ease-in-out`.
+- **Duration:** micro 80ms, short 160ms, medium 240ms.
+- **Use:** navigation state, roadmap selection, drawers, submission status, and confirmation.
+- **Avoid:** ambient animation, bouncing rewards, repeated entrance effects, and motion that competes with the learner's work.
 - Respect `prefers-reduced-motion`.
 
 ## Accessibility
 
-- Target WCAG 2.2 AA for primary learner and proof-sharing flows.
-- Use visible focus, semantic landmarks, heading order, and 44px minimum touch targets.
-- Pair every status color with text.
-- Test Burmese line height and wrapping on 360px screens.
-- Keep core tasks usable at 200% zoom.
+- Target WCAG 2.2 AA.
+- Use landmarks, logical headings, persistent labels, visible focus, and 44px touch targets where practical.
+- Test English and Burmese at 360px, 200% zoom, and long-content wrapping.
+- Keep primary workflows keyboard-operable and screen-reader labelled.
+- Do not expose duplicate English and Burmese labels in one hierarchy.
 
 ## Decisions Log
 
 | Date | Decision | Rationale |
 |---|---|---|
-| 2026-08-11 | Deep Navy + Teal + Warm Yellow approved | User supplied this exact brand palette and rationale. |
-| 2026-08-11 | Guided Momentum aesthetic | Connects the logo’s directional path to the product’s map-to-proof promise. |
-| 2026-08-11 | Light-first app with navy navigation | Matches the approved screen board and improves dashboard readability. |
-| 2026-08-11 | Plus Jakarta Sans + Padauk | Adds typographic intention while supporting Burmese clearly. |
-| 2026-08-11 | Yellow reserved for the next action | Makes direction visible and prevents accent-color noise. |
-
+| 2026-08-11 | Deep Navy + Teal + Warm Yellow | Founder-approved brand palette. |
+| 2026-08-13 | One language per screen | Prevents duplicate labels and reduces hierarchy noise. |
+| 2026-08-13 | Connected roadmap canvas | Makes the Map-to-Proof promise structural. |
+| 2026-08-13 | Quiet Guidance redesign | Replaces the dense sidebar and card-heavy learner UI with the supplied HTML's compact, focused interaction model. |
+| 2026-08-13 | Four primary learner destinations | Home, Roadmaps, Opportunities, and Me make missions and proof contextual rather than competing tabs. |
