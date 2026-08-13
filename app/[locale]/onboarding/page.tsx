@@ -9,7 +9,7 @@ export default async function OnboardingPage({ params }: { params: Promise<{ loc
   const user = await requireUser(locale);
   const [profile, preferences, dashboard] = await Promise.all([getProfile(user.id), getCareerPreferences(user.id), getActivePathDashboard()]);
   const defaultName = String(user.user_metadata?.full_name ?? user.email?.split("@")[0] ?? "Learner");
-  return <OnboardingForm locale={locale} defaultName={defaultName} initialValues={profile ? {
+  return <OnboardingForm locale={locale} defaultName={defaultName} userId={user.id} initialValues={profile ? {
     alias: profile.alias,
     weeklyHours: profile.weeklyHours as "2–3 hours" | "4–6 hours" | "7+ hours",
     interests: preferences?.interests ?? [],

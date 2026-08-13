@@ -1,3 +1,5 @@
+import type { Milestone, OpportunityCard } from "@/lib/domain/types";
+
 export type AppLocale = "en" | "my";
 
 const english = {
@@ -61,10 +63,10 @@ export function getAppCopy(locale: string) {
 }
 
 const careerTerms: Record<string, { en: string; my: string }> = {
-  "frontend-developer": { en: "Frontend Developer", my: "Frontend Developer" },
-  "full-stack-developer": { en: "Full-Stack Developer", my: "Full-Stack Developer" },
-  "ai-data-analyst": { en: "AI & Data Analyst", my: "AI နှင့် Data Analyst" },
-  "content-creator": { en: "Content Creator & Social Media Storyteller", my: "Content Creator နှင့် Social Media Storyteller" },
+  "frontend-developer": { en: "Frontend Developer", my: "ဝဘ်ရှေ့ပိုင်း ဖန်တီးသူ" },
+  "full-stack-developer": { en: "Full-Stack Developer", my: "ဝဘ်စနစ်အပြည့် ဖန်တီးသူ" },
+  "ai-data-analyst": { en: "AI & Data Analyst", my: "ဉာဏ်ရည်တုနှင့် ဒေတာ ခွဲခြမ်းစိတ်ဖြာသူ" },
+  "content-creator": { en: "Content Creator & Social Media Storyteller", my: "ဒစ်ဂျစ်တယ်အကြောင်းအရာ ဖန်တီးသူ" },
   "responsive-profile-card": { en: "Responsive Profile Card", my: "Responsive Profile Card" },
   "content-creator-awareness": { en: "Three-piece awareness campaign", my: "သုံးပိုင်းပါ အသိပညာပေး campaign" },
 };
@@ -88,6 +90,91 @@ export function localizePathDescription(locale: string, key: string, fallback: s
     "content-creator": "အသုံးဝင်သောအကြောင်းအရာများကို ရှင်းလင်းပြီး ကျင့်ဝတ်နှင့်ညီသော platform-native content ဖြင့် မျှဝေပါ။",
   };
   return descriptions[key] ?? fallback;
+}
+
+const myanmarMilestones: Record<string, Partial<Milestone>> = {
+  "content-awareness-campaign": {
+    title: "ပရိသတ်နှင့် ပြဿနာ လေ့လာမှု",
+    description: "တိကျသော ပရိသတ်တစ်စုကို ရွေးချယ်ပြီး သူတို့လိုအပ်ချက်ကို သက်သေအထောက်အထားဖြင့် လေ့လာကာ အသုံးဝင်သော campaign လမ်းကြောင်းတစ်ခု ဖန်တီးပါ။",
+    proof: "ပရိသတ်နှင့် campaign အကျဉ်းချုပ်",
+    leftLabel: "လေ့လာမည်",
+    left: ["ပရိသတ်နှင့် စကားပြောခြင်း", "ပြဿနာ၏ သက်သေ"],
+    rightLabel: "သတ်မှတ်မည်",
+    right: ["Campaign ရည်မှန်းချက်", "ကျင့်ဝတ် စည်းမျဉ်း"],
+    estimate: "၁–၂ ပတ်",
+  },
+  "content-story-system": {
+    title: "ဇာတ်လမ်းနှင့် script ရေးသားမှု",
+    description: "ရှင်းလင်းသော သတင်းစကားတစ်ခုကို ပရိသတ်နှင့် channel အလိုက် ဆက်စပ်နေသော content များအဖြစ် ပုံဖော်ပါ။",
+    proof: "သုံးပိုင်းပါ ဇာတ်လမ်းနှင့် script",
+    leftLabel: "ရေးမည်",
+    left: ["အစပိုင်းနှင့် ဖွဲ့စည်းပုံ", "အသံပုံစံနှင့် ရှင်းလင်းမှု"],
+    rightLabel: "စီစဉ်မည်",
+    right: ["Content အစီအစဉ်", "လုပ်ဆောင်ရန် ဖိတ်ခေါ်ချက်"],
+    estimate: "၁–၂ ပတ်",
+  },
+  "content-mobile-production": {
+    title: "ဖုန်းဖြင့် content ထုတ်လုပ်မှု",
+    description: "ယုံကြည်စိတ်ချရသော ဖုန်းအခြေပြု workflow ဖြင့် platform နှင့် ကိုက်ညီသည့် content များ ထုတ်လုပ်ပါ။",
+    proof: "ထုတ်ဝေရန် အသင့်ဖြစ်သော visual နှင့် video draft",
+    leftLabel: "ရိုက်ကူးမည်",
+    left: ["မြင်ကွင်းနှင့် အလင်း", "ကြည်လင်သော အသံ"],
+    rightLabel: "ပြင်ဆင်မည်",
+    right: ["အရှိန်နှင့် layout", "Export အရည်အသွေး"],
+    estimate: "၂–၃ ပတ်",
+  },
+  "content-safe-publishing": {
+    title: "လူတိုင်းသုံးနိုင်ပြီး လုံခြုံသော ထုတ်ဝေမှု",
+    description: "Source၊ မသေချာမှုနှင့် AI အသုံးပြုမှုကို မဖုံးကွယ်ဘဲ နားလည်လွယ်ပြီး ယုံကြည်ရသော content ထုတ်ဝေပါ။",
+    proof: "လူတိုင်းသုံးနိုင်မှုနှင့် လုံခြုံမှု စစ်ဆေးစာရင်း",
+    leftLabel: "ထည့်သွင်းမည်",
+    left: ["စာတန်းနှင့် စာသား", "ဖတ်ရလွယ်သော ဖွဲ့စည်းပုံ"],
+    rightLabel: "ကာကွယ်မည်",
+    right: ["Source ဖော်ပြမှု", "သဘောတူညီမှုနှင့် လုံခြုံမှု"],
+    estimate: "၁–၂ ပတ်",
+  },
+  "content-case-study": {
+    title: "Campaign ဖြစ်ရပ်လေ့လာချက်",
+    description: "Campaign၊ ပရိသတ်သက်သေ၊ ဆုံးဖြတ်ချက်၊ ရလဒ်နှင့် သင်ယူမှုတို့ကို portfolio အတွက် အသင့်ဖြစ်သော သက်သေအဖြစ် စုစည်းပါ။",
+    proof: "မိတ်ဖက်သုံးသပ်ထားသော campaign ဖြစ်ရပ်လေ့လာချက်",
+    leftLabel: "တိုင်းတာမည်",
+    left: ["အသုံးဝင်သော အချက်ပြ", "ပရိသတ် တုံ့ပြန်မှု"],
+    rightLabel: "ရှင်းပြမည်",
+    right: ["ဆုံးဖြတ်ချက် အကြောင်းရင်း", "Portfolio ဇာတ်ကြောင်း"],
+    estimate: "၂–၃ ပတ်",
+  },
+};
+
+export function localizeRoadmapMilestone(locale: string, milestone: Milestone): Milestone {
+  if (locale !== "my") return milestone;
+  return { ...milestone, ...(myanmarMilestones[milestone.key] ?? {}) };
+}
+
+export function localizeTrackOutcome(locale: string, key: string, fallback: string) {
+  if (locale !== "my") return fallback;
+  const outcomes: Record<string, string> = {
+    "frontend-developer": "ဝဘ်အခြေခံမှ မိတ်ဖက်သုံးသပ်ထားသော frontend product အထိ။",
+    "full-stack-developer": "Client-server အခြေခံမှ production full-stack system အထိ။",
+    "ai-data-analyst": "ဒေတာနားလည်မှုမှ မိတ်ဖက်သုံးသပ်ထားသော analysis case study အထိ။",
+    "content-creator": "ပရိသတ်လေ့လာမှုမှ မိတ်ဖက်သုံးသပ်ထားသော campaign case study အထိ။",
+  };
+  return outcomes[key] ?? fallback;
+}
+
+const opportunityTranslations: Record<string, Partial<OpportunityCard>> = {
+  "Junior Frontend Build Challenge": { title: "Frontend တည်ဆောက်မှု စိန်ခေါ်ပွဲ", organization: "လမ်းပြ စမ်းသပ်မိတ်ဖက်", type: "စိန်ခေါ်ပွဲ", location: "မြန်မာ · အဝေးမှ", supported: ["အဓိပ္ပါယ်ရှိသော HTML", "တုံ့ပြန်နိုင်သော CSS"] },
+  "Frontend Engineering Internship": { title: "Frontend Engineering အလုပ်သင်", organization: "မြန်မာ Product Studio", type: "အလုပ်သင်", location: "ရန်ကုန် · ပေါင်းစပ်", supported: ["အဓိပ္ပါယ်ရှိသော HTML", "တုံ့ပြန်နိုင်သော CSS"], gaps: ["JavaScript အခြေခံ", "Deployment မှတ်တမ်း"] },
+  "Digital Skills Scholarship": { title: "ဒစ်ဂျစ်တယ်ကျွမ်းကျင်မှု ပညာသင်ဆု", organization: "မြန်မာ့ အနာဂတ်ကျွမ်းကျင်မှု", type: "ပညာသင်ဆု", location: "အွန်လိုင်း", supported: ["Frontend စိတ်ဝင်စားမှု"], unknown: ["လက်ရှိ တက္ကသိုလ်ကျောင်းသားဖြစ်မှု"] },
+};
+
+export function localizeOpportunity(locale: string, opportunity: OpportunityCard): OpportunityCard {
+  if (locale !== "my") return opportunity;
+  return { ...opportunity, ...(opportunityTranslations[opportunity.title] ?? {}) };
+}
+
+export function localizeReadiness(locale: string, readiness: OpportunityCard["readiness"]) {
+  if (locale !== "my") return readiness;
+  return ({ "Ready now": "ယခုအဆင်သင့်", "Build toward": "ပြင်ဆင်ရန်လို", Explore: "စူးစမ်းရန်", "Cannot determine": "မသတ်မှတ်နိုင်" } as const)[readiness];
 }
 
 export function localizeRecommendationReason(locale: string, fallback: string) {

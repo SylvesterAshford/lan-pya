@@ -52,6 +52,10 @@ export function RoadmapTree({ locale = "en", milestones }: { locale?: string; mi
     window.history.replaceState(null, "", `#milestone-${key}`);
   }
 
+  function missionHref(milestone: Milestone) {
+    return milestone.key.startsWith("content-") ? "/app/missions/content-creator-awareness" : "/app/missions/responsive-profile-card";
+  }
+
   if (!selected) return null;
   const selectedDetail = detailFor(c, selected);
 
@@ -101,7 +105,7 @@ export function RoadmapTree({ locale = "en", milestones }: { locale?: string; mi
                   {detail.right.map((skill) => <span className="roadmap-skill-node" key={skill}>{skill}</span>)}
                 </div>
 
-                {isSelected ? <div className="roadmap-mobile-selection"><span>{c.proofTarget}</span><strong>{milestone.proof}</strong>{milestone.status === "active" ? <Link href="/app/missions/responsive-profile-card">{c.continueMission}</Link> : null}</div> : null}
+                {isSelected ? <div className="roadmap-mobile-selection"><span>{c.proofTarget}</span><strong>{milestone.proof}</strong>{milestone.status === "active" ? <Link href={missionHref(milestone)}>{c.continueMission}</Link> : null}</div> : null}
               </article>
             );
           })}
@@ -132,7 +136,7 @@ export function RoadmapTree({ locale = "en", milestones }: { locale?: string; mi
           <small>{c.completion}</small>
         </div>
 
-        {selected.status === "active" ? <Link className="button primary full" href="/app/missions/responsive-profile-card">{c.continueMission}</Link> : null}
+        {selected.status === "active" ? <Link className="button primary full" href={missionHref(selected)}>{c.continueMission}</Link> : null}
         {selected.status === "complete" ? <Link className="button outline full" href="/app/proof">{c.viewProof}</Link> : null}
         {selected.status === "next" || selected.status === "upcoming" ? <p className="roadmap-visible-note">{c.visibleNote}</p> : null}
       </aside>

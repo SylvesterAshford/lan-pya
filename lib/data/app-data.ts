@@ -1,7 +1,7 @@
 import "server-only";
 
 import { createClient } from "@/lib/supabase/server";
-import { getCareerTrack, mergeTrackMilestones } from "@/lib/domain/career-tracks";
+import { CAREER_TRACKS, getCareerTrack, mergeTrackMilestones } from "@/lib/domain/career-tracks";
 import type { ActivePathDashboard, CareerPreferences, Milestone, OpportunityCard, PausedMissionWork, Profile, ProofItem, SubmissionState } from "@/lib/domain/types";
 
 type UnknownRecord = Record<string, unknown>;
@@ -111,8 +111,8 @@ export async function getRoadmap(trackKey = "frontend-developer"): Promise<Miles
   const supabase = await createClient();
   const { data, error } = await supabase.rpc("get_roadmap", { p_track_key: trackKey });
   if (!error && Array.isArray(data)) {
-    const isTechnicalTrack = ["frontend-developer", "full-stack-developer", "ai-data-analyst"].includes(trackKey);
-    return isTechnicalTrack ? mergeTrackMilestones(trackKey, data as Milestone[]) : data as Milestone[];
+    const isCatalogTrack = CAREER_TRACKS.some((track) => track.key === trackKey);
+    return isCatalogTrack ? mergeTrackMilestones(trackKey, data as Milestone[]) : data as Milestone[];
   }
 
   if (trackKey === "frontend-developer") {

@@ -130,6 +130,22 @@ describe("RoadmapTree — AI & Data track", () => {
   });
 });
 
+describe("RoadmapTree — Content Creator track", () => {
+  const milestones = trackMilestones("content-creator");
+
+  it("renders the complete five-stage creator journey", () => {
+    render(<RoadmapTree milestones={milestones} />);
+    expect(screen.getAllByRole("button")).toHaveLength(5);
+    expect(screen.getByRole("heading", { name: "Audience and problem research" })).toBeInTheDocument();
+  });
+
+  it("opens the creator mission from the active roadmap stage", () => {
+    render(<RoadmapTree milestones={milestones} />);
+    const detailPanel = document.querySelector("#roadmap-detail")!;
+    expect(within(detailPanel as HTMLElement).getByRole("link", { name: /Continue current mission/i })).toHaveAttribute("href", "/app/missions/content-creator-awareness");
+  });
+});
+
 // ─── mergeTrackMilestones ─────────────────────────────────────────────────────
 
 describe("career-tracks — mergeTrackMilestones", () => {
@@ -137,6 +153,7 @@ describe("career-tracks — mergeTrackMilestones", () => {
     expect(mergeTrackMilestones("frontend-developer", []).length).toBe(12);
     expect(mergeTrackMilestones("full-stack-developer", []).length).toBe(14);
     expect(mergeTrackMilestones("ai-data-analyst", []).length).toBe(13);
+    expect(mergeTrackMilestones("content-creator", []).length).toBe(5);
   });
 
   it("promotes the milestone after the active one to 'next'", () => {

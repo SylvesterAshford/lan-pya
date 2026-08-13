@@ -43,4 +43,25 @@ describe("career recommendations", () => {
 
     expect(recommendations[0]).toMatchObject({ key: "frontend-developer", availability: "operational" });
   });
+
+  it("falls back deterministically when the learner is not sure yet", () => {
+    const recommendations = getCareerRecommendations(basePreferences);
+    const keys = recommendations.map((path) => path.key);
+    expect(new Set(keys).size).toBe(keys.length);
+    expect(keys.slice(0, 2)).toEqual(["content-creator", "frontend-developer"]);
+    expect(recommendations.every((path) => path.reason.length > 0)).toBe(true);
+  });
+
+  it("uses immediate goals and weekly rhythm as recommendation signals", () => {
+    const recommendations = getCareerRecommendations({
+      ...basePreferences,
+      immediateGoal: "freelance",
+      preferredWork: "explain",
+    });
+    expect(recommendations[0]?.key).toBe("content-creator");
+  });
+
+  it("returns null for an unknown path instead of inventing one", () => {
+    expect(getCareerPath("unknown-path")).toBeNull();
+  });
 });

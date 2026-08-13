@@ -3,7 +3,7 @@ import { Link } from "@/i18n/navigation";
 import { StartMissionButton } from "@/components/missions/start-mission-button";
 import { requireUser } from "@/lib/auth";
 import { getActivePathDashboard, getRoadmap } from "@/lib/data/app-data";
-import { getAppCopy, localizeCareerTerm } from "@/lib/i18n/app-copy";
+import { getAppCopy, localizeCareerTerm, localizeRoadmapMilestone } from "@/lib/i18n/app-copy";
 
 const missionHref: Record<string, string> = {
   "responsive-profile-card": "/app/missions/responsive-profile-card",
@@ -27,7 +27,7 @@ export default async function BuildPage({ params }: { params: Promise<{ locale: 
     return <div className="app-page build-page"><section className="empty-path-state panel"><CircleDashed size={24} aria-hidden="true" /><span className="eyebrow">{c.today.build}</span><h1>{c.build.emptyTitle}</h1><p>{c.build.emptyBody}</p><Link className="button primary" href="/app/paths">{c.build.choosePath}</Link></section></div>;
   }
 
-  const roadmap = await getRoadmap(dashboard.activePath.key);
+  const roadmap = (await getRoadmap(dashboard.activePath.key)).map((stage) => localizeRoadmapMilestone(locale, stage));
   const mission = dashboard.nextMission;
   const state = missionStateCopy(c, mission.workState, mission.submissionState);
   const pathTitle = localizeCareerTerm(locale, dashboard.activePath.key, dashboard.activePath.title);

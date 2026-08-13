@@ -13,21 +13,27 @@ export type CareerPathCatalogItem = {
   firstMission: string;
 };
 
-const TECHNICAL_PATHS: CareerPathCatalogItem[] = CAREER_TRACKS.map((track) => ({
-  key: track.key,
-  title: track.title,
-  description: track.description,
-  outcome: track.outcome,
-  availability: track.key === "frontend-developer" ? "operational" : "preview",
-  arena: "Technology & Data",
-  device: "Laptop recommended",
-  timeToFirstProof: "1–2 weeks",
-  firstMission: track.key === "frontend-developer" ? "Responsive Profile Card" : "Mission design in progress",
-}));
+const digitalPathByKey = new Map(DIGITAL_PATH_PREVIEWS.map((path) => [path.key, path]));
+const careerTrackKeys = new Set(CAREER_TRACKS.map((track) => track.key));
+
+const TECHNICAL_PATHS: CareerPathCatalogItem[] = CAREER_TRACKS.map((track) => {
+  const digitalPath = digitalPathByKey.get(track.key);
+  return {
+    key: track.key,
+    title: track.title,
+    description: track.description,
+    outcome: track.outcome,
+    availability: track.key === "frontend-developer" ? "operational" : digitalPath?.status ?? "preview",
+    arena: digitalPath?.arena ?? "Technology & Data",
+    device: digitalPath?.device ?? "Laptop recommended",
+    timeToFirstProof: digitalPath?.timeToFirstProof ?? "1–2 weeks",
+    firstMission: track.key === "frontend-developer" ? "Responsive Profile Card" : digitalPath?.firstMission ?? "Mission design in progress",
+  };
+});
 
 export const CAREER_PATH_CATALOG: CareerPathCatalogItem[] = [
   ...TECHNICAL_PATHS,
-  ...DIGITAL_PATH_PREVIEWS.map((path) => ({
+  ...DIGITAL_PATH_PREVIEWS.filter((path) => !careerTrackKeys.has(path.key)).map((path) => ({
     key: path.key,
     title: path.title,
     description: path.description,

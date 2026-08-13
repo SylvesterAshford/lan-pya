@@ -1,5 +1,6 @@
 import { ArrowRight, Globe2, Settings2, ShieldCheck, UserRound } from "lucide-react";
 import { Link } from "@/i18n/navigation";
+import { MeNav } from "@/components/app/me-nav";
 import { requireUser } from "@/lib/auth";
 import { getActivePathDashboard, getCareerPreferences, getPathHistory, getProfile } from "@/lib/data/app-data";
 import { formatAppDate, getAppCopy, localizeCareerTerm, localizePathDescription, localizePreference } from "@/lib/i18n/app-copy";
@@ -14,7 +15,8 @@ export default async function ProfilePage({ params }: { params: Promise<{ locale
   const previousPaths = history.filter((path) => path.state === "previous");
 
   return <div className="app-page profile-page">
-    <section className="page-heading compact-heading"><span className="eyebrow">{c.profile.heading}</span><h1>{c.profile.title}</h1><p>{c.profile.body}</p></section>
+    <MeNav locale={locale} active="profile" />
+    <section className="page-heading compact-heading"><h1>{c.profile.title}</h1><p>{c.profile.body}</p></section>
     <section className="career-identity panel"><span className="profile-avatar"><UserRound size={26} aria-hidden="true" /></span><div><h2>{profile.alias}</h2><p>{dashboard.activePath ? localizeCareerTerm(locale, dashboard.activePath.key, dashboard.activePath.title) : c.profile.compassProgress}</p><small>{profile.dataOrigin === "seeded_demo" ? c.profile.demo : c.profile.privateProfile}</small></div><Link className="button outline" href="/onboarding">{c.profile.editCompass}</Link></section>
     <div className="career-profile-grid">
       <section className="panel career-direction"><span className="eyebrow">{c.profile.activePath}</span><h2>{dashboard.activePath ? localizeCareerTerm(locale, dashboard.activePath.key, dashboard.activePath.title) : c.profile.noPath}</h2><p>{dashboard.activePath ? localizePathDescription(locale, dashboard.activePath.key, dashboard.activePath.description) : c.profile.noPathBody}</p><div className="path-inline-meta"><span>{dashboard.progressPercent}% {c.profile.progress}</span><span>{c.today.level} {dashboard.level}</span><span>{dashboard.xp} XP</span></div><Link className="text-link" href="/app/paths">{c.profile.changePath} <ArrowRight size={16} aria-hidden="true" /></Link></section>

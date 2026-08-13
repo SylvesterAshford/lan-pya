@@ -1,12 +1,9 @@
 "use client";
 
 import {
-  BadgeCheck,
   BriefcaseBusiness,
-  Hammer,
   Home,
   Map,
-  Route,
   ShieldCheck,
   SlidersHorizontal,
   UserRound,
@@ -15,162 +12,111 @@ import {
 import { usePathname } from "next/navigation";
 import { Link } from "@/i18n/navigation";
 import type { Profile } from "@/lib/domain/types";
-import { getAppCopy, localizeCareerDisplay } from "@/lib/i18n/app-copy";
-import {
-  Sidebar,
-  SidebarContent,
-  SidebarFooter,
-  SidebarGroup,
-  SidebarGroupLabel,
-  SidebarHeader,
-  SidebarInset,
-  SidebarMenu,
-  SidebarMenuButton,
-  SidebarMenuItem,
-  SidebarProvider,
-  SidebarRail,
-  SidebarTrigger,
-  useSidebar,
-} from "@/components/ui/sidebar";
 
 type NavItem = {
-  path: string;
+  href: string;
   en: string;
   my: string;
   icon: LucideIcon;
+  matches: (pathname: string) => boolean;
 };
 
-const PRIMARY_NAV: NavItem[] = [
-  { path: "today", en: "Home", my: "ပင်မ", icon: Home },
-  { path: "paths", en: "Paths", my: "လမ်းကြောင်းများ", icon: Route },
-  { path: "roadmap", en: "Roadmap", my: "ကျွမ်းကျင်မှုမြေပုံ", icon: Map },
-  { path: "build", en: "Build", my: "တည်ဆောက်ရန်", icon: Hammer },
-  { path: "opportunities", en: "Opportunities", my: "အခွင့်အလမ်းများ", icon: BriefcaseBusiness },
-  { path: "proof", en: "Portfolio", my: "လက်ရာများ", icon: BadgeCheck },
+const LEARNER_NAV: NavItem[] = [
+  {
+    href: "/app/today",
+    en: "Home",
+    my: "ပင်မ",
+    icon: Home,
+    matches: (pathname) => pathname.includes("/app/today"),
+  },
+  {
+    href: "/app/paths",
+    en: "Roadmaps",
+    my: "လမ်းပြမြေပုံများ",
+    icon: Map,
+    matches: (pathname) => ["/app/paths", "/app/roadmap", "/app/build", "/app/missions/"].some((route) => pathname.includes(route)),
+  },
+  {
+    href: "/app/opportunities",
+    en: "Opportunities",
+    my: "အခွင့်အလမ်းများ",
+    icon: BriefcaseBusiness,
+    matches: (pathname) => pathname.includes("/app/opportunities"),
+  },
+  {
+    href: "/app/profile",
+    en: "Me",
+    my: "ကျွန်ုပ်",
+    icon: UserRound,
+    matches: (pathname) => ["/app/profile", "/app/proof", "/app/privacy"].some((route) => pathname.includes(route)),
+  },
 ];
 
 export function AppShell({ children, profile, roles, locale }: { children: React.ReactNode; profile: Profile; roles: Set<string>; locale: string }) {
-  return (
-    <SidebarProvider>
-      <AppShellContent profile={profile} roles={roles} locale={locale}>{children}</AppShellContent>
-    </SidebarProvider>
-  );
-}
-
-function AppShellContent({ children, profile, roles, locale }: { children: React.ReactNode; profile: Profile; roles: Set<string>; locale: string }) {
-  const c = getAppCopy(locale);
   const pathname = usePathname();
-  const { setOpenMobile } = useSidebar();
-  const isActive = (path: string) => {
-    if (path === "build" && pathname.includes("/app/missions/")) return true;
-    return pathname.endsWith(`/app/${path}`) || pathname.includes(`/app/${path}/`);
-  };
-  const staffNav: NavItem[] = [
-    ...(roles.has("reviewer") || roles.has("reviewer_lead")
-      ? [{ path: "review", en: "Review", my: "သုံးသပ်ရန်", icon: SlidersHorizontal }]
-      : []),
-    ...(roles.has("admin") ? [{ path: "admin", en: "Admin", my: "စီမံခန့်ခွဲမှု", icon: ShieldCheck }] : []),
-  ];
-  const allNav = [...PRIMARY_NAV, ...staffNav];
-  const currentNav = allNav.find((item) => isActive(item.path));
-  const standaloneLabel = pathname.includes("/app/profile")
-    ? (locale === "my" ? "ပရိုဖိုင်" : "Profile")
-    : pathname.includes("/app/privacy")
-      ? (locale === "my" ? "ကိုယ်ရေးလုံခြုံမှု" : "Privacy")
-      : null;
-  const pageLabel = standaloneLabel ?? (currentNav ? (locale === "my" ? currentNav.my : currentNav.en) : "Lan Pya");
+  const labelFor = (item: NavItem) => locale === "my" ? item.my : item.en;
   const accountLabel = profile.dataOrigin === "seeded_demo"
     ? (locale === "my" ? "နမူနာအကောင့်" : "Demo account")
     : (locale === "my" ? "သင့်အကောင့်" : "Your account");
-  const closeMobile = () => setOpenMobile(false);
+  const brandLabel = locale === "my" ? "လမ်းပြ" : "Lan Pya";
+  const updateLabel = locale === "my" ? "သောကြာနေ့တိုင်း အပ်ဒိတ်" : "Updated every Friday";
+  const staffNav = [
+    ...(roles.has("reviewer") || roles.has("reviewer_lead")
+      ? [{ href: "/app/review", label: locale === "my" ? "သုံးသပ်ရန်" : "Review", icon: SlidersHorizontal }]
+      : []),
+    ...(roles.has("admin")
+      ? [{ href: "/app/admin", label: locale === "my" ? "စီမံခန့်ခွဲမှု" : "Admin", icon: ShieldCheck }]
+      : []),
+  ];
 
-  const renderNav = (items: NavItem[]) => items.map((item) => {
-    const active = isActive(item.path);
-    const label = locale === "my" ? item.my : item.en;
+  const renderLearnerNav = (placement: "desktop" | "mobile") => LEARNER_NAV.map((item) => {
+    const active = item.matches(pathname);
     const Icon = item.icon;
+    const label = labelFor(item);
     return (
-      <SidebarMenuItem key={item.path}>
-        <SidebarMenuButton isActive={active}>
-          <Link href={`/app/${item.path}`} onClick={closeMobile} aria-current={active ? "page" : undefined} title={label}>
-            <Icon aria-hidden="true" />
-            <span className="sidebar-menu-label">{label}</span>
-          </Link>
-        </SidebarMenuButton>
-      </SidebarMenuItem>
+      <Link
+        className={`app-nav-link ${placement}${active ? " active" : ""}`}
+        href={item.href}
+        aria-current={active ? "page" : undefined}
+        key={`${placement}-${item.href}`}
+      >
+        <Icon aria-hidden="true" />
+        <span>{label}</span>
+      </Link>
     );
   });
 
   return (
-    <>
-      <Sidebar aria-label="Primary navigation">
-        <SidebarHeader>
-          <Link className="sidebar-brand" href="/" onClick={closeMobile} title={`Lan Pya — ${c.brandTagline}`}>
+    <div className="app-frame">
+      <header className="app-header">
+        <div className="app-header-inner">
+          <Link className="app-brand" href="/app/today" aria-label={brandLabel}>
             <span className="brand-mark" aria-hidden="true" />
-            <span className="sidebar-brand-copy">
-              <strong>Lan Pya</strong>
-              <small>{c.brandTagline}</small>
-            </span>
+            <strong>{brandLabel}</strong>
           </Link>
-        </SidebarHeader>
 
-        <SidebarContent>
-          <SidebarGroup>
-            <SidebarGroupLabel>{locale === "my" ? "အလုပ်နေရာ" : "Workspace"}</SidebarGroupLabel>
-            <SidebarMenu>{renderNav(PRIMARY_NAV)}</SidebarMenu>
-          </SidebarGroup>
-          {staffNav.length ? (
-            <SidebarGroup>
-              <SidebarGroupLabel>{locale === "my" ? "စီမံခန့်ခွဲရန်" : "Manage"}</SidebarGroupLabel>
-              <SidebarMenu>{renderNav(staffNav)}</SidebarMenu>
-            </SidebarGroup>
-          ) : null}
-        </SidebarContent>
+          <nav className="app-primary-nav" aria-label={locale === "my" ? "အဓိက လမ်းညွှန်" : "Primary navigation"}>
+            {renderLearnerNav("desktop")}
+          </nav>
 
-        <SidebarFooter>
-          <Link className="sidebar-account" href="/app/profile" onClick={closeMobile} title={`${accountLabel}: ${profile.alias}`}>
-            <span className="sidebar-account-avatar">{profile.alias.slice(0, 2).toUpperCase()}</span>
-            <span className="sidebar-account-copy">
-              <strong>{profile.alias}</strong>
-              <small><span className="live-dot" />{accountLabel}</small>
-            </span>
-          </Link>
-          <SidebarMenu>
-            <SidebarMenuItem>
-              <SidebarMenuButton isActive={isActive("profile")}>
-                <Link href="/app/profile" onClick={closeMobile} title={locale === "my" ? "ပရိုဖိုင်" : "Profile"}>
-                  <UserRound aria-hidden="true" />
-                  <span className="sidebar-menu-label">{locale === "my" ? "ပရိုဖိုင်" : "Profile"}</span>
-                </Link>
-              </SidebarMenuButton>
-            </SidebarMenuItem>
-            <SidebarMenuItem>
-              <SidebarMenuButton isActive={isActive("privacy")}>
-                <Link href="/app/privacy" onClick={closeMobile} title={locale === "my" ? "ကိုယ်ရေးလုံခြုံမှု" : "Privacy"}>
-                  <ShieldCheck aria-hidden="true" />
-                  <span className="sidebar-menu-label">{locale === "my" ? "ကိုယ်ရေးလုံခြုံမှု" : "Privacy"}</span>
-                </Link>
-              </SidebarMenuButton>
-            </SidebarMenuItem>
-          </SidebarMenu>
-        </SidebarFooter>
-        <SidebarRail />
-      </Sidebar>
-
-      <SidebarInset>
-        <header className="app-topbar">
-          <div className="app-topbar-left">
-            <SidebarTrigger />
-            <div className="app-topbar-context">
-              <strong>{pageLabel}</strong>
-              <span>{localizeCareerDisplay(locale, profile.goal)}</span>
-            </div>
+          <div className="app-header-tools">
+            {staffNav.map(({ href, label, icon: Icon }) => {
+              const active = pathname.includes(href);
+              return <Link className={`staff-link${active ? " active" : ""}`} href={href} aria-current={active ? "page" : undefined} key={href}><Icon aria-hidden="true" /><span>{label}</span></Link>;
+            })}
+            <span className="update-chip">{updateLabel}</span>
+            <Link className="app-avatar" href="/app/profile" aria-label={`${accountLabel}: ${profile.alias}`} title={`${accountLabel}: ${profile.alias}`}>
+              {profile.alias.slice(0, 2).toUpperCase()}
+            </Link>
           </div>
-          <Link className="app-avatar" href="/app/profile" aria-label={locale === "my" ? "ပရိုဖိုင် ဖွင့်မည်" : "Open profile"}>
-            {profile.alias.slice(0, 2).toUpperCase()}
-          </Link>
-        </header>
-        {children}
-      </SidebarInset>
-    </>
+        </div>
+      </header>
+
+      <main className="app-workspace">{children}</main>
+
+      <nav className="app-bottom-nav" aria-label={locale === "my" ? "အဓိက လမ်းညွှန်" : "Primary navigation"}>
+        {renderLearnerNav("mobile")}
+      </nav>
+    </div>
   );
 }

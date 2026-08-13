@@ -7,7 +7,7 @@ import { getAppCopy, localizeCareerTerm, localizePreference, localizeRecommendat
 
 const INTERESTS = ["Technology", "Startup", "Social impact", "Business", "Arts & culture", "Fashion", "Food", "Math & physics", "Programming", "Movie & shows", "Music", "Self growth"];
 const EXPERIENCE = ["HTML", "Basic CSS", "Responsive design", "JavaScript", "Git & GitHub", "Canva", "Mobile video editing", "Writing or social posts"];
-const STORAGE_KEY = "lan-pya-career-compass-v1";
+const LEGACY_STORAGE_KEY = "lan-pya-career-compass-v1";
 
 type CompassForm = {
   alias: string;
@@ -38,8 +38,9 @@ function initialForm(defaultName: string, values: Partial<CompassForm> = {}): Co
   };
 }
 
-export function OnboardingForm({ locale, defaultName, initialValues }: { locale: string; defaultName: string; initialValues?: Partial<CompassForm> }) {
+export function OnboardingForm({ locale, defaultName, userId, initialValues }: { locale: string; defaultName: string; userId: string; initialValues?: Partial<CompassForm> }) {
   const router = useRouter();
+  const storageKey = `${LEGACY_STORAGE_KEY}:${userId}`;
   const c = getAppCopy(locale).onboarding;
   const initialValuesRef = useRef(initialValues);
   const defaultNameRef = useRef(defaultName);
@@ -53,7 +54,8 @@ export function OnboardingForm({ locale, defaultName, initialValues }: { locale:
   useEffect(() => {
     const timer = window.setTimeout(() => {
       try {
-        const saved = window.localStorage.getItem(STORAGE_KEY);
+        window.localStorage.removeItem(LEGACY_STORAGE_KEY);
+        const saved = window.localStorage.getItem(storageKey);
         if (saved) setForm({ ...initialForm(defaultNameRef.current, initialValuesRef.current), ...JSON.parse(saved) });
       } catch {
         // The form remains usable even when browser storage is unavailable.
@@ -62,12 +64,12 @@ export function OnboardingForm({ locale, defaultName, initialValues }: { locale:
       }
     }, 0);
     return () => window.clearTimeout(timer);
-  }, []);
+  }, [storageKey]);
 
   useEffect(() => {
     if (!ready) return;
-    try { window.localStorage.setItem(STORAGE_KEY, JSON.stringify(form)); } catch { /* keep in-memory answers */ }
-  }, [form, ready]);
+    try { window.localStorage.setItem(storageKey, JSON.stringify(form)); } catch { /* keep in-memory answers */ }
+  }, [form, ready, storageKey]);
 
   const recommendations = useMemo(() => getCareerRecommendations(form), [form]);
   const eligiblePaths = useMemo(() => recommendations.filter((item) => item.availability !== "preview"), [recommendations]);
@@ -111,7 +113,7 @@ export function OnboardingForm({ locale, defaultName, initialValues }: { locale:
     const saved = await save(true);
     setBusy(false);
     if (!saved) return;
-    try { window.localStorage.removeItem(STORAGE_KEY); } catch { /* nothing to clear */ }
+    try { window.localStorage.removeItem(storageKey); } catch { /* nothing to clear */ }
     router.push("/app/today");
     router.refresh();
   }
