@@ -34,6 +34,7 @@ describe("AppShell", () => {
   it.each([
     ["/en/app/today", "Home"],
     ["/en/app/paths", "Paths"],
+    ["/en/app/roadmap", "Roadmap"],
     ["/en/app/build", "Build"],
     ["/en/app/opportunities", "Opportunities"],
     ["/en/app/proof", "Portfolio"],

@@ -5,6 +5,7 @@ import {
   BriefcaseBusiness,
   Hammer,
   Home,
+  Map,
   Route,
   ShieldCheck,
   SlidersHorizontal,
@@ -42,6 +43,7 @@ type NavItem = {
 const PRIMARY_NAV: NavItem[] = [
   { path: "today", en: "Home", my: "ပင်မ", icon: Home },
   { path: "paths", en: "Paths", my: "လမ်းကြောင်းများ", icon: Route },
+  { path: "roadmap", en: "Roadmap", my: "ကျွမ်းကျင်မှုမြေပုံ", icon: Map },
   { path: "build", en: "Build", my: "တည်ဆောက်ရန်", icon: Hammer },
   { path: "opportunities", en: "Opportunities", my: "အခွင့်အလမ်းများ", icon: BriefcaseBusiness },
   { path: "proof", en: "Portfolio", my: "လက်ရာများ", icon: BadgeCheck },

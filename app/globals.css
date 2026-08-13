@@ -3643,11 +3643,18 @@ fieldset {
   border-radius: 999px;
 }
 
-.active-path-panel > .button,
+.active-path-actions,
+.active-path-actions > .button,
 .today-next-mission > .button,
 .mission-focus > .button,
 .mission-start-action > .button {
   flex: 0 0 auto;
+}
+
+.active-path-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 
 .alternatives-section {
@@ -4260,11 +4267,17 @@ fieldset {
     flex-direction: column;
   }
 
-  .active-path-panel > .button,
+  .active-path-actions,
+  .active-path-actions > .button,
   .today-next-mission > .button,
   .mission-focus > .button,
   .mission-start-action > .button {
     width: 100%;
+  }
+
+  .active-path-actions {
+    align-items: stretch;
+    flex-direction: column;
   }
 
   .mission-focus-status {
