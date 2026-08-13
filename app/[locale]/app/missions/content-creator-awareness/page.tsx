@@ -1,9 +1,13 @@
+import { redirect } from "next/navigation";
 import { Link } from "@/i18n/navigation";
 import { requireUser } from "@/lib/auth";
 import { SubmissionForm } from "@/components/missions/submission-form";
+import { getActivePathDashboard } from "@/lib/data/app-data";
 
 export default async function ContentCreatorAwarenessMission({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
   const user = await requireUser(locale);
+  const dashboard = await getActivePathDashboard();
+  if (dashboard.activePath?.key !== "content-creator") redirect(`/${locale}/app/build`);
   return <div className="app-page mission-page"><section className="page-heading"><span className="status-tag pilot mission-stage-tag">Controlled pilot · Mission 1</span><h1>Three-piece awareness campaign</h1><p>Choose a real local problem, explain it clearly, and make three useful pieces of content for one specific audience.</p></section><div className="mission-layout"><section className="panel mission-brief"><div className="brief-tag">PILOT BRIEF · v0.1</div><h2>Make the message useful.</h2><p>This pilot is designed for a phone-first workflow. You can use a script, a carousel, a short video, or a voice note—what matters is the audience, the clarity, and the evidence behind your choices.</p><h3>Deliverables</h3><ul className="rubric-list"><li><b>1</b><span><strong>Audience and problem</strong><small>Name who you are helping and what they need.</small></span></li><li><b>2</b><span><strong>Three content pieces</strong><small>Use at least two formats and keep one clear call to action.</small></span></li><li><b>3</b><span><strong>Accessibility and safety</strong><small>Add captions or text alternatives and avoid unsupported claims.</small></span></li><li><b>4</b><span><strong>Reflection</strong><small>Explain what you changed after feedback or testing.</small></span></li></ul><div className="mission-guardrail"><strong>Controlled-pilot note</strong><p>This mission uses the same trusted-link submission and reviewer workflow as the technical path. The path is still a controlled pilot, so the curriculum remains intentionally small.</p></div><Link className="button ghost" href="/app/build">Back to Build →</Link></section><SubmissionForm userId={user.id} missionKey="content-creator-awareness" title="Campaign evidence" repositoryLabel="Primary content or source URL" deploymentLabel="Public preview or campaign URL" reflectionPlaceholder="What did you learn about your audience, message, and publishing choices?" /></div></div>;
 }

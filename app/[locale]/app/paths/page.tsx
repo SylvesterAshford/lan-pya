@@ -1,44 +1,41 @@
+import { Compass, FolderKanban, LockKeyhole, Sparkles } from "lucide-react";
 import { Link } from "@/i18n/navigation";
-import { CAREER_TRACKS, DIGITAL_PATH_PREVIEWS } from "@/lib/domain/career-tracks";
+import { PathSwitchButton } from "@/components/paths/path-switch-button";
+import { requireUser } from "@/lib/auth";
+import { getActivePathDashboard, getCareerPreferences } from "@/lib/data/app-data";
+import { CAREER_PATH_CATALOG, getCareerRecommendations } from "@/lib/domain/career-recommendations";
+import type { CareerPreferences } from "@/lib/domain/types";
 
-const ARENAS = [
-  ["all", "All paths", "See every digital career"],
-  ["Technology & Data", "Technology & Data", "Code, systems, and analysis"],
-  ["Stories & Community", "Stories & Community", "Teach, publish, and grow an audience"],
-  ["Visual Craft", "Visual Craft", "Design, edit, and communicate visually"],
-  ["Business & Growth", "Business & Growth", "Reach people and measure what works"],
-] as const;
+const EMPTY_PREFERENCES: CareerPreferences = { interests: [], preferredWork: "not_sure", immediateGoal: "not_sure", deviceAccess: "not_sure", connectivity: "not_sure", priorExperience: [] };
 
-function statusLabel(status: "operational" | "controlled_pilot" | "preview") {
-  if (status === "operational") return "Ready to start";
-  if (status === "controlled_pilot") return "Controlled pilot";
-  return "Coming next";
-}
+export default async function PathsPage({ params }: { params: Promise<{ locale: string }> }) {
+  const { locale } = await params;
+  const user = await requireUser(locale);
+  const [dashboard, preferences] = await Promise.all([getActivePathDashboard(), getCareerPreferences(user.id)]);
+  const recommendations = getCareerRecommendations(preferences ?? EMPTY_PREFERENCES);
+  const alternatives = recommendations.filter((path) => path.availability !== "preview" && path.key !== dashboard.activePath?.key).slice(0, 2);
+  const catalogByArena = CAREER_PATH_CATALOG.reduce<Record<string, typeof CAREER_PATH_CATALOG>>((groups, path) => {
+    (groups[path.arena] ??= []).push(path);
+    return groups;
+  }, {});
 
-export default async function PathsPage({ searchParams }: { searchParams: Promise<{ interest?: string }> }) {
-  const { interest = "all" } = await searchParams;
-  const previews = interest === "all" ? DIGITAL_PATH_PREVIEWS : DIGITAL_PATH_PREVIEWS.filter((path) => path.arena === interest);
+  if (!dashboard.activePath) {
+    return <div className="app-page paths-page"><section className="empty-path-state panel"><Compass size={24} aria-hidden="true" /><span className="eyebrow">YOUR DIRECTION</span><h1>Start with a few small choices.</h1><p>Career Compass suggests one path you can actually start, then keeps the full career catalog available when you are curious.</p><Link className="button primary" href="/onboarding">Find my path</Link></section></div>;
+  }
+
   return (
     <div className="app-page paths-page">
-      <section className="page-heading">
-        <h1>Find a path that fits the work you want to do.</h1>
-        <p>Lan Pya turns broad digital careers into small, phone-friendly steps and honest proof. Start with one arena; you can change direction later.</p>
+      <section className="page-heading compact-heading"><span className="eyebrow">YOUR DIRECTION</span><h1>One active path. A clear next move.</h1><p>Explore without getting lost. Your active path shapes Build; every other career stays a considered alternative or a preview.</p></section>
+      <section className="active-path-panel panel">
+        <div className="active-path-icon"><Compass size={22} aria-hidden="true" /></div>
+        <div className="active-path-copy"><span className="eyebrow">ACTIVE PATH</span><h2>{dashboard.activePath.title}</h2><p>{dashboard.activePath.description}</p><div className="path-inline-meta"><span>{dashboard.progressPercent}% complete</span><span>{dashboard.xp} XP on this path</span><span>{dashboard.activePath.availability === "controlled_pilot" ? "Controlled pilot" : "Ready to build"}</span></div></div>
+        <Link className="button primary" href="/app/build">Continue Build</Link>
       </section>
-      <nav className="arena-switcher" aria-label="Career arenas">
-        {ARENAS.map(([key, label, description]) => <Link key={key} className={interest === key ? "active" : ""} href={key === "all" ? "/app/paths" : `/app/paths?interest=${encodeURIComponent(key)}`}><strong>{label}</strong><small>{description}</small></Link>)}
-      </nav>
-      <section className="path-section">
-        <div className="section-heading"><div><span className="eyebrow">OPERATIONAL NOW</span><h2>Technical paths</h2></div><Link className="text-link" href="/app/roadmap">View full roadmaps →</Link></div>
-        <div className="path-preview-grid">
-          {CAREER_TRACKS.map((track) => <article className="panel path-preview operational" key={track.key}><div className="path-card-top"><span className="path-icon">↗</span><span className="status-tag success">Ready to start</span></div><h3>{track.title}</h3><p>{track.description}</p><div className="path-meta"><span>{track.milestones.length} stages</span><span>Portfolio outcome</span></div><Link className="button primary" href={`/app/roadmap?track=${track.key}`}>Explore roadmap</Link></article>)}
-        </div>
+      <section className="path-section alternatives-section">
+        <div className="section-heading"><div><span className="eyebrow">ALTERNATIVES FOR YOU</span><h2>Only two options, with a reason.</h2></div><Link className="text-link" href="/app/profile">Edit my Career Compass →</Link></div>
+        {alternatives.length ? <div className="alternative-list">{alternatives.map((path) => <article className="panel alternative-path" key={path.key}><div className="path-card-top"><span className="path-icon"><Sparkles size={20} aria-hidden="true" /></span><span className="status-tag pilot">{path.availability === "controlled_pilot" ? "Controlled pilot" : "Ready now"}</span></div><h3>{path.title}</h3><p>{path.reason}</p><small>First mission: {path.firstMission} · {path.timeToFirstProof}</small><PathSwitchButton trackKey={path.key}>Choose this path</PathSwitchButton></article>)}</div> : <article className="panel compact-empty"><p>Your current path is the only operational option right now. You can still explore upcoming careers below.</p></article>}
       </section>
-      <section className="path-section">
-        <div className="section-heading"><div><span className="eyebrow">DIGITAL CAREER PREVIEWS</span><h2>More ways to make a living online</h2></div><span className="section-note">Built in small slices, reviewed as they mature.</span></div>
-        <div className="path-preview-grid">
-          {previews.map((path) => <article className={`panel path-preview ${path.status}`} key={path.key}><div className="path-card-top"><span className="path-icon">{path.status === "controlled_pilot" ? "↗" : "+"}</span><span className={`status-tag ${path.status === "controlled_pilot" ? "pilot" : "preview"}`}>{statusLabel(path.status)}</span></div><h3>{path.title}</h3><p>{path.description}</p><div className="path-meta"><span>{path.device}</span><span>First proof: {path.timeToFirstProof}</span></div>{path.status === "controlled_pilot" ? <Link className="button gold" href={`/app/build?path=${path.key}`}>Start pilot mission</Link> : <div className="path-disabled">Preview the shape · {path.stages.length} stages planned</div>}</article>)}
-        </div>
-      </section>
+      <details className="career-catalog panel"><summary><span><FolderKanban size={20} aria-hidden="true" /><strong>Explore all digital careers</strong><small>Browse by arena. Preview paths cannot become active until their first real mission opens.</small></span><span className="catalog-count">{CAREER_PATH_CATALOG.length} paths</span></summary><div className="catalog-groups">{Object.entries(catalogByArena).map(([arena, paths]) => <section key={arena} className="catalog-group"><h3>{arena}</h3><div>{paths.map((path) => <article key={path.key} className="catalog-row"><span className="catalog-row-icon">{path.availability === "preview" ? <LockKeyhole size={17} aria-hidden="true" /> : <Compass size={17} aria-hidden="true" />}</span><div><strong>{path.title}</strong><small>{path.description}</small></div><span className={`status-tag ${path.availability === "preview" ? "preview" : path.availability === "controlled_pilot" ? "pilot" : "success"}`}>{path.availability === "preview" ? "Preview" : path.availability === "controlled_pilot" ? "Pilot" : "Available"}</span></article>)}</div></section>)}</div></details>
     </div>
   );
 }

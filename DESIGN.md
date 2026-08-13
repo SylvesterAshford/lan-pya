@@ -26,7 +26,7 @@
 ### Deliberate risks
 
 - Warm Yellow is reserved for the one most useful action or time-sensitive opportunity, so the eye always knows where to go next.
-- Bilingual Burmese/English microcopy appears inside the real interface hierarchy rather than in a separate language layer.
+- Each screen renders one selected language only. Language changes from Profile and never creates duplicate Burmese/English labels in the same hierarchy.
 - Roadmap views use directional composition and milestone rhythm rather than reducing the journey to a generic progress bar.
 
 ## Typography
@@ -41,14 +41,15 @@
 
 ### Type scale
 
-- Display: 56px / 1.05 desktop, 40px mobile
-- H1: 38px / 1.12 desktop, 30px mobile
-- H2: 26px / 1.2
-- H3: 18px / 1.3
-- Body large: 17px / 1.65
-- Body: 15px / 1.6
-- Small: 13px / 1.45
-- Label: 11px / 1.3, uppercase Latin only
+- Display: 48px / 1.08 desktop, 36px mobile; marketing and milestone celebration only
+- H1: 34px / 1.15 desktop, 30px mobile
+- H2: 24px / 1.25 desktop, 22px mobile
+- H3: 18px / 1.35
+- Body large: 18px / 1.6
+- Body: 16px / 1.6
+- Secondary: 14px / 1.55
+- Metadata: 13px / 1.45
+- Label: 12px / 1.35, uppercase Latin only
 
 ## Color
 
@@ -104,6 +105,7 @@
 - **Readiness labels:** Ready now = green; Build toward = warm yellow; Explore = slate/blue.
 - **Evidence record:** evaluator tier, date, rubric version, and evidence link remain visually grouped.
 - **Forms:** 44–48px controls, persistent labels, clear error below the field, visible keyboard focus.
+- **Icons:** One Lucide-style outlined icon family at 18px, 20px, or 24px. Career identity uses specific symbols, never generic plus or arrow glyphs.
 
 ## Motion
 
@@ -131,4 +133,6 @@
 | 2026-08-11 | Light-first app with navy navigation | Matches the approved screen board and improves dashboard readability. |
 | 2026-08-11 | Plus Jakarta Sans + Padauk | Adds typographic intention while supporting Burmese clearly. |
 | 2026-08-11 | Yellow reserved for the next action | Makes direction visible and prevents accent-color noise. |
-
+| 2026-08-13 | One language per screen | Prevents duplicated labels and keeps language control in Profile. |
+| 2026-08-13 | Compact product typography | Reduces oversized headings while keeping body copy at 16px and metadata at 13px. |
+| 2026-08-13 | Path Spine composition | Makes the map-to-proof journey structural without turning the app into a card dashboard. |

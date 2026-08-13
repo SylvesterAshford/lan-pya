@@ -95,8 +95,9 @@ Therefore Lan Pya gamifies **meaningful progress**, not attendance.
 3. A mission is the work. A submission is the learner’s attempt. Proof is a verified result. These must appear as one continuous lifecycle.
 4. XP is motivational metadata. Verified competencies and inspectable artifacts are the career signal.
 5. New digital paths must be AI-native and outcome-oriented. A narrow static Graphic Designer curriculum is too exposed to tool disruption; Brand & Visual Content Design includes systems, motion, campaigns, accessibility, AI-assisted workflows, and decision explanation.
-6. The app should make exploration safe. Learners may try short sampler missions before selecting or changing a primary path.
-7. Opportunities are never hidden behind points or streaks. Readiness explanations may change only when supported evidence changes.
+6. The app should make exploration safe. Learners may preview any path and, after the pilot, try short sampler missions before changing direction.
+7. Each learner has exactly one active path. Other paths remain explorable, and switching preserves all prior progress, submissions, XP, and proof without mixing missions in Build.
+8. Opportunities are never hidden behind points or streaks. Readiness explanations may change only when supported evidence changes.
 
 ## Approaches Considered
 
@@ -129,7 +130,7 @@ Make short cross-career sampler missions the main entry experience and delay pri
 
 ## Recommended Approach
 
-Build Approach B and include one bounded feature from C: every learner can try sampler missions before committing to a path.
+Build Approach B and include one bounded feature from C: Career Compass makes exploration safe before commitment. Cross-career sampler missions remain post-pitch work.
 
 ### Product promise
 
@@ -139,8 +140,8 @@ Build Approach B and include one bounded feature from C: every learner can try s
 
 ```mermaid
 flowchart LR
-    A["Choose interests"] --> B["Explore paths or samplers"]
-    B --> C["Choose a primary path"]
+    A["Career Compass"] --> B["See one recommendation and two alternatives"]
+    B --> C["Confirm one active path"]
     C --> D["Start next mission"]
     D --> E["Build and save work"]
     E --> F["Submit evidence"]
@@ -157,13 +158,13 @@ flowchart LR
 ### Primary navigation
 
 1. **Home** — current path, level, next action, submission status, and upcoming opportunity. Weekly goals are a post-pitch module.
-2. **Paths** — lightweight interest selection, path discovery, the primary roadmap, and clearly labeled previews. Sampler missions and path switching are post-pitch.
-3. **Build** — active mission, mission library, drafts, submissions, feedback, and completed missions.
+2. **Paths** — a personalized career home showing the active path first, two explained alternatives second, and the complete searchable catalog behind `Explore all careers`.
+3. **Build** — the active path's next mission, drafts, submissions, feedback, and upcoming stages. It never mixes missions from other paths.
 4. **Opportunities** — explained readiness, deadlines, source quality, and saved opportunities.
 5. **Portfolio** — verified and in-progress artifacts, competencies, profile presentation, and sharing controls.
-6. **Profile** — account, language, privacy, accessibility, notification, and career preferences.
+6. **Profile** — current path, interests, work preferences, device access, weekly capacity, experience, language, privacy, accessibility, and account controls.
 
-Desktop uses a conventional labeled sidebar without decorative numbering. Mobile uses five persistent destinations: Home, Paths, a visually prominent Build action, Opportunities, and Portfolio. Account, language, privacy, and settings live behind the persistent avatar menu instead of consuming a primary mobile destination.
+Desktop uses a conventional labeled sidebar without decorative numbering. Mobile root pages use five persistent destinations: Home, Paths, a visually prominent Build action, Opportunities, and Portfolio. Account, language, privacy, and settings live behind the persistent avatar menu instead of consuming a primary mobile destination. Mission detail routes enter Focus Mode: the bottom navigation is replaced by a labelled `Back to Build` control and one sticky state action.
 
 ### Why Mission and Proof change
 
@@ -185,6 +186,40 @@ Interest arenas answer “what kind of work sounds interesting?” They may reco
 | Social Impact | education, communities, public-interest problems | Content Creator, Digital Marketing, Data |
 
 Selecting an arena never automatically assigns a career. The learner sees two or three suggested paths, why each matches, typical work, device requirements, time-to-first-proof, and a sampler mission.
+
+## Active Path and Career Discovery
+
+Paths is a personalized career home, not a catalog wall.
+
+Career Compass is a five-step, save-as-you-go flow. Each step has one job, four to six scannable choices, a visible Back action, progress such as `2 of 5`, and `Not sure yet` as a valid answer.
+
+1. **Interests:** choose up to three topics or kinds of problems that feel interesting.
+2. **Preferred work:** choose how the learner likes to contribute: make, explain, design, analyze, organize, or grow.
+3. **Access:** phone, shared or personal laptop, connectivity constraints, and tools already available.
+4. **Capacity and outcome:** weekly time plus the immediate goal, such as explore, freelance, internship, portfolio, or first job.
+5. **Prior experience:** broad, path-neutral activities the learner could explain or demonstrate today; a later practical placement check outranks self-report.
+
+Answers save after every step and survive refresh or connection loss. The result screen shows one recommended path, two alternatives, and plain-language reasons tied to the answers. It names uncertainty when answers are incomplete and never uses a fake compatibility percentage. The learner confirms a path before entering the main app and can retake Career Compass from Profile.
+
+1. **Your path:** the active path, current stage, progress, next mission, and one `Continue building` action.
+2. **Why it fits:** a short explanation grounded in the learner's saved interests, preferred work, device access, weekly capacity, and demonstrated or self-reported experience. It never uses a fake match percentage.
+3. **Recommended alternatives:** at most two compact rows, each with a specific reason, first proof, device requirement, and readiness status.
+4. **Explore all careers:** a secondary searchable destination grouped by Technology & Data, Stories & Community, Visual Craft, and Business & Growth. The full catalog is not rendered as an equal card grid on the personalized page.
+
+Exactly one path is active at a time. `Change path` opens a preview and confirmation step that explains the new next mission and states that previous progress will be preserved. Confirming the change updates the active path and all primary surfaces together: Home, Paths, Build, Roadmap, Opportunities, and Profile. Preview-only paths may be explored but cannot become active until they have at least controlled-pilot mission availability.
+
+Switching never deletes or blocks unfinished work. Drafts remain saved under the previous path with a `Paused` label, submitted work continues through review, requested revisions remain actionable from Portfolio, and verified results remain part of the learner's evidence history. Build shows only the newly active path. Profile includes `Previous paths and paused work`, where the learner can inspect old progress or make that path active again.
+
+## Profile Experience
+
+Profile is the learner's private career identity and personalization surface. It does not duplicate Portfolio or pretend to be a public résumé.
+
+1. **Career profile:** active path, current stage, immediate outcome, compact progress, and `Change path`.
+2. **Personalization:** interests, preferred work, device/connectivity access, weekly capacity, immediate goal, prior experience, and `Retake Career Compass`.
+3. **Previous paths and paused work:** prior progress, saved drafts, reviews still in progress, requested revisions, and a clear `Make active again` action.
+4. **Account and language:** one-language selector, privacy, accessibility preferences, account email, and sign-out in a compact settings group below the career content.
+
+Verified work, sharing controls, reviewer details, and employer-facing presentation remain in Portfolio. Profile may show a small link such as `View 3 portfolio items`; it does not render project cards or a public-profile preview.
 
 ## Career Path Portfolio
 
@@ -278,13 +313,13 @@ If the Operational gate has not passed, the path remains **Controlled Pilot** wh
 
 ### Build hub
 
-The Build page prioritizes three things:
+The Build page prioritizes three things from the active path only:
 
 1. Resume the active mission or act on review feedback.
 2. Understand current submission status.
-3. Choose another available or sampler mission.
+3. See the next one or two missions in sequence without browsing unrelated careers.
 
-Filters such as Path, Difficulty, Device, Time, and Evidence Type support browsing but remain secondary.
+Cross-career browsing belongs in Paths. Build may filter the active path by mission state after more than five missions are available, but it never uses a Path filter.
 
 Each mission card shows:
 
@@ -306,7 +341,7 @@ Each mission card shows:
 6. **Rubric:** visible before the learner starts.
 7. **Submission:** artifact links/files, explanation, AI-use disclosure, and consent.
 
-Mobile uses a sticky bottom action that changes with state: `Start mission`, `Continue`, `Submit`, `View feedback`, or `Add to portfolio`.
+Mobile mission detail uses Focus Mode. The normal bottom navigation is hidden only after entering a mission, a labelled `Back to Build` control remains at the top, and one sticky bottom action changes with state: `Start mission`, `Continue`, `Submit`, `View feedback`, or `Add to portfolio`. Exiting restores the root Build page and bottom navigation.
 
 ### Mission lifecycle
 
@@ -355,6 +390,8 @@ Employers and opportunity matching never use XP as evidence.
 2. **Path level:** a learner-friendly summary gated by completed missions and verified milestones.
 3. **Verified competencies:** the only signal used for opportunity readiness.
 
+XP and levels are scoped to one career path. The active path shows its own XP and level; Profile preserves the same summary for previous paths. Switching paths never transfers XP into another career. Verified competencies and Portfolio evidence remain portable and may support multiple paths or opportunities when their underlying rubric evidence is relevant.
+
 ### XP rules
 
 - Award XP for rubric-linked mission completion, meaningful revision, calibrated peer contribution, or verified capstone work.
@@ -393,7 +430,7 @@ The interface explains the exact requirement for the next level. Higher levels r
 | Practitioner | 700 | At least three Human Reviewed core missions spanning two path stages |
 | Trailblazer | 1,200 | One Partner Verified or Human Reviewed capstone plus four other Human Reviewed core missions |
 
-Level calculation is deterministic and reruns whenever an XP ledger entry or qualifying proof changes. Revoked evidence no longer satisfies its evidence gate; associated XP is removed only when the revocation invalidates the underlying completion rather than merely disabling public sharing. Opportunity readiness remains a separate evidence computation.
+Level calculation is deterministic within each path and reruns whenever that path's XP ledger entry or qualifying proof changes. Revoked evidence no longer satisfies its evidence gate; associated XP is removed only when the revocation invalidates the underlying completion rather than merely disabling public sharing. Opportunity readiness remains a separate evidence computation.
 
 ### Weekly goals
 
@@ -460,17 +497,18 @@ Points do not unlock opportunities. An opportunity may suggest `Build this missi
 ### Must work by 20 August
 
 - Revised navigation and understandable Build/Portfolio lifecycle.
-- Lightweight interest selection that recommends two or three paths without assigning a path automatically; no sampler or path-switching workflow is required in P0.
+- A five-step, save-as-you-go Career Compass that asks interests, preferred work, device access, weekly capacity/outcome, and prior experience; recommends one primary path plus two alternatives; and lets the learner confirm one active path.
+- A path-switching flow for operational and controlled-pilot paths that preserves prior progress and updates Home, Paths, Build, Roadmap, Opportunities, and Profile together.
 - One Content Creator path with one end-to-end mission: start, locally persisted draft, trusted-link submission, controlled pilot review, revision, and verified portfolio evidence.
 - XP ledger and deterministic level display for the Content Creator journey.
 - Existing technical paths use a P0 compatibility adapter: Home and Paths link to their current roadmaps, Build resumes the current technical mission/task, and Portfolio reads existing proof records. Quest XP and levels remain hidden for technical paths until their P1 migration.
 - Video Editor, Brand & Visual Content Designer, and Digital Marketing appear only as explicitly seeded Path Previews.
 - Seeded demo states demonstrate later lifecycle states without representing seeded records as live verification.
-- Weekly goals, sampler missions, path switching, advanced mission filters, cohort challenges, and generalized multi-track migration are intentionally deferred.
+- Weekly goals, sampler missions, advanced mission filters, cohort challenges, and simultaneous multi-path progression are intentionally deferred.
 
 ### After the pitch
 
-- Add weekly goals, sampler missions, path switching, and mission-library filters after the core lifecycle passes comprehension testing.
+- Add weekly goals, sampler missions, and active-path mission filters after the core lifecycle passes comprehension testing.
 - Migrate the three technical paths into the same shared path, mission, and XP model.
 - Complete operational mission libraries for Video Editor, Brand & Visual Content Designer, and Digital Marketing & Growth.
 - Calibrate reviewers and build examples at fail, revise, and pass levels.
@@ -488,7 +526,7 @@ Points do not unlock opportunities. An opportunity may suggest `Build this missi
 ### Activation
 
 - Pilot measurement uses 30–50 invited Myanmar learners over a 30-day observation window. Staff, seeded-demo accounts, reviewers, duplicate test accounts, and users who never accept the pilot consent are excluded.
-- At least 60% of eligible pilot learners complete lightweight interest selection, inspect the Content Creator recommendation, and start its mission in the first session.
+- At least 60% of eligible pilot learners complete Career Compass, inspect the Content Creator recommendation, confirm an active path, and start its mission in the first session.
 - At least 40% save a meaningful first draft or artifact within seven days of first sign-in.
 
 ### Evidence loop
@@ -513,7 +551,7 @@ Points do not unlock opportunities. An opportunity may suggest `Build this missi
 - Paid advertising spend as a learner requirement.
 - A reward store before supply, eligibility, fulfillment, and sponsor terms are operational.
 - Group clans, chat, and social feed in the hackathon release.
-- Weekly goals, sampler missions, path switching, advanced filtering, and complete migration of all technical paths before the hackathon.
+- Weekly goals, sampler missions, simultaneous multi-path progression, advanced filtering, and complete migration of all technical paths before the hackathon.
 - Trade, agriculture, healthcare, or migration pathways requiring a different evidence and duty-of-care model.
 
 ## What Already Exists
@@ -584,6 +622,10 @@ At submission, Lan Pya freezes the learner's text, link list, declared filenames
 | Appeal upheld | prior decision remains | rationale added to audit history | reviewer lead |
 | Appeal changes decision | new decision supersedes old one | portfolio/readiness/XP recalculate with visible explanation | reviewer lead/product system |
 | Proof sharing is revoked | proof remains private and verified unless underlying evidence is invalid | public links stop working; private history remains | learner |
+| Learner switches paths with a local or server draft | draft becomes Paused and XP/level remain attached to the previous path | Build opens the new path; Profile lists the paused draft and previous progress | learner/product system |
+| Learner switches while a submission is in review | review continues against the immutable submitted version | Portfolio retains the review status; Build does not mix it into the new path | reviewer/product system |
+| Learner switches while changes are requested | revision remains available under Portfolio and the previous path history | a non-blocking reminder explains that completing the revision can still create evidence | learner |
+| Active controlled pilot closes | path remains in history but cannot accept new starts | explain closure, preserve all work, and recommend the nearest eligible path without auto-switching | product/track owner |
 
 ## Pilot Ownership and Capacity Gate
 
@@ -595,7 +637,7 @@ The Content Creator path remains labeled **Controlled Pilot** until both this ca
 
 | Slice | Deliverable | Acceptance check | Rollback boundary |
 |---|---|---|---|
-| 1. Navigation and IA | Home, Paths, Build, Opportunities, Portfolio; settings behind avatar; lightweight interest selection | first-time tester finds Build and Portfolio in under 10 seconds on desktop and mobile; English/Burmese labels fit at 320px and Burmese Language Owner approves meaning | restore prior shell routes without changing stored evidence |
+| 1. Navigation and IA | Home, Paths, Build, Opportunities, Portfolio; settings behind avatar; five-step Career Compass; one active path | first-time tester finds Build and Portfolio in under 10 seconds, understands which path is active, and sees only that path's missions; English/Burmese labels fit at 320px | restore prior shell routes without changing stored evidence or previous-path progress |
 | 2. Shared quest model | Content path, stage, mission, status, XP ledger, verification tier; technical-path compatibility adapter | seeded and live records render with explicit provenance; tier never inferred from XP; technical users can resume existing roadmap, mission, and proof flows | feature flag new quest reads while preserving current roadmap tables and shell |
 | 3. Content mission | bilingual brief, rubric, offline draft, trusted-link evidence form | refresh/offline recovery retains draft; invalid link produces correction state; Burmese rubric is meaning-equivalent and mobile overflow passes at 320px | disable mission availability without deleting drafts |
 | 4. Review and proof | immutable submission snapshot, reviewer decision, revision, proof creation | end-to-end test covers submit → needs changes → resubmit → verified → revoked share | retain existing proof API and disable Content mission review route |
@@ -612,6 +654,8 @@ Lan Pya remains a responsive PWA deployed on Vercel with Supabase as the operati
 
 Lan Pya is a focused career workspace, not a generic dashboard and not a game arcade. Its visual anchor is the directional line from the Lan Pya mark: a calm, purposeful path that connects the learner’s next action to evidence. XP gives a small spark of momentum; the work, rubric, and proof remain visually dominant.
 
+The core composition is the **Path Spine**. A thin directional route connects the learner's active stage, next mission, submission/review state, and resulting proof. It is a structural wayfinding device, not decorative artwork. Paths uses one dominant active-path workspace plus compact recommendation rows. Build uses the same spine as a progress rail beside one mission workspace. Portfolio closes the route with evidence and verification state. Equal card mosaics, unrelated mission libraries, and dashboard widget walls are prohibited.
+
 Use the approved system in `DESIGN.md`: Soft White canvas, a Deep Navy navigation rail, Teal for active learning and progress, and one Warm Yellow primary action per viewport. Plus Jakarta Sans is the Latin UI face and Padauk is the Burmese face. Use real, consistent icons rather than emoji.
 
 ### Navigation and screen hierarchy
@@ -623,10 +667,11 @@ Mobile uses a fixed five-item bottom bar in the same order. `Build` is the centr
 | Screen | First thing the learner sees | Second | Third | Primary action |
 |---|---|---|---|---|
 | Home | current path, compact level/XP, and review availability | one large “next quest” row with status | recent proof or one explained opportunity | context-specific: Start, Continue, Revise, or View feedback |
-| Paths | a short interest question and six arena tiles | 2–3 recommended paths with a plain “why this fits” reason | selected path or preview detail | Explore path |
-| Build | active mission title, outcome, and current state | step list or feedback summary | rubric/evidence requirements in a collapsible supporting panel | Start, Continue, Submit, or Revise |
+| Paths | the active path, progress, and next mission | two compact recommendations with a plain “why this fits” reason | `Explore all careers` search and grouped catalog | Continue building or Change path |
+| Build | the active path's next mission, outcome, and current state | step list or feedback summary | the next one or two stages plus collapsible rubric/evidence requirements | Start, Continue, Submit, or Revise |
 | Opportunities | one relevant opportunity with evidence-gap explanation | saved/current listings in dense rows | source and freshness metadata | Build the missing evidence |
 | Portfolio | verified evidence summary and private/public control | evidence entries grouped by verification state | competencies and share preview | View, share, or manage proof |
+| Profile | active path and current career identity | saved personalization and Career Compass controls | previous paths plus compact account/language settings | Change path or Edit career profile |
 
 The desktop Home layout is one primary workspace column plus a narrow status rail, never a mosaic of equal-sized statistic cards. The mobile Home order is: current path → next quest → review status → recent proof → opportunity. A learner should not need to scroll past a scorecard before discovering what to do.
 
@@ -640,22 +685,40 @@ HOME
   recent evidence
   explained opportunity
 
+CAREER COMPASS
+  1 of 5: interests
+  2 of 5: preferred work
+  3 of 5: device and connectivity access
+  4 of 5: weekly capacity and immediate outcome
+  5 of 5: prior experience
+  └─ result: one recommendation + two alternatives + why each fits
+      └─ confirm one active path
+
 PATHS
-  interest selection
-  recommended paths (operational, controlled-pilot, or preview label)
-  └─ path detail: outcome, device needs, time to first proof, stages
+  path spine: active path / current stage / next mission / proof target
+  why this fits
+  two recommended alternatives
+  └─ explore all careers: search + grouped catalog
+      └─ preview → confirm change → preserve previous progress
 
 BUILD
-  mission header + state
+  active-path spine + mission header + state
   ├─ brief and steps
   ├─ rubric self-check
-  └─ evidence form / reviewer feedback
+  ├─ evidence form / reviewer feedback
+  └─ next one or two active-path missions
 
 PORTFOLIO
   verification filter + sharing control
   ├─ verified evidence
   ├─ awaiting review / needs changes
   └─ private work in progress
+
+PROFILE
+  active path / current stage / change path
+  career preferences / retake Career Compass
+  previous paths / paused work / continuing reviews
+  account / language / privacy / accessibility / sign-out
 ```
 
 Path and mission selection use a structured list or a roadmap node; cards are reserved for an item that can genuinely be opened, selected, or acted on. A Path Preview never presents a yellow “Start” action: it uses `See planned path` and plainly explains that verified missions are not yet available. A Controlled Pilot path always carries a text label next to its status icon; its availability must never be inferred from its colour.
@@ -682,17 +745,20 @@ Portfolio separates **Verified evidence**, **In review**, **Needs changes**, and
 | Feature | Loading | Empty / first use | Error | Success | Partial / constrained |
 |---|---|---|---|---|---|
 | Home | preserve the shell and show a single next-quest skeleton | “Your first path starts with one small choice” plus `Explore paths` | `We could not refresh your progress` plus Retry and last-known state | next quest updates in place with a short confirmation | show last synced time when data is stale |
-| Paths | show six stable tile skeletons | no selection means interests are optional and `Show my paths` remains available | retry recommendations without losing selected interests | selected arenas visibly confirm and recommendations explain why | unavailable paths remain visible as Preview, never vanish |
+| Career Compass | keep completed answers visible and skeleton only the recommendation result | every question includes `Not sure yet`; an incomplete profile can still receive broad recommendations | save failure retains every answer locally and offers Retry | show one recommended path, two alternatives, and the specific reasons before confirmation | unavailable or low-confidence recommendations explain which answer would improve them; never invent a match score |
+| Paths | preserve the active-path summary and skeleton only the recommendations | no active path opens Career Compass with `Find my path`; no alternatives explains how to edit preferences | retry recommendations without losing the active path or saved preferences | changing paths updates every primary surface and confirms preserved progress | preview paths remain searchable but cannot become active until mission availability opens |
+| Path switching | retain the current path until confirmation completes | no eligible alternative links to `Explore all careers` without changing state | failed switch leaves the current path active and provides Retry | confirm the new active path, its next mission, and that prior work was preserved | old drafts become Paused, reviews continue, requested revisions remain in Portfolio, and closed pilot paths cannot be activated |
 | Build draft | show the mission frame before resources load | no active mission shows one recommended mission and `Explore paths` | field-level validation; failed submit preserves every input | saved timestamp and one concise confirmation | offline draft label, queued submit, inaccessible link = `Needs attention`, not fail |
 | Review | show an unobtrusive status row | no submissions explains what evidence becomes after review | delayed review shows target missed and support route | verified state links straight to portfolio | reviewer conflict or appeal has a neutral private status, never a public warning |
 | Portfolio | evidence row skeletons preserve grouping | explain private-by-default proof and link to Build | share-link failure leaves proof private and gives Retry | copy confirmation and recipient preview | revoked/expired proof stays in history with a plain reason and appeal link |
+| Profile | keep account settings usable while career data loads | missing personalization offers `Complete Career Compass`; no previous paths hides that section | failed preference save retains edits and leaves the active path unchanged | changed preferences refresh recommendations without silently switching paths | paused drafts and continuing reviews are grouped under their previous path; Portfolio remains the owner of evidence |
 | Opportunities | dense listing skeletons | one relevant example plus `Explore paths` | retain saved opportunities and show source error separately | save state is immediate and reversible | stale or unknown requirement displays its freshness/unknown label rather than a false readiness score |
 
 ### Emotional journey
 
 | Moment | Learner feeling | Design response |
 |---|---|---|
-| First sign-in | uncertain, possibly behind | one interest question, no forced career decision, no empty dashboard metrics |
+| First sign-in | uncertain, possibly behind | five short Career Compass steps with `Not sure yet`, saved progress, one explained recommendation, two alternatives, and no empty dashboard metrics |
 | Recommended path | curious but sceptical | show why it fits, device requirement, and the first concrete output before asking for commitment |
 | Starting Build | cautious | visible outcome, short time estimate, rubric, and local-save assurance reduce the fear of wasting effort |
 | Submitting work | vulnerable | clear snapshot, no hidden scoring language, and an expected review window |
@@ -704,13 +770,17 @@ At five seconds, the screen must answer “What is my next move?” At five minu
 
 ### Component grammar and visual rules
 
+- **Path spine:** a 2px Teal route with labelled stage nodes; Warm Yellow marks only the current action and Green marks only completed or verified states. Desktop places it beside or above the workspace; mobile converts it to a compact horizontal stage summary rather than squeezing the full diagram.
 - **Quest row:** the primary interactive unit; left-aligned outcome and status, concise metadata, and one right-aligned action. It may use a 2px directional rule tied to the roadmap, not a decorative card grid.
+- **Recommendation row:** a compact selectable row with one career-specific line icon, title, first proof, readiness, and one sentence explaining why it fits. Recommendations never become three equal promotional cards.
 - **Path status label:** icon + text + plain-language explanation. Use Teal for active learning, Green only for completion/verified evidence, Yellow only for the one current action or deadline.
 - **Level/XP:** compact inline status near the current path; never a full-width hero card and never adjacent to opportunity readiness.
+- **Cross-path progress:** show only the active path's XP/level in Home, Paths, and Build. Profile may list previous path levels in subdued rows; never combine them into a global career score.
 - **Roadmap node:** a central stage node with connected branches for skills/proof targets on desktop; a horizontal stage selector plus an expandable detail panel on mobile.
 - **Feedback item:** one rubric criterion, decision, explanation, and `Go to fix` action; do not show an unprioritised wall of reviewer text.
-- **Typography:** H1 is 30px mobile / 38px desktop; body is at least 16px; Burmese uses Padauk with generous line height. Latin labels may be uppercase; Burmese labels never are.
+- **Typography:** H1 is 30px mobile / 34px desktop; H2 is 22px mobile / 24px desktop; H3 is 18px; body is 16px; secondary copy is 14px; metadata is 13px; labels are 12px. Burmese uses Padauk with generous line height. Latin labels may be uppercase; Burmese labels never are.
 - **Surfaces:** 8px control radius, 10–12px interactive surfaces, 1px cool-slate lines, and only functional shadows. Do not add purple gradients, repeated icon circles, coloured left-border cards, or centred SaaS-style feature grids.
+- **Icons and graphics:** use one Lucide-style outlined icon family at 18px, 20px, or 24px with consistent stroke weight. Every career has a specific symbol; generic `+` and `↗` glyphs are not career identities. Custom spot graphics are reserved for the Career Compass result and meaningful empty states, never repeated on every row.
 - **Motion:** only 160–240ms state transitions for saving, status change, expanding roadmap detail, and copy confirmation. Respect `prefers-reduced-motion`; no streak fire, confetti, or bounce reward animation.
 
 ### Responsive and accessibility requirements
@@ -719,12 +789,13 @@ At five seconds, the screen must answer “What is my next move?” At five minu
 |---|---|
 | 1280px+ | 232–256px rail; 12-column content grid; Home status rail and Build rubric panel may remain visible beside the primary work area |
 | 768–1279px | compact rail or labelled drawer; 8-column grid; status rail moves beneath the primary action, not above it |
-| 360–767px | 16px gutters; fixed five-item bottom navigation; one-column mission flow; sticky action above the safe area; roadmap uses detail-on-select rather than a squeezed tree |
+| 360–767px | 16px gutters; fixed five-item bottom navigation on root pages; mission detail Focus Mode replaces it with Back-to-Build plus one sticky action above the safe area; one-column mission flow; roadmap uses detail-on-select rather than a squeezed tree |
 
 - All interactive controls have a 44px minimum target, visible focus treatment, and a label that remains visible after content is entered.
 - Navigation uses semantic `nav` landmarks; Build uses one H1 followed by ordered H2 sections; status messages use a polite live region only when the status actually changes.
 - Every state has text in addition to colour and icon. Body text meets 4.5:1 contrast; verification and error text are not reduced below 16px.
 - Tab order matches visual order; desktop sidebar, avatar menu, roadmap nodes, Build steps, and share controls must be keyboard operable. Escape closes menus/drawers and returns focus to their trigger.
+- Entering mobile Mission Focus Mode moves focus to the mission H1. Back restores focus to the mission row that launched the workspace. The sticky action appears once in the accessibility tree and never duplicates an equivalent inline control.
 - English and Burmese are tested independently at 320px, 360px, and 200% zoom. Strings may wrap; navigation labels and actions may not truncate into ambiguity.
 
 ### Visual work explicitly deferred
@@ -746,26 +817,56 @@ At five seconds, the screen must answer “What is my next move?” At five minu
 
 Synthesized from this design review. Each task is a build action, not a visual polish suggestion.
 
-- [ ] **T1 (P1, human: ~3h / CC: ~25min)** — App shell — replace numbered Mission/Proof navigation with Home, Paths, Build, Opportunities, and Portfolio; move profile/settings/language into the avatar menu and provide matching labelled mobile navigation.
-  - Surfaced by: Information Architecture — the current shell hard-codes one mission and treats proof as a disconnected destination.
-  - Files: `components/app/app-shell.tsx`, `app/globals.css`, route pages.
-  - Verify: desktop and 360px navigation expose every destination and display only the selected language.
-- [ ] **T2 (P1, human: ~5h / CC: ~45min)** — Paths and Home — add lightweight interest selection, transparent path-status labels, recommendations, and a single dominant next-quest state without auto-assigning a career.
-  - Surfaced by: Information Architecture and User Journey — first-time learners need a concrete first action instead of a static dashboard.
-  - Files: `app/[locale]/app/today/page.tsx`, new Paths route/components, career-path domain data.
-  - Verify: a new learner can inspect a recommendation and start the Content Creator mission within one session.
-- [ ] **T3 (P1, human: ~6h / CC: ~55min)** — Build lifecycle — turn the one hard-coded mission route into an explicit stateful workspace for Available, In progress, Ready to submit, In review, Needs changes, Not verified, and Verified.
-  - Surfaced by: Interaction State Coverage — each state needs an obvious next action and preserved local work.
-  - Files: mission route/components, submission API presentation layer, `lib/offline/draft-store.ts`.
-  - Verify: submit → needs changes → revise → verified can be completed without losing draft content or navigating to a separate proof concept.
-- [ ] **T4 (P1, human: ~4h / CC: ~35min)** — Portfolio — group evidence by verification state, show evidence provenance and link limitations, and make public sharing an explicit private-by-default preview flow.
-  - Surfaced by: User Journey and Design System Alignment — proof must read as credible evidence, not as a gamified scorecard.
-  - Files: `app/[locale]/app/proof/page.tsx`, proof components, sharing controls.
-  - Verify: users can distinguish private work, in-review work, and each verification tier without relying on colour.
-- [ ] **T5 (P2, human: ~4h / CC: ~35min)** — Responsive/a11y state system — implement mobile sticky Build actions, labelled status feedback, keyboard navigation, focus return, empty/error/stale states, and independent English/Burmese layout tests.
-  - Surfaced by: Responsive & Accessibility — the current plan needs deliberate state behavior on low-bandwidth phones, not only responsive stacking.
-  - Files: app shell, route components, global styles, i18n messages, interaction tests.
-  - Verify: 320px/360px and 200% zoom flows retain clear labels, 44px controls, visible focus, and no ambiguous truncation.
+- [ ] **T1 (P1, human: ~10h / CC: ~90min)** — Personalization model — persist Career Compass answers, exactly one active path, previous-path history, paused work, and path-scoped XP/levels.
+  - Surfaced by: Information Architecture and Unresolved Decisions — the current profile has no active-path or preference model and the XP total is global.
+  - Files: `supabase/migrations/`, `lib/domain/types.ts`, `lib/data/app-data.ts`, `app/api/profile/route.ts`.
+  - Verify: path switching is atomic, prior progress survives, reviews continue, Content Creator XP never changes Frontend level, and RLS prevents cross-user access.
+- [ ] **T2 (P1, human: ~12h / CC: ~2h)** — Career Compass — replace the frontend-only placement form with five save-as-you-go steps and an explained one-plus-two recommendation result.
+  - Surfaced by: User Journey — the current assessment feels like a technical exam before the learner understands available careers.
+  - Files: `components/onboarding/onboarding-form.tsx`, onboarding route, profile/recommendation API, offline draft storage, i18n messages.
+  - Verify: Back, refresh, offline recovery, `Not sure yet`, partial answers, save failure, retry, confirmation, English, and Burmese all preserve valid state.
+- [ ] **T3 (P1, human: ~10h / CC: ~90min)** — Personalized Paths — show the active path first, two explained alternatives second, and move the complete grouped catalog behind search and progressive disclosure.
+  - Surfaced by: Information Architecture — the current equal card wall gives every career the same weight and does not identify the learner's direction.
+  - Files: `app/[locale]/app/paths/page.tsx`, career recommendation/domain data, path-switch API/components.
+  - Verify: no more than two alternatives appear by default; preview paths cannot become active; a failed switch leaves the old path active; all primary surfaces update after success.
+- [ ] **T4 (P1, human: ~8h / CC: ~75min)** — Path Spine and visual grammar — replace Paths and Build card mosaics with the shared directional spine, compact rows, compact type scale, and career-specific Lucide icons.
+  - Surfaced by: AI Slop Risk and Design System Alignment — stacked panels, generic `+`/`↗` symbols, and oversized headings make the app feel generated and obscure hierarchy.
+  - Files: new Path Spine components, `app/[locale]/app/paths/page.tsx`, `app/[locale]/app/build/page.tsx`, `app/globals.css`, `DESIGN.md`.
+  - Verify: Paths and Build remain understandable with shadows removed; one Warm Yellow action per viewport; H1/body/metadata resolve to 34/16/13px desktop; no equal three-column card grid begins a primary app page.
+- [ ] **T5 (P1, human: ~10h / CC: ~90min)** — Focused Build lifecycle — render only the active path's mission and specify Available, In progress, Ready to submit, In review, Needs changes, Not verified, and Verified states.
+  - Surfaced by: Interaction State Coverage — Build currently mixes Frontend, Content Creator, and Video missions while offering several competing actions.
+  - Files: `app/[locale]/app/build/page.tsx`, mission routes/components, submission presentation layer, `lib/offline/draft-store.ts`.
+  - Verify: submit → needs changes → revise → verified works without lost drafts; switching paths pauses drafts without mixing them into the new Build workspace.
+- [ ] **T6 (P1, human: ~7h / CC: ~60min)** — Career Profile — replace the showcase/settings mixture with Career Profile, Personalization, Previous Paths, and compact Account & Language sections.
+  - Surfaced by: Unresolved Design Decisions — Profile currently duplicates Portfolio while failing to expose the preferences that drive recommendations.
+  - Files: `app/[locale]/app/profile/page.tsx`, profile data/API, Profile components, `app/[locale]/app/proof/page.tsx`.
+  - Verify: changing preferences never silently changes the active path; language changes from Profile; paused work remains discoverable; Portfolio alone owns evidence presentation and sharing.
+- [ ] **T7 (P2, human: ~8h / CC: ~70min)** — Responsive, accessibility, and state verification — implement Mission Focus Mode, sticky state actions, focus restoration, and full loading/empty/error/success/partial coverage.
+  - Surfaced by: Responsive & Accessibility — the new journey must remain understandable on low-bandwidth phones rather than simply stacking desktop panels.
+  - Files: app shell, onboarding/Paths/Build/Profile components, global styles, i18n messages, component and end-to-end tests.
+  - Verify: 320px/360px, 200% zoom, keyboard-only, screen reader landmarks, reduced motion, English/Burmese wrapping, offline recovery, and mobile Back-to-Build all pass without ambiguous truncation.
+
+## Engineering Architecture Decisions
+
+### First release boundary
+
+Ship the complete personalized learner loop for Frontend Developer and the operational Content Creator pilot. Other career paths remain searchable, clearly labelled previews until they have a real first mission and reviewer capacity. The underlying track model stays extensible; the learner-facing flow must not pretend a preview is operational.
+
+### Authoritative path state
+
+Use two authenticated Postgres RPCs, `save_career_compass` and `switch_active_path`, as the only write boundary for Career Compass confirmation and later path changes. Each transaction must validate `auth.uid()`, enforce one active path, preserve path history and paused mission work, emit an audit event, and return the canonical active-path snapshot. Neither browser state nor a multi-call Next.js route may coordinate these writes.
+
+### Eligibility and shared read model
+
+Track availability is database-owned: `operational`, `controlled_pilot`, or `preview`, with eligibility enforced inside the switch RPC. Preview paths cannot become active even if an API caller bypasses the UI. Every primary learner surface reads `get_active_path_dashboard`, a typed server read model that returns the active path, availability, next mission, path-scoped progress and XP, and paused-work summary. This replaces frontend-only dashboard assumptions and page-by-page state assembly.
+
+### Work, review, and proof remain separate
+
+Add `learner_mission_work` to record a learner's mission/path context and whether unfinished work is active or paused. It is not a submission-state value. Submission versions, reviewer assignment, decisions, and proof retain their existing immutable lifecycle; local draft contents remain device-private and are labelled as such. A path change pauses only the work context and never interrupts an in-flight review.
+
+### Private personalization
+
+Store Career Compass answers in a separate learner-only preferences table with ownership RLS. `learner_profiles` continues to carry the alias needed by reviewer views, but reviewers cannot read interests, device/connectivity, capacity, or prior-experience answers. Recommendation reasons are derived server-side from the learner's own preferences and never turn those private answers into reviewer-visible profile fields.
 
 ## Dependencies
 
@@ -777,7 +878,7 @@ Synthesized from this design review. Each task is a build action, not a visual p
 
 ## The Assignment
 
-Before treating the redesign as validated, observe five Myanmar learners complete the lightweight interest selection, inspect the recommended paths, start the Content Creator mission, and find where their eventual proof will appear. Do not guide them. Record every hesitation, then ask each learner: “What do points mean here?” and “What would an employer trust?”
+Before treating the redesign as validated, observe five Myanmar learners complete Career Compass, inspect the explained recommendation, confirm or change one active path, start that path's mission, and find where eventual proof will appear. Do not guide them. Record every hesitation, then ask each learner: “What do points mean here?” and “What would an employer trust?”
 
 ## What I Noticed About How You Think
 
@@ -803,10 +904,10 @@ Before treating the redesign as validated, observe five Myanmar learners complet
 |--------|---------|-----|------|--------|----------|
 | CEO Review | `/plan-ceo-review` | Scope & strategy | 0 | — | Not run |
 | Codex Review | `/codex review` | Independent 2nd opinion | 0 | — | Not run |
-| Eng Review | `/plan-eng-review` | Architecture & tests (required) | 0 | NOT CLEARED (PLAN) | Required before shipping |
-| Design Review | `/plan-design-review` | UI/UX gaps | 1 | CLEAR (FULL) | score: 6.5/10 → 9.5/10, 16 decisions |
+| Eng Review | `/plan-eng-review` | Architecture & tests (required) | 1 | CLEAR (DIFF via `/ship`) | 1 informational sidebar issue, auto-fixed; review predates the new personalization plan |
+| Design Review | `/plan-design-review` | UI/UX gaps | 2 | CLEAR (FULL) | score: 3/10 → 10/10, 9 decisions |
 | DX Review | `/plan-devex-review` | Developer experience gaps | 0 | — | Not run |
 
-**VERDICT:** Design review is clear; an engineering plan review is required before implementation/ship decisions.
+**VERDICT:** DESIGN CLEAR + prior ENG DIFF CLEAR; run `/plan-eng-review` on the new personalization, switching, and path-XP architecture before implementation.
 
 NO UNRESOLVED DECISIONS
