@@ -3,7 +3,7 @@ import { createClient } from "@/lib/supabase/server";
 import { ok, problem } from "@/lib/http";
 
 const schema = z.object({
-  missionKey: z.literal("responsive-profile-card"),
+  missionKey: z.enum(["responsive-profile-card", "content-creator-awareness"]),
   repositoryUrl: z.string().url().max(500),
   deploymentUrl: z.string().url().max(500),
   screenshotUrl: z.union([z.literal(""), z.string().url().max(500)]),
@@ -12,7 +12,7 @@ const schema = z.object({
 
 export async function POST(request: Request) {
   const parsed = schema.safeParse(await request.json().catch(() => null));
-  if (!parsed.success) return problem(400, "invalid-submission", "Add valid repository and deployment links plus a 40-character reflection.");
+  if (!parsed.success) return problem(400, "invalid-submission", "Add two valid work links plus a 40-character reflection.");
   const supabase = await createClient();
   const { data: auth } = await supabase.auth.getUser();
   if (!auth.user) return problem(401, "authentication-required", "Sign in before submitting work.");
