@@ -21,7 +21,6 @@ export default async function PathsPage({ searchParams }: { searchParams: Promis
   return (
     <div className="app-page paths-page">
       <section className="page-heading">
-        <span className="eyebrow">CHOOSE YOUR ARENA</span>
         <h1>Find a path that fits the work you want to do.</h1>
         <p>Lan Pya turns broad digital careers into small, phone-friendly steps and honest proof. Start with one arena; you can change direction later.</p>
       </section>

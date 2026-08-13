@@ -1,4 +1,6 @@
 :root {
+  --sidebar-width: 264px;
+  --sidebar-width-icon: 76px;
   --navy: #0f172a;
   --navy-2: #0a2135;
   --teal: #0f766e;
@@ -36,8 +38,16 @@ body {
   margin: 0;
   color: var(--slate);
   background: var(--canvas);
-  font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", "Padauk", sans-serif;
+  font-family: var(--font-ui), "Avenir Next", "Segoe UI", sans-serif;
+  font-size: 16px;
+  line-height: 1.55;
   -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+html[lang="my"] body {
+  font-family: var(--font-myanmar), "Myanmar Text", sans-serif;
+  line-height: 1.75;
 }
 
 button,
@@ -64,6 +74,23 @@ h3,
 h4,
 p {
   margin-top: 0;
+}
+
+h1,
+h2,
+h3,
+h4 {
+  color: var(--navy);
+  font-family: var(--font-ui), "Avenir Next", "Segoe UI", sans-serif;
+  font-weight: 750;
+  text-wrap: balance;
+}
+
+html[lang="my"] h1,
+html[lang="my"] h2,
+html[lang="my"] h3,
+html[lang="my"] h4 {
+  font-family: var(--font-myanmar), "Myanmar Text", sans-serif;
 }
 
 .boot-screen {
@@ -4268,5 +4295,637 @@ dt { color:var(--muted); font-size:9px; font-weight:800; text-transform:uppercas
   }
   .demo-login-card {
     padding: 12px;
+  }
+}
+
+/* Impeccable app refinement — shadcn sidebar composition */
+.sidebar-provider {
+  min-height: 100svh;
+  background: var(--canvas);
+}
+
+.app-sidebar {
+  position: fixed;
+  z-index: 40;
+  inset: 0 auto 0 0;
+  display: flex;
+  width: var(--sidebar-width);
+  min-height: 100svh;
+  flex-direction: column;
+  color: #dbe5ef;
+  background: var(--navy);
+  border-right: 1px solid #1e293b;
+  transition: transform 200ms ease-in-out;
+}
+
+.sidebar-header {
+  display: flex;
+  min-height: 80px;
+  align-items: center;
+  padding: 16px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.sidebar-brand {
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  gap: 12px;
+  color: white;
+}
+
+.sidebar-brand .brand-mark {
+  width: 40px;
+  height: 40px;
+  flex-basis: 40px;
+}
+
+.sidebar-brand-copy,
+.sidebar-account-copy {
+  display: grid;
+  min-width: 0;
+  gap: 2px;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.sidebar-brand-copy strong {
+  font-size: 16px;
+  font-weight: 750;
+  letter-spacing: -0.02em;
+}
+
+.sidebar-brand-copy small {
+  color: #93a4b8;
+  font-size: 12px;
+}
+
+.sidebar-content {
+  flex: 1;
+  overflow-x: hidden;
+  overflow-y: auto;
+  padding: 14px 12px;
+}
+
+.sidebar-group + .sidebar-group {
+  margin-top: 18px;
+}
+
+.sidebar-group-label {
+  min-height: 28px;
+  padding: 6px 10px;
+  color: #73849a;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.sidebar-menu {
+  display: grid;
+  gap: 4px;
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+
+.sidebar-menu-item {
+  min-width: 0;
+}
+
+.sidebar-menu-button > a {
+  position: relative;
+  display: flex;
+  min-height: 44px;
+  align-items: center;
+  gap: 12px;
+  padding: 0 12px;
+  overflow: hidden;
+  color: #aebdcd;
+  font-size: 14px;
+  font-weight: 650;
+  border-radius: 8px;
+  white-space: nowrap;
+  transition: color 160ms ease, background-color 160ms ease, box-shadow 160ms ease;
+}
+
+.sidebar-menu-button > a svg {
+  width: 19px;
+  height: 19px;
+  flex: 0 0 19px;
+  stroke-width: 1.8;
+}
+
+.sidebar-menu-button > a:hover {
+  color: white;
+  background: rgba(255, 255, 255, 0.07);
+}
+
+.sidebar-menu-button[data-active="true"] > a {
+  color: white;
+  background: rgba(15, 118, 110, 0.5);
+  box-shadow: inset 0 0 0 1px rgba(94, 234, 212, 0.16);
+}
+
+.sidebar-menu-button[data-active="true"] > a svg {
+  color: #8de0d7;
+}
+
+.sidebar-menu-button > a:focus-visible,
+.sidebar-brand:focus-visible,
+.sidebar-account:focus-visible {
+  outline: 2px solid #fbbf24;
+  outline-offset: 2px;
+}
+
+.sidebar-footer {
+  display: grid;
+  gap: 10px;
+  padding: 12px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.sidebar-account {
+  display: flex;
+  min-height: 58px;
+  align-items: center;
+  gap: 11px;
+  padding: 8px;
+  color: #e7eef6;
+  border-radius: 9px;
+  transition: background-color 160ms ease;
+}
+
+.sidebar-account:hover {
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.sidebar-account-avatar {
+  display: grid;
+  width: 44px;
+  height: 44px;
+  flex: 0 0 44px;
+  place-items: center;
+  color: var(--navy);
+  font-size: 12px;
+  font-weight: 800;
+  background: var(--yellow);
+  border-radius: 9px;
+}
+
+.sidebar-account-copy strong {
+  overflow: hidden;
+  font-size: 13px;
+  text-overflow: ellipsis;
+}
+
+.sidebar-account-copy small {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  color: #8393a8;
+  font-size: 11px;
+}
+
+.sidebar-account-copy .live-dot {
+  width: 6px;
+  height: 6px;
+  box-shadow: none;
+}
+
+.sidebar-rail {
+  position: absolute;
+  z-index: 2;
+  top: 0;
+  right: -22px;
+  bottom: 0;
+  width: 44px;
+  padding: 0;
+  background: transparent;
+  border: 0;
+}
+
+.sidebar-rail::after {
+  position: absolute;
+  top: 16px;
+  right: 21px;
+  bottom: 16px;
+  width: 1px;
+  background: transparent;
+  content: "";
+  transition: background-color 160ms ease;
+}
+
+.sidebar-rail:hover::after,
+.sidebar-rail:focus-visible::after {
+  background: #5eead4;
+}
+
+.sidebar-inset {
+  min-width: 0;
+  min-height: 100svh;
+  margin-left: var(--sidebar-width);
+  background: var(--canvas);
+}
+
+.app-topbar {
+  position: sticky;
+  z-index: 25;
+  top: 0;
+  display: flex;
+  height: 68px;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 28px;
+  background: rgba(255, 255, 255, 0.96);
+  border-bottom: 1px solid var(--line);
+  backdrop-filter: blur(14px);
+}
+
+.app-topbar-left {
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  gap: 12px;
+}
+
+.sidebar-trigger {
+  display: inline-grid;
+  width: 44px;
+  height: 44px;
+  flex: 0 0 44px;
+  place-items: center;
+  padding: 0;
+  color: var(--slate);
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  transition: color 160ms ease, background-color 160ms ease, border-color 160ms ease;
+}
+
+.sidebar-trigger:hover {
+  color: var(--teal);
+  background: var(--teal-soft);
+  border-color: rgba(15, 118, 110, 0.14);
+}
+
+.sidebar-trigger svg {
+  width: 19px;
+  height: 19px;
+}
+
+.app-topbar-context {
+  display: grid;
+  min-width: 0;
+  gap: 1px;
+}
+
+.app-topbar-context strong {
+  color: var(--navy);
+  font-size: 14px;
+  font-weight: 750;
+}
+
+.app-topbar-context span {
+  overflow: hidden;
+  color: var(--muted);
+  font-size: 12px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.app-avatar {
+  display: grid;
+  width: 44px;
+  height: 44px;
+  place-items: center;
+  color: white;
+  font-size: 11px;
+  font-weight: 750;
+  background: var(--navy);
+  border: 2px solid white;
+  border-radius: 50%;
+  box-shadow: 0 0 0 1px var(--line-strong);
+}
+
+[data-sidebar-state="collapsed"] .app-sidebar:not([data-mobile="true"]) {
+  width: var(--sidebar-width-icon);
+}
+
+[data-sidebar-state="collapsed"] .sidebar-inset {
+  margin-left: var(--sidebar-width-icon);
+}
+
+[data-sidebar-state="collapsed"] .sidebar-header,
+[data-sidebar-state="collapsed"] .sidebar-footer {
+  padding-right: 12px;
+  padding-left: 12px;
+}
+
+[data-sidebar-state="collapsed"] .sidebar-brand {
+  width: 100%;
+  justify-content: center;
+}
+
+[data-sidebar-state="collapsed"] .sidebar-brand-copy,
+[data-sidebar-state="collapsed"] .sidebar-account-copy,
+[data-sidebar-state="collapsed"] .sidebar-menu-label,
+[data-sidebar-state="collapsed"] .sidebar-group-label {
+  display: none;
+}
+
+[data-sidebar-state="collapsed"] .sidebar-content {
+  padding-right: 10px;
+  padding-left: 10px;
+}
+
+[data-sidebar-state="collapsed"] .sidebar-menu-button > a,
+[data-sidebar-state="collapsed"] .sidebar-account {
+  justify-content: center;
+  padding-right: 0;
+  padding-left: 0;
+}
+
+/* Typography roles for the task-focused app */
+.sidebar-inset .app-page,
+.sidebar-inset .page {
+  max-width: 1280px;
+  padding: 48px clamp(24px, 3.4vw, 48px) 88px;
+}
+
+.sidebar-inset .page-heading,
+.sidebar-inset .page-intro,
+.sidebar-inset .mission-title {
+  max-width: 780px;
+  margin-bottom: 34px;
+}
+
+.sidebar-inset .page-heading h1,
+.sidebar-inset .page-intro h1,
+.sidebar-inset .mission-title h1 {
+  margin: 0 0 10px;
+  font-size: clamp(32px, 3.4vw, 44px);
+  font-weight: 750;
+  letter-spacing: -0.035em;
+  line-height: 1.1;
+}
+
+.sidebar-inset .page-heading p,
+.sidebar-inset .page-intro p,
+.sidebar-inset .mission-title p {
+  max-width: 68ch;
+  color: var(--muted);
+  font-size: 16px;
+  line-height: 1.65;
+  text-wrap: pretty;
+}
+
+.sidebar-inset .eyebrow {
+  margin-bottom: 9px;
+  font-size: 11px;
+  letter-spacing: 0.1em;
+}
+
+.sidebar-inset .panel {
+  border-radius: 12px;
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04);
+}
+
+.sidebar-inset .section-heading {
+  margin-bottom: 18px;
+}
+
+.sidebar-inset .section-heading h2 {
+  font-size: 26px;
+  font-weight: 750;
+  letter-spacing: -0.025em;
+}
+
+.sidebar-inset .arena-switcher strong {
+  font-size: 15px;
+}
+
+.sidebar-inset .arena-switcher small,
+.sidebar-inset .section-note {
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.sidebar-inset .path-preview {
+  min-height: 304px;
+  padding: 24px;
+}
+
+.sidebar-inset .path-preview h3 {
+  font-size: 20px;
+  font-weight: 750;
+  line-height: 1.25;
+}
+
+.sidebar-inset .path-preview p,
+.sidebar-inset .mission-library p,
+.sidebar-inset .pilot-brief > p,
+.sidebar-inset .pilot-note > p,
+.sidebar-inset .build-hero p {
+  font-size: 15px;
+  line-height: 1.65;
+}
+
+.sidebar-inset .path-meta,
+.sidebar-inset .status-tag,
+.sidebar-inset .quest-tags span {
+  font-size: 11px;
+}
+
+.sidebar-inset .mission-stage-tag {
+  display: inline-flex;
+  margin-bottom: 14px;
+}
+
+.sidebar-inset .path-disabled,
+.sidebar-inset .quest-footer {
+  font-size: 13px;
+}
+
+.sidebar-inset .build-hero {
+  padding: 30px;
+}
+
+.sidebar-inset .build-hero h2 {
+  font-size: 28px;
+  font-weight: 750;
+}
+
+.sidebar-inset .mission-library h3 {
+  font-size: 18px;
+}
+
+.sidebar-inset .quest-list strong {
+  font-size: 15px;
+}
+
+.sidebar-inset .quest-list small,
+.sidebar-inset .quest-row small {
+  font-size: 13px;
+  line-height: 1.45;
+}
+
+.sidebar-inset .submission-form label,
+.sidebar-inset .review-actions label,
+.sidebar-inset .stack-form label {
+  font-size: 14px;
+}
+
+.sidebar-inset .submission-form input,
+.sidebar-inset .submission-form textarea,
+.sidebar-inset .review-actions textarea,
+.sidebar-inset .stack-form input,
+.sidebar-inset .stack-form select {
+  min-height: 46px;
+  font-size: 16px;
+  line-height: 1.5;
+  border-radius: 8px;
+}
+
+.sidebar-inset .draft-state {
+  font-size: 12px;
+}
+
+.sidebar-inset .mission-guardrail,
+.sidebar-inset .submission-note {
+  display: grid;
+  gap: 4px;
+  padding: 16px;
+  border: 1px solid rgba(15, 118, 110, 0.18);
+  border-radius: 8px;
+}
+
+.sidebar-inset .submission-note span,
+.sidebar-inset .mission-guardrail p {
+  font-size: 14px;
+  line-height: 1.55;
+}
+
+.sidebar-inset .metric-grid span,
+.sidebar-inset .metric-grid small,
+.sidebar-inset .selected-track-heading > span,
+.sidebar-inset .roadmap-legend,
+.sidebar-inset .roadmap-skill-node,
+.sidebar-inset .roadmap-detail-section li,
+.sidebar-inset .readiness-grid strong,
+.sidebar-inset .readiness-grid ul,
+.sidebar-inset .readiness-grid p,
+.sidebar-inset .opportunity-card footer {
+  font-size: 12px;
+}
+
+.sidebar-inset .selected-track-heading p,
+.sidebar-inset .roadmap-detail-panel > p,
+.sidebar-inset .opportunity-header p,
+.sidebar-inset .proof-card-top p {
+  font-size: 14px;
+  line-height: 1.55;
+}
+
+.sidebar-scrim {
+  display: none;
+}
+
+@media (max-width: 860px) {
+  .app-sidebar[data-mobile="true"] {
+    width: min(288px, 86vw);
+    box-shadow: 18px 0 50px rgba(2, 8, 23, 0.28);
+  }
+
+  .app-sidebar[data-mobile="true"][data-state="collapsed"] {
+    transform: translateX(-105%);
+    pointer-events: none;
+  }
+
+  .app-sidebar[data-mobile="true"][data-state="expanded"] {
+    transform: translateX(0);
+  }
+
+  .sidebar-scrim {
+    position: fixed;
+    z-index: 35;
+    inset: 0;
+    display: block;
+    padding: 0;
+    background: rgba(15, 23, 42, 0.45);
+    border: 0;
+    backdrop-filter: blur(2px);
+  }
+
+  .sidebar-rail {
+    display: none;
+  }
+
+  .sidebar-inset,
+  [data-sidebar-state="collapsed"] .sidebar-inset {
+    margin-left: 0;
+  }
+
+  .app-topbar {
+    height: 64px;
+    padding: 0 16px;
+  }
+
+  .sidebar-inset .app-page,
+  .sidebar-inset .page {
+    padding: 32px 18px 56px;
+  }
+
+  .sidebar-inset .page-heading,
+  .sidebar-inset .page-intro,
+  .sidebar-inset .mission-title {
+    margin-bottom: 28px;
+  }
+
+  .sidebar-inset .page-heading h1,
+  .sidebar-inset .page-intro h1,
+  .sidebar-inset .mission-title h1 {
+    font-size: clamp(30px, 8vw, 36px);
+  }
+
+  .sidebar-inset .build-hero,
+  .sidebar-inset .path-preview,
+  .sidebar-inset .pilot-brief,
+  .sidebar-inset .pilot-note,
+  .sidebar-inset .pilot-form,
+  .sidebar-inset .submission-form {
+    padding: 20px;
+  }
+}
+
+@media (max-width: 520px) {
+  .app-topbar-context span {
+    display: none;
+  }
+
+  .app-topbar-context strong {
+    font-size: 13px;
+  }
+
+  .sidebar-inset .page-heading h1,
+  .sidebar-inset .page-intro h1,
+  .sidebar-inset .mission-title h1 {
+    font-size: 30px;
+  }
+
+  .sidebar-inset .page-heading p,
+  .sidebar-inset .page-intro p,
+  .sidebar-inset .mission-title p {
+    font-size: 16px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .app-sidebar,
+  .sidebar-inset,
+  .sidebar-menu-button > a,
+  .sidebar-trigger {
+    transition: none;
   }
 }

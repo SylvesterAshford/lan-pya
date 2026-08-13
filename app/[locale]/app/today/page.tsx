@@ -11,7 +11,7 @@ export default async function TodayPage() {
   const level = Number(dashboard?.level ?? 1);
   return (
     <div className="app-page">
-      <section className="page-heading"><span className="eyebrow">YOUR NEXT HONEST STEP</span><h1>What will you build today?</h1><p>Lan Pya keeps the path practical: choose a mission, make something real, and turn it into evidence you can carry forward.</p></section>
+      <section className="page-heading"><h1>What will you build today?</h1><p>Lan Pya keeps the path practical: choose a mission, make something real, and turn it into evidence you can carry forward.</p></section>
       <section className="metric-grid" aria-label="Journey summary">
         <article><span>Roadmap</span><strong>{progress}%</strong><small>{completed} of {roadmap.length} milestones grounded</small></article>
         <article><span>Practice rhythm</span><strong>{streak} days</strong><small>Consistency without pressure</small></article>
