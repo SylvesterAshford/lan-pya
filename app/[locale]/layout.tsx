@@ -59,7 +59,7 @@ export default async function LocaleLayout({
 
   return (
     <html lang={locale} data-scroll-behavior="smooth">
-      <body className={`${plusJakartaSans.variable} ${padauk.variable} ${plusJakartaSans.className}`}>
+      <body className={`${plusJakartaSans.variable} ${padauk.variable} ${locale === "my" ? padauk.className : plusJakartaSans.className}`}>
         <NextIntlClientProvider messages={messages}>
           {children}
           <ServiceWorkerRegistration />

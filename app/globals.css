@@ -23,6 +23,10 @@
   --shadow-sm: 0 1px 2px rgba(15, 23, 42, 0.05);
   --shadow-md: 0 12px 32px rgba(15, 23, 42, 0.09);
   --shadow-lg: 0 28px 70px rgba(3, 13, 28, 0.3);
+  --app-body-size: 15px;
+  --app-body-leading: 1.58;
+  --app-heading-leading: 1.2;
+  --app-label-size: 11px;
 }
 
 * {
@@ -39,15 +43,20 @@ body {
   color: var(--slate);
   background: var(--canvas);
   font-family: var(--font-ui), "Avenir Next", "Segoe UI", sans-serif;
-  font-size: 16px;
-  line-height: 1.55;
+  font-size: var(--app-body-size);
+  line-height: var(--app-body-leading);
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
 }
 
 html[lang="my"] body {
   font-family: var(--font-myanmar), "Myanmar Text", sans-serif;
-  line-height: 1.75;
+  --app-body-size: 16px;
+  --app-body-leading: 1.68;
+  --app-heading-leading: 1.34;
+  --app-label-size: 12px;
+  font-size-adjust: from-font;
+  line-height: var(--app-body-leading);
 }
 
 button,
@@ -84,6 +93,7 @@ h4 {
   font-family: var(--font-ui), "Avenir Next", "Segoe UI", sans-serif;
   font-weight: 750;
   text-wrap: balance;
+  line-height: var(--app-heading-leading);
 }
 
 html[lang="my"] h1,
@@ -91,6 +101,9 @@ html[lang="my"] h2,
 html[lang="my"] h3,
 html[lang="my"] h4 {
   font-family: var(--font-myanmar), "Myanmar Text", sans-serif;
+  font-weight: 700;
+  letter-spacing: 0;
+  line-height: var(--app-heading-leading);
 }
 
 .boot-screen {
@@ -171,11 +184,24 @@ html[lang="my"] h4 {
 .eyebrow {
   display: block;
   color: var(--teal);
-  font-size: 11px;
+  font-size: var(--app-label-size);
   font-weight: 800;
   letter-spacing: 0.12em;
   line-height: 1.3;
   text-transform: uppercase;
+}
+
+html[lang="my"] .eyebrow {
+  letter-spacing: 0.03em;
+  line-height: 1.5;
+  text-transform: none;
+}
+
+html[lang="my"] .button,
+html[lang="my"] input,
+html[lang="my"] textarea,
+html[lang="my"] select {
+  line-height: 1.4;
 }
 
 .button {
@@ -4768,8 +4794,8 @@ a { color: inherit; text-decoration: none; }
 .seeded-banner span { color:#8a651c; }
 .app-page { width:100%; max-width:1260px; padding:40px 38px 80px; margin:0 auto; }
 .page-heading { max-width:800px; margin-bottom:28px; }
-.page-heading h1 { margin:7px 0 8px; color:var(--navy); font-size:clamp(30px,4vw,44px); letter-spacing:-.045em; line-height:1.08; }
-.page-heading p { max-width:720px; margin:0; color:var(--muted); font-size:15px; line-height:1.7; }
+.page-heading h1 { margin:7px 0 8px; color:var(--navy); font-size:clamp(28px,3.4vw,40px); letter-spacing:-.04em; line-height:var(--app-heading-leading); }
+.page-heading p { max-width:720px; margin:0; color:var(--muted); font-size:14px; line-height:1.68; }
 .metric-grid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:14px; margin-bottom:18px; }
 .metric-grid article { padding:20px; background:#fff; border:1px solid var(--line); border-radius:11px; box-shadow:var(--shadow-sm); }
 .metric-grid span,.metric-grid small { display:block; color:var(--muted); font-size:11px; }

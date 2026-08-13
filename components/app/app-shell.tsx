@@ -14,6 +14,7 @@ import {
 import { usePathname } from "next/navigation";
 import { Link } from "@/i18n/navigation";
 import type { Profile } from "@/lib/domain/types";
+import { getAppCopy, localizeCareerDisplay } from "@/lib/i18n/app-copy";
 import {
   Sidebar,
   SidebarContent,
@@ -55,6 +56,7 @@ export function AppShell({ children, profile, roles, locale }: { children: React
 }
 
 function AppShellContent({ children, profile, roles, locale }: { children: React.ReactNode; profile: Profile; roles: Set<string>; locale: string }) {
+  const c = getAppCopy(locale);
   const pathname = usePathname();
   const { setOpenMobile } = useSidebar();
   const isActive = (path: string) => {
@@ -100,11 +102,11 @@ function AppShellContent({ children, profile, roles, locale }: { children: React
     <>
       <Sidebar aria-label="Primary navigation">
         <SidebarHeader>
-          <Link className="sidebar-brand" href="/" onClick={closeMobile} title="Lan Pya — From Map to Proof">
+          <Link className="sidebar-brand" href="/" onClick={closeMobile} title={`Lan Pya — ${c.brandTagline}`}>
             <span className="brand-mark" aria-hidden="true" />
             <span className="sidebar-brand-copy">
               <strong>Lan Pya</strong>
-              <small>From Map to Proof</small>
+              <small>{c.brandTagline}</small>
             </span>
           </Link>
         </SidebarHeader>
@@ -158,10 +160,10 @@ function AppShellContent({ children, profile, roles, locale }: { children: React
             <SidebarTrigger />
             <div className="app-topbar-context">
               <strong>{pageLabel}</strong>
-              <span>{profile.goal}</span>
+              <span>{localizeCareerDisplay(locale, profile.goal)}</span>
             </div>
           </div>
-          <Link className="app-avatar" href="/app/profile" aria-label="Open profile">
+          <Link className="app-avatar" href="/app/profile" aria-label={locale === "my" ? "ပရိုဖိုင် ဖွင့်မည်" : "Open profile"}>
             {profile.alias.slice(0, 2).toUpperCase()}
           </Link>
         </header>
