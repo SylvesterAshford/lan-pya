@@ -1,4 +1,4 @@
-import type { CareerTrack, Milestone } from "./types";
+import type { CareerPathPreview, CareerTrack, Milestone } from "./types";
 
 type StageInput = Omit<Milestone, "status">;
 
@@ -65,6 +65,61 @@ export const CAREER_TRACKS: CareerTrack[] = [
   { key: "frontend-developer", title: "Frontend Developer", shortTitle: "Frontend", description: "Build accessible, responsive, production-quality web interfaces.", outcome: "From web foundations to a partner-reviewed frontend product.", milestones: FRONTEND },
   { key: "full-stack-developer", title: "Full-Stack Developer", shortTitle: "Full-Stack", description: "Build and operate complete products across browser, server, data, and cloud.", outcome: "From client-server foundations to a production full-stack system.", milestones: FULL_STACK },
   { key: "ai-data-analyst", title: "AI & Data Analyst", shortTitle: "AI & Data", description: "Turn data into responsible analysis, decisions, dashboards, and evaluated AI workflows.", outcome: "From data literacy to a partner-reviewed analytics case study.", milestones: AI_DATA },
+];
+
+export const DIGITAL_PATH_PREVIEWS: CareerPathPreview[] = [
+  {
+    key: "content-creator",
+    title: "Content Creator & Social Media Storyteller",
+    shortTitle: "Content Creator",
+    description: "Explain useful ideas through clear, ethical, platform-native content.",
+    outcome: "Build a three-piece awareness campaign that can become portfolio evidence.",
+    status: "controlled_pilot",
+    device: "Phone-friendly; laptop optional",
+    timeToFirstProof: "1–2 weeks",
+    arena: "Stories & Community",
+    stages: ["Audience and problem research", "Story and scripting", "Mobile production", "Accessibility and safe publishing", "Campaign case study"],
+    firstMission: "Three-piece awareness campaign",
+  },
+  {
+    key: "video-editor",
+    title: "Video Editor & Motion Content",
+    shortTitle: "Video Editor",
+    description: "Turn raw footage into clear, accessible stories for modern platforms.",
+    outcome: "Create a thirty-second vertical story edit with captions and licensed audio.",
+    status: "preview",
+    device: "Phone or laptop with an editor",
+    timeToFirstProof: "2–3 weeks",
+    arena: "Visual Craft",
+    stages: ["Editing workflow", "Cuts and pacing", "Sound and colour", "Captions and motion", "Client-ready delivery"],
+    firstMission: "Thirty-second vertical story edit",
+  },
+  {
+    key: "brand-visual-designer",
+    title: "Brand & Visual Content Designer",
+    shortTitle: "Visual Designer",
+    description: "Solve communication problems with accessible visual systems, not isolated decoration.",
+    outcome: "Build a mini campaign identity kit across five responsive formats.",
+    status: "preview",
+    device: "Phone or laptop with a design tool",
+    timeToFirstProof: "2–3 weeks",
+    arena: "Visual Craft",
+    stages: ["Visual problem framing", "Type and hierarchy", "Colour and composition", "Campaign systems", "Client-ready case study"],
+    firstMission: "Mini campaign identity kit",
+  },
+  {
+    key: "digital-marketing",
+    title: "Digital Marketing & Growth",
+    shortTitle: "Digital Marketing",
+    description: "Plan ethical, measurable campaigns without requiring learners to buy ads.",
+    outcome: "Create a no-spend campaign plan with a clear audience, channel hypothesis, and measurement plan.",
+    status: "preview",
+    device: "Phone-friendly; laptop helpful",
+    timeToFirstProof: "2–3 weeks",
+    arena: "Business & Growth",
+    stages: ["Customer research", "Positioning and goals", "Content strategy", "Measurement", "Growth case study"],
+    firstMission: "No-spend campaign plan",
+  },
 ];
 
 export function getCareerTrack(trackKey: string | undefined) {

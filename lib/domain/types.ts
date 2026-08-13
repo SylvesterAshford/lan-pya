@@ -48,6 +48,22 @@ export type CareerTrack = {
   milestones: Milestone[];
 };
 
+export type PathStatus = "operational" | "controlled_pilot" | "preview";
+
+export type CareerPathPreview = {
+  key: string;
+  title: string;
+  shortTitle: string;
+  description: string;
+  outcome: string;
+  status: PathStatus;
+  device: string;
+  timeToFirstProof: string;
+  arena: string;
+  stages: string[];
+  firstMission: string;
+};
+
 export type OpportunityCard = {
   id: string;
   title: string;

@@ -11,9 +11,9 @@ export default async function RoadmapPage({ searchParams }: { searchParams: Prom
   return (
     <div className="app-page roadmap-page">
       <section className="page-heading roadmap-page-heading">
-        <span className="eyebrow">COMPLETE CAREER ROADMAPS</span>
+        <span className="eyebrow">TECHNICAL ROADMAPS</span>
         <h1>Choose a path. See every skill that matters.</h1>
-        <p>Each path connects foundations, practical skills, production quality, and proof-producing work. Select any milestone to inspect it.</p>
+        <p>Each technical path connects foundations, practical skills, production quality, and proof-producing work. Select any milestone to inspect it.</p>
       </section>
       <nav className="track-switcher" aria-label="Career tracks">
         {CAREER_TRACKS.map((item) => <Link className={item.key === track.key ? "active" : ""} href={`/app/roadmap?track=${item.key}`} aria-current={item.key === track.key ? "page" : undefined} key={item.key}><span>{item.shortTitle}</span><strong>{item.milestones.length} milestones</strong><small>{item.description}</small></Link>)}

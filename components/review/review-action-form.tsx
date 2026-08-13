@@ -2,13 +2,14 @@
 
 import { useState } from "react";
 
-export function ReviewActionForm({ submissionId }: { submissionId: string }) {
+export function ReviewActionForm({ submissionId, rubricKeys = ["semantic", "responsive", "accessibility", "explanation"] }: { submissionId: string; rubricKeys?: string[] }) {
   const [notes, setNotes] = useState("");
   const [message, setMessage] = useState("");
   const [busy, setBusy] = useState(false);
   async function act(action: "verify" | "request_changes" | "reject") {
     setBusy(true); setMessage("");
-    const response = await fetch(`/api/review/${submissionId}`, { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ action, notes, rubricScores: { semantic: 3, responsive: 3, accessibility: 3, explanation: 3 } }) });
+    const rubricScores = Object.fromEntries(rubricKeys.map((key) => [key, 3]));
+    const response = await fetch(`/api/review/${submissionId}`, { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ action, notes, rubricScores }) });
     const body = await response.json().catch(() => null);
     setMessage(response.ok ? "Decision recorded with an audit event." : body?.detail ?? "Decision was not recorded."); setBusy(false);
   }
