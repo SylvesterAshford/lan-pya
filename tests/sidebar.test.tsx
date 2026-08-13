@@ -1,4 +1,4 @@
-import { cleanup, fireEvent, render, screen } from "@testing-library/react";
+import { cleanup, fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import {
   Sidebar,
@@ -49,6 +49,12 @@ describe("Sidebar", () => {
 
     fireEvent.keyDown(window, { key: "b", ctrlKey: true });
     expect(provider).toHaveAttribute("data-sidebar-state", "expanded");
+
+    fireEvent.click(document.querySelector(".sidebar-rail")!);
+    expect(provider).toHaveAttribute("data-sidebar-state", "collapsed");
+
+    fireEvent.keyDown(window, { key: "b", metaKey: true });
+    expect(provider).toHaveAttribute("data-sidebar-state", "expanded");
   });
 
   it("opens as a mobile drawer and closes from the scrim", () => {
@@ -66,5 +72,28 @@ describe("Sidebar", () => {
 
     fireEvent.keyDown(window, { key: "Escape" });
     expect(navigation).toHaveAttribute("aria-hidden", "true");
+  });
+
+  it("switches toggle behavior when the viewport crosses the mobile breakpoint", async () => {
+    let changeListener: (() => void) | undefined;
+    const media = {
+      matches: false,
+      media: "(max-width: 860px)",
+      onchange: null,
+      addEventListener: vi.fn((_type: string, listener: () => void) => { changeListener = listener; }),
+      removeEventListener: vi.fn(),
+      addListener: vi.fn(),
+      removeListener: vi.fn(),
+      dispatchEvent: vi.fn(),
+    };
+    vi.stubGlobal("matchMedia", vi.fn(() => media));
+    renderSidebar();
+
+    media.matches = true;
+    changeListener?.();
+    await waitFor(() => expect(screen.getByRole("button", { name: "Open navigation" })).toBeInTheDocument());
+    fireEvent.keyDown(window, { key: "b", ctrlKey: true });
+
+    await waitFor(() => expect(screen.getByRole("button", { name: "Close navigation" })).toBeInTheDocument());
   });
 });
