@@ -6,10 +6,11 @@ The production stack is Next.js 16 on Vercel and Supabase Auth/Postgres/RLS/Queu
 
 ## What works
 
-- English/Myanmar locale routing and a responsive PWA shell
-- Google signup/login with Supabase PKCE
-- Private onboarding and evidence-based starting placement
-- Seven-milestone Frontend Developer roadmap
+- English/Myanmar locale routing, one language at a time, and a responsive PWA shell
+- Google OAuth plus email/password signup and login through Supabase Auth
+- Private Career Compass onboarding with explained path recommendations
+- One active career path at a time, with switching that preserves prior work and proof
+- Connected roadmaps for Frontend, Full-Stack, AI/Data, and the Content Creator controlled pilot, with availability labeled explicitly
 - Offline, per-user mission drafts in IndexedDB with 30-day expiry
 - Transactional submission plus durable PGMQ evaluation jobs
 - Allowlisted URL checks; custom domains are explicitly inconclusive
@@ -120,3 +121,6 @@ The Google OAuth path requires a manual staging check because browser automation
 - `supabase/functions/process-evaluations` — deterministic evidence checker
 - `supabase/seed.sql` — versioned curriculum and labeled example opportunities
 - `tests` and `supabase/tests` — unit, E2E, accessibility, and RLS coverage
+- `PRODUCT.md` — product purpose, constraints, principles, and brand commitments
+- `DESIGN.md` — learner information architecture, visual system, and accessibility rules
+- `docs/product/LAN_PYA_CAREER_QUEST_PLAN.md` — detailed personalization and career-path architecture
