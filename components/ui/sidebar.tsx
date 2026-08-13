@@ -49,6 +49,10 @@ export function SidebarProvider({ children, defaultOpen = true }: { children: Re
 
   useEffect(() => {
     const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape" && isMobile && openMobile) {
+        setOpenMobile(false);
+        return;
+      }
       if (event.key.toLowerCase() === "b" && (event.metaKey || event.ctrlKey)) {
         event.preventDefault();
         toggleSidebar();
@@ -56,7 +60,7 @@ export function SidebarProvider({ children, defaultOpen = true }: { children: Re
     };
     window.addEventListener("keydown", onKeyDown);
     return () => window.removeEventListener("keydown", onKeyDown);
-  }, [toggleSidebar]);
+  }, [isMobile, openMobile, toggleSidebar]);
 
   const value = useMemo(
     () => ({ open, openMobile, isMobile, setOpen, setOpenMobile, toggleSidebar }),
@@ -87,6 +91,7 @@ export function Sidebar({ children, ...props }: HTMLAttributes<HTMLElement>) {
         data-mobile={isMobile || undefined}
         data-state={visible ? "expanded" : "collapsed"}
         aria-hidden={isMobile && !openMobile ? true : undefined}
+        inert={isMobile && !openMobile ? true : undefined}
       >
         {children}
       </aside>
