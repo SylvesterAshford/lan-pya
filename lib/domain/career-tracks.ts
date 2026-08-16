@@ -150,3 +150,39 @@ export function mergeTrackMilestones(trackKey: string, rows: Milestone[]) {
   if (activeIndex < 0 && !merged.some((item) => item.status === "complete") && merged[0]?.status === "upcoming") merged[0].status = "next";
   return merged;
 }
+
+/**
+ * Track fork — Design Spec v1.1 §3.3 "The fork".
+ *
+ * DISPLAY ONLY. The fork renders and is announced to assistive technology, but
+ * there is no schema behind it: a learner's track choice is not persisted and
+ * downstream nodes are not filtered by branch. Adding that needs a migration
+ * (see TODOS.md "Real fork schema"). Until then this must stay labelled as a
+ * preview wherever it appears, per the honest-availability rule in PRODUCT.md.
+ */
+const TRACK_FORKS: Record<string, { en: TrackFork; my: TrackFork }> = {
+  "frontend-developer": {
+    en: {
+      note: "The path splits here — both stay open",
+      local: { title: "Yangon track", subtitle: "Local jobs · Burmese-first" },
+      global: { title: "Global track", subtitle: "Remote & abroad · English-first" },
+    },
+    my: {
+      note: "ဤနေရာတွင် လမ်းခွဲသည် — နှစ်ခုစလုံး ဖွင့်ထားသည်",
+      local: { title: "ရန်ကုန် လမ်းကြောင်း", subtitle: "ပြည်တွင်းအလုပ် · မြန်မာဘာသာ ဦးစားပေး" },
+      global: { title: "နိုင်ငံတကာ လမ်းကြောင်း", subtitle: "အဝေးမှ / ပြည်ပ · အင်္ဂလိပ်ဘာသာ ဦးစားပေး" },
+    },
+  },
+};
+
+export type TrackFork = {
+  note: string;
+  local: { title: string; subtitle: string };
+  global: { title: string; subtitle: string };
+};
+
+export function getTrackFork(trackKey: string, locale: string): TrackFork | undefined {
+  const entry = TRACK_FORKS[trackKey];
+  if (!entry) return undefined;
+  return locale === "my" ? entry.my : entry.en;
+}

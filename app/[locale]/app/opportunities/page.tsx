@@ -1,6 +1,7 @@
-import { ArrowUpRight, BriefcaseBusiness, CalendarClock, ChevronDown, MapPin } from "lucide-react";
+import { ArrowUpRight, BriefcaseBusiness, ChevronDown, MapPin } from "lucide-react";
 import { getOpportunities } from "@/lib/data/app-data";
 import { StatusPill } from "@/components/app/status-pill";
+import { DeadlineChip } from "@/components/app/deadline-chip";
 import { formatAppDate, getAppCopy, localizeOpportunity, localizeReadiness } from "@/lib/i18n/app-copy";
 
 function tone(readiness: string) {
@@ -28,7 +29,7 @@ export default async function OpportunitiesPage({ params }: { params: Promise<{ 
               <strong>{item.title}</strong>
               <small>{item.organization}</small>
             </span>
-            <span className="opportunity-deadline"><CalendarClock size={14} aria-hidden="true" /><span>{formatAppDate(locale, item.deadline)}</span></span>
+            <DeadlineChip locale={locale} deadline={item.deadline} />
             <StatusPill tone={tone(source.readiness)}>{localizeReadiness(locale, source.readiness)}</StatusPill>
             <ChevronDown className="opportunity-chevron" size={18} aria-hidden="true" />
           </summary>

@@ -1,6 +1,6 @@
-import Image from "next/image";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
+import { RoadmapPreview } from "@/components/marketing/roadmap-preview";
 
 export default async function MarketingPage({
   params,
@@ -47,15 +47,9 @@ export default async function MarketingPage({
         </div>
       </section>
 
-      <section className="journey-strip" aria-label={my ? "Lan Pya လုပ်ငန်းစဉ်" : "Lan Pya product loop"}>
-        {stages.map(([number, label, detail]) => (
-          <article key={number}><span>{number}</span><div><strong>{label}</strong><p>{detail}</p></div></article>
-        ))}
-      </section>
-
       <section className="screen-board">
         <div className="screen-board-copy"><span className="hero-kicker">{t("connected")}</span><h2>{t("screensTitle")}</h2><p>{t("screensBody")}</p><Link className="button gold" href="/demo">{t("secondary")} <span>→</span></Link></div>
-        <figure><Image src="/lan-pya-screen-board.png" width={1536} height={1024} sizes="(max-width: 800px) 100vw, 56vw" loading="lazy" alt={my ? "Lan Pya သင်ယူသူ၊ လမ်းကြောင်း၊ review၊ အခွင့်အလမ်းနှင့် သက်သေပြစာမျက်နှာများ" : "Lan Pya learner, roadmap, review, opportunity and proof screens"} /><figcaption>{my ? "မူရင်း Lan Pya concept board" : "Original Lan Pya concept board"}</figcaption></figure>
+        <RoadmapPreview locale={locale} />
       </section>
     </main>
   );

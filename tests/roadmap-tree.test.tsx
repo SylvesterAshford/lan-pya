@@ -17,12 +17,18 @@ function trackMilestones(key: string) {
   return CAREER_TRACKS.find((t) => t.key === key)!.milestones;
 }
 
+/** Stage nodes on the canvas are the only buttons carrying aria-pressed, which
+ *  separates them from toolbar actions like "Jump to my position". */
+function stageNodes() {
+  return screen.getAllByRole("button").filter((b) => b.hasAttribute("aria-pressed"));
+}
+
 // ─── Frontend track ───────────────────────────────────────────────────────────
 
 describe("RoadmapTree — Frontend track", () => {
   it("renders all 12 milestones", () => {
     render(<RoadmapTree milestones={FRONTEND_MILESTONES} />);
-    expect(screen.getAllByRole("button").length).toBe(12);
+    expect(stageNodes().length).toBe(12);
   });
 
   it("opens milestone details and stores the selected step in the URL", () => {
@@ -67,7 +73,7 @@ describe("RoadmapTree — Full-Stack track", () => {
 
   it("renders all 14 milestones", () => {
     render(<RoadmapTree milestones={milestones} />);
-    expect(screen.getAllByRole("button").length).toBe(14);
+    expect(stageNodes().length).toBe(14);
   });
 
   it("shows Server-side programming milestone with correct detail", () => {
@@ -100,7 +106,7 @@ describe("RoadmapTree — AI & Data track", () => {
 
   it("renders all 13 milestones", () => {
     render(<RoadmapTree milestones={milestones} />);
-    expect(screen.getAllByRole("button").length).toBe(13);
+    expect(stageNodes().length).toBe(13);
   });
 
   it("shows Statistics and probability milestone with correct detail", () => {
@@ -121,10 +127,9 @@ describe("RoadmapTree — AI & Data track", () => {
 
   it("shows Data workflows and reproducibility milestone", () => {
     render(<RoadmapTree milestones={milestones} />);
-    // Use getAllByRole to handle the case where the button text wraps across the skill nodes
-    const buttons = screen.getAllByRole("button");
-    const dataWorkflowsBtn = buttons.find((btn) => btn.textContent?.includes("Data workflows and reproducibility"))!;
-    fireEvent.click(dataWorkflowsBtn);
+    // Long titles wrap across two <text> elements, so textContent has no space
+    // at the break. The aria-label carries the whole title — query on that.
+    fireEvent.click(screen.getByRole("button", { name: /Data workflows and reproducibility/i }));
     const detailPanel = document.querySelector("#roadmap-detail")!;
     expect(within(detailPanel as HTMLElement).getByText("ETL/ELT basics")).toBeInTheDocument();
   });
@@ -135,7 +140,7 @@ describe("RoadmapTree — Content Creator track", () => {
 
   it("renders the complete five-stage creator journey", () => {
     render(<RoadmapTree milestones={milestones} />);
-    expect(screen.getAllByRole("button")).toHaveLength(5);
+    expect(stageNodes()).toHaveLength(5);
     expect(screen.getByRole("heading", { name: "Audience and problem research" })).toBeInTheDocument();
   });
 
