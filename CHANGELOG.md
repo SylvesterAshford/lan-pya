@@ -1,5 +1,31 @@
 # Changelog
 
+## [0.3.0.0] - 2026-08-17
+
+### Added
+
+- Follow a roadmap.sh-style track canvas with a dotted spine, amber stage nodes, branching milestones, verified check marks, and a preview of the Yangon and Global track fork.
+- See how long is left to apply with deadline countdowns that escalate to amber inside a week, in English and Burmese, on both Opportunities and Home.
+- Follow the complete five-stage Content Creator journey. The database previously held only the first stage while the app promised five.
+
+### Changed
+
+- Rebuilt typography on an eight-step scale. The stylesheet had carried 31 hardcoded sizes between 8px and 30px, 123 of them below a legible minimum, which is why nothing on the page aligned.
+- Corrected the palette to the founder brand system, added the purple global track, and separated the roadmap canvas palette from application chrome so amber means one thing in each place.
+- Narrowed primary screens to an 820px reading column so a short page reads as composed rather than unfinished.
+- Replaced the roadmap's dark inspector panel with a light surface, removing an undocumented third surface colour from a light application.
+- Removed decorative elevation from cards, buttons, and nodes in favour of hairline borders, keeping only the mobile drawer and bottom navigation shadows.
+
+### Fixed
+
+- The prepared demo account opened on zero milestones, zero percent, and zero XP because progress was seeded on a path the learner was not active on.
+- Home, the roadmap, and the portfolio disagreed about how much work was complete.
+- Home named a stage-one mission while the learner was on stage three, and numbered upcoming stages by their position in a list rather than on the roadmap.
+- Opportunity deadlines were computed in the server's timezone rather than Myanmar's, and date-only values were read as UTC, so a countdown could be a day out.
+- The opportunities feed claimed to be sorted by deadline without sorting.
+- Several small, low-contrast labels failed WCAG AA, including deadline dates at 9px and category chips at 8px.
+- Removed a 1.5MB decorative image from the landing page, replacing it with an inline roadmap that shows the actual product.
+
 ## [0.2.0.0] - 2026-08-13
 
 ### Added

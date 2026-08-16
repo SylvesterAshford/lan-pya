@@ -146,7 +146,7 @@ if (competencyError) throw competencyError;
 // frontend track left Home reading "0/1 milestones, 0% complete, 0 XP" while
 // the roadmap showed real progress. Seed the active path too.
 //
-// Requires migration 20260817000000_content_creator_full_track, which adds
+// Requires migration 20260816185145_content_creator_full_track, which adds
 // stages 2-5. Without it only stage 1 exists and this seeds 1/1 rather than 2/5.
 
 const CONTENT_TRACK_ID = "40000000-0000-0000-0000-000000000001";
@@ -162,7 +162,7 @@ if (contentMilestoneError) throw contentMilestoneError;
 if (contentMilestones.length < 5) {
   console.warn(
     `Content Creator has ${contentMilestones.length} milestone(s) in the database, expected 5. ` +
-    "Apply migration 20260817000000_content_creator_full_track first, then re-run.",
+    "Apply migration 20260816185145_content_creator_full_track first, then re-run.",
   );
 }
 
@@ -175,7 +175,8 @@ const { error: contentProgressError } = await supabase.from("milestone_progress"
     user_id: userId,
     milestone_id: milestone.id,
     status: index < 2 ? "complete" : index === 2 ? "active" : "upcoming",
-    source: "seeded_demo",
+    // milestone_progress_source_check allows placement | proof | admin only.
+    source: "placement",
   })),
   { onConflict: "user_id,milestone_id" },
 );

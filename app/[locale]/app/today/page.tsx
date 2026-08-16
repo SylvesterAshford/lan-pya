@@ -1,4 +1,4 @@
-import { ArrowRight, BriefcaseBusiness, Check, Clock3, Compass, Map } from "lucide-react";
+import { ArrowRight, BriefcaseBusiness, Clock3, Compass, Map } from "lucide-react";
 import { Link } from "@/i18n/navigation";
 import { requireUser } from "@/lib/auth";
 import { DeadlineChip } from "@/components/app/deadline-chip";
@@ -21,6 +21,12 @@ export default async function TodayPage({ params }: { params: Promise<{ locale: 
   const pathTitle = localizeCareerTerm(locale, path.key, path.title);
   const missionTitle = localizeCareerTerm(locale, mission.key, mission.title);
   const nextStages = roadmap.filter((stage) => stage.status !== "complete").slice(0, 3);
+  // Lead with the stage the learner is actually on. The controlled pilot has a
+  // single authored mission attached to stage 1, so naming the mission here made
+  // Home claim "Three-piece awareness campaign" while the roadmap and the list
+  // below both said "Mobile production". The stage is the shared truth across
+  // every surface; the mission is context under it.
+  const currentStage = nextStages.find((stage) => stage.status === "active") ?? nextStages[0];
   const nearbyOpportunities = opportunities.slice(0, 3).map((item) => localizeOpportunity(locale, item));
 
   return (
@@ -40,8 +46,8 @@ export default async function TodayPage({ params }: { params: Promise<{ locale: 
       <section className="continue-panel">
         <div className="continue-copy">
           <span>{locale === "my" ? "ရပ်ထားသည့်နေရာမှ ဆက်လုပ်မည်" : "Continue where you left off"}</span>
-          <h2>{missionTitle}</h2>
-          <p>{pathTitle} · {mission.workState === "active" ? c.build.inProgress : c.build.available}</p>
+          <h2>{currentStage ? currentStage.title : missionTitle}</h2>
+          <p>{pathTitle} · {currentStage ? `${c.roadmap.step} ${currentStage.order}/${roadmap.length}` : missionTitle} · {mission.workState === "active" ? c.build.inProgress : c.build.available}</p>
           <div className="continue-progress" role="progressbar" aria-valuemin={0} aria-valuemax={100} aria-valuenow={dashboard.progressPercent}><span style={{ width: `${dashboard.progressPercent}%` }} /></div>
           <small>{dashboard.completedMilestones} {locale === "my" ? "အဆင့် ပြီးစီး" : "milestones complete"}</small>
         </div>
@@ -52,7 +58,11 @@ export default async function TodayPage({ params }: { params: Promise<{ locale: 
         <section className="home-section path-ahead">
           <header><div><Map size={18} aria-hidden="true" /><h2>{locale === "my" ? "ရှေ့ဆက်ရမည့်လမ်း" : "Your path ahead"}</h2></div><Link href={`/app/roadmap?track=${path.key}`}>{locale === "my" ? "လမ်းပြမြေပုံဖွင့်မည်" : "Open roadmap"}</Link></header>
           <div className="home-list">
-            {nextStages.map((stage, index) => <Link className={index === 0 ? "current" : ""} href={`/app/roadmap?track=${path.key}#milestone-${stage.key}`} key={stage.key}><span className="home-step">{stage.status === "active" ? <Check size={14} aria-hidden="true" /> : index + 1}</span><span><strong>{stage.title}</strong><small>{stage.proof}</small></span><ArrowRight size={15} aria-hidden="true" /></Link>)}
+            {/* Every stage in this list is incomplete by construction, so a check mark
+                never belongs here. The active stage is marked by the "current" class,
+                and each row shows its real position on the roadmap rather than its
+                index in this slice of three. */}
+            {nextStages.map((stage) => <Link className={stage.status === "active" ? "current" : ""} href={`/app/roadmap?track=${path.key}#milestone-${stage.key}`} key={stage.key}><span className="home-step">{stage.order}</span><span><strong>{stage.title}</strong><small>{stage.proof}</small></span><ArrowRight size={15} aria-hidden="true" /></Link>)}
           </div>
         </section>
 
