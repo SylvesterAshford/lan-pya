@@ -608,7 +608,9 @@ fieldset{
   flex-direction: column;
   align-items: center;
   gap: 9px;
-  color: #94a3b8;
+  /* Future steps stay secondary but must remain readable: #94a3b8 on the white
+     mockup card measured 2.34:1, well under AA. */
+  color: var(--muted-ink);
   text-align: center;
 }
 
@@ -647,13 +649,16 @@ fieldset{
 }
 
 .proof-stages .done{
-  color: var(--success);
+  /* teal-500 is a fill token; text on white needs teal-700 (DESIGN.md Color). */
+  color: var(--teal-700);
 }
 
 .proof-stages .done b{
   color: white;
-  background: var(--success);
-  border-color: var(--success);
+  /* A fill carrying white text needs teal-700: white on teal-500 measures
+     3.39:1, and an 11px bold numeral is not "large text" under WCAG. */
+  background: var(--teal-700);
+  border-color: var(--teal-700);
 }
 
 .proof-stages .done::after{
@@ -707,51 +712,6 @@ fieldset{
   margin-top: 3px;
   color: var(--muted);
   font-size: var(--t-label);
-}
-
-.journey-strip{
-  position: relative;
-  z-index: 2;
-  display: grid;
-  max-width: 1160px;
-  grid-template-columns: repeat(4, 1fr);
-  margin: -42px auto 0;
-  overflow: hidden;
-  color: var(--slate);
-  background: white;
-  border: 1px solid var(--line);
-  border-radius: 12px;
-  box-shadow: var(--shadow-md);
-}
-
-.journey-strip article{
-  display: flex;
-  min-height: 114px;
-  align-items: flex-start;
-  gap: 13px;
-  padding: 24px;
-}
-
-.journey-strip article:not(:last-child){
-  border-right: 1px solid var(--line);
-}
-
-.journey-strip article > span{
-  color: var(--teal);
-  font-size: var(--t-label);
-  font-weight: 800;
-}
-
-.journey-strip strong{
-  color: var(--navy);
-  font-size: var(--t-body);
-}
-
-.journey-strip p{
-  margin: 6px 0 0;
-  color: var(--muted);
-  font-size: var(--t-label);
-  line-height: 1.45;
 }
 
 .screen-board{
@@ -3067,19 +3027,6 @@ fieldset{
     transform: none;
   }
 
-  .journey-strip{
-    grid-template-columns: repeat(2, 1fr);
-    margin: 0 24px 40px;
-  }
-
-  .journey-strip article:nth-child(2){
-    border-right: 0;
-  }
-
-  .journey-strip article:nth-child(-n + 2){
-    border-bottom: 1px solid var(--line);
-  }
-
   .screen-board{
     grid-template-columns: 1fr;
     padding-top: 62px;
@@ -3223,17 +3170,6 @@ fieldset{
 
   .window-body h2{
     font-size: var(--t-h2);
-  }
-
-  .journey-strip{
-    grid-template-columns: 1fr;
-    margin: 0 16px 32px;
-  }
-
-  .journey-strip article{
-    min-height: auto;
-    border-right: 0 !important;
-    border-bottom: 1px solid var(--line);
   }
 
   .screen-board{
@@ -6748,21 +6684,21 @@ html[lang="my"] .mission-focus h2{
    Supersedes every earlier .roadmap-* rule in this file.
    ============================================================ */
 
-.roadmap-workspace {
+.roadmap-workspace{
   display: grid;
   grid-template-columns: minmax(0, 1fr) 320px;
   gap: var(--s-lg);
   align-items: start;
 }
 
-.roadmap-canvas {
+.roadmap-canvas{
   background: var(--surface);
   border: 1px solid var(--hairline);
   border-radius: var(--r-card);
   overflow: hidden;
 }
 
-.roadmap-toolbar {
+.roadmap-toolbar{
   display: grid;
   grid-template-columns: 1fr auto;
   gap: var(--s-sm) var(--s-md);
@@ -6771,7 +6707,7 @@ html[lang="my"] .mission-focus h2{
   border-bottom: 1px solid var(--hairline);
 }
 
-.roadmap-progress-copy {
+.roadmap-progress-copy{
   display: flex;
   align-items: baseline;
   gap: var(--s-sm);
@@ -6779,14 +6715,14 @@ html[lang="my"] .mission-focus h2{
   color: var(--muted-ink);
 }
 
-.roadmap-progress-copy strong {
+.roadmap-progress-copy strong{
   font-size: var(--t-title);
   font-weight: 700;
   color: var(--teal-700);
   font-variant-numeric: tabular-nums;
 }
 
-.roadmap-progress-track {
+.roadmap-progress-track{
   grid-column: 1 / -1;
   height: 6px;
   background: var(--surface-sunk);
@@ -6794,14 +6730,14 @@ html[lang="my"] .mission-focus h2{
   overflow: hidden;
 }
 
-.roadmap-progress-track > span {
+.roadmap-progress-track > span{
   display: block;
   height: 100%;
   background: var(--teal-500);
   transition: width 240ms ease-in-out;
 }
 
-.roadmap-position-link {
+.roadmap-position-link{
   padding: 0;
   font-size: var(--t-meta);
   font-weight: 600;
@@ -6811,9 +6747,9 @@ html[lang="my"] .mission-focus h2{
   text-align: right;
 }
 
-.roadmap-position-link:hover { text-decoration: underline; }
+.roadmap-position-link:hover{ text-decoration: underline; }
 
-.roadmap-legend {
+.roadmap-legend{
   display: flex;
   flex-wrap: wrap;
   gap: var(--s-md);
@@ -6822,7 +6758,7 @@ html[lang="my"] .mission-focus h2{
   border-bottom: 1px solid var(--hairline);
 }
 
-.roadmap-legend span {
+.roadmap-legend span{
   display: inline-flex;
   align-items: center;
   gap: 6px;
@@ -6833,7 +6769,7 @@ html[lang="my"] .mission-focus h2{
 
 /* Scoped swatch names: bare .stage/.milestone/.complete/.path collide with
    unrelated global classes elsewhere in this file. */
-.roadmap-legend .rm-sw {
+.roadmap-legend .rm-sw{
   flex: 0 0 auto;
   display: block;
   width: 14px;
@@ -6842,29 +6778,29 @@ html[lang="my"] .mission-focus h2{
   border-radius: 3px;
 }
 
-.roadmap-legend .rm-sw-stage { background: var(--node-stage); }
-.roadmap-legend .rm-sw-milestone { background: var(--node-milestone); }
-.roadmap-legend .rm-sw-done { background: var(--node-done-fill); border-color: var(--node-done-border); }
-.roadmap-legend .rm-sw-path {
+.roadmap-legend .rm-sw-stage{ background: var(--node-stage); }
+.roadmap-legend .rm-sw-milestone{ background: var(--node-milestone); }
+.roadmap-legend .rm-sw-done{ background: var(--node-done-fill); border-color: var(--node-done-border); }
+.roadmap-legend .rm-sw-path{
   height: 0;
   border: 0;
   border-top: 2px dotted var(--connector);
   border-radius: 0;
 }
 
-.roadmap-canvas-scroll {
+.roadmap-canvas-scroll{
   padding: var(--s-lg) 0;
   overflow-x: auto;
 }
 
-.roadmap-svg {
+.roadmap-svg{
   display: block;
   margin: 0 auto;
   max-width: 100%;
 }
 
 /* ---- connectors ---- */
-.rm-spine {
+.rm-spine{
   fill: none;
   stroke: var(--connector);
   stroke-width: 2;
@@ -6872,7 +6808,7 @@ html[lang="my"] .mission-focus h2{
   stroke-linecap: round;
 }
 
-.rm-connector {
+.rm-connector{
   fill: none;
   stroke: var(--connector);
   stroke-width: 1.5;
@@ -6880,73 +6816,71 @@ html[lang="my"] .mission-focus h2{
   stroke-linecap: round;
 }
 
-.rm-connector.local { stroke: var(--teal-700); stroke-width: 2; stroke-dasharray: 3 5; }
-.rm-connector.global { stroke: var(--purple-500); stroke-width: 2; stroke-dasharray: 3 5; }
+.rm-connector.local{ stroke: var(--teal-700); stroke-width: 2; stroke-dasharray: 3 5; }
+.rm-connector.global{ stroke: var(--purple-500); stroke-width: 2; stroke-dasharray: 3 5; }
 
 /* ---- nodes ---- */
-.rm-node { cursor: pointer; }
-.rm-node[aria-disabled="true"] { cursor: default; }
-.rm-node .rm-body { transition: filter 160ms ease-out; }
-.rm-node:hover .rm-body { filter: brightness(0.97); }
-.rm-node:focus { outline: none; }
-.rm-node:focus-visible .rm-body {
+.rm-node{ cursor: pointer; }
+.rm-node[aria-disabled="true"]{ cursor: default; }
+.rm-node .rm-body{ transition: filter 160ms ease-out; }
+.rm-node:hover .rm-body{ filter: brightness(0.97); }
+.rm-node:focus{ outline: none; }
+.rm-node:focus-visible .rm-body{
   stroke: var(--teal-700);
   stroke-width: 3;
 }
-.rm-node.selected .rm-body {
+.rm-node.selected .rm-body{
   stroke: var(--teal-700);
   stroke-width: 3;
 }
 
-.rm-ring {
+.rm-ring{
   fill: none;
   stroke: var(--amber-500);
   stroke-width: 2;
   opacity: 0.55;
 }
 
-.rm-stage-num {
+.rm-stage-num{
   font-size: var(--t-label);
   font-weight: 700;
   letter-spacing: 0.06em;
   fill: #6b6551;
 }
 
-.rm-stage-label {
+.rm-stage-label{
   font-size: 14px;
   font-weight: 700;
   fill: var(--node-border);
 }
 
-.rm-node-label {
+.rm-node-label{
   font-size: var(--t-node);
   font-weight: 600;
   fill: var(--node-border);
 }
 
-.rm-node.soon .rm-stage-num,
-.rm-node.soon .rm-stage-label,
-.rm-node.soon .rm-node-label { opacity: 0.55; }
+.rm-node.soon .rm-stage-num, .rm-node.soon .rm-stage-label, .rm-node.soon .rm-node-label{ opacity: 0.55; }
 
 /* ---- the fork ---- */
-.rm-fork-note {
+.rm-fork-note{
   font-size: var(--t-meta);
   font-weight: 500;
   fill: var(--muted-ink);
 }
 
-.rm-track rect { stroke-width: 2; }
-.rm-track.local rect { fill: var(--teal-100); stroke: var(--teal-700); }
-.rm-track.global rect { fill: var(--purple-100); stroke: var(--purple-500); }
-.rm-track-title { font-size: 14px; font-weight: 700; }
-.rm-track-sub { font-size: 11px; font-weight: 500; }
-.rm-track.local .rm-track-title { fill: var(--teal-900); }
-.rm-track.local .rm-track-sub { fill: var(--teal-700); }
-.rm-track.global .rm-track-title { fill: var(--purple-900); }
-.rm-track.global .rm-track-sub { fill: var(--purple-500); }
+.rm-track rect{ stroke-width: 2; }
+.rm-track.local rect{ fill: var(--teal-100); stroke: var(--teal-700); }
+.rm-track.global rect{ fill: var(--purple-100); stroke: var(--purple-500); }
+.rm-track-title{ font-size: 14px; font-weight: 700; }
+.rm-track-sub{ font-size: 11px; font-weight: 500; }
+.rm-track.local .rm-track-title{ fill: var(--teal-900); }
+.rm-track.local .rm-track-sub{ fill: var(--teal-700); }
+.rm-track.global .rm-track-title{ fill: var(--purple-900); }
+.rm-track.global .rm-track-sub{ fill: var(--purple-500); }
 
 /* ---- detail panel: a LIGHT surface. There is no dark inspector. ---- */
-.roadmap-detail-panel {
+.roadmap-detail-panel{
   position: sticky;
   top: 80px;
   padding: var(--s-md) var(--s-lg);
@@ -6958,14 +6892,14 @@ html[lang="my"] .mission-focus h2{
   box-shadow: none;
 }
 
-.roadmap-detail-panel .roadmap-detail-heading {
+.roadmap-detail-panel .roadmap-detail-heading{
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: var(--s-sm);
 }
 
-.roadmap-detail-panel .eyebrow {
+.roadmap-detail-panel .eyebrow{
   font-size: var(--t-label);
   font-weight: 600;
   letter-spacing: 0.04em;
@@ -6973,7 +6907,7 @@ html[lang="my"] .mission-focus h2{
   color: var(--teal-700);
 }
 
-.roadmap-detail-panel h2 {
+.roadmap-detail-panel h2{
   margin: var(--s-sm) 0 var(--s-xs);
   font-size: var(--t-h2);
   line-height: var(--l-h2);
@@ -6981,14 +6915,14 @@ html[lang="my"] .mission-focus h2{
   color: var(--ink);
 }
 
-.roadmap-detail-panel > p {
+.roadmap-detail-panel > p{
   margin: 0 0 var(--s-md);
   font-size: var(--t-meta);
   line-height: var(--l-meta);
   color: var(--muted-ink);
 }
 
-.roadmap-detail-meta {
+.roadmap-detail-meta{
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: var(--s-sm);
@@ -6999,7 +6933,7 @@ html[lang="my"] .mission-focus h2{
   border-radius: var(--r-control);
 }
 
-.roadmap-detail-meta dt {
+.roadmap-detail-meta dt{
   font-size: var(--t-label);
   font-weight: 600;
   letter-spacing: 0.04em;
@@ -7007,16 +6941,16 @@ html[lang="my"] .mission-focus h2{
   color: var(--muted-ink);
 }
 
-.roadmap-detail-meta dd {
+.roadmap-detail-meta dd{
   margin: 2px 0 0;
   font-size: var(--t-meta);
   font-weight: 600;
   color: var(--ink);
 }
 
-.roadmap-detail-section { margin-bottom: var(--s-md); }
+.roadmap-detail-section{ margin-bottom: var(--s-md); }
 
-.roadmap-detail-label {
+.roadmap-detail-label{
   display: block;
   margin-bottom: var(--s-sm);
   font-size: var(--t-label);
@@ -7026,7 +6960,7 @@ html[lang="my"] .mission-focus h2{
   color: var(--muted-ink);
 }
 
-.roadmap-detail-section ul {
+.roadmap-detail-section ul{
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 6px var(--s-md);
@@ -7034,13 +6968,13 @@ html[lang="my"] .mission-focus h2{
   padding-left: var(--s-md);
 }
 
-.roadmap-detail-section li {
+.roadmap-detail-section li{
   font-size: var(--t-meta);
   line-height: var(--l-meta);
   color: var(--ink);
 }
 
-.roadmap-proof-target {
+.roadmap-proof-target{
   margin-bottom: var(--s-md);
   padding: var(--s-sm) var(--s-md);
   background: var(--teal-050);
@@ -7048,7 +6982,7 @@ html[lang="my"] .mission-focus h2{
   border-radius: var(--r-control);
 }
 
-.roadmap-proof-target > span {
+.roadmap-proof-target > span{
   display: block;
   font-size: var(--t-label);
   font-weight: 600;
@@ -7057,7 +6991,7 @@ html[lang="my"] .mission-focus h2{
   color: var(--teal-700);
 }
 
-.roadmap-proof-target > strong {
+.roadmap-proof-target > strong{
   display: block;
   margin: 2px 0 4px;
   font-size: var(--t-title);
@@ -7065,13 +6999,13 @@ html[lang="my"] .mission-focus h2{
   color: var(--ink);
 }
 
-.roadmap-proof-target > small {
+.roadmap-proof-target > small{
   font-size: var(--t-meta);
   line-height: var(--l-meta);
   color: var(--muted-ink);
 }
 
-.roadmap-visible-note {
+.roadmap-visible-note{
   margin: 0;
   font-size: var(--t-meta);
   line-height: var(--l-meta);
@@ -7079,14 +7013,97 @@ html[lang="my"] .mission-focus h2{
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .rm-node .rm-body,
-  .roadmap-progress-track > span { transition: none; }
+  .rm-node .rm-body, .roadmap-progress-track > span{ transition: none; }
 }
 
 /* Narrow: single-column spine, no horizontal scroll, detail panel below. */
-@media (max-width: 859px) {
+@media (max-width: 859px){
   .roadmap-workspace { grid-template-columns: minmax(0, 1fr); }
   .roadmap-detail-panel { position: static; }
   .roadmap-canvas-scroll { overflow-x: hidden; padding: var(--s-md) 0; }
   .roadmap-detail-section ul { grid-template-columns: 1fr; }
+}
+
+/* ============================================================
+   CONTENT COLUMN — DESIGN.md "Layout".
+   Short-content screens read as abandoned in a 1100-1380px column.
+   820px is a better measure and lets the page end honestly.
+   Reviewer and admin tables, and the roadmap canvas, are exempt.
+   ============================================================ */
+
+.app-workspace .home-page, .app-workspace .opportunities-page, .app-workspace .profile-page, .app-workspace .me-page, .app-workspace .paths-page, .home-page, .opportunities-page, .profile-page, .me-page, .paths-page{
+  max-width: var(--content-max);
+}
+
+/* Canvas (780) + gap (24) + detail panel (320) + page padding (76). */
+.app-workspace .roadmap-page, .roadmap-page{
+  max-width: 1200px;
+}
+
+.roadmap-page-heading{ max-width: var(--content-max); }
+
+/* ============================================================
+   MARKETING ROADMAP PREVIEW
+   Sits on the dark marketing canvas. Node fills stay light amber:
+   Design Spec §5 — they read as paper cards on a dark surface, the
+   same way roadmap.sh's dark theme handles them.
+   ============================================================ */
+
+.roadmap-preview {
+  margin: 0;
+  max-width: 100%;
+}
+
+.roadmap-preview svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-width: 560px;
+}
+
+.roadmap-preview figcaption {
+  margin-top: var(--s-md);
+  font-size: var(--t-meta);
+  line-height: var(--l-meta);
+  color: rgba(226, 240, 237, 0.62);
+}
+
+.rmp-num {
+  font-size: var(--t-label);
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  fill: #6b6551;
+}
+
+.rmp-title {
+  font-size: var(--t-meta);
+  font-weight: 700;
+  fill: var(--node-border);
+}
+
+.rmp-small {
+  font-size: var(--t-label);
+  font-weight: 600;
+  fill: var(--node-border);
+}
+
+.rmp-fork-note {
+  font-size: var(--t-meta);
+  font-weight: 500;
+  fill: rgba(226, 240, 237, 0.72);
+}
+
+.rmp-track { font-size: var(--t-meta); font-weight: 700; }
+.rmp-track.local { fill: var(--teal-900); }
+.rmp-track.global { fill: var(--purple-900); }
+
+/* Removing the four-column card grid left a large gap between the hero and the
+   roadmap section. Close it rather than letting the page look truncated. */
+.welcome-hero {
+  min-height: 560px;
+  padding-bottom: 56px;
+}
+
+.screen-board {
+  padding-top: 56px;
 }

@@ -13,7 +13,7 @@ export default async function TodayPage({ params }: { params: Promise<{ locale: 
   const mission = dashboard.nextMission;
 
   if (!path || !mission) {
-    return <div className="app-page"><section className="empty-path-state panel"><Compass size={24} aria-hidden="true" /><h1>{c.today.emptyTitle}</h1><p>{c.today.emptyBody}</p><Link className="button primary" href="/onboarding">{c.today.openCompass}</Link></section></div>;
+    return <div className="app-page home-page"><section className="empty-path-state panel"><Compass size={24} aria-hidden="true" /><h1>{c.today.emptyTitle}</h1><p>{c.today.emptyBody}</p><Link className="button primary" href="/onboarding">{c.today.openCompass}</Link></section></div>;
   }
 
   const roadmap = (await getRoadmap(path.key)).map((stage) => localizeRoadmapMilestone(locale, stage));
