@@ -4,6 +4,7 @@ import { useMemo, useState } from "react";
 import { Link } from "@/i18n/navigation";
 import type { Milestone } from "@/lib/domain/types";
 import { StatusPill } from "@/components/app/status-pill";
+import { RoadmapCanvas, type ForkConfig } from "@/components/app/roadmap-canvas";
 import { getAppCopy } from "@/lib/i18n/app-copy";
 
 type RoadmapDetail = {
@@ -13,7 +14,6 @@ type RoadmapDetail = {
   right: string[];
   estimate: string;
 };
-
 
 function detailFor(c: ReturnType<typeof getAppCopy>["roadmap"], milestone: Milestone): RoadmapDetail {
   if (milestone.left?.length && milestone.right?.length) {
@@ -31,14 +31,30 @@ function detailFor(c: ReturnType<typeof getAppCopy>["roadmap"], milestone: Miles
     left: [milestone.description],
     rightLabel: c.prove,
     right: [milestone.proof],
-    estimate: c.selfPaced,
+    estimate: milestone.estimate ?? c.selfPaced,
   };
 }
 
-export function RoadmapTree({ locale = "en", milestones }: { locale?: string; milestones: Milestone[] }) {
+export function RoadmapTree({
+  locale = "en",
+  milestones,
+  fork,
+}: {
+  locale?: string;
+  milestones: Milestone[];
+  fork?: ForkConfig;
+}) {
   const c = getAppCopy(locale).roadmap;
-  const statusLabels: Record<Milestone["status"], string> = { complete: c.verified, active: c.inProgress, next: c.next, upcoming: c.upcoming };
-  const current = milestones.find((item) => item.status === "active") ?? milestones.find((item) => item.status === "next") ?? milestones[0];
+  const statusLabels: Record<Milestone["status"], string> = {
+    complete: c.verified,
+    active: c.inProgress,
+    next: c.next,
+    upcoming: c.upcoming,
+  };
+  const current =
+    milestones.find((item) => item.status === "active") ??
+    milestones.find((item) => item.status === "next") ??
+    milestones[0];
   const [selectedKey, setSelectedKey] = useState(current?.key ?? "");
   const selected = useMemo(
     () => milestones.find((item) => item.key === selectedKey) ?? current,
@@ -50,10 +66,14 @@ export function RoadmapTree({ locale = "en", milestones }: { locale?: string; mi
   function selectMilestone(key: string) {
     setSelectedKey(key);
     window.history.replaceState(null, "", `#milestone-${key}`);
+    // Optional call: scrollIntoView is absent in jsdom.
+    document.getElementById("roadmap-detail")?.scrollIntoView?.({ behavior: "smooth", block: "nearest" });
   }
 
   function missionHref(milestone: Milestone) {
-    return milestone.key.startsWith("content-") ? "/app/missions/content-creator-awareness" : "/app/missions/responsive-profile-card";
+    return milestone.key.startsWith("content-")
+      ? "/app/missions/content-creator-awareness"
+      : "/app/missions/responsive-profile-card";
   }
 
   if (!selected) return null;
@@ -61,73 +81,89 @@ export function RoadmapTree({ locale = "en", milestones }: { locale?: string; mi
 
   return (
     <div className="roadmap-workspace">
-    <section
-      className="roadmap-canvas"
-      aria-label={locale === "my" ? "သင်ယူမှုလမ်းကြောင်း" : "Learning roadmap"}
-    >
+      <section className="roadmap-canvas" aria-label={locale === "my" ? "သင်ယူမှုလမ်းကြောင်း" : "Learning roadmap"}>
         <header className="roadmap-toolbar">
           <div className="roadmap-progress-copy">
-            <span>{completedCount}/{milestones.length} {c.milestones} {c.verified.toLowerCase()}</span>
+            <span>
+              {completedCount}/{milestones.length} {c.milestones} {c.verified.toLowerCase()}
+            </span>
             <strong>{progress}%</strong>
           </div>
-          <div className="roadmap-progress-track" aria-label={`${progress}% complete`} role="progressbar" aria-valuemin={0} aria-valuemax={100} aria-valuenow={progress}>
+          <div
+            className="roadmap-progress-track"
+            aria-label={`${progress}% complete`}
+            role="progressbar"
+            aria-valuemin={0}
+            aria-valuemax={100}
+            aria-valuenow={progress}
+          >
             <span style={{ width: `${progress}%` }} />
           </div>
-          {current ? <a className="roadmap-position-link" href={`#milestone-${current.key}`} onClick={() => selectMilestone(current.key)}>{current.status === "active" ? c.jump : c.startHere}</a> : null}
+          {current ? (
+            <button type="button" className="roadmap-position-link" onClick={() => selectMilestone(current.key)}>
+              {current.status === "active" ? c.jump : c.startHere}
+            </button>
+          ) : null}
         </header>
 
         <div className="roadmap-legend" aria-label={c.careerTracks}>
-          <span><i className="complete" />{c.verified}</span>
-          <span><i className="active" />{c.inProgress}</span>
-          <span><i className="upcoming" />{c.visibleNext}</span>
+          <span><i className="rm-sw rm-sw-stage" />{c.stage ?? "Stage"}</span>
+          <span><i className="rm-sw rm-sw-milestone" />{c.milestone ?? "Milestone"}</span>
+          <span><i className="rm-sw rm-sw-done" />{c.verified}</span>
+          <span><i className="rm-sw rm-sw-path" />{c.path ?? "Path"}</span>
         </div>
 
-        <div className="roadmap-tree">
-          {milestones.map((milestone) => {
-            const detail = detailFor(c, milestone);
-            const isSelected = milestone.key === selected.key;
-            return (
-              <article className={`roadmap-stage ${milestone.status} ${isSelected ? "selected" : ""}`} id={`milestone-${milestone.key}`} key={milestone.key}>
-                <div className="roadmap-branch left">
-                  <span className="roadmap-branch-label">{detail.leftLabel}</span>
-                  {detail.left.map((skill) => <span className="roadmap-skill-node" key={skill}>{skill}</span>)}
-                </div>
-
-                <button className="roadmap-core-node" type="button" aria-pressed={isSelected} onClick={() => selectMilestone(milestone.key)}>
-                  <span className="roadmap-step">{c.step} {milestone.order}</span>
-                  <span className="roadmap-node-status">{statusLabels[milestone.status]}</span>
-                  <strong>{milestone.title}</strong>
-                  <span className="roadmap-core-proof">{milestone.proof}</span>
-                </button>
-
-                <div className="roadmap-branch right">
-                  <span className="roadmap-branch-label">{detail.rightLabel}</span>
-                  {detail.right.map((skill) => <span className="roadmap-skill-node" key={skill}>{skill}</span>)}
-                </div>
-
-                {isSelected ? <div className="roadmap-mobile-selection"><span>{c.proofTarget}</span><strong>{milestone.proof}</strong>{milestone.status === "active" ? <Link href={missionHref(milestone)}>{c.continueMission}</Link> : null}</div> : null}
-              </article>
-            );
-          })}
+        <div className="roadmap-canvas-scroll">
+          <RoadmapCanvas
+            milestones={milestones}
+            selectedKey={selected.key}
+            onSelect={selectMilestone}
+            fork={fork}
+            labels={{
+              stage: c.step,
+              verified: c.verified,
+              inProgress: c.inProgress,
+              upcoming: c.upcoming,
+              comingSoon: c.comingSoon ?? c.upcoming,
+            }}
+          />
         </div>
       </section>
 
       <aside className={`roadmap-detail-panel ${selected.status}`} id="roadmap-detail" aria-live="polite">
         <div className="roadmap-detail-heading">
-          <span className="eyebrow">{c.selected} · {String(selected.order).padStart(2, "0")}</span>
-          <StatusPill tone={selected.status === "complete" ? "success" : selected.status === "active" ? "warning" : "neutral"}>{statusLabels[selected.status]}</StatusPill>
+          <span className="eyebrow">
+            {c.selected} · {String(selected.order).padStart(2, "0")}
+          </span>
+          <StatusPill
+            tone={selected.status === "complete" ? "success" : selected.status === "active" ? "warning" : "neutral"}
+          >
+            {statusLabels[selected.status]}
+          </StatusPill>
         </div>
         <h2>{selected.title}</h2>
         <p>{selected.description}</p>
 
         <dl className="roadmap-detail-meta">
-          <div><dt>{c.estimated}</dt><dd>{selectedDetail.estimate}</dd></div>
-          <div><dt>{c.placement}</dt><dd>{c.step} {selected.order}/{milestones.length}</dd></div>
+          <div>
+            <dt>{c.estimated}</dt>
+            <dd>{selectedDetail.estimate}</dd>
+          </div>
+          <div>
+            <dt>{c.placement}</dt>
+            <dd>
+              {c.step} {selected.order}/{milestones.length}
+            </dd>
+          </div>
         </dl>
 
         <div className="roadmap-detail-section">
           <span className="roadmap-detail-label">{c.whatCover}</span>
-          <ul>{[...selectedDetail.left, ...selectedDetail.right].map((skill) => <li key={skill}>{skill}</li>)}</ul>
+          <ul>
+            {[...selectedDetail.left, ...selectedDetail.right].map((skill) => (
+              <li key={skill}>{skill}</li>
+            ))}
+          </ul>
         </div>
 
         <div className="roadmap-proof-target">
@@ -136,9 +172,19 @@ export function RoadmapTree({ locale = "en", milestones }: { locale?: string; mi
           <small>{c.completion}</small>
         </div>
 
-        {selected.status === "active" ? <Link className="button primary full" href={missionHref(selected)}>{c.continueMission}</Link> : null}
-        {selected.status === "complete" ? <Link className="button outline full" href="/app/proof">{c.viewProof}</Link> : null}
-        {selected.status === "next" || selected.status === "upcoming" ? <p className="roadmap-visible-note">{c.visibleNote}</p> : null}
+        {selected.status === "active" ? (
+          <Link className="button primary full" href={missionHref(selected)}>
+            {c.continueMission}
+          </Link>
+        ) : null}
+        {selected.status === "complete" ? (
+          <Link className="button outline full" href="/app/proof">
+            {c.viewProof}
+          </Link>
+        ) : null}
+        {selected.status === "next" || selected.status === "upcoming" ? (
+          <p className="roadmap-visible-note">{c.visibleNote}</p>
+        ) : null}
       </aside>
     </div>
   );

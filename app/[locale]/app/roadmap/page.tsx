@@ -1,7 +1,7 @@
 import { Link } from "@/i18n/navigation";
 import { RoadmapTree } from "@/components/app/roadmap-tree";
 import { getRoadmap } from "@/lib/data/app-data";
-import { getCareerTrack } from "@/lib/domain/career-tracks";
+import { getCareerTrack, getTrackFork } from "@/lib/domain/career-tracks";
 import type { Milestone } from "@/lib/domain/types";
 import { getAppCopy, localizeCareerTerm, localizeRoadmapMilestone, localizeTrackOutcome } from "@/lib/i18n/app-copy";
 
@@ -23,7 +23,7 @@ export default async function RoadmapPage({ params, searchParams }: { params: Pr
           <span>{track.milestones.length} {c.stages}</span>
         </div>
       </section>
-      <RoadmapTree locale={locale} milestones={milestones} />
+      <RoadmapTree locale={locale} milestones={milestones} fork={getTrackFork(track.key, locale)} />
     </div>
   );
 }

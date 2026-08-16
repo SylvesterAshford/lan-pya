@@ -82,6 +82,9 @@ export type Milestone = {
   rightLabel?: string;
   right?: string[];
   estimate?: string;
+  /** Published shape of the journey is visible, but this stage has no content
+   *  yet. Renders dashed and non-interactive. Design Spec §3.3 node states. */
+  comingSoon?: boolean;
 };
 
 export type CareerTrack = {
