@@ -139,4 +139,106 @@ const { error: competencyError } = await supabase.from("proof_competencies").ups
 ]);
 if (competencyError) throw competencyError;
 
+// ─── Content Creator: the demo account's ACTIVE path ──────────────────────────
+//
+// get_active_path_dashboard scopes every Home figure to the learner's active
+// path. The demo account is active on content-creator, so seeding only the
+// frontend track left Home reading "0/1 milestones, 0% complete, 0 XP" while
+// the roadmap showed real progress. Seed the active path too.
+//
+// Requires migration 20260817000000_content_creator_full_track, which adds
+// stages 2-5. Without it only stage 1 exists and this seeds 1/1 rather than 2/5.
+
+const CONTENT_TRACK_ID = "40000000-0000-0000-0000-000000000001";
+const CONTENT_MISSION_ID = "42000000-0000-0000-0000-000000000001";
+
+const { data: contentMilestones, error: contentMilestoneError } = await supabase
+  .from("roadmap_milestones")
+  .select("id,key,position")
+  .eq("track_id", CONTENT_TRACK_ID)
+  .order("position");
+if (contentMilestoneError) throw contentMilestoneError;
+
+if (contentMilestones.length < 5) {
+  console.warn(
+    `Content Creator has ${contentMilestones.length} milestone(s) in the database, expected 5. ` +
+    "Apply migration 20260817000000_content_creator_full_track first, then re-run.",
+  );
+}
+
+// Stages 1-2 verified, stage 3 in progress, the rest ahead. A prepared account
+// mid-journey, per PRODUCT.md: seeded records behave like a prepared account and
+// stay visibly distinct from live learner evidence.
+const { error: contentProgressError } = await supabase.from("milestone_progress").upsert(
+  contentMilestones.map((milestone, index) => ({
+    id: `16500000-0000-0000-0000-${String(index + 1).padStart(12, "0")}`,
+    user_id: userId,
+    milestone_id: milestone.id,
+    status: index < 2 ? "complete" : index === 2 ? "active" : "upcoming",
+    source: "seeded_demo",
+  })),
+  { onConflict: "user_id,milestone_id" },
+);
+if (contentProgressError) throw contentProgressError;
+
+const contentSubmissionId = "16600000-0000-0000-0000-000000000001";
+const contentProofId = "16700000-0000-0000-0000-000000000001";
+
+const contentRecords = [
+  supabase.from("submissions").upsert({
+    id: contentSubmissionId,
+    user_id: userId,
+    mission_id: CONTENT_MISSION_ID,
+    state: "verified",
+    attempt: 1,
+    current_version: 1,
+    data_origin: "seeded_demo",
+  }),
+  supabase.from("submission_versions").upsert({
+    id: "16800000-0000-0000-0000-000000000001",
+    submission_id: contentSubmissionId,
+    version: 1,
+    repository_url: "https://example.com/lan-pya-demo/audience-brief",
+    deployment_url: "https://example.com/lan-pya-demo/campaign",
+    screenshot_url: null,
+    reflection:
+      "A prepared demo record: one named audience, evidence for the problem, and the campaign direction that followed from it.",
+    immutable_payload_hash: "demo-content-awareness-v1",
+  }, { onConflict: "submission_id,version" }),
+];
+
+for (const operation of contentRecords) {
+  const { error } = await operation;
+  if (error) throw error;
+}
+
+const { error: contentProofError } = await supabase.from("proof_items").upsert({
+  id: contentProofId,
+  user_id: userId,
+  submission_id: contentSubmissionId,
+  state: "active",
+  snapshot: {
+    title: "Audience and campaign brief",
+    rubric_version: "content-creator-awareness-rubric-v1",
+    reviewer_tier: "Prepared demo review",
+    competencies: ["Audience research", "Content strategy", "Accessible publishing", "Ethical communication"],
+    repository_url: "https://example.com/lan-pya-demo/audience-brief",
+    deployment_url: "https://example.com/lan-pya-demo/campaign",
+  },
+  verified_at: "2026-08-12T09:00:00.000Z",
+  data_origin: "seeded_demo",
+});
+if (contentProofError) throw contentProofError;
+
+// XP is path-scoped: career_quest_xp joins on track_id so Content Creator XP
+// never moves a Frontend level. One verified core mission is worth 100.
+const { error: xpError } = await supabase.from("career_quest_xp").upsert({
+  user_id: userId,
+  submission_id: contentSubmissionId,
+  track_id: CONTENT_TRACK_ID,
+  amount: 100,
+  reason: "verified_core_mission",
+}, { onConflict: "submission_id" });
+if (xpError) throw xpError;
+
 console.log(`Demo account provisioned: ${email}`);
