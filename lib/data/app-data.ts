@@ -2,6 +2,7 @@ import "server-only";
 
 import { createClient } from "@/lib/supabase/server";
 import { CAREER_TRACKS, getCareerTrack, mergeTrackMilestones } from "@/lib/domain/career-tracks";
+import { byDeadlineAscending } from "@/lib/domain/deadlines";
 import type { ActivePathDashboard, CareerPreferences, Milestone, OpportunityCard, PausedMissionWork, Profile, ProofItem, SubmissionState } from "@/lib/domain/types";
 
 type UnknownRecord = Record<string, unknown>;
@@ -142,13 +143,16 @@ export async function getProofItems(): Promise<ProofItem[]> {
 export async function getOpportunities(): Promise<OpportunityCard[]> {
   const supabase = await createClient();
   const { data } = await supabase.rpc("get_opportunity_readiness");
-  return ((data ?? []) as UnknownRecord[]).map((row) => ({
+  return ((data ?? []) as UnknownRecord[]).map((row): OpportunityCard => ({
     id: String(row.id), title: String(row.title), organization: String(row.organization), type: String(row.type),
     location: String(row.location), deadline: String(row.deadline), readiness: row.readiness as OpportunityCard["readiness"],
     supported: Array.isArray(row.supported) ? row.supported.map(String) : [], gaps: Array.isArray(row.gaps) ? row.gaps.map(String) : [],
     unknown: Array.isArray(row.unknown) ? row.unknown.map(String) : [], sourceUrl: String(row.source_url),
     lastVerifiedAt: String(row.last_verified_at), dataOrigin: row.data_origin === "seeded_demo" ? "seeded_demo" : "live",
-  }));
+  }))
+    // The feed heading promises "sorted by deadline"; do not rely on the RPC's
+    // ordering to keep that promise. Design Spec §3.5: soonest first.
+    .sort(byDeadlineAscending);
 }
 
 export async function getReviewQueue() {

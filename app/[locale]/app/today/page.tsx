@@ -1,8 +1,9 @@
 import { ArrowRight, BriefcaseBusiness, Check, Clock3, Compass, Map } from "lucide-react";
 import { Link } from "@/i18n/navigation";
 import { requireUser } from "@/lib/auth";
+import { DeadlineChip } from "@/components/app/deadline-chip";
 import { getActivePathDashboard, getOpportunities, getRoadmap } from "@/lib/data/app-data";
-import { formatAppDate, getAppCopy, localizeCareerTerm, localizeOpportunity, localizeRoadmapMilestone } from "@/lib/i18n/app-copy";
+import { getAppCopy, localizeCareerTerm, localizeOpportunity, localizeRoadmapMilestone } from "@/lib/i18n/app-copy";
 
 export default async function TodayPage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
@@ -57,7 +58,7 @@ export default async function TodayPage({ params }: { params: Promise<{ locale: 
 
         <section className="home-section deadlines">
           <header><div><BriefcaseBusiness size={18} aria-hidden="true" /><h2>{locale === "my" ? "သင့်အတွက် သတ်မှတ်ရက်များ" : "Deadlines for you"}</h2></div><Link href="/app/opportunities">{locale === "my" ? "အားလုံးကြည့်မည်" : "See all"}</Link></header>
-          {nearbyOpportunities.length ? <div className="home-list">{nearbyOpportunities.map((item) => <Link href="/app/opportunities" key={item.id}><span className="deadline-icon"><Clock3 size={15} aria-hidden="true" /></span><span><strong>{item.title}</strong><small>{item.type} · {formatAppDate(locale, item.deadline)}</small></span><ArrowRight size={15} aria-hidden="true" /></Link>)}</div> : <p className="home-empty">{c.opportunities.emptyBody}</p>}
+          {nearbyOpportunities.length ? <div className="home-list">{nearbyOpportunities.map((item) => <Link href="/app/opportunities" key={item.id}><span className="deadline-icon"><Clock3 size={15} aria-hidden="true" /></span><span><strong>{item.title}</strong><small>{item.type}</small><DeadlineChip locale={locale} deadline={item.deadline} showIcon={false} /></span><ArrowRight size={15} aria-hidden="true" /></Link>)}</div> : <p className="home-empty">{c.opportunities.emptyBody}</p>}
         </section>
       </div>
     </div>
