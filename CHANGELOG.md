@@ -1,5 +1,17 @@
 # Changelog
 
+## [0.5.0.0] - 2026-08-17
+
+### Added
+
+- Open any career path on three tabs: the Map, its Missions, and a Tutor that answers questions about that roadmap. Tab counts state how many stages and missions exist before you click.
+- Ask about a roadmap in English or Burmese. The tutor is a clearly labelled preview that answers from prepared notes, never marks work complete, and never creates proof.
+
+### Changed
+
+- Missions moved out of Roadmaps into their own tab, so the work is where you would look for it.
+- The content column now grows with the window instead of staying a fixed width, so a wide monitor is used rather than leaving the page stranded in the middle.
+
 ## [0.4.0.0] - 2026-08-17
 
 ### Added

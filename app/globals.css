@@ -65,7 +65,10 @@
 
   /* ---- Layout ---- */
   --shell-max: 1100px;
-  --content-max: 820px;
+  /* Fluid, not a fixed cap. 820px reads well at 1440px but strands the content
+     in the middle of a wide monitor; one fixed number cannot serve both.
+       1024px -> 820   1440px -> 1123   1920px -> 1280   2560px -> 1280  */
+  --content-max: clamp(820px, 78vw, 1280px);
   --canvas-max: 760px;
   --sidebar-width: 264px;
   --sidebar-width-icon: 76px;
@@ -7151,7 +7154,7 @@ html[lang="my"] .mission-focus h2{
 
 /* Canvas (780) + gap (24) + detail panel (320) + page padding (76). */
 .app-workspace .roadmap-page, .roadmap-page{
-  max-width: 1200px;
+  max-width: max(1200px, var(--content-max));
 }
 
 .roadmap-page-heading{ max-width: var(--content-max); }
@@ -7516,4 +7519,207 @@ html[lang="my"] .app-page .page-heading h1,
 html[lang="my"] .app-page .page-intro h1,
 html[lang="my"] .app-page .mission-title h1 {
   line-height: 1.3;
+}
+
+/* ============================================================
+   PATH TABS + AI TUTOR — DESIGN.md "Path tabs" / "The AI Tutor".
+   ============================================================ */
+
+.path-tabs {
+  display: flex;
+  gap: var(--s-lg);
+  margin-bottom: var(--s-lg);
+  border-bottom: 1px solid var(--hairline);
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.path-tabs::-webkit-scrollbar { display: none; }
+
+.path-tab {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 11px 0;
+  margin-bottom: -1px;
+  font-size: var(--t-meta);
+  font-weight: 600;
+  white-space: nowrap;
+  color: var(--muted-ink);
+  text-decoration: none;
+  border-bottom: 2px solid transparent;
+}
+
+.path-tab:hover { color: var(--ink); }
+.path-tab:focus-visible { outline: 2px solid var(--teal-700); outline-offset: 3px; }
+
+.path-tab.on {
+  color: var(--teal-700);
+  border-bottom-color: var(--teal-700);
+}
+
+.path-tab-count {
+  padding: 1px 7px;
+  font-size: var(--t-label);
+  font-weight: 700;
+  color: var(--muted-ink);
+  background: var(--surface-sunk);
+  border: 1px solid var(--hairline);
+  border-radius: var(--r-chip);
+  font-variant-numeric: tabular-nums;
+}
+
+.path-tab.on .path-tab-count {
+  color: var(--teal-700);
+  background: var(--teal-100);
+  border-color: var(--teal-100);
+}
+
+/* ---- tutor ---- */
+.tutor {
+  max-width: 620px;
+  background: var(--surface);
+  border: 1px solid var(--hairline);
+  border-radius: var(--r-card);
+  overflow: hidden;
+}
+
+.tutor-head {
+  display: flex;
+  align-items: center;
+  gap: var(--s-sm);
+  padding: 12px var(--s-md);
+  border-bottom: 1px solid var(--hairline);
+  color: var(--teal-700);
+}
+
+.tutor-head strong {
+  flex: 1;
+  font-size: var(--t-title);
+  font-weight: 700;
+  color: var(--ink);
+}
+
+.tutor-reset {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 5px 10px;
+  font-family: inherit;
+  font-size: var(--t-label);
+  font-weight: 600;
+  color: var(--muted-ink);
+  background: var(--surface);
+  border: 1px solid var(--hairline);
+  border-radius: var(--r-chip);
+  cursor: pointer;
+}
+
+.tutor-reset:hover { color: var(--ink); }
+
+.tutor-log {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  min-height: 260px;
+  max-height: 440px;
+  overflow-y: auto;
+  padding: var(--s-md);
+  background: var(--surface-sunk);
+}
+
+.tutor-msg {
+  max-width: 84%;
+  margin: 0;
+  padding: 10px 13px;
+  font-size: var(--t-meta);
+  line-height: 1.55;
+  border-radius: var(--r-card);
+}
+
+/* Assistant amber, learner teal — the founder reference's pairing. This amber
+   is chrome amber, so it never appears on the roadmap canvas. */
+.tutor-msg.bot {
+  align-self: flex-start;
+  color: var(--amber-800);
+  background: var(--amber-100);
+  border: 1px solid #ebd9b4;
+  border-bottom-left-radius: var(--r-node);
+}
+
+.tutor-msg.me {
+  align-self: flex-end;
+  color: #fff;
+  background: var(--teal-700);
+  border-bottom-right-radius: var(--r-node);
+}
+
+.tutor-suggest-lead {
+  margin: var(--s-xs) 0 0;
+  font-size: var(--t-label);
+  font-weight: 600;
+  color: var(--muted-ink);
+}
+
+.tutor-suggest {
+  width: 100%;
+  padding: 10px 13px;
+  font-family: inherit;
+  font-size: var(--t-meta);
+  font-weight: 600;
+  text-align: left;
+  color: var(--teal-700);
+  background: var(--teal-050);
+  border: 1px solid var(--teal-100);
+  border-radius: var(--r-control);
+  cursor: pointer;
+}
+
+.tutor-suggest:hover { background: var(--teal-100); }
+.tutor-suggest:focus-visible { outline: 2px solid var(--teal-700); outline-offset: 2px; }
+
+.tutor-foot {
+  padding: 11px var(--s-md);
+  border-top: 1px solid var(--hairline);
+}
+
+.tutor-input { display: flex; gap: var(--s-sm); }
+
+.tutor-input input {
+  flex: 1;
+  min-height: 44px;
+  padding: 0 13px;
+  font-family: inherit;
+  font-size: var(--t-meta);
+  color: var(--ink);
+  background: var(--surface);
+  border: 1px solid var(--hairline);
+  border-radius: var(--r-control);
+}
+
+.tutor-input input:focus-visible { outline: 2px solid var(--teal-700); outline-offset: 1px; }
+
+.tutor-input button {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  min-height: 44px;
+  color: #fff;
+  background: var(--teal-700);
+  border: 0;
+  border-radius: var(--r-control);
+  cursor: pointer;
+}
+
+.tutor-disclaimer {
+  margin: var(--s-sm) 0 0;
+  font-size: var(--t-label);
+  line-height: var(--l-label);
+  color: var(--muted-ink);
+  text-align: center;
+}
+
+@media (max-width: 640px) {
+  .tutor-msg { max-width: 92%; }
+  .tutor-log { min-height: 220px; }
 }
