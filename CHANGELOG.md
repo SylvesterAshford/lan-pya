@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.8.0.0] - 2026-08-17
+
+### Changed
+
+- Opportunities is now a focus carousel. Move through listings with arrows, keyboard, drag, or trackpad; the one you land on stands forward and its full detail — deadline, what your evidence supports, what is missing — reads above the rail.
+
 ## [0.7.0.0] - 2026-08-17
 
 ### Added

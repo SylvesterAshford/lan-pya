@@ -8306,3 +8306,233 @@ html[lang="my"] .app-page .mission-title h1 {
   }
   .tutor-fab-copy { display: none; }
 }
+
+/* ============================================================
+   OPPORTUNITY FOCUS CAROUSEL
+   A 3D arc built from CSS transforms only. The reference is WebGL;
+   a canvas bundle would buy the same picture at a cost learners on
+   mobile data pay. Design Spec §8: the app's speed is the brand.
+   ============================================================ */
+
+.opp-stage { display: grid; gap: var(--s-lg); }
+
+/* Detail sits above the arc: the decision is read first, the carousel
+   is the control rather than the content. */
+.opp-detail {
+  padding: var(--s-lg);
+  background: var(--surface);
+  border: 1px solid var(--hairline);
+  border-left: 3px solid var(--teal-700);
+  border-radius: var(--r-card);
+}
+
+.opp-detail-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s-sm);
+  align-items: center;
+  margin-bottom: var(--s-sm);
+}
+
+.opp-kind {
+  font-size: var(--t-label);
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--teal-700);
+}
+
+.opp-loc {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: var(--t-label);
+  font-weight: 600;
+  color: var(--muted-ink);
+}
+
+.opp-detail h2 {
+  margin: 0 0 2px;
+  font-size: var(--t-h1);
+  line-height: var(--l-h1);
+  letter-spacing: var(--k-h1);
+  font-weight: 700;
+}
+
+.opp-org { margin: 0 0 var(--s-sm); font-size: var(--t-meta); color: var(--muted-ink); }
+
+.opp-evidence {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--s-md);
+  margin: var(--s-md) 0;
+  padding-top: var(--s-md);
+  border-top: 1px solid var(--hairline);
+}
+
+.opp-evidence strong {
+  display: block;
+  margin-bottom: 5px;
+  font-size: var(--t-label);
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--muted-ink);
+}
+
+.opp-evidence ul { margin: 0; padding-left: var(--s-md); }
+.opp-evidence li { font-size: var(--t-meta); line-height: var(--l-meta); }
+.opp-evidence small { font-size: var(--t-meta); color: var(--muted-ink); }
+
+.opp-detail-foot {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s-sm);
+  align-items: center;
+  justify-content: space-between;
+  padding-top: var(--s-md);
+  border-top: 1px solid var(--hairline);
+}
+
+.opp-detail-foot small { font-size: var(--t-meta); color: var(--muted-ink); }
+
+/* ---- the arc ---- */
+.opp-rail {
+  position: relative;
+  height: 230px;
+  perspective: 1200px;
+  perspective-origin: 50% 45%;
+  touch-action: pan-y;
+  cursor: grab;
+  overflow: hidden;
+}
+
+.opp-rail.dragging { cursor: grabbing; }
+.opp-rail:focus-visible { outline: 2px solid var(--teal-700); outline-offset: 3px; border-radius: var(--r-card); }
+
+.opp-arc {
+  position: relative;
+  height: 100%;
+  transform-style: preserve-3d;
+}
+
+.opp-card {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  display: grid;
+  gap: 5px;
+  align-content: start;
+  width: 232px;
+  min-height: 168px;
+  padding: var(--s-md);
+  margin: -84px 0 0 -116px;
+  font-family: inherit;
+  text-align: left;
+  background: var(--surface);
+  border: 1px solid var(--hairline);
+  border-radius: var(--r-card);
+  cursor: pointer;
+  transition: transform 420ms cubic-bezier(0.22, 0.8, 0.3, 1),
+              opacity 420ms ease-out,
+              border-color 240ms ease,
+              box-shadow 240ms ease;
+  will-change: transform, opacity;
+}
+
+/* The focused card stands upright and lit; neighbours recede. */
+.opp-card.active {
+  border-color: var(--teal-700);
+  box-shadow: 0 18px 40px rgba(4, 52, 44, 0.16);
+}
+
+.opp-card:focus-visible { outline: 2px solid var(--teal-700); outline-offset: 3px; }
+
+.opp-card-icon {
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  color: var(--teal-700);
+  background: var(--teal-050);
+  border-radius: var(--r-control);
+}
+
+.opp-card.active .opp-card-icon { color: #fff; background: var(--teal-700); }
+
+.opp-card-kind {
+  font-size: var(--t-label);
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--muted-ink);
+}
+
+.opp-card strong { font-size: var(--t-title); line-height: var(--l-title); font-weight: 600; }
+.opp-card small { font-size: var(--t-meta); color: var(--muted-ink); }
+
+/* ---- controls ---- */
+.opp-controls {
+  display: flex;
+  gap: var(--s-md);
+  align-items: center;
+  justify-content: center;
+}
+
+.opp-arrow {
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  color: var(--ink);
+  background: var(--surface);
+  border: 1px solid var(--hairline);
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.opp-arrow:hover:not(:disabled) { border-color: var(--teal-700); color: var(--teal-700); }
+.opp-arrow:disabled { opacity: 0.4; cursor: default; }
+.opp-arrow:focus-visible { outline: 2px solid var(--teal-700); outline-offset: 2px; }
+
+.opp-scrub { display: flex; gap: 5px; align-items: center; }
+
+.opp-scrub span {
+  width: 22px;
+  height: 4px;
+  background: var(--hairline);
+  border-radius: var(--r-chip);
+  transition: width 320ms ease-out, background-color 320ms ease-out;
+}
+
+.opp-scrub span.on { width: 44px; background: var(--teal-700); }
+
+.opp-hint {
+  margin: 0;
+  font-size: var(--t-label);
+  color: var(--muted-ink);
+  text-align: center;
+}
+
+/* Motion is the whole point of this component, so reduced-motion gets a
+   plain stacked list rather than a stilled arc a learner cannot parse. */
+@media (prefers-reduced-motion: reduce) {
+  .opp-rail { height: auto; perspective: none; overflow: visible; }
+  .opp-arc { display: grid; gap: var(--s-sm); }
+  .opp-card {
+    position: static;
+    width: 100%;
+    min-height: 0;
+    margin: 0;
+    transform: none !important;
+    opacity: 1 !important;
+    transition: none;
+  }
+  .opp-scrub span, .opp-card { transition: none; }
+}
+
+@media (max-width: 720px) {
+  .opp-evidence { grid-template-columns: 1fr; gap: var(--s-sm); }
+  .opp-rail { height: 210px; }
+  .opp-card { width: 200px; margin-left: -100px; }
+}
