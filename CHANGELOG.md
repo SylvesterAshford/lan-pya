@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.12.0.0] - 2026-08-17
+
+### Changed
+
+- Opportunities is a board instead of a carousel. Search by name or organisation, switch between For you and All, filter by category, and open any listing in place to read what your evidence supports and what is still missing. Listings are grouped by what matters first: closing this week, then what your proof already covers, then what you could build toward.
+
 ## [0.11.0.0] - 2026-08-17
 
 ### Changed
