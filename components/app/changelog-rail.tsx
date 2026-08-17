@@ -20,9 +20,13 @@ import type { ChangeKind, Release } from "@/lib/domain/changelog";
  * Abbreviations are the trap — "v0.9.1.0" and "e.g." both contain a period that
  * is not a sentence end. Only a period followed by whitespace and a capital
  * counts, and a result that would be uselessly short falls back to the full text.
+ *
+ * The capital may be preceded by an opening quote or bracket. Missing that case
+ * shipped a full paragraph to production, because the entry announcing this very
+ * rail read: `Home now shows what changed. "New this week" lists ...`
  */
 function firstSentence(text: string): string {
-  const match = /^(.+?[.!?])\s+[A-Z]/.exec(text);
+  const match = /^(.+?[.!?])\s+["“‘'([]?[A-Z]/.exec(text);
   const candidate = match?.[1];
   if (candidate && candidate.length >= 24) return candidate;
   return text;

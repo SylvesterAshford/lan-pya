@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.10.0.1] - 2026-08-17
+
+### Fixed
+
+- A "New this week" entry ran to a full paragraph when its next sentence began with a quotation mark, instead of showing one line.
+
 ## [0.10.0.0] - 2026-08-17
 
 ### Added
