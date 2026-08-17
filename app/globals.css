@@ -47,6 +47,21 @@
      graphical objects. Every emblem therefore carries a 2.2px --em-ink
      outline, which is what actually carries the contrast. The outline is
      structural. Removing it breaks accessibility, not just the look. */
+  /* ---- Mascot palette: the traveller illustration ONLY ----
+     Sampled from the founder's supplied artwork. Scoped exactly like the
+     emblem palette: these never appear in chrome, only inside the character.
+     Navy, teal and amber are already the system, which is why this artwork
+     suits the product. */
+  --m-navy: #17305a;
+  --m-navy-dark: #0f2143;
+  --m-hair: #101d38;
+  --m-teal: #2e8079;
+  --m-teal-dark: #1d5f5a;
+  --m-skin: #e0a075;
+  --m-skin-dark: #c98757;
+  --m-amber: #f0a830;
+  --m-cream: #f4efe4;
+
   --em-1: #1d7f6e;
   --em-2: #2f6ea8;
   --em-3: #8a5fbf;
