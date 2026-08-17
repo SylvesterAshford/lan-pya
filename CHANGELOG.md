@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.15.0.0] - 2026-08-17
+
+### Changed
+
+- Lan Pya is dark. Navy is the primary surface and teal is now the accent that rides on it, with panels rendered as lit glass. Every screen was checked for surfaces that stayed light.
+
 ## [0.14.0.0] - 2026-08-17
 
 ### Changed

@@ -1,0 +1,114 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 768" role="img" aria-labelledby="title desc">
+  <title id="title">Lan Pya front-facing girl mascot</title>
+  <desc id="desc">A hopeful young Myanmar woman wearing a navy hoodie and teal backpack.</desc>
+  <defs>
+    <linearGradient id="hoodie" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#17305C"/>
+      <stop offset="1" stop-color="#0F172A"/>
+    </linearGradient>
+    <linearGradient id="teal" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#14978D"/>
+      <stop offset="1" stop-color="#0F766E"/>
+    </linearGradient>
+    <linearGradient id="skin" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#FFC18D"/>
+      <stop offset="1" stop-color="#E98A58"/>
+    </linearGradient>
+    <filter id="softShadow" x="-20%" y="-20%" width="140%" height="160%">
+      <feDropShadow dx="0" dy="8" stdDeviation="8" flood-color="#0F172A" flood-opacity=".12"/>
+    </filter>
+    <symbol id="lanPyaMark" viewBox="0 0 64 64">
+      <path d="M8 10h14v31c0 5 3 8 8 8h26v11H27C15 60 8 53 8 41Z" fill="#0F172A"/>
+      <path d="M7 38h16c8 0 12-2 17-9l8-12 9 6-9 14C41 48 34 52 22 52H7Z" fill="#0F766E"/>
+      <path d="m34 16 25-9-5 25-7-8-8 11-9-7 9-11Z" fill="#F59E0B"/>
+      <path d="m28 20 12-5 8 9-9 11Z" fill="#0F766E"/>
+    </symbol>
+  </defs>
+
+  <g filter="url(#softShadow)" stroke-linecap="round" stroke-linejoin="round">
+    <!-- Backpack straps -->
+    <path d="M170 245C143 274 137 332 151 391" fill="none" stroke="#095D59" stroke-width="25"/>
+    <path d="M342 245C369 274 375 332 361 391" fill="none" stroke="#095D59" stroke-width="25"/>
+    <path d="M170 245C143 274 137 332 151 391" fill="none" stroke="url(#teal)" stroke-width="17"/>
+    <path d="M342 245C369 274 375 332 361 391" fill="none" stroke="url(#teal)" stroke-width="17"/>
+
+    <!-- Ponytail behind the head -->
+    <path d="M314 102c32 5 47 28 37 56-6 18-4 35 7 51-22 5-42-6-46-28-5-27 9-49 2-79Z" fill="#071936" stroke="#06142B" stroke-width="4"/>
+
+    <!-- Neck -->
+    <path d="M220 215V258H292V215Z" fill="url(#skin)" stroke="#C96C42" stroke-width="3"/>
+
+    <!-- Ears -->
+    <ellipse cx="184" cy="166" rx="20" ry="30" fill="url(#skin)" stroke="#C96C42" stroke-width="3"/>
+    <ellipse cx="328" cy="166" rx="20" ry="30" fill="url(#skin)" stroke="#C96C42" stroke-width="3"/>
+    <path d="M181 162c12-8 16 8 7 18" fill="none" stroke="#C96C42" stroke-width="3"/>
+    <path d="M331 162c-12-8-16 8-7 18" fill="none" stroke="#C96C42" stroke-width="3"/>
+
+    <!-- Head -->
+    <path d="M256 76c54 0 78 37 73 90-4 53-34 90-73 90s-69-37-73-90c-5-53 19-90 73-90Z" fill="url(#skin)" stroke="#C96C42" stroke-width="3"/>
+
+    <!-- Hair -->
+    <path d="M183 151c-13-62 20-108 76-108 45 0 76 28 74 79-15-8-28-20-37-35-22 20-55 31-103 32-3 10-6 21-10 32Z" fill="#071936" stroke="#06142B" stroke-width="4"/>
+    <path d="M297 86c14 17 25 26 39 31" fill="none" stroke="#17305C" stroke-width="7" opacity=".8"/>
+    <path d="M207 91c24-24 57-31 88-13" fill="none" stroke="#17305C" stroke-width="7" opacity=".75"/>
+    <path d="M326 101c9-2 17-8 23-17" fill="none" stroke="#F59E0B" stroke-width="4"/>
+    <path d="M191 123c-7 27-5 51 6 73M321 119c7 26 5 52-6 76" fill="none" stroke="#071936" stroke-width="12"/>
+
+    <!-- Face -->
+    <path d="M211 157c10-7 23-7 34-1" fill="none" stroke="#101A2E" stroke-width="4"/>
+    <path d="M267 156c11-6 24-6 34 1" fill="none" stroke="#101A2E" stroke-width="4"/>
+    <ellipse cx="229" cy="170" rx="6" ry="8" fill="#071936"/>
+    <ellipse cx="283" cy="170" rx="6" ry="8" fill="#071936"/>
+    <circle cx="231" cy="168" r="2" fill="#FFF"/>
+    <circle cx="285" cy="168" r="2" fill="#FFF"/>
+    <path d="M217 168l-6-3M295 168l6-3" fill="none" stroke="#101A2E" stroke-width="2"/>
+    <path d="M256 172l-5 20 10 2" fill="none" stroke="#C96C42" stroke-width="3"/>
+    <path d="M235 211c13 10 29 10 42 0" fill="none" stroke="#B84F55" stroke-width="4"/>
+
+    <!-- Hood -->
+    <path d="M183 286c1-38 31-62 73-62s72 24 73 62l-34 16h-78Z" fill="#0B2347" stroke="#071936" stroke-width="4"/>
+    <path d="M207 242c11 22 27 35 49 45 22-10 38-23 49-45" fill="none" stroke="#F59E0B" stroke-width="5"/>
+
+    <!-- Arms -->
+    <path d="M184 276c-34 9-51 33-55 73l-7 137c-2 30 17 47 40 39 16-6 21-20 20-42l9-118Z" fill="url(#hoodie)" stroke="#071936" stroke-width="4"/>
+    <path d="M328 276c34 9 51 33 55 73l7 137c2 30-17 47-40 39-16-6-21-20-20-42l-9-118Z" fill="url(#hoodie)" stroke="#071936" stroke-width="4"/>
+    <path d="M135 384c10 8 23 11 39 8" fill="none" stroke="#28436B" stroke-width="4"/>
+    <path d="M377 384c-10 8-23 11-39 8" fill="none" stroke="#28436B" stroke-width="4"/>
+
+    <!-- Torso -->
+    <path d="M181 276c20-10 43-15 75-15s55 5 75 15l15 177c2 25-15 42-39 42H205c-24 0-41-17-39-42Z" fill="url(#hoodie)" stroke="#071936" stroke-width="4"/>
+
+    <!-- Drawstrings -->
+    <path d="M233 286v72M279 286v72" fill="none" stroke="#F59E0B" stroke-width="5"/>
+    <circle cx="233" cy="360" r="5" fill="#F59E0B"/>
+    <circle cx="279" cy="360" r="5" fill="#F59E0B"/>
+
+    <!-- Hoodie pocket -->
+    <path d="M206 402h100l16 58c-18 12-42 18-66 18s-48-6-66-18Z" fill="#102A50" stroke="#071936" stroke-width="3"/>
+    <path d="M210 404c11 23 26 31 46 31s35-8 46-31" fill="none" stroke="#28436B" stroke-width="3"/>
+
+    <!-- Lan Pya app logo -->
+    <use href="#lanPyaMark" x="286" y="313" width="48" height="48"/>
+
+    <!-- Hands -->
+    <path d="M123 482c-1 31 5 56 23 63 14 5 27-5 27-23l-2-34Z" fill="url(#skin)" stroke="#C96C42" stroke-width="3"/>
+    <path d="M389 482c1 31-5 56-23 63-14 5-27-5-27-23l2-34Z" fill="url(#skin)" stroke="#C96C42" stroke-width="3"/>
+    <path d="M142 511v23M370 511v23" fill="none" stroke="#C96C42" stroke-width="2"/>
+
+    <!-- Pants -->
+    <path d="M186 483c18 7 42 11 70 11s52-4 70-11l12 205h-70l-12-131-12 131h-70Z" fill="#10274A" stroke="#071936" stroke-width="4"/>
+    <path d="M256 510v47" fill="none" stroke="#071936" stroke-width="4"/>
+    <path d="M194 572c15 7 30 8 47 3M318 572c-15 7-30 8-47 3" fill="none" stroke="#28436B" stroke-width="3"/>
+
+    <!-- Ankles -->
+    <path d="M178 671h67v34h-67ZM267 671h67v34h-67Z" fill="#0B1E3B" stroke="#071936" stroke-width="4"/>
+
+    <!-- Shoes -->
+    <path d="M175 697c20-6 44-5 66 1l17 23c7 10 1 22-11 22h-87c-13 0-19-14-11-24Z" fill="#112D55" stroke="#071936" stroke-width="4"/>
+    <path d="M337 697c-20-6-44-5-66 1l-17 23c-7 10-1 22 11 22h87c13 0 19-14 11-24Z" fill="#112D55" stroke="#071936" stroke-width="4"/>
+    <path d="M153 727h98M359 727h-98" fill="none" stroke="#F8FAFC" stroke-width="9"/>
+    <path d="M187 698v28M325 698v28" fill="none" stroke="#F59E0B" stroke-width="7"/>
+    <path d="M199 707h29M313 707h-29" fill="none" stroke="#637A99" stroke-width="3"/>
+    <path d="M201 715h29M311 715h-29" fill="none" stroke="#637A99" stroke-width="3"/>
+  </g>
+</svg>
