@@ -17,8 +17,9 @@ describe("AppShell", () => {
     ["/en/app/today", "Home"],
     ["/en/app/paths", "Roadmaps"],
     ["/en/app/roadmap", "Roadmaps"],
-    ["/en/app/build", "Roadmaps"],
-    ["/en/app/missions/responsive-profile-card", "Roadmaps"],
+    ["/en/app/build", "Missions"],
+    ["/en/app/missions", "Missions"],
+    ["/en/app/missions/responsive-profile-card", "Missions"],
     ["/en/app/opportunities", "Opportunities"],
     ["/en/app/profile", "Me"],
     ["/en/app/proof", "Me"],
@@ -32,11 +33,12 @@ describe("AppShell", () => {
     expect(links.every((link) => link.getAttribute("aria-current") === "page")).toBe(true);
   });
 
-  it("renders a compact four-destination learner navigation", () => {
+  it("renders the five learner destinations", () => {
     pathname = "/en/app/today";
     render(<AppShell profile={DEMO_PROFILE} roles={new Set()} locale="en"><p>Page</p></AppShell>);
 
-    expect(screen.getAllByRole("link", { name: /Home|Roadmaps|Opportunities|Me/ })).toHaveLength(8);
+    // Five destinations, rendered twice each: desktop bar and mobile bottom bar.
+    expect(screen.getAllByRole("link", { name: /Home|Roadmaps|Missions|Opportunities|Me/ })).toHaveLength(10);
     expect(screen.queryByRole("link", { name: "Build" })).not.toBeInTheDocument();
     expect(screen.queryByRole("link", { name: "Portfolio" })).not.toBeInTheDocument();
   });

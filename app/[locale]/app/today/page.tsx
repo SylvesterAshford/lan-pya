@@ -2,6 +2,8 @@ import { ArrowRight, BriefcaseBusiness, Clock3, Compass, Map } from "lucide-reac
 import { Link } from "@/i18n/navigation";
 import { requireUser } from "@/lib/auth";
 import { DeadlineChip } from "@/components/app/deadline-chip";
+import { TutorLauncher } from "@/components/app/tutor-launcher";
+import { getTutorScript } from "@/lib/domain/tutor-script";
 import { getActivePathDashboard, getOpportunities, getRoadmap } from "@/lib/data/app-data";
 import { getAppCopy, localizeCareerTerm, localizeOpportunity, localizeRoadmapMilestone } from "@/lib/i18n/app-copy";
 
@@ -42,6 +44,21 @@ export default async function TodayPage({ params }: { params: Promise<{ locale: 
           <div><dd>{dashboard.xp}</dd><dt>XP</dt></div>
         </dl>
       </section>
+
+      {path ? (
+        <TutorLauncher
+          pathTitle={pathTitle}
+          qa={getTutorScript(path.key, locale)}
+          labels={{
+            title: c.pathTabs.tutorTitle, preview: c.pathTabs.tutorPreview,
+            greeting: c.pathTabs.tutorGreeting, suggestLead: c.pathTabs.tutorSuggestLead,
+            placeholder: c.pathTabs.tutorPlaceholder, disclaimer: c.pathTabs.tutorDisclaimer,
+            scripted: c.pathTabs.tutorScripted, newChat: c.pathTabs.tutorNewChat,
+            send: c.pathTabs.tutorSend, open: c.pathTabs.tutorOpen,
+            close: c.pathTabs.tutorClose, nudge: c.pathTabs.tutorNudge,
+          }}
+        />
+      ) : null}
 
       <section className="continue-panel">
         <div className="continue-copy">
