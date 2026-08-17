@@ -8808,3 +8808,12 @@ html[lang="my"] .app-page .mission-title h1 {
   .levelup-overlay,
   .levelup-dialog { animation: none; }
 }
+
+/* A retryable proof failure is our fault, not the learner's. It reads as a
+   service notice rather than a verdict on their evidence. */
+.public-proof-card .retry-note {
+  font-size: var(--t-meta);
+  line-height: var(--l-meta);
+  color: var(--muted-ink);
+  margin: 8px 0 16px;
+}
