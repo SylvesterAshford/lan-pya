@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.10.0.0] - 2026-08-17
+
+### Added
+
+- Home now shows what changed. "New this week" lists the most recent release in plain language, including anything still known to be broken, so the "Updated every Friday" promise in the header finally has somewhere to point.
+
 ## [0.9.1.0] - 2026-08-17
 
 ### Fixed

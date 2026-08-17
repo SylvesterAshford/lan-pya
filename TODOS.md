@@ -17,16 +17,6 @@ Design debt deferred from the 2026-08-16 design review. Everything here was foun
 **Context:** `Milestone` in `lib/domain/types.ts` has no branch concept. Needs a `track_branches` table, a `learner_track_choice` record, RLS, and an API route.
 **Depends on:** Roadmap canvas rebuild landing first.
 
-### Friday changelog rail on Home
-
-**What:** The "New this Friday" changelog section from Design Spec §2.
-
-**Why:** The top navigation carries an "Updated every Friday" chip on every screen, which is a promise the product never keeps — there is nowhere to see what changed. It is also the second half of the return mechanic that the deadline countdown starts.
-
-**Pros:** Fills the Home dead space with real product rather than filler. Makes the maintained-map positioning visible instead of asserted.
-**Cons:** Needs a content pipeline and someone to actually write weekly entries. An empty changelog is worse than none.
-**Context:** Reference screenshot `home-new.png` shows the intended treatment: dated rows, one line each.
-
 ### Opportunity filter chips
 
 **What:** Horizontal filter row — All / Scholarships / Fellowships / Hackathons / Events / Webinars / Jobs — per Design Spec §3.5.

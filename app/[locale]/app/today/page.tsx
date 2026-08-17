@@ -4,6 +4,8 @@ import { requireUser } from "@/lib/auth";
 import { DeadlineChip } from "@/components/app/deadline-chip";
 import { LevelMeter } from "@/components/app/level-meter";
 import { LevelUpMoment } from "@/components/app/level-up-moment";
+import { ChangelogRail } from "@/components/app/changelog-rail";
+import { getReleases } from "@/lib/domain/changelog";
 import { localizeLevel, resolveProgress } from "@/lib/domain/progress";
 import { toMyanmarDigits } from "@/lib/domain/deadlines";
 import { getActivePathDashboard, getOpportunities, getRoadmap } from "@/lib/data/app-data";
@@ -123,6 +125,8 @@ export default async function TodayPage({ params }: { params: Promise<{ locale: 
             {nextStages.map((stage) => <Link className={stage.status === "active" ? "current" : ""} href={`/app/roadmap?track=${path.key}#milestone-${stage.key}`} key={stage.key}><span className="home-step">{stage.order}</span><span><strong>{stage.title}</strong><small>{stage.proof}</small></span><ArrowRight size={15} aria-hidden="true" /></Link>)}
           </div>
         </section>
+
+        <ChangelogRail releases={getReleases()} locale={locale} />
 
         <section className="home-section deadlines">
           <header><div><BriefcaseBusiness size={18} aria-hidden="true" /><h2>{locale === "my" ? "သင့်အတွက် သတ်မှတ်ရက်များ" : "Deadlines for you"}</h2></div><Link href="/app/opportunities">{locale === "my" ? "အားလုံးကြည့်မည်" : "See all"}</Link></header>
