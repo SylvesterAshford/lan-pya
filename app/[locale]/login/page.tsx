@@ -2,6 +2,7 @@ import { getTranslations, setRequestLocale } from "next-intl/server";
 import { redirect } from "next/navigation";
 import { GoogleSignIn } from "@/components/auth/google-sign-in";
 import { EmailAuthForm } from "@/components/auth/email-auth-form";
+import { RoadmapPreview } from "@/components/auth/roadmap-preview";
 import { getUser } from "@/lib/auth";
 import { Link } from "@/i18n/navigation";
 import { hasSupabaseEnv } from "@/lib/env";
@@ -22,7 +23,7 @@ export default async function LoginPage({ params, searchParams }: { params: Prom
       <section className="auth-brand-panel">
         <Link href="/" className="brand-lockup static light"><span className="brand-mark">လ</span><span><strong>Lan Pya</strong><small>လမ်းပြ</small></span></Link>
         <div><span className="hero-kicker">{my ? "လမ်းကြောင်းမှ သက်သေဆီသို့" : "FROM MAP TO PROOF"}</span><h1>{my ? <>သင့်အလုပ်လမ်းကြောင်း။<br />သင့်သက်သေ။<br /><em>သင့်နောက်တံခါး။</em></> : <>Your career.<br />Your evidence.<br /><em>Your next door.</em></>}</h1></div>
-        <div className="auth-brand-features"><span>{my ? "အမြဲတမ်း အခမဲ့" : "Free forever"}</span><span>{my ? "ပွင့်လင်းမြင်သာမှု" : "Transparent"}</span><span>{my ? "ကိုယ်ရေးကိုယ်တာကို ဦးစားပေး" : "Private by default"}</span></div>
+        <RoadmapPreview locale={locale} />
       </section>
       <section className="auth-form-panel">
         <div className="auth-card">

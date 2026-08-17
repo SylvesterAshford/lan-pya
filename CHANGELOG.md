@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.12.1.0] - 2026-08-17
+
+### Changed
+
+- The sign-in page shows an example roadmap instead of three claims about the product. Anyone arriving for the first time can see what Lan Pya does before they have an account: stages connect, work gets verified, and you are somewhere on a line that continues.
+
 ## [0.12.0.0] - 2026-08-17
 
 ### Changed
