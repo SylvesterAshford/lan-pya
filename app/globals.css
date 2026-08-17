@@ -9402,3 +9402,106 @@ html[lang="my"] .mission-trail figcaption { text-transform: none; letter-spacing
 @media (prefers-reduced-motion: no-preference) {
   .trail-stop.is-link > circle { transition: filter 160ms ease-out; }
 }
+
+/* ---- Steps ring ---- */
+.steps-ring { display: block; flex: none; }
+.steps-ring text { font-family: var(--font-sans), system-ui, sans-serif; font-variant-numeric: tabular-nums; }
+html[lang="my"] .steps-ring text { font-family: var(--font-my), sans-serif; }
+
+/* The level card now leads with the ring rather than a hexagon and a bar. */
+.level-card { align-items: center; gap: 22px; }
+
+/* ---- Profile hero ----
+   Follows the founder's reference: character, level pill, name, identity line,
+   stat tiles. No leaderboard rank: the plan rules it out, so the slot carries
+   the path and how long the learner has walked it. */
+.profile-hero {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: 26px;
+  align-items: center;
+  background: var(--surface);
+  border: 1px solid var(--hairline);
+  border-radius: 14px;
+  padding: 24px 26px;
+}
+
+.profile-hero-figure { display: grid; justify-items: center; gap: 10px; }
+
+.profile-level-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 5px 12px;
+  background: var(--teal-050);
+  border: 1px solid var(--teal-100);
+  border-radius: 99px;
+  font-size: var(--t-meta);
+  font-weight: 700;
+  color: var(--teal-900);
+  white-space: nowrap;
+}
+.profile-level-pill small { font-size: var(--t-label); font-weight: 600; color: var(--muted-ink); }
+.profile-level-dot { width: 9px; height: 9px; border-radius: 50%; background: var(--em-1); }
+.profile-level-dot[data-hue="2"] { background: var(--em-2); }
+.profile-level-dot[data-hue="3"] { background: var(--em-3); }
+.profile-level-dot[data-hue="4"] { background: var(--em-4); }
+.profile-level-dot[data-hue="5"] { background: var(--em-5); }
+
+.profile-hero-copy { min-width: 0; }
+.profile-hero-copy h2 {
+  font-size: var(--t-h1);
+  line-height: var(--l-h1);
+  letter-spacing: var(--k-h1);
+  font-weight: 700;
+  color: var(--ink);
+}
+.profile-hero-line { font-size: var(--t-meta); line-height: var(--l-meta); color: var(--muted-ink); margin-top: 3px; }
+.profile-since { color: var(--muted-ink); }
+.profile-demo { display: inline-block; margin-top: 8px; }
+
+.profile-stats {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+  margin-top: 16px;
+  max-width: 420px;
+}
+.profile-stats > div {
+  background: var(--surface-sunk);
+  border-radius: 10px;
+  padding: 12px 14px;
+  text-align: center;
+}
+.profile-stats dd {
+  font-size: var(--t-h2);
+  line-height: 1.15;
+  font-weight: 800;
+  color: var(--ink);
+  font-variant-numeric: tabular-nums;
+  margin: 0;
+}
+.profile-stats dt {
+  font-size: var(--t-label);
+  letter-spacing: 0.06em;
+  font-weight: 600;
+  text-transform: uppercase;
+  color: var(--muted-ink);
+  margin-top: 3px;
+}
+html[lang="my"] .profile-stats dt { text-transform: none; letter-spacing: 0; }
+
+.profile-hero-ring { display: grid; place-items: center; }
+
+@media (max-width: 860px) {
+  .profile-hero { grid-template-columns: auto 1fr; gap: 18px; padding: 18px; }
+  /* The ring moves under the stats rather than squeezing a third column. */
+  .profile-hero-ring { grid-column: 1 / -1; }
+  .profile-stats { max-width: none; }
+}
+
+@media (max-width: 560px) {
+  .profile-hero { grid-template-columns: 1fr; justify-items: center; text-align: center; }
+  .profile-hero-copy { text-align: center; }
+  .profile-stats { width: 100%; }
+}

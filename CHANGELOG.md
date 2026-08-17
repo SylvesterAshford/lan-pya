@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.14.0.0] - 2026-08-17
+
+### Changed
+
+- Progress is measured in steps, not XP. The score is now a ring of trail dots that fills toward your next level, with the level name and your step count inside it. The ladder and its evidence gates are unchanged.
+- Profile leads with your character, your level, the path you are on and when you started it, and three counts you can check: missions, steps and proofs.
+
 ## [0.13.1.0] - 2026-08-17
 
 ### Changed

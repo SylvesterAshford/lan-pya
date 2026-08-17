@@ -75,12 +75,12 @@ export default async function TodayPage({ params }: { params: Promise<{ locale: 
         pathTitle={pathTitle}
         satisfied={
           locale === "my"
-            ? [`${toMyanmarDigits(progress.level.minXp)} XP ကျော်လွန်ပြီး`, progress.level.gate({
+            ? [`ခြေလှမ်း ${toMyanmarDigits(progress.level.minXp)} ကျော်လွန်ပြီး`, progress.level.gate({
               completedMissions: dashboard.completedMilestones,
               verifiedCount: dashboard.verifiedCount,
               stagesTouched: roadmap.filter((stage) => stage.status === "complete").length,
             }).my]
-            : [`Passed ${progress.level.minXp} XP`, progress.level.gate({
+            : [`Passed ${progress.level.minXp} steps`, progress.level.gate({
               completedMissions: dashboard.completedMilestones,
               verifiedCount: dashboard.verifiedCount,
               stagesTouched: roadmap.filter((stage) => stage.status === "complete").length,

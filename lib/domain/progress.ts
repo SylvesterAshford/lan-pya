@@ -12,8 +12,12 @@
  * is computed here instead, from the raw `xp` plus the evidence counts the same
  * RPC already returns. No migration, and the rule stays in one readable place.
  *
- * Levels are path-scoped. Switching paths never transfers XP into another
+ * Levels are path-scoped. Switching paths never transfers steps into another
  * career, which is why every function here takes one path's numbers.
+ *
+ * The unit is "steps", not XP. The ledger column and the RPC still say `xp`
+ * because renaming a shipped database column three days before a pitch buys
+ * nothing; the rename is a product-language decision, not a schema one.
  */
 
 export type LevelKey = "explorer" | "starter" | "maker" | "practitioner" | "trailblazer";
@@ -126,8 +130,8 @@ export function resolveProgress(xp: number, evidence: Evidence): PathProgress {
   const gates: Gate[] = [];
   if (next) {
     gates.push({
-      en: `${next.minXp} XP`,
-      my: `${next.minXp} XP`,
+      en: `${next.minXp} steps`,
+      my: `ခြေလှမ်း ${next.minXp}`,
       met: safeXp >= next.minXp,
       have: Math.min(safeXp, next.minXp),
       need: next.minXp,
