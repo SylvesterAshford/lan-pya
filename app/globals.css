@@ -7723,3 +7723,272 @@ html[lang="my"] .app-page .mission-title h1 {
   .tutor-msg { max-width: 92%; }
   .tutor-log { min-height: 220px; }
 }
+
+/* ============================================================
+   MISSION RUNNER — DESIGN.md "The Mission Runner".
+   Five steps with a progress rail. The deliverables checklist is
+   the in-mission progress signal, deliberately not points.
+   ============================================================ */
+
+.runner { max-width: 720px; }
+
+.runner-rail {
+  display: flex;
+  gap: 0;
+  margin: 0 0 var(--s-lg);
+  padding: 0;
+  list-style: none;
+}
+
+.runner-step {
+  position: relative;
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+}
+
+/* Connector sits behind the dots. */
+.runner-step::after {
+  content: "";
+  position: absolute;
+  top: 13px;
+  left: 50%;
+  width: 100%;
+  height: 2px;
+  background: var(--hairline);
+}
+
+.runner-step:last-child::after { display: none; }
+.runner-step.done::after { background: var(--teal-500); }
+
+.runner-dot {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  font-family: inherit;
+  font-size: var(--t-label);
+  font-weight: 700;
+  color: var(--muted-ink);
+  background: var(--surface);
+  border: 2px solid var(--hairline);
+  border-radius: 50%;
+  cursor: pointer;
+  font-variant-numeric: tabular-nums;
+}
+
+.runner-dot:disabled { cursor: default; opacity: 0.55; }
+.runner-dot:focus-visible { outline: 2px solid var(--teal-700); outline-offset: 2px; }
+
+.runner-step.done .runner-dot {
+  color: #fff;
+  background: var(--teal-500);
+  border-color: var(--teal-500);
+}
+
+/* Current step borrows the canvas vocabulary so the rail reads like the map. */
+.runner-step.now .runner-dot {
+  color: var(--node-border);
+  background: var(--node-stage);
+  border-color: var(--node-border);
+}
+
+.runner-step > span {
+  font-size: var(--t-label);
+  font-weight: 600;
+  color: var(--muted-ink);
+  text-align: center;
+}
+
+.runner-step.now > span { color: var(--ink); }
+
+.runner-panel {
+  padding: var(--s-lg);
+  background: var(--surface);
+  border: 1px solid var(--hairline);
+  border-radius: var(--r-card);
+}
+
+.runner-panel > h2 {
+  margin: var(--s-xs) 0 var(--s-sm);
+  font-size: var(--t-h2);
+  line-height: var(--l-h2);
+  letter-spacing: var(--k-h2);
+  font-weight: 700;
+}
+
+.runner-intro { margin: 0 0 var(--s-sm); font-size: var(--t-body); line-height: var(--l-body); }
+.runner-premise { margin: 0 0 var(--s-md); font-size: var(--t-meta); line-height: var(--l-meta); color: var(--muted-ink); }
+.runner-weight-note { margin: var(--s-xs) 0 var(--s-md); font-size: var(--t-meta); color: var(--muted-ink); }
+
+.runner-guardrail {
+  padding: 11px var(--s-md);
+  background: var(--amber-100);
+  border: 1px solid #ebd9b4;
+  border-left: 3px solid var(--amber-500);
+  border-radius: 0 var(--r-control) var(--r-control) 0;
+}
+
+.runner-guardrail strong {
+  display: block;
+  margin-bottom: 2px;
+  font-size: var(--t-label);
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--amber-800);
+}
+
+.runner-guardrail p { margin: 0; font-size: var(--t-meta); line-height: var(--l-meta); color: var(--amber-800); }
+
+.runner-checklist { margin: 0; padding: 0; list-style: none; }
+
+.runner-check {
+  display: flex;
+  gap: 11px;
+  width: 100%;
+  padding: 12px var(--s-sm);
+  margin: 0 calc(var(--s-sm) * -1);
+  font-family: inherit;
+  text-align: left;
+  background: none;
+  border: 0;
+  border-bottom: 1px solid var(--hairline);
+  border-radius: var(--r-control);
+  cursor: pointer;
+}
+
+.runner-checklist li:last-child .runner-check { border-bottom: 0; }
+.runner-check:hover { background: var(--surface-sunk); }
+.runner-check:focus-visible { outline: 2px solid var(--teal-700); outline-offset: -2px; }
+
+.runner-box {
+  display: grid;
+  flex-shrink: 0;
+  place-items: center;
+  width: 22px;
+  height: 22px;
+  margin-top: 1px;
+  color: #fff;
+  background: var(--surface);
+  border: 1.5px solid var(--node-border);
+  border-radius: 6px;
+}
+
+.runner-check.on .runner-box { background: var(--teal-500); border-color: var(--teal-500); }
+
+.runner-check-copy strong {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--s-sm);
+  font-size: var(--t-title);
+  line-height: var(--l-title);
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.runner-check-copy strong em {
+  flex-shrink: 0;
+  font-size: var(--t-label);
+  font-style: normal;
+  font-weight: 600;
+  color: var(--muted-ink);
+  font-variant-numeric: tabular-nums;
+}
+
+.runner-check-copy small { font-size: var(--t-meta); line-height: var(--l-meta); color: var(--muted-ink); }
+.runner-check.on .runner-check-copy strong { color: var(--muted-ink); text-decoration: line-through; }
+
+.runner-state {
+  padding: var(--s-md);
+  margin-bottom: var(--s-md);
+  background: var(--surface-sunk);
+  border: 1px solid var(--hairline);
+  border-radius: var(--r-control);
+}
+
+.runner-state strong { display: block; margin-bottom: 3px; font-size: var(--t-title); font-weight: 600; }
+.runner-state p { margin: 0; font-size: var(--t-meta); line-height: var(--l-meta); color: var(--muted-ink); }
+.runner-state.warning { background: var(--amber-100); border-color: #ebd9b4; }
+.runner-state.warning strong, .runner-state.warning p { color: var(--amber-800); }
+.runner-state.success { background: var(--teal-050); border-color: var(--teal-100); }
+.runner-state.success strong { color: var(--teal-700); }
+
+.runner-foot {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s-sm);
+  align-items: center;
+  justify-content: space-between;
+  margin-top: var(--s-md);
+  padding-top: var(--s-md);
+  border-top: 1px solid var(--hairline);
+}
+
+.runner-saved { font-size: var(--t-meta); color: var(--muted-ink); }
+.runner-nav { display: flex; gap: var(--s-sm); margin-left: auto; }
+
+.runner .mm-note {
+  margin-top: var(--s-md);
+  padding: 10px var(--s-md);
+  background: var(--teal-050);
+  border-left: 3px solid var(--teal-700);
+  border-radius: 0 var(--r-control) var(--r-control) 0;
+  font-size: var(--t-meta);
+  line-height: var(--l-meta);
+}
+
+.runner .mm-note b {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  margin-bottom: 2px;
+  font-size: var(--t-label);
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--teal-700);
+}
+
+/* The runner hosts the submission form; drop its duplicate chrome. */
+.runner .submission-form { padding: 0; background: none; border: 0; box-shadow: none; }
+
+@media (max-width: 640px) {
+  .runner-step > span { display: none; }
+  .runner-panel { padding: var(--s-md); }
+  .runner-check-copy strong { flex-direction: column; gap: 2px; }
+}
+
+/* Profile: sections read as one column with rules, not five stacked cards. */
+.profile-page .panel {
+  padding: var(--s-lg) 0;
+  background: none;
+  border: 0;
+  border-bottom: 1px solid var(--hairline);
+  border-radius: 0;
+  box-shadow: none;
+}
+
+.profile-page .panel:last-of-type { border-bottom: 0; }
+.profile-page .career-identity { align-items: center; }
+
+.compass-empty {
+  padding: var(--s-md);
+  background: var(--surface-sunk);
+  border: 1px solid var(--hairline);
+  border-radius: var(--r-control);
+}
+
+.compass-empty p { margin: 0 0 3px; font-size: var(--t-title); font-weight: 600; }
+.compass-empty small { font-size: var(--t-meta); line-height: var(--l-meta); color: var(--muted-ink); }
+
+/* Account actions should not wrap their labels. */
+.profile-actions .button,
+.profile-actions form .button { white-space: nowrap; }
+.profile-actions { display: flex; flex-wrap: wrap; gap: var(--s-sm); align-items: center; }

@@ -9,6 +9,11 @@ export type MissionDraft = {
   deploymentUrl: string;
   reflection: string;
   screenshotUrl: string;
+  /** Deliverable ids the learner has ticked in the Build step. Kept in the same
+   *  record so it inherits the private, on-device storage and 30-day expiry that
+   *  the rest of the draft already has. Optional: records written before the
+   *  mission runner existed will not have it. */
+  checklist?: string[];
   savedAt: number;
 };
 
