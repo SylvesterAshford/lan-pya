@@ -93,20 +93,23 @@ export function TutorLauncher({ qa, pathTitle, labels }: { qa: TutorQA[]; pathTi
 
   return (
     <>
+      {/* Floating, bottom right. Present on every screen rather than only where
+          a banner happens to sit, because the moment a learner needs help is the
+          moment they are stuck on something else. */}
       <button
         ref={launcherRef}
         type="button"
-        className="tutor-launcher"
+        className="tutor-fab"
         onClick={() => setOpen(true)}
         aria-haspopup="dialog"
         aria-expanded={open}
+        aria-label={labels.open}
       >
-        <Mascot />
-        <span className="tutor-launcher-copy">
+        <Mascot size={44} />
+        <span className="tutor-fab-copy">
           <strong>{labels.title}</strong>
           <small>{labels.nudge}</small>
         </span>
-        <span className="tutor-launcher-cta">{labels.open}</span>
       </button>
 
       {open ? (
