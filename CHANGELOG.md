@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.13.0.0] - 2026-08-17
+
+### Added
+
+- Missions opens on a trail. Your path winds through soft terrain with a traveller standing on the stage you are on, finished stages carrying their earned emblem, and the ones ahead locked until you reach them. It reads the same progress the roadmap does, so the two can never disagree.
+
 ## [0.12.1.0] - 2026-08-17
 
 ### Changed
