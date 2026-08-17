@@ -136,7 +136,7 @@ export function MissionTrail({
     <figure className="mission-trail">
       <svg viewBox={`0 0 ${g.W} ${H}`} role="img" aria-label={labels.caption}>
         <g aria-hidden="true">
-          <circle cx={g.W * 0.86} cy={g.top * 0.44} r={g.W * 0.082} fill="var(--amber-500)" opacity="0.16" />
+          <circle cx={g.W * 0.86} cy={g.top * 0.44} r={g.W * 0.082} fill="var(--amber-100)" />
           {[0.22, 0.52, 0.82].map((t, i) => {
             const y = H * t;
             return (
@@ -215,7 +215,7 @@ export function MissionTrail({
                   <path d="M3.5 7 V4.5 a4.5 4.5 0 0 1 9 0 V7" fill="none" stroke="var(--node-soon-border)" strokeWidth="2.2" />
                 </g>
               ) : (
-                <text x={x} y={y + R * 0.26} textAnchor="middle" fontSize={R * 0.72} fontWeight="800" fill="var(--ink)" aria-hidden="true">
+                <text x={x} y={y + R * 0.26} textAnchor="middle" fontSize={R * 0.72} fontWeight="800" fill="var(--node-border)" aria-hidden="true">
                   {num(stop.order)}
                 </text>
               )}
