@@ -1,4 +1,5 @@
 import { EMBLEM_SHAPES } from "@/components/app/emblem";
+import { MascotPaths } from "@/components/app/mascot";
 import { emblemForStage } from "@/lib/domain/progress";
 import { toMyanmarDigits } from "@/lib/domain/deadlines";
 import type { Milestone } from "@/lib/domain/types";
@@ -51,25 +52,19 @@ function stateOf(milestone: Milestone): Stop["state"] {
 }
 
 /**
- * The traveller, after the founder's pitch artwork: a figure with a backpack
- * heading uphill. Flat SVG rather than the raster original, which would smear
- * at this size and cost real bytes on a budget phone.
+ * The traveller standing on the current stop.
+ *
+ * Draws the shared mascot inside the trail's own coordinate space rather than
+ * nesting a second SVG. The figure is 132x200 in its own units; scaled to 46
+ * tall here, which keeps the backpack and the amber sleeve readable while
+ * staying small enough not to cover the node it stands on.
  */
 function Traveller({ x, y }: { x: number; y: number }) {
+  const H = 46;
+  const k = H / 200;
   return (
-    <g transform={`translate(${x - 15},${y - 46})`} aria-hidden="true">
-      {/* backpack behind the body */}
-      <rect x="3" y="13" width="12" height="15" rx="4" fill="var(--teal-700)" />
-      {/* body */}
-      <path d="M9 13 h12 a5 5 0 0 1 5 5 v11 a4 4 0 0 1 -4 4 h-14 a4 4 0 0 1 -4 -4 v-11 a5 5 0 0 1 5 -5 Z" fill="var(--teal-500)" />
-      {/* head */}
-      <circle cx="16" cy="7" r="6.5" fill="var(--amber-100)" stroke="var(--teal-900)" strokeWidth="1.5" />
-      {/* hat brim, the reference character's silhouette cue */}
-      <path d="M7 4 h18" stroke="var(--teal-900)" strokeWidth="2.4" strokeLinecap="round" />
-      <path d="M10 4 a6 4 0 0 1 12 0" fill="var(--teal-900)" />
-      {/* legs mid-stride */}
-      <path d="M12 33 v7" stroke="var(--teal-900)" strokeWidth="3" strokeLinecap="round" />
-      <path d="M21 33 l4 6" stroke="var(--teal-900)" strokeWidth="3" strokeLinecap="round" />
+    <g transform={`translate(${x - (132 * k) / 2},${y - H}) scale(${k})`} aria-hidden="true">
+      <MascotPaths />
     </g>
   );
 }
