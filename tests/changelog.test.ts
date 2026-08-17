@@ -84,7 +84,7 @@ describe("firstSentence trimming, as used by the rail", () => {
   // against — a version string like "v0.9.1.0" being read as four sentences —
   // is silent and only visible on Home.
   const firstSentence = (text: string) => {
-    const match = /^(.+?[.!?])\s+[A-Z]/.exec(text);
+    const match = /^(.+?[.!?])\s+["“‘'([]?[A-Z]/.exec(text);
     const candidate = match?.[1];
     if (candidate && candidate.length >= 24) return candidate;
     return text;
@@ -98,6 +98,14 @@ describe("firstSentence trimming, as used by the rail", () => {
   it("does not split on a version number or abbreviation", () => {
     expect(firstSentence("Bumped to v0.9.1.0 today.")).toBe("Bumped to v0.9.1.0 today.");
     expect(firstSentence("Uses z.guid() for ids now.")).toBe("Uses z.guid() for ids now.");
+  });
+
+  it("splits when the next sentence opens with a quote or bracket", () => {
+    // Regression: this exact string shipped to production untrimmed.
+    expect(firstSentence('Home now shows what changed. "New this week" lists the most recent release.'))
+      .toBe("Home now shows what changed.");
+    expect(firstSentence("The rail now reads the changelog directly. (It cannot drift from what shipped.)"))
+      .toBe("The rail now reads the changelog directly.");
   });
 
   it("leaves a single-sentence entry untouched", () => {
