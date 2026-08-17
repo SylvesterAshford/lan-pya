@@ -8817,3 +8817,44 @@ html[lang="my"] .app-page .mission-title h1 {
   color: var(--muted-ink);
   margin: 8px 0 16px;
 }
+
+/* ---- "New this week" rail ----
+   A record, not an announcement: dated rows, one line each, no card chrome
+   beyond the section the rest of Home already uses. */
+.changelog-rail .changelog-version {
+  font-size: var(--t-label);
+  line-height: var(--l-label);
+  letter-spacing: 0.08em;
+  font-weight: 600;
+  text-transform: uppercase;
+  color: var(--muted-ink);
+  font-variant-numeric: tabular-nums;
+}
+.changelog-list { list-style: none; margin: 0; padding: 0; }
+.changelog-list li {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  padding: 11px 0;
+  border-bottom: 1px solid var(--hairline);
+}
+.changelog-list li:last-child { border-bottom: 0; }
+.changelog-list .avail { flex: none; margin-top: 1px; }
+.changelog-list p {
+  font-size: var(--t-meta);
+  line-height: var(--l-meta);
+  color: var(--ink);
+  margin: 0;
+}
+.changelog-more {
+  display: block;
+  font-size: var(--t-meta);
+  color: var(--muted-ink);
+  padding-top: 10px;
+}
+/* Known issues get the one amber treatment on this surface, because "amber
+   means attention and honesty" and an unresolved problem is exactly that. */
+.changelog-list .avail.warn {
+  background: var(--amber-100);
+  color: var(--amber-800);
+}
