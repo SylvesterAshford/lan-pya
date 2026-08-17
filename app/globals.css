@@ -8399,7 +8399,7 @@ html[lang="my"] .app-page .mission-title h1 {
 /* ---- the arc ---- */
 .opp-rail {
   position: relative;
-  height: 230px;
+  height: 330px;
   perspective: 1200px;
   perspective-origin: 50% 45%;
   touch-action: pan-y;
@@ -8421,12 +8421,13 @@ html[lang="my"] .app-page .mission-title h1 {
   top: 50%;
   left: 50%;
   display: grid;
-  gap: 5px;
+  grid-template-rows: auto 1fr;
   align-content: start;
-  width: 232px;
-  min-height: 168px;
-  padding: var(--s-md);
-  margin: -84px 0 0 -116px;
+  width: 296px;
+  min-height: 268px;
+  padding: 0 0 var(--s-md);
+  overflow: hidden;
+  margin: -134px 0 0 -148px;
   font-family: inherit;
   text-align: left;
   background: var(--surface);
@@ -8447,18 +8448,6 @@ html[lang="my"] .app-page .mission-title h1 {
 }
 
 .opp-card:focus-visible { outline: 2px solid var(--teal-700); outline-offset: 3px; }
-
-.opp-card-icon {
-  display: grid;
-  place-items: center;
-  width: 34px;
-  height: 34px;
-  color: var(--teal-700);
-  background: var(--teal-050);
-  border-radius: var(--r-control);
-}
-
-.opp-card.active .opp-card-icon { color: #fff; background: var(--teal-700); }
 
 .opp-card-kind {
   font-size: var(--t-label);
@@ -8533,6 +8522,30 @@ html[lang="my"] .app-page .mission-title h1 {
 
 @media (max-width: 720px) {
   .opp-evidence { grid-template-columns: 1fr; gap: var(--s-sm); }
-  .opp-rail { height: 210px; }
-  .opp-card { width: 200px; margin-left: -100px; }
+  .opp-rail { height: 300px; }
+  .opp-card { width: 244px; min-height: 240px; margin-left: -122px; margin-top: -120px; }
+}
+
+/* Card artwork sits flush at the top; copy takes the remaining row. */
+.opp-card-art {
+  display: block;
+  width: 100%;
+  height: 108px;
+  border-bottom: 1px solid var(--hairline);
+}
+
+.opp-card.active .opp-card-art { border-bottom-color: var(--teal-100); }
+
+.opp-card-body {
+  display: grid;
+  gap: 4px;
+  align-content: start;
+  padding: var(--s-md) var(--s-md) 0;
+}
+
+.opp-card-foot { margin-top: 6px; }
+.opp-card:not(.active) .opp-card-foot { opacity: 0.75; }
+
+@media (max-width: 720px) {
+  .opp-card-art { height: 92px; }
 }
