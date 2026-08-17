@@ -1,5 +1,24 @@
 # Changelog
 
+## [0.4.0.0] - 2026-08-17
+
+### Added
+
+- Browse careers by arena, with counts and honest availability, instead of a wall of identical cards. Preview paths stay collapsed until you ask for them.
+
+### Changed
+
+- Rebuilt typography on larger, tighter proportions: bigger body and supporting text, tighter heading leading, negative tracking on headings, and a lighter display weight that reads confident rather than loud. Colours are unchanged.
+- Buttons now use the body text size on a 44px control, up from small labels on a target below the touch minimum.
+- Long titles in compact lists wrap to two lines instead of being cut off mid-word.
+
+### Fixed
+
+- The header sat up to 116px left of the content it labelled on wide screens, because it never moved when the content column narrowed.
+- Full-Stack Developer and AI & Data Analyst were labelled "Preview" despite having complete 14 and 13 stage roadmaps. They now read "No missions yet", which is the accurate claim.
+- Career rows advertised a first mission even where none had been authored.
+- The alternatives heading promised two options while showing one in a half-empty row.
+
 ## [0.3.0.0] - 2026-08-17
 
 ### Added
