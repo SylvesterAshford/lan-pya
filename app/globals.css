@@ -8174,3 +8174,365 @@ html[lang="my"] .app-page .mission-title h1 {
 @media (max-width: 560px) {
   .tutor-launcher-cta { display: none; }
 }
+
+/* ============================================================
+   ME TABS — four destinations, each with its own accent so the
+   section is recognisable at a glance. Accents are existing
+   palette tokens used semantically, not decorative variety.
+   ============================================================ */
+
+.me-nav {
+  display: flex;
+  gap: var(--s-sm);
+  margin-bottom: var(--s-lg);
+  padding-bottom: var(--s-sm);
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.me-nav::-webkit-scrollbar { display: none; }
+
+.me-tab {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  padding: 9px 14px 9px 9px;
+  font-size: var(--t-meta);
+  font-weight: 600;
+  color: var(--muted-ink);
+  text-decoration: none;
+  white-space: nowrap;
+  background: var(--surface);
+  border: 1px solid var(--hairline);
+  border-radius: var(--r-chip);
+  transition: border-color 160ms ease, background-color 160ms ease;
+}
+
+.me-tab:hover { border-color: var(--muted-ink); }
+.me-tab:focus-visible { outline: 2px solid var(--teal-700); outline-offset: 2px; }
+
+.me-tab-icon {
+  display: grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: var(--surface-sunk);
+  color: var(--muted-ink);
+}
+
+.me-tab-count {
+  padding: 1px 7px;
+  font-size: var(--t-label);
+  font-weight: 700;
+  background: var(--surface-sunk);
+  border-radius: var(--r-chip);
+  font-variant-numeric: tabular-nums;
+}
+
+/* Semantic accents: teal is you and your evidence, amber is exploring,
+   purple is the private surface. Same three meanings as everywhere else. */
+.me-tab.you.active     { color: var(--teal-900); background: var(--teal-050); border-color: var(--teal-100); }
+.me-tab.you.active .me-tab-icon     { background: var(--teal-700); color: #fff; }
+.me-tab.explore.active { color: var(--amber-800); background: var(--amber-100); border-color: #ebd9b4; }
+.me-tab.explore.active .me-tab-icon { background: var(--amber-500); color: var(--amber-800); }
+.me-tab.proof.active   { color: var(--teal-900); background: var(--teal-100); border-color: var(--teal-100); }
+.me-tab.proof.active .me-tab-icon   { background: var(--teal-500); color: #fff; }
+.me-tab.private.active { color: var(--purple-900); background: var(--purple-100); border-color: #ddd9f7; }
+.me-tab.private.active .me-tab-icon { background: var(--purple-500); color: #fff; }
+.me-tab.active .me-tab-count { background: rgba(255, 255, 255, 0.7); }
+
+/* Your current path, seen from the catalog. */
+.avail.here { color: var(--teal-700); background: var(--teal-100); }
+.path-row.is-active { background: var(--teal-050); }
+
+.explore-link {
+  display: flex;
+  align-items: center;
+  gap: var(--s-md);
+  margin-top: var(--s-xl);
+  padding: var(--s-md) var(--s-lg);
+  color: inherit;
+  text-decoration: none;
+  background: var(--surface);
+  border: 1px solid var(--hairline);
+  border-radius: var(--r-card);
+}
+
+.explore-link:hover { border-color: var(--teal-700); }
+.explore-link:focus-visible { outline: 2px solid var(--teal-700); outline-offset: 2px; }
+.explore-link span { flex: 1; }
+.explore-link strong { display: block; font-size: var(--t-title); line-height: var(--l-title); font-weight: 600; }
+.explore-link small { font-size: var(--t-meta); line-height: var(--l-meta); color: var(--muted-ink); }
+.explore-link svg { flex-shrink: 0; color: var(--muted-ink); }
+
+/* ============================================================
+   TUTOR FAB — bottom right, above the mobile bar.
+   ============================================================ */
+
+.tutor-fab {
+  position: fixed;
+  right: var(--s-lg);
+  bottom: var(--s-lg);
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  max-width: 280px;
+  padding: 8px 18px 8px 8px;
+  font-family: inherit;
+  text-align: left;
+  background: var(--surface);
+  border: 1px solid #ebd9b4;
+  border-radius: var(--r-chip);
+  box-shadow: var(--shadow-overlay);
+  cursor: pointer;
+  transition: transform 160ms ease-out;
+}
+
+.tutor-fab:hover { transform: translateY(-2px); }
+.tutor-fab:focus-visible { outline: 2px solid var(--teal-700); outline-offset: 3px; }
+.tutor-fab .tutor-mascot { border-radius: 50%; }
+.tutor-fab-copy strong { display: block; font-size: var(--t-meta); font-weight: 700; color: var(--ink); }
+.tutor-fab-copy small { display: block; font-size: var(--t-label); line-height: 1.35; color: var(--muted-ink); }
+
+@media (max-width: 860px) {
+  /* Clear the bottom bar, and shrink to the mascot alone. */
+  .tutor-fab {
+    right: var(--s-md);
+    bottom: calc(78px + env(safe-area-inset-bottom));
+    max-width: none;
+    padding: 8px;
+  }
+  .tutor-fab-copy { display: none; }
+}
+
+/* ============================================================
+   OPPORTUNITY FOCUS CAROUSEL
+   A 3D arc built from CSS transforms only. The reference is WebGL;
+   a canvas bundle would buy the same picture at a cost learners on
+   mobile data pay. Design Spec §8: the app's speed is the brand.
+   ============================================================ */
+
+.opp-stage { display: grid; gap: var(--s-lg); }
+
+/* Detail sits above the arc: the decision is read first, the carousel
+   is the control rather than the content. */
+.opp-detail {
+  padding: var(--s-lg);
+  background: var(--surface);
+  border: 1px solid var(--hairline);
+  border-left: 3px solid var(--teal-700);
+  border-radius: var(--r-card);
+}
+
+.opp-detail-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s-sm);
+  align-items: center;
+  margin-bottom: var(--s-sm);
+}
+
+.opp-kind {
+  font-size: var(--t-label);
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--teal-700);
+}
+
+.opp-loc {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: var(--t-label);
+  font-weight: 600;
+  color: var(--muted-ink);
+}
+
+.opp-detail h2 {
+  margin: 0 0 2px;
+  font-size: var(--t-h1);
+  line-height: var(--l-h1);
+  letter-spacing: var(--k-h1);
+  font-weight: 700;
+}
+
+.opp-org { margin: 0 0 var(--s-sm); font-size: var(--t-meta); color: var(--muted-ink); }
+
+.opp-evidence {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--s-md);
+  margin: var(--s-md) 0;
+  padding-top: var(--s-md);
+  border-top: 1px solid var(--hairline);
+}
+
+.opp-evidence strong {
+  display: block;
+  margin-bottom: 5px;
+  font-size: var(--t-label);
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--muted-ink);
+}
+
+.opp-evidence ul { margin: 0; padding-left: var(--s-md); }
+.opp-evidence li { font-size: var(--t-meta); line-height: var(--l-meta); }
+.opp-evidence small { font-size: var(--t-meta); color: var(--muted-ink); }
+
+.opp-detail-foot {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s-sm);
+  align-items: center;
+  justify-content: space-between;
+  padding-top: var(--s-md);
+  border-top: 1px solid var(--hairline);
+}
+
+.opp-detail-foot small { font-size: var(--t-meta); color: var(--muted-ink); }
+
+/* ---- the arc ---- */
+.opp-rail {
+  position: relative;
+  height: 230px;
+  perspective: 1200px;
+  perspective-origin: 50% 45%;
+  touch-action: pan-y;
+  cursor: grab;
+  overflow: hidden;
+}
+
+.opp-rail.dragging { cursor: grabbing; }
+.opp-rail:focus-visible { outline: 2px solid var(--teal-700); outline-offset: 3px; border-radius: var(--r-card); }
+
+.opp-arc {
+  position: relative;
+  height: 100%;
+  transform-style: preserve-3d;
+}
+
+.opp-card {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  display: grid;
+  gap: 5px;
+  align-content: start;
+  width: 232px;
+  min-height: 168px;
+  padding: var(--s-md);
+  margin: -84px 0 0 -116px;
+  font-family: inherit;
+  text-align: left;
+  background: var(--surface);
+  border: 1px solid var(--hairline);
+  border-radius: var(--r-card);
+  cursor: pointer;
+  transition: transform 420ms cubic-bezier(0.22, 0.8, 0.3, 1),
+              opacity 420ms ease-out,
+              border-color 240ms ease,
+              box-shadow 240ms ease;
+  will-change: transform, opacity;
+}
+
+/* The focused card stands upright and lit; neighbours recede. */
+.opp-card.active {
+  border-color: var(--teal-700);
+  box-shadow: 0 18px 40px rgba(4, 52, 44, 0.16);
+}
+
+.opp-card:focus-visible { outline: 2px solid var(--teal-700); outline-offset: 3px; }
+
+.opp-card-icon {
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  color: var(--teal-700);
+  background: var(--teal-050);
+  border-radius: var(--r-control);
+}
+
+.opp-card.active .opp-card-icon { color: #fff; background: var(--teal-700); }
+
+.opp-card-kind {
+  font-size: var(--t-label);
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--muted-ink);
+}
+
+.opp-card strong { font-size: var(--t-title); line-height: var(--l-title); font-weight: 600; }
+.opp-card small { font-size: var(--t-meta); color: var(--muted-ink); }
+
+/* ---- controls ---- */
+.opp-controls {
+  display: flex;
+  gap: var(--s-md);
+  align-items: center;
+  justify-content: center;
+}
+
+.opp-arrow {
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  color: var(--ink);
+  background: var(--surface);
+  border: 1px solid var(--hairline);
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.opp-arrow:hover:not(:disabled) { border-color: var(--teal-700); color: var(--teal-700); }
+.opp-arrow:disabled { opacity: 0.4; cursor: default; }
+.opp-arrow:focus-visible { outline: 2px solid var(--teal-700); outline-offset: 2px; }
+
+.opp-scrub { display: flex; gap: 5px; align-items: center; }
+
+.opp-scrub span {
+  width: 22px;
+  height: 4px;
+  background: var(--hairline);
+  border-radius: var(--r-chip);
+  transition: width 320ms ease-out, background-color 320ms ease-out;
+}
+
+.opp-scrub span.on { width: 44px; background: var(--teal-700); }
+
+.opp-hint {
+  margin: 0;
+  font-size: var(--t-label);
+  color: var(--muted-ink);
+  text-align: center;
+}
+
+/* Motion is the whole point of this component, so reduced-motion gets a
+   plain stacked list rather than a stilled arc a learner cannot parse. */
+@media (prefers-reduced-motion: reduce) {
+  .opp-rail { height: auto; perspective: none; overflow: visible; }
+  .opp-arc { display: grid; gap: var(--s-sm); }
+  .opp-card {
+    position: static;
+    width: 100%;
+    min-height: 0;
+    margin: 0;
+    transform: none !important;
+    opacity: 1 !important;
+    transition: none;
+  }
+  .opp-scrub span, .opp-card { transition: none; }
+}
+
+@media (max-width: 720px) {
+  .opp-evidence { grid-template-columns: 1fr; gap: var(--s-sm); }
+  .opp-rail { height: 210px; }
+  .opp-card { width: 200px; margin-left: -100px; }
+}
