@@ -1,5 +1,15 @@
 # Changelog
 
+## [0.16.0.0] - 2026-08-17
+
+### Changed
+
+- Navy is now the colour that leads: navigation, buttons, links and selection. Teal keeps every meaning it had as the secondary accent, on progress, verified work and completed roadmap stages.
+
+### Fixed
+
+- The app is light again. The previous release turned every surface dark, which was not what was asked for.
+
 ## [0.15.0.0] - 2026-08-17
 
 ### Changed
