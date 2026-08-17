@@ -2,8 +2,9 @@ import { z } from "zod";
 import { createClient } from "@/lib/supabase/server";
 import { ok, problem } from "@/lib/http";
 import { secureToken, sha256 } from "@/lib/crypto";
+import { uuidLike } from "@/lib/validation/ids";
 
-const schema = z.object({ proofId: z.string().uuid(), expiresInDays: z.number().int().min(1).max(30).default(7) });
+const schema = z.object({ proofId: uuidLike(), expiresInDays: z.number().int().min(1).max(30).default(7) });
 
 export async function POST(request: Request) {
   const parsed = schema.safeParse(await request.json().catch(() => null));
