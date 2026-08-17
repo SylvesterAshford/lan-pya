@@ -1,5 +1,16 @@
 # Changelog
 
+## [0.9.1.0] - 2026-08-17
+
+### Fixed
+
+- Sharing proof did not work. Every proof the demo account holds was rejected as an invalid identifier, so the Share proof button failed silently for all of it. The check was stricter than the database it was guarding.
+- An employer opening a valid proof link could be told the link was "expired, revoked, or invalid" when the real problem was on our side. Lan Pya now says it is temporarily unavailable, states plainly that nothing is wrong with the link, and offers to try again. A service fault must never read as a learner withdrawing their evidence.
+
+### Known issue
+
+- Public proof viewing is currently unavailable and returns a retryable error. The server's Supabase secret key is being rejected as invalid and has to be replaced by hand. Creating and revoking share links works; only opening a shared link is affected.
+
 ## [0.9.0.0] - 2026-08-17
 
 ### Added
