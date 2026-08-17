@@ -57,6 +57,7 @@ export type BoardLabels = {
   noMatchesBody: string;
   clear: string;
   count: string;
+  countOne: string;
 };
 
 function tone(readiness: string) {
@@ -170,7 +171,10 @@ export function OpportunityBoard({
       </div>
 
       <p className="opp-count" role="status">
-        {labels.count.replace("{n}", num(filtered.length))}
+        {/* "1 opportunities" is the kind of small wrongness that makes a
+            product feel unfinished. Burmese has no plural inflection, so both
+            keys carry the same string there. */}
+        {(filtered.length === 1 ? labels.countOne : labels.count).replace("{n}", num(filtered.length))}
         {hasFilters ? (
           <button type="button" className="text-link inline" onClick={() => { setQuery(""); setCategory(""); }}>
             {labels.clear}

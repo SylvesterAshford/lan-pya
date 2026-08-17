@@ -9106,3 +9106,222 @@ html[lang="my"] .sidebar-menu-button > a { font-size: var(--t-body); }
   .app-mobile-bar .app-brand { flex: 1; min-width: 0; }
   .app-mobile-bar .update-chip { flex: none; }
 }
+
+/* ===================================================================
+   Opportunities board — after Contra's discover / jobs pages
+   Structure only. Contra's visual weight comes from portfolio
+   thumbnails; this has none, so generated category art does the work
+   at list scale and teal stays primary.
+   =================================================================== */
+
+.opp-board { display: grid; gap: 18px; }
+
+.opp-controls-bar { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+
+.opp-search {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  flex: 1;
+  min-width: 220px;
+  height: 44px;
+  padding: 0 14px;
+  background: var(--surface);
+  border: 1px solid var(--hairline);
+  border-radius: 10px;
+  color: var(--muted-ink);
+}
+.opp-search:focus-within { border-color: var(--teal-700); }
+.opp-search svg { flex: none; }
+.opp-search input {
+  flex: 1;
+  min-width: 0;
+  height: 100%;
+  border: 0;
+  background: transparent;
+  color: var(--ink);
+  font: inherit;
+  font-size: var(--t-meta);
+  outline: none;
+}
+.opp-search input::-webkit-search-cancel-button { cursor: pointer; }
+
+/* Segmented control: one background, the active half raised on white. */
+.opp-segmented {
+  display: inline-flex;
+  flex: none;
+  gap: 2px;
+  padding: 3px;
+  background: var(--surface-sunk);
+  border: 1px solid var(--hairline);
+  border-radius: 10px;
+}
+.opp-segmented button {
+  min-height: 36px;
+  padding: 0 16px;
+  border: 0;
+  border-radius: 7px;
+  background: transparent;
+  color: var(--muted-ink);
+  font-size: var(--t-meta);
+  font-weight: 600;
+  cursor: pointer;
+}
+.opp-segmented button.on { background: var(--surface); color: var(--teal-900); box-shadow: 0 0 0 1px var(--hairline); }
+
+/* Chips scroll sideways on a phone rather than wrapping to four rows. */
+.opp-chips {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  overflow-x: auto;
+  padding-bottom: 2px;
+  scrollbar-width: none;
+}
+.opp-chips::-webkit-scrollbar { display: none; }
+.opp-chips-icon { flex: none; display: inline-flex; color: var(--muted-ink); }
+.opp-chips button {
+  flex: none;
+  min-height: 34px;
+  padding: 0 14px;
+  background: var(--surface);
+  border: 1px solid var(--hairline);
+  border-radius: 99px;
+  color: var(--muted-ink);
+  font-size: var(--t-meta);
+  font-weight: 600;
+  white-space: nowrap;
+  cursor: pointer;
+}
+.opp-chips button:hover { color: var(--teal-900); background: var(--teal-050); }
+.opp-chips button.on { background: var(--teal-100); border-color: var(--teal-100); color: var(--teal-900); }
+
+.opp-count {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: var(--t-meta);
+  color: var(--muted-ink);
+  font-variant-numeric: tabular-nums;
+}
+
+.opp-shelf { display: grid; gap: 10px; }
+.opp-shelf > header { display: flex; align-items: baseline; gap: 10px; }
+.opp-shelf h2 {
+  font-size: var(--t-h2);
+  line-height: var(--l-h2);
+  letter-spacing: var(--k-h2);
+  font-weight: 700;
+  color: var(--ink);
+}
+.opp-shelf header p { font-size: var(--t-meta); line-height: var(--l-meta); color: var(--muted-ink); margin-top: 2px; }
+.opp-shelf-count {
+  margin-left: auto;
+  font-size: var(--t-label);
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  color: var(--muted-ink);
+  font-variant-numeric: tabular-nums;
+}
+
+.opp-rows { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
+
+.opp-row {
+  background: var(--surface);
+  border: 1px solid var(--hairline);
+  border-radius: 12px;
+  overflow: hidden;
+}
+.opp-row.open { border-color: var(--teal-500); }
+
+.opp-row-head {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  width: 100%;
+  min-height: 72px;
+  padding: 12px 16px;
+  background: transparent;
+  border: 0;
+  text-align: left;
+  cursor: pointer;
+}
+.opp-row-head:hover { background: var(--teal-050); }
+
+.opp-row-art {
+  flex: none;
+  width: 56px;
+  height: 44px;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.opp-row-copy { flex: 1; min-width: 0; display: grid; gap: 3px; }
+.opp-row-copy strong {
+  font-size: var(--t-title);
+  line-height: var(--l-title);
+  letter-spacing: var(--k-title);
+  font-weight: 600;
+  color: var(--ink);
+}
+.opp-row-copy small {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+  font-size: var(--t-meta);
+  color: var(--muted-ink);
+}
+.opp-row-loc { display: inline-flex; align-items: center; gap: 3px; }
+
+.opp-row-meta { flex: none; display: flex; align-items: center; gap: 8px; }
+.opp-row-chevron { flex: none; color: var(--muted-ink); transition: transform 160ms ease-out; }
+.opp-row.open .opp-row-chevron { transform: rotate(180deg); }
+
+.opp-row-detail { padding: 0 16px 16px; border-top: 1px solid var(--hairline); }
+.opp-row-detail .opp-evidence {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  padding: 16px 0;
+}
+.opp-row-detail .opp-evidence > div { display: grid; gap: 6px; align-content: start; }
+.opp-row-detail .opp-evidence strong {
+  font-size: var(--t-label);
+  letter-spacing: 0.08em;
+  font-weight: 600;
+  text-transform: uppercase;
+  color: var(--muted-ink);
+}
+html[lang="my"] .opp-row-detail .opp-evidence strong { text-transform: none; letter-spacing: 0; }
+.opp-row-detail .opp-evidence ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 4px; }
+.opp-row-detail .opp-evidence li {
+  font-size: var(--t-meta);
+  line-height: var(--l-meta);
+  color: var(--ink);
+}
+.opp-row-detail .opp-evidence small { font-size: var(--t-meta); color: var(--muted-ink); }
+.opp-row-detail footer {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  padding-top: 12px;
+  border-top: 1px solid var(--hairline);
+}
+.opp-row-detail footer small { flex: 1; min-width: 180px; font-size: var(--t-meta); color: var(--muted-ink); }
+
+@media (max-width: 720px) {
+  .opp-row-detail .opp-evidence { grid-template-columns: 1fr; gap: 12px; }
+  .opp-row-head { flex-wrap: wrap; gap: 10px; }
+  .opp-row-art { width: 44px; height: 36px; }
+  /* Meta drops below the title instead of squeezing it to a few characters. */
+  .opp-row-meta { width: 100%; order: 3; }
+  .opp-row-chevron { order: 2; margin-left: auto; }
+  .opp-segmented { width: 100%; }
+  .opp-segmented button { flex: 1; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .opp-row-chevron { transition: none; }
+}
