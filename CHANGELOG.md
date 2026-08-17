@@ -1,5 +1,17 @@
 # Changelog
 
+## [0.6.0.0] - 2026-08-17
+
+### Added
+
+- Work through a mission in five clear steps — Brief, Build, Submit, Review, Proof — instead of one long page, with your position visible throughout.
+- Tick off each deliverable as you finish it. Progress saves privately on your device and shows the rubric weight your reviewer will use.
+
+### Changed
+
+- Review and Proof are reached by submitting work, not by clicking. You cannot navigate your way into a verified state.
+- Profile now says once that the Career Compass has not been answered, instead of repeating "Not sure yet" for every question, and reads as one page rather than five stacked cards.
+
 ## [0.5.0.0] - 2026-08-17
 
 ### Added
