@@ -1,7 +1,8 @@
 "use client";
 
-import { ArrowUpRight, BriefcaseBusiness, ChevronLeft, ChevronRight, MapPin } from "lucide-react";
+import { ArrowUpRight, ChevronLeft, ChevronRight, MapPin } from "lucide-react";
 import { useCallback, useEffect, useRef, useState } from "react";
+import { CategoryArt } from "@/components/opportunities/category-art";
 import { DeadlineChip } from "@/components/app/deadline-chip";
 import { StatusPill } from "@/components/app/status-pill";
 import { formatAppDate, localizeReadiness } from "@/lib/i18n/app-copy";
@@ -169,16 +170,21 @@ export function OpportunityCarousel({
                 onKeyDown={onKeyDown}
                 style={{
                   // The arc: rotate away, push back, and shrink with distance.
-                  transform: `translateX(${offset * 80}%) translateZ(${distance * -130}px) rotateY(${offset * -30}deg) scale(${1 - distance * 0.05})`,
+                  transform: `translateX(${offset * 78}%) translateZ(${distance * -130}px) rotateY(${offset * -30}deg) scale(${1 - distance * 0.05})`,
                   opacity: distance > 3 ? 0 : 1 - distance * 0.22,
                   zIndex: items.length - distance,
                   pointerEvents: distance > 3 ? "none" : "auto",
                 }}
               >
-                <span className="opp-card-icon"><BriefcaseBusiness size={18} aria-hidden="true" /></span>
-                <span className="opp-card-kind">{entry.display.type}</span>
-                <strong>{entry.display.title}</strong>
-                <small>{entry.display.organization}</small>
+                <CategoryArt type={entry.source.type} className="opp-card-art" />
+                <span className="opp-card-body">
+                  <span className="opp-card-kind">{entry.display.type}</span>
+                  <strong>{entry.display.title}</strong>
+                  <small>{entry.display.organization}</small>
+                  <span className="opp-card-foot">
+                    <DeadlineChip locale={locale} deadline={entry.display.deadline} showIcon={false} />
+                  </span>
+                </span>
               </button>
             );
           })}
