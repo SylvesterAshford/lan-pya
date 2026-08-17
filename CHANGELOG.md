@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.11.0.0] - 2026-08-17
+
+### Changed
+
+- Navigation is a sidebar again on desktop, with the five destinations, staff links, and your account in one column that can collapse to icons. Phones keep the bottom tab bar, which stays reachable with a thumb, and gain a slim bar carrying the Lan Pya mark.
+
 ## [0.10.0.1] - 2026-08-17
 
 ### Fixed
