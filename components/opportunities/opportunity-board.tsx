@@ -3,6 +3,7 @@
 import { ArrowUpRight, Building2, ChevronDown, MapPin, Search, ShieldCheck, SlidersHorizontal } from "lucide-react";
 import { useMemo, useState } from "react";
 import { CategoryArt } from "@/components/opportunities/category-art";
+import { FeaturedOpportunity, type FeaturedLabels } from "@/components/opportunities/featured-opportunity";
 import { DeadlineChip } from "@/components/app/deadline-chip";
 import { StatusPill } from "@/components/app/status-pill";
 import { getDeadlineStatus, toMyanmarDigits } from "@/lib/domain/deadlines";
@@ -58,6 +59,9 @@ export type BoardLabels = {
   clear: string;
   count: string;
   countOne: string;
+  featured: FeaturedLabels;
+  noteTitle: string;
+  noteBody: string;
 };
 
 function tone(readiness: string) {
@@ -182,6 +186,17 @@ export function OpportunityBoard({
         ) : null}
       </p>
 
+      {/* The concept's two lead cards. Shown only on the unfiltered "For you"
+          view: a featured pick inside a filtered result set is just the first
+          row with a bigger border. */}
+      {scope === "for-you" && !hasFilters && filtered.length > 1 ? (
+        <div className="featured-opp-pair">
+          {filtered.slice(0, 2).map((entry) => (
+            <FeaturedOpportunity key={`featured-${entry.display.id}`} entry={entry} locale={locale} labels={labels.featured} />
+          ))}
+        </div>
+      ) : null}
+
       {shelves.length ? shelves.map((shelf) => (
         <section className="opp-shelf" key={shelf.key} aria-labelledby={`shelf-${shelf.key}`}>
           <header>
@@ -269,6 +284,10 @@ export function OpportunityBoard({
           <button type="button" className="button outline" onClick={() => { setQuery(""); setCategory(""); }}>{labels.clear}</button>
         </section>
       )}
+      <aside className="opp-note">
+        <strong>{labels.noteTitle}</strong>
+        <p>{labels.noteBody}</p>
+      </aside>
     </div>
   );
 }
