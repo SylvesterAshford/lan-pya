@@ -2,6 +2,8 @@ import { ArrowRight, BriefcaseBusiness, Clock3, Compass, Map } from "lucide-reac
 import { Link } from "@/i18n/navigation";
 import { requireUser } from "@/lib/auth";
 import { DeadlineChip } from "@/components/app/deadline-chip";
+import { LevelMeter } from "@/components/app/level-meter";
+import { resolveProgress } from "@/lib/domain/progress";
 import { getActivePathDashboard, getOpportunities, getRoadmap } from "@/lib/data/app-data";
 import { getAppCopy, localizeCareerTerm, localizeOpportunity, localizeRoadmapMilestone } from "@/lib/i18n/app-copy";
 
@@ -29,6 +31,15 @@ export default async function TodayPage({ params }: { params: Promise<{ locale: 
   const currentStage = nextStages.find((stage) => stage.status === "active") ?? nextStages[0];
   const nearbyOpportunities = opportunities.slice(0, 3).map((item) => localizeOpportunity(locale, item));
 
+  // The XP ledger has existed since 2026-08-13 and the dashboard has always
+  // returned a summed `xp`; nothing rendered it, and the RPC's own `level` is a
+  // flat xp/100 ladder with no evidence gate. The real ladder is resolved here.
+  const progress = resolveProgress(dashboard.xp, {
+    completedMissions: dashboard.completedMilestones,
+    verifiedCount: dashboard.verifiedCount,
+    stagesTouched: roadmap.filter((stage) => stage.status === "complete").length,
+  });
+
   return (
     <div className="app-page home-page">
       <section className="home-heading">
@@ -39,9 +50,14 @@ export default async function TodayPage({ params }: { params: Promise<{ locale: 
         <dl className="home-stats">
           <div><dd>{dashboard.completedMilestones}/{dashboard.totalMilestones}</dd><dt>{locale === "my" ? "ပြီးစီးသောအဆင့်" : "Milestones"}</dt></div>
           <div><dd>{dashboard.progressPercent}%</dd><dt>{locale === "my" ? "တိုးတက်မှု" : "Complete"}</dt></div>
-          <div><dd>{dashboard.xp}</dd><dt>XP</dt></div>
         </dl>
       </section>
+
+      {/* First element after the greeting: "where am I" is Home's whole job,
+          and a level with its gates answers it better than a bare XP figure
+          did. The raw number moved out of the stats row because a count with
+          no ladder beside it invites "out of what?" and answers nothing. */}
+      <LevelMeter progress={progress} locale={locale} pathTitle={pathTitle} />
 
       <section className="continue-panel">
         <div className="continue-copy">

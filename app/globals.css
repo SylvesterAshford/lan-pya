@@ -35,6 +35,25 @@
   --node-soon-border: #c9c3ae;
   --connector: #b6c4c0;
 
+  /* ---- Emblem palette: stage emblems and level insignia ONLY ----
+     A third bounded palette, scoped exactly the way the canvas palette is.
+     It exists because teal was the only expressive colour in the system and
+     teal is also every button and link, so the app had no way to look like
+     anything. These five hues never appear in chrome: not on a button, chip,
+     border, background, or icon. They appear inside an emblem silhouette or a
+     level insignia and nowhere else.
+
+     Contrast: --em-5 on white is ~2.6:1, under the 3:1 WCAG 2.2 floor for
+     graphical objects. Every emblem therefore carries a 2.2px --em-ink
+     outline, which is what actually carries the contrast. The outline is
+     structural. Removing it breaks accessibility, not just the look. */
+  --em-1: #1d7f6e;
+  --em-2: #2f6ea8;
+  --em-3: #8a5fbf;
+  --em-4: #c2603f;
+  --em-5: #b4922a;
+  --em-ink: #22201c;
+
   /* ---- Type scale: eight steps. A size outside these is a defect. ----
      Proportions after Zapier: tight display leading, negative tracking on the
      headings, a lighter display weight than 800, and a body ladder one step up.
@@ -8548,4 +8567,157 @@ html[lang="my"] .app-page .mission-title h1 {
 
 @media (max-width: 720px) {
   .opp-card-art { height: 92px; }
+}
+
+/* ===================================================================
+   Path progress — level meter, gates, stage emblems
+   Added 2026-08-17. The XP ledger has existed since 2026-08-13 and was
+   never rendered; this is the interface for it.
+   =================================================================== */
+
+.emblem { display: block; flex: none; }
+/* Unearned emblems keep their silhouette so an empty path still has shape,
+   but drop to grey so there is no doubt about what has been earned. */
+.emblem.is-locked { opacity: 0.3; filter: grayscale(1); }
+
+.insignia { display: block; flex: none; }
+.insignia text {
+  font-family: var(--font-sans), system-ui, sans-serif;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ---- Full meter: Home only ---- */
+.level-card {
+  display: flex;
+  gap: var(--sp-lg, 24px);
+  align-items: flex-start;
+  background: var(--surface);
+  border: 1px solid var(--hairline);
+  border-radius: 12px;
+  padding: 20px 22px;
+}
+.level-main { flex: 1; min-width: 0; }
+.level-top {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.level-name {
+  font-size: var(--t-h2);
+  line-height: var(--l-h2);
+  letter-spacing: var(--k-h2);
+  font-weight: 700;
+  color: var(--ink);
+}
+.level-rank,
+.level-path {
+  font-size: var(--t-label);
+  line-height: var(--l-label);
+  letter-spacing: 0.08em;
+  font-weight: 600;
+  text-transform: uppercase;
+  color: var(--muted-ink);
+}
+.level-path { color: var(--teal-700); }
+
+.level-track {
+  height: 8px;
+  /* An inset hairline, because --surface-sunk on --surface is nearly no
+     contrast: at 0% the bar otherwise vanishes and a new learner sees no
+     meter at all, which is the exact moment the meter matters most. */
+  background: var(--surface-sunk);
+  box-shadow: inset 0 0 0 1px var(--hairline);
+  border-radius: 99px;
+  margin: 12px 0 8px;
+  overflow: hidden;
+}
+.level-fill {
+  height: 100%;
+  background: var(--teal-500);
+  border-radius: 99px;
+  transition: width 240ms ease-in-out;
+}
+.level-xp {
+  font-size: var(--t-meta);
+  line-height: var(--l-meta);
+  color: var(--muted-ink);
+  font-variant-numeric: tabular-nums;
+}
+.level-xp b { color: var(--ink); font-weight: 600; }
+
+.level-gates { list-style: none; margin: 12px 0 0; padding: 0; display: grid; gap: 6px; }
+.level-gates li {
+  display: flex;
+  gap: 8px;
+  align-items: flex-start;
+  font-size: var(--t-meta);
+  line-height: var(--l-meta);
+  color: var(--muted-ink);
+}
+.level-gates li.met { color: var(--ink); }
+.level-gates b { color: var(--ink); font-weight: 600; font-variant-numeric: tabular-nums; }
+.gate-tick { flex: none; margin-top: 3px; }
+
+.level-honesty {
+  font-size: var(--t-meta);
+  line-height: var(--l-meta);
+  color: var(--muted-ink);
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid var(--hairline);
+}
+
+/* ---- Compact strip: Roadmap and Missions ---- */
+.level-strip {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: var(--surface);
+  border: 1px solid var(--hairline);
+  border-radius: 10px;
+  padding: 8px 14px;
+}
+.level-strip strong {
+  font-size: var(--t-meta);
+  font-weight: 600;
+  color: var(--ink);
+  white-space: nowrap;
+}
+.level-strip-track {
+  flex: 1;
+  min-width: 60px;
+  height: 6px;
+  background: var(--surface-sunk);
+  box-shadow: inset 0 0 0 1px var(--hairline);
+  border-radius: 99px;
+  overflow: hidden;
+}
+.level-strip-track > span {
+  display: block;
+  height: 100%;
+  background: var(--teal-500);
+  border-radius: 99px;
+}
+.level-strip-xp {
+  font-size: var(--t-label);
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: var(--muted-ink);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+/* ---- Mission rows carry their stage emblem ---- */
+.mission-emblem { flex: none; }
+
+@media (max-width: 560px) {
+  .level-card { gap: 14px; padding: 16px 16px; }
+  .level-honesty { font-size: var(--t-label); letter-spacing: 0; text-transform: none; }
+  /* The path name is the first thing to go: it is already the page context. */
+  .level-path { display: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .level-fill { transition: none; }
 }

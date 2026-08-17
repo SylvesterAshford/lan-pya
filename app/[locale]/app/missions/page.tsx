@@ -1,5 +1,8 @@
-import { ArrowRight, Check, CircleDashed } from "lucide-react";
+import { ArrowRight, CircleDashed } from "lucide-react";
 import { Link } from "@/i18n/navigation";
+import { Emblem } from "@/components/app/emblem";
+import { LevelMeter } from "@/components/app/level-meter";
+import { emblemForStage, resolveProgress } from "@/lib/domain/progress";
 import { requireUser } from "@/lib/auth";
 import { getActivePathDashboard, getProofItems, getRoadmap } from "@/lib/data/app-data";
 import { getAppCopy, formatAppDate, localizeCareerTerm, localizeRoadmapMilestone } from "@/lib/i18n/app-copy";
@@ -47,6 +50,17 @@ export default async function MissionsPage({ params }: { params: Promise<{ local
   const mission = dashboard.nextMission;
   const verified = proof.filter((item) => item.state === "active");
 
+  const progress = resolveProgress(dashboard.xp, {
+    completedMissions: dashboard.completedMilestones,
+    verifiedCount: dashboard.verifiedCount,
+    stagesTouched: roadmap.filter((stage) => stage.status === "complete").length,
+  });
+
+  // Which emblem a mission carries comes from the stage it belongs to, so the
+  // mark here and the mark on the roadmap node are the same mark.
+  const stageIndex = currentStage ? roadmap.findIndex((stage) => stage.key === currentStage.key) : 0;
+  const activeEmblem = emblemForStage(Math.max(0, stageIndex), roadmap.length);
+
   return (
     <div className="app-page missions-page">
       <section className="page-heading compact-heading">
@@ -54,6 +68,10 @@ export default async function MissionsPage({ params }: { params: Promise<{ local
         <h1>{c.missions.title}</h1>
         <p>{c.missions.body}</p>
       </section>
+
+      {/* Compact, not the full Home card. Repeating a large panel on every
+          screen is how an app becomes a dashboard mosaic. */}
+      <LevelMeter progress={progress} locale={locale} variant="compact" />
 
       <section className="mission-section">
         <header className="arena-head">
@@ -63,6 +81,7 @@ export default async function MissionsPage({ params }: { params: Promise<{ local
 
         {mission ? (
           <Link className="mission-row current" href={missionHref[mission.key] ?? "/app/paths"}>
+            <Emblem kind={activeEmblem} size={40} className="mission-emblem" />
             <span className="mission-row-copy">
               <span className="mission-tags">
                 {currentStage ? <span className="mission-tag stage">{c.missions.stage} {currentStage.order}</span> : null}
@@ -95,7 +114,9 @@ export default async function MissionsPage({ params }: { params: Promise<{ local
         {verified.length ? (
           verified.map((item) => (
             <Link className="mission-row done" href="/app/proof" key={item.id}>
-              <span className="mission-check" aria-hidden="true"><Check size={13} /></span>
+              {/* The rosette, not a check mark: verification is different in
+                  kind from "finished", and the shape is what says so. */}
+              <Emblem kind="verified" size={40} className="mission-emblem" />
               <span className="mission-row-copy">
                 <span className="mission-tags">
                   <span className="mission-tag verified">{c.missions.verifiedOn} {formatAppDate(locale, item.verifiedAt)}</span>
