@@ -5579,12 +5579,21 @@ dt{ color:var(--muted); font-size:var(--t-label); font-weight:800; text-transfor
 .app-header-inner{
   display: flex;
   width: 100%;
-  max-width: 1100px;
+  /* Bound to the content column, not an independent track. A header on a wider
+     track leaves the brand floating left of everything it labels: at 1440px a
+     1100px header put the logo 116px left of an 820px column. DESIGN.md Layout. */
+  max-width: var(--content-max);
   height: 100%;
   align-items: center;
   gap: 26px;
   padding: 0 24px;
   margin: 0 auto;
+}
+
+/* Account actions ride the right edge so nav link spacing holds as the window
+   narrows, instead of the whole bar drifting. */
+.app-header-inner > :last-child{
+  margin-left: auto;
 }
 
 .app-brand{
@@ -7162,3 +7171,188 @@ html[lang="my"] .mission-focus h2{
 }
 
 .home-list .deadline-chip { margin-top: 3px; }
+
+/* ============================================================
+   ROADMAP CATALOG — DESIGN.md "The Roadmap Catalog".
+   No cards. Arena headings with counts, then compact rows.
+   ============================================================ */
+
+.your-path {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: var(--s-sm) var(--s-md);
+  align-items: start;
+  padding: var(--s-md) var(--s-lg);
+  background: var(--teal-050);
+  border: 1px solid var(--teal-100);
+  border-left: 3px solid var(--teal-700);
+  border-radius: var(--r-card);
+}
+
+.your-path-copy h2 {
+  margin: 3px 0 2px;
+  font-size: var(--t-h2);
+  line-height: var(--l-h2);
+  font-weight: 700;
+}
+
+.your-path-copy p {
+  margin: 0;
+  font-size: var(--t-meta);
+  line-height: var(--l-meta);
+  color: var(--muted-ink);
+}
+
+.your-path-pct {
+  font-size: var(--t-display);
+  line-height: 1;
+  font-weight: 800;
+  color: var(--teal-700);
+  font-variant-numeric: tabular-nums;
+}
+
+.your-path-bar {
+  grid-column: 1 / -1;
+  height: 5px;
+  background: var(--surface);
+  border: 1px solid var(--teal-100);
+  border-radius: var(--r-chip);
+  overflow: hidden;
+}
+
+.your-path-bar > span {
+  display: block;
+  height: 100%;
+  background: var(--teal-500);
+  transition: width 240ms ease-in-out;
+}
+
+.your-path-actions {
+  grid-column: 1 / -1;
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s-sm);
+}
+
+.arena-group { margin-top: var(--s-xl); }
+
+.arena-head {
+  display: flex;
+  align-items: baseline;
+  gap: var(--s-sm);
+  padding-bottom: var(--s-sm);
+  border-bottom: 1px solid var(--hairline);
+}
+
+.arena-head h3 {
+  margin: 0;
+  font-size: var(--t-label);
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ink);
+}
+
+.arena-count {
+  font-size: var(--t-label);
+  font-weight: 600;
+  color: var(--muted-ink);
+  font-variant-numeric: tabular-nums;
+}
+
+.path-row {
+  display: grid;
+  grid-template-columns: 1fr auto auto;
+  gap: var(--s-md);
+  align-items: center;
+  padding: 11px var(--s-sm);
+  margin: 0 calc(var(--s-sm) * -1);
+  border-bottom: 1px solid var(--hairline);
+  border-radius: var(--r-control);
+  color: inherit;
+  text-decoration: none;
+}
+
+.path-row:last-child { border-bottom: 0; }
+.path-row:hover { background: var(--surface-sunk); }
+.path-row:focus-visible { outline: 2px solid var(--teal-700); outline-offset: 2px; }
+
+.path-row-copy strong {
+  display: block;
+  font-size: var(--t-title);
+  line-height: var(--l-title);
+  font-weight: 600;
+}
+
+.path-row-copy small {
+  font-size: var(--t-meta);
+  line-height: var(--l-meta);
+  color: var(--muted-ink);
+}
+
+.path-row-chevron { color: var(--muted-ink); flex-shrink: 0; }
+
+.avail {
+  flex-shrink: 0;
+  padding: 2px 9px;
+  font-size: var(--t-label);
+  font-weight: 600;
+  line-height: var(--l-label);
+  white-space: nowrap;
+  border: 1px solid transparent;
+  border-radius: var(--r-chip);
+}
+
+.avail.op { background: var(--teal-100); color: var(--teal-700); }
+.avail.pilot { background: var(--amber-100); color: var(--amber-800); border-color: #ebd9b4; }
+.avail.prev { background: var(--surface-sunk); color: var(--muted-ink); border-color: var(--hairline); }
+
+.disclose {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: var(--s-md);
+  padding: 7px 0;
+  font-family: inherit;
+  font-size: var(--t-meta);
+  font-weight: 600;
+  color: var(--teal-700);
+  background: none;
+  border: 0;
+  cursor: pointer;
+}
+
+.disclose:hover { text-decoration: underline; }
+
+.alt-list { display: grid; gap: 0; }
+
+.alt-row {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: var(--s-md);
+  align-items: center;
+  padding: var(--s-md) 0;
+  border-bottom: 1px solid var(--hairline);
+}
+
+.alt-row:last-child { border-bottom: 0; }
+
+.alt-copy strong {
+  display: block;
+  font-size: var(--t-title);
+  line-height: var(--l-title);
+  font-weight: 600;
+}
+
+.alt-copy small {
+  font-size: var(--t-meta);
+  line-height: var(--l-meta);
+  color: var(--muted-ink);
+}
+
+@media (max-width: 640px) {
+  .your-path { grid-template-columns: 1fr; }
+  .path-row { grid-template-columns: 1fr auto; }
+  .path-row-chevron { display: none; }
+  .alt-row { grid-template-columns: 1fr; }
+}

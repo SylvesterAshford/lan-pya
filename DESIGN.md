@@ -46,10 +46,22 @@ Where this file and those documents disagree, this file wins and the disagreemen
 3. **Opportunities:** deadline-led feed with compact provenance and readiness detail.
 4. **Me:** career profile, personalization, portfolio proof, language, privacy, account controls.
 
+### Path tabs
+
+A path is not one page. Opening a path from the catalog lands on three tabs, matching the split roadmap.sh uses on every one of its path pages:
+
+| Tab | Contains | Count badge |
+|---|---|---|
+| **Map** | The roadmap canvas | Stage count |
+| **Missions** | The work: brief, build, submit, review, proof | Authored mission count |
+| **Tutor** | Roadmap questions and answers | None |
+
+Missions previously lived inside Roadmaps at `/app/build`, which is why learners could not find them. The count badges are load-bearing honesty: `Missions 1` states that the controlled pilot has one authored mission before the learner clicks, rather than after.
+
 ### Contextual flows
 
-- A roadmap milestone opens its mission brief.
-- Mission brief, deliverables, proof requirements, submission, status, feedback, and revision form one linear workflow.
+- A roadmap milestone opens its mission in the Missions tab.
+- Mission brief, deliverables, proof requirements, submission, status, feedback, and revision form one linear workflow, presented as the mission runner below.
 - Verified missions become portfolio records automatically; sharing and revocation live under Me.
 - Reviewer and administrator links appear as compact role-specific utilities, not learner destinations.
 
@@ -161,7 +173,8 @@ Two palettes. They serve different surfaces and must not appear in the same comp
 ## Layout
 
 - **Approach:** Grid-disciplined application workspace.
-- **Desktop shell:** Sticky 60px top navigation, centered 1100px maximum shell.
+- **Desktop shell:** Sticky 60px top navigation. **The header inner width uses the same token as the content column below it.** A header on a wider track than its content leaves the brand mark floating left of everything it labels; at 1440px the 1100px header put the logo 116px left of an 820px content column.
+- **Header layout is flex, not a fixed track:** brand at natural width, navigation `flex: 1`, account actions pushed right with `margin-left: auto`. Link spacing then holds as the window narrows instead of the whole bar drifting. Below 860px the links hand off to the bottom navigation and the top row keeps only brand and account.
 - **Primary screen content column: 820px maximum.** Home, Opportunities, Paths, and Portfolio are short-content screens. A 1100px column holding three list rows reads as abandoned; an 820px column reads as composed and gives a better line length. Only the roadmap canvas and reviewer/admin tables may exceed it.
 - **Pages end honestly.** Never pad a short screen with filler cards to fill the viewport.
 - **Mobile shell:** Compact top brand row plus fixed four-item bottom navigation; content reserves safe-area space.
@@ -242,6 +255,54 @@ The countdown is the product's daily-return mechanic (Design Spec §2), not deco
 
 This is the one place amber escalation is required rather than permitted. Countdowns appear on both the Opportunities feed and the Home deadline rail, in English and Burmese.
 
+## The Roadmap Catalog
+
+**No cards.** roadmap.sh presents 94 roadmaps as category headings with counts and plain rows underneath, and it is the most legible catalog in this category. Equal bordered cards are the pattern that makes a page read as generated, and DESIGN.md already forbids opening a primary screen with an equal card grid.
+
+Structure, top to bottom:
+
+1. **Your path** — one pinned block, tinted `--teal-050` with a 3px `--teal-700` left edge, showing title, current stage, percentage, and a progress bar. This is the only element on the screen that is allowed to look like a card.
+2. **Arena groups** — an uppercase `--t-label` heading with a count (`Technology & Data · 3`), a hairline rule, then compact rows.
+3. **Preview paths collapsed** — behind a single disclosure control. Nothing is hidden that a learner needs to act on; only paths they cannot start yet.
+
+A catalog row is a grid of `title + one line of substance | availability | chevron`. The substance line carries stage count and first mission, not marketing description.
+
+### Availability labels
+
+| Label | Meaning |
+|---|---|
+| `Controlled pilot` | Roadmap and at least one mission exist, capacity-limited |
+| `No missions yet` | Roadmap is complete; no mission authored |
+| `Preview` | Roadmap itself is not built yet |
+
+`No missions yet` and `Preview` are different claims and must not be collapsed. Labelling a finished 14-stage roadmap as `Preview` understates real work.
+
+## The Mission Runner
+
+A mission is five steps with a progress rail, not one long page. The previous single page stacked a brief, a deliverables list, a pilot note, and a submission form, which on a phone is a wall of text with the form buried at the bottom and no sense of position.
+
+| Step | Contains |
+|---|---|
+| 1 Brief | What you are making, for whom, and why it counts |
+| 2 Build | Deliverables as a live checklist, drafts saved locally |
+| 3 Submit | Links and reflection |
+| 4 Review | Status timeline and reviewer feedback |
+| 5 Proof | The verified artifact |
+
+**One step on screen at a time.** The brief stays reachable from every later step.
+
+**Deliverables are the progress mechanic.** Ticking a real deliverable is progress a learner can defend in an interview. This is the only in-mission progress signal, and it is deliberately not points: the founder research note records that gamification works on meaningful progress rather than attendance, and that unclear game rules are a recurring failure mode.
+
+Rail states use the canvas vocabulary: complete steps take `--teal-500`, the current step takes `--node-stage` with a `--node-border` ring, future steps stay `--hairline`.
+
+## The AI Tutor
+
+Answers questions about the active roadmap. Modeled on the founder reference: assistant messages in `--amber-100` on the left, learner messages in `--teal-700` on the right, suggested questions as full-width `--teal-050` buttons, and a persistent footer reading "Answers use your roadmap context · verify links before applying".
+
+**Current status: scripted preview.** Suggested questions map to pre-written answers per roadmap. There is no model behind it. It must carry a `Preview` label wherever it appears until there is one and a process for checking Burmese answers.
+
+**Boundaries, regardless of implementation.** The tutor explains a roadmap. It never marks a milestone complete, never reviews submitted work, never creates or influences proof, and never claims a verification tier. PRODUCT.md: automated feedback never creates verified proof.
+
 ## Components
 
 - **Primary action:** `--teal-700` background, white text, 8px radius. One per viewport.
@@ -294,3 +355,10 @@ This is the one place amber escalation is required rather than permitted. Countd
 | 2026-08-16 | Detail panel converted to a light surface | The shipped panel was dark navy `#0f172a`, an undocumented third surface in a light app. No dark inspector surface exists in this system. |
 | 2026-08-16 | Deadline countdown promoted to a system rule | Design Spec §2 names it the daily-return mechanic. It was unbuilt; opportunities showed flat dates at 9px. The one place amber escalation is required. |
 | 2026-08-16 | Landing four-column card grid removed | Most recognizable AI-generated layout, and it repeated what the hero mockup already shows as a connected progress line. |
+| 2026-08-17 | **Missions moved out of Roadmaps into their own tab** | Learners could not find the work. roadmap.sh splits every path into Roadmap / Projects / AI Tutor; Lan Pya uses Map / Missions / Tutor. Tab counts state authored-mission scope before the click. |
+| 2026-08-17 | **Catalog cards removed entirely** | roadmap.sh presents 94 roadmaps with category headings, counts, and plain rows. Equal bordered cards are what made the page read as generated. The `catalogByArena` grouping already existed in the page and was unused. |
+| 2026-08-17 | **`No missions yet` separated from `Preview`** | Full-Stack and AI & Data have complete 14 and 13 stage roadmaps but rendered as `Preview`, because `career-recommendations.ts` falls back to preview without a `DIGITAL_PATH_PREVIEWS` entry. Two different claims; collapsing them understates finished work. |
+| 2026-08-17 | **Mission page becomes a five-step runner** | The single page stacked brief, deliverables, pilot note and form, which on a phone buried the form under a wall of text with no sense of position. Deliverables become the in-mission progress signal. |
+| 2026-08-17 | **In-mission progress is a deliverables checklist, not points** | Founder research note: gamification works on meaningful progress, not attendance; unclear rules are a recurring failure mode. A ticked deliverable is defensible in an interview. |
+| 2026-08-17 | **AI Tutor added as a scripted preview** | Taken from the founder reference. No model behind it, labelled Preview, and bounded so it never marks work done or influences proof, per PRODUCT.md. |
+| 2026-08-17 | **Header width bound to the content token** | Regression from the 820px content column change on 2026-08-16, which left the header at 1100px. |

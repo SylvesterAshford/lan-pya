@@ -11,6 +11,12 @@ export type CareerPathCatalogItem = {
   device: string;
   timeToFirstProof: string;
   firstMission: string;
+  /** True when a published roadmap exists, whatever the mission situation.
+   *  "The roadmap is not built" and "the roadmap is built but has no mission
+   *  yet" are different claims and must not share the Preview label. */
+  hasRoadmap: boolean;
+  /** Stage count, 0 when no roadmap exists. */
+  stageCount: number;
 };
 
 const digitalPathByKey = new Map(DIGITAL_PATH_PREVIEWS.map((path) => [path.key, path]));
@@ -28,6 +34,8 @@ const TECHNICAL_PATHS: CareerPathCatalogItem[] = CAREER_TRACKS.map((track) => {
     device: digitalPath?.device ?? "Laptop recommended",
     timeToFirstProof: digitalPath?.timeToFirstProof ?? "1–2 weeks",
     firstMission: track.key === "frontend-developer" ? "Responsive Profile Card" : digitalPath?.firstMission ?? "Mission design in progress",
+    hasRoadmap: true,
+    stageCount: track.milestones.length,
   };
 });
 
@@ -43,8 +51,23 @@ export const CAREER_PATH_CATALOG: CareerPathCatalogItem[] = [
     device: path.device,
     timeToFirstProof: path.timeToFirstProof,
     firstMission: path.firstMission,
+    hasRoadmap: false,
+    stageCount: 0,
   })),
 ];
+
+/** Availability as a learner should read it. `preview` covers two very different
+ *  situations: Full-Stack and AI & Data carry complete 14 and 13 stage roadmaps
+ *  but fall through to preview because neither has a DIGITAL_PATH_PREVIEWS entry.
+ *  Calling a finished roadmap "Preview" understates real work. DESIGN.md
+ *  "The Roadmap Catalog / Availability labels". */
+export type PathAvailabilityLabel = "operational" | "controlled_pilot" | "no_missions_yet" | "preview";
+
+export function getAvailabilityLabel(path: Pick<CareerPathCatalogItem, "availability" | "hasRoadmap">): PathAvailabilityLabel {
+  if (path.availability === "operational") return "operational";
+  if (path.availability === "controlled_pilot") return "controlled_pilot";
+  return path.hasRoadmap ? "no_missions_yet" : "preview";
+}
 
 export type CareerRecommendation = CareerPathCatalogItem & {
   reason: string;
