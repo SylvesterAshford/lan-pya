@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.8.1.0] - 2026-08-17
+
+### Changed
+
+- Opportunity cards are larger and now carry artwork for their category, so a challenge, an internship and a scholarship are recognisable before you read the label. Each card also shows its deadline.
+
 ## [0.8.0.0] - 2026-08-17
 
 ### Changed
