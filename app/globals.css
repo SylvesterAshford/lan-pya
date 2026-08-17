@@ -9325,3 +9325,20 @@ html[lang="my"] .opp-row-detail .opp-evidence strong { text-transform: none; let
 @media (prefers-reduced-motion: reduce) {
   .opp-row-chevron { transition: none; }
 }
+
+/* Login brand panel roadmap. Replaces three adjective pills with the product
+   itself: a visitor who has never heard of Lan Pya learns what it does in one
+   glance, and every element of it is checkable rather than asserted. */
+/* Clear of the headline: the display glow bleeds downward and was landing
+   on the first node. */
+.auth-roadmap { margin: 26px 0 0; display: grid; gap: 12px; justify-items: start; }
+.auth-roadmap svg { width: 268px; max-width: 100%; height: auto; }
+.auth-roadmap figcaption {
+  font-size: var(--t-label);
+  line-height: var(--l-label);
+  letter-spacing: 0.08em;
+  font-weight: 600;
+  text-transform: uppercase;
+  color: rgb(255 255 255 / 0.55);
+}
+html[lang="my"] .auth-roadmap figcaption { text-transform: none; letter-spacing: 0; }
