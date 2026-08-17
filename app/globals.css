@@ -8721,3 +8721,90 @@ html[lang="my"] .app-page .mission-title h1 {
 @media (prefers-reduced-motion: reduce) {
   .level-fill { transition: none; }
 }
+
+/* ---- Level-up moment ----
+   One 240ms settle, no confetti and no bounce: the founder plan maps verified
+   proof to "proud but practical" and forbids reward animation outright. */
+.levelup-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 90;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  background: rgb(4 52 44 / 0.42);
+  animation: levelup-veil 240ms ease-out;
+}
+.levelup-dialog {
+  background: var(--surface);
+  border: 1px solid var(--hairline);
+  border-radius: 14px;
+  padding: 32px 28px 24px;
+  width: min(400px, 100%);
+  text-align: center;
+  display: grid;
+  justify-items: center;
+  gap: 0;
+  animation: levelup-rise 240ms ease-out;
+}
+.levelup-dialog h2 {
+  font-size: var(--t-h1);
+  line-height: var(--l-h1);
+  letter-spacing: var(--k-h1);
+  font-weight: 700;
+  color: var(--ink);
+  margin-top: 16px;
+}
+.levelup-sub {
+  font-size: var(--t-meta);
+  line-height: var(--l-meta);
+  color: var(--muted-ink);
+  margin-top: 6px;
+}
+.levelup-lead {
+  font-size: var(--t-label);
+  line-height: var(--l-label);
+  letter-spacing: 0.08em;
+  font-weight: 600;
+  text-transform: uppercase;
+  color: var(--muted-ink);
+  margin-top: 20px;
+}
+.levelup-list {
+  list-style: none;
+  margin: 10px 0 0;
+  padding: 14px 16px;
+  width: 100%;
+  text-align: left;
+  background: var(--surface-sunk);
+  border-radius: 10px;
+  display: grid;
+  gap: 8px;
+}
+.levelup-list li {
+  display: flex;
+  gap: 8px;
+  align-items: flex-start;
+  font-size: var(--t-meta);
+  line-height: var(--l-meta);
+  color: var(--ink);
+}
+.levelup-list svg { flex: none; margin-top: 3px; }
+.levelup-dismiss { margin-top: 22px; width: 100%; justify-content: center; }
+.levelup-honesty {
+  font-size: var(--t-meta);
+  line-height: var(--l-meta);
+  color: var(--muted-ink);
+  margin-top: 14px;
+}
+
+@keyframes levelup-veil { from { opacity: 0; } to { opacity: 1; } }
+@keyframes levelup-rise {
+  from { opacity: 0; transform: scale(0.96); }
+  to   { opacity: 1; transform: scale(1); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .levelup-overlay,
+  .levelup-dialog { animation: none; }
+}

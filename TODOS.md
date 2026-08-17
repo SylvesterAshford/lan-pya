@@ -43,6 +43,40 @@ Design debt deferred from the 2026-08-16 design review. Everything here was foun
 **Pros:** Removes a component. Matches the spec.
 **Cons:** Loses the always-visible detail that makes the desktop canvas feel like a workspace. Genuinely arguable — the current side panel may be better than the spec on desktop.
 
+### XP weighting table is not implemented
+
+**What:** Award the founder plan's per-action XP values rather than a flat 100 for every verified mission.
+
+**Why:** `LAN_PYA_CAREER_QUEST_PLAN.md` specifies sampler 25, foundation 60, verified core 100, meaningful revision 20, verified capstone 250, weekly goal 10. `record_review_decision` awards a flat 100 regardless. Every mission is currently worth the same, so the ladder cannot distinguish a sampler from a capstone, and the 1,200 XP Trailblazer threshold is reachable only through twelve identical awards.
+
+**Pros:** Makes the level thresholds mean what the plan says they mean. The numbers are already written down.
+**Cons:** Needs a mission-type column (`sampler | foundation | core | capstone`) on `mission_definitions`, plus a migration to the award path and a backfill decision for existing rows.
+**Context:** The ladder itself is already correct in `lib/domain/progress.ts`. This is purely about what feeds it.
+**Depends on:** Nothing. Safe to do after the pitch.
+
+### Capstone is not a distinct mission type
+
+**What:** Give the Trailblazer gate a real capstone check instead of the current approximation.
+
+**Why:** The plan gates Trailblazer on "one Partner Verified or Human Reviewed capstone plus four other Human Reviewed core missions". There is no capstone concept in the schema, so `progress.ts` approximates it as five verified proofs and says so in a comment. Honest, but it is not the documented rule.
+**Depends on:** The mission-type column above. The two should land together.
+
+### Weekly goals are specified but unbuilt
+
+**What:** The optional weekly goal with a grace week, from the plan's "Weekly goals" section.
+
+**Why:** It is the one part of the progress system that supports autonomy — the learner chooses the goal — and it is the only sanctioned use of a streak in the product (weekly rhythm, grace week, never coercive daily pressure). The design sketch included it; the implementation did not.
+**Pros:** Small surface. One choice, one weekly reset, no leaderboard.
+**Cons:** Needs a `learner_weekly_goal` table and a week-boundary rule that respects Asia/Yangon, which `lib/domain/deadlines.ts` already knows how to do.
+
+### Demo XP counts but demo proof does not
+
+**What:** Decide whether `career_quest_xp` should carry a `data_origin`, the way `proof_items` does.
+
+**Why:** `verified_count` deliberately counts only `data_origin = 'live'` proof, so a demo account can never pass an evidence gate. But XP has no such distinction, so demo XP accumulates as real XP. The demo learner therefore climbs the XP axis and is frozen on the evidence axis. That is arguably the right behaviour, but it is currently an accident of two tables disagreeing rather than a decision anyone made.
+**Pros:** Makes the live/demo boundary consistent across the whole progress system.
+**Cons:** Requires deciding what a demo account's level should mean at all. Worth a conversation, not a quick fix.
+
 ---
 
 ## P3 — worth doing, no urgency

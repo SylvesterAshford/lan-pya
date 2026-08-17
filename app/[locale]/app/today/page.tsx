@@ -3,7 +3,9 @@ import { Link } from "@/i18n/navigation";
 import { requireUser } from "@/lib/auth";
 import { DeadlineChip } from "@/components/app/deadline-chip";
 import { LevelMeter } from "@/components/app/level-meter";
-import { resolveProgress } from "@/lib/domain/progress";
+import { LevelUpMoment } from "@/components/app/level-up-moment";
+import { localizeLevel, resolveProgress } from "@/lib/domain/progress";
+import { toMyanmarDigits } from "@/lib/domain/deadlines";
 import { getActivePathDashboard, getOpportunities, getRoadmap } from "@/lib/data/app-data";
 import { getAppCopy, localizeCareerTerm, localizeOpportunity, localizeRoadmapMilestone } from "@/lib/i18n/app-copy";
 
@@ -58,6 +60,46 @@ export default async function TodayPage({ params }: { params: Promise<{ locale: 
           did. The raw number moved out of the stats row because a count with
           no ladder beside it invites "out of what?" and answers nothing. */}
       <LevelMeter progress={progress} locale={locale} pathTitle={pathTitle} />
+
+      {/* Fires once per promotion, tracked per path in localStorage. A first
+          visit only records the baseline, so a learner opening the app on a
+          new phone is never congratulated for a level they have had for
+          months. */}
+      <LevelUpMoment
+        pathKey={path.key}
+        rank={progress.level.rank}
+        hue={progress.level.hue}
+        levelName={localizeLevel(locale, progress.level)}
+        pathTitle={pathTitle}
+        satisfied={
+          locale === "my"
+            ? [`${toMyanmarDigits(progress.level.minXp)} XP ကျော်လွန်ပြီး`, progress.level.gate({
+              completedMissions: dashboard.completedMilestones,
+              verifiedCount: dashboard.verifiedCount,
+              stagesTouched: roadmap.filter((stage) => stage.status === "complete").length,
+            }).my]
+            : [`Passed ${progress.level.minXp} XP`, progress.level.gate({
+              completedMissions: dashboard.completedMilestones,
+              verifiedCount: dashboard.verifiedCount,
+              stagesTouched: roadmap.filter((stage) => stage.status === "complete").length,
+            }).en]
+        }
+        labels={locale === "my" ? {
+          reached: "{level} အဆင့်သို့ ရောက်ရှိပြီ",
+          subtitle: "{path} တွင် အဆင့် {n} / ၅",
+          earnedLead: "ဖြည့်ဆည်းပြီးသည်များ",
+          dismiss: "ဆက်လက်လုပ်ဆောင်မည်",
+          honesty: "အဆင့်များသည် Lan Pya အတွင်း တိုးတက်မှုကို ဖော်ပြသည်။ အလုပ်အကိုင် ရရှိနိုင်မှုကို မဆိုလိုပါ။",
+          close: "ပိတ်မည်",
+        } : {
+          reached: "You reached {level}",
+          subtitle: "Level {n} of 5 on {path}",
+          earnedLead: "What you satisfied",
+          dismiss: "Continue",
+          honesty: "Levels describe progress inside Lan Pya. They do not claim you are employable.",
+          close: "Close",
+        }}
+      />
 
       <section className="continue-panel">
         <div className="continue-copy">
