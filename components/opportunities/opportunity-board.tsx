@@ -1,6 +1,6 @@
 "use client";
 
-import { ArrowUpRight, ChevronDown, MapPin, Search, SlidersHorizontal } from "lucide-react";
+import { ArrowUpRight, Building2, ChevronDown, MapPin, Search, ShieldCheck, SlidersHorizontal } from "lucide-react";
 import { useMemo, useState } from "react";
 import { CategoryArt } from "@/components/opportunities/category-art";
 import { DeadlineChip } from "@/components/app/deadline-chip";
@@ -207,9 +207,23 @@ export function OpportunityBoard({
                     <CategoryArt type={entry.source.type} className="opp-row-art" />
                     <span className="opp-row-copy">
                       <strong>{item.title}</strong>
+                      {/* The organisation is the first thing a learner needs in
+                          order to judge a listing, so it leads its own line
+                          rather than trailing the type. */}
+                      <span className="opp-row-org">
+                        <Building2 size={13} aria-hidden="true" />
+                        {item.organization}
+                      </span>
                       <small>
-                        {item.organization} · {item.type}
+                        {item.type}
                         <span className="opp-row-loc"><MapPin size={11} aria-hidden="true" />{item.location}</span>
+                        {/* Verification and source without expanding: the two
+                            facts that decide whether a listing is worth
+                            trusting should not cost a click. */}
+                        <span className={`opp-row-verified ${entry.source.dataOrigin === "seeded_demo" ? "demo" : "live"}`}>
+                          <ShieldCheck size={11} aria-hidden="true" />
+                          {labels.checked} {formatAppDate(locale, item.lastVerifiedAt)}
+                        </span>
                       </small>
                     </span>
                     <span className="opp-row-meta">

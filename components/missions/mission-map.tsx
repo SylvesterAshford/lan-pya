@@ -50,8 +50,8 @@ type Geometry = {
   card: number;
 };
 
-const WIDE: Geometry = { W: 923, H: 1704, xs: [0.43, 0.57, 0.41, 0.52, 0.50], top: 300, bottom: 1470, r: 40, rCurrent: 52, mascot: 250, card: 270 };
-const NARROW: Geometry = { W: 923, H: 1704, xs: [0.40, 0.58, 0.38, 0.54, 0.50], top: 300, bottom: 1470, r: 40, rCurrent: 52, mascot: 250, card: 300 };
+const WIDE: Geometry = { W: 923, H: 1704, xs: [0.43, 0.57, 0.41, 0.52, 0.50], top: 300, bottom: 1470, r: 31, rCurrent: 40, mascot: 196, card: 232 };
+const NARROW: Geometry = { W: 923, H: 1704, xs: [0.40, 0.58, 0.38, 0.54, 0.50], top: 300, bottom: 1470, r: 31, rCurrent: 40, mascot: 196, card: 250 };
 
 const WIDE_QUERY = "(min-width: 780px)";
 

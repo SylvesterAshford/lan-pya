@@ -1,5 +1,16 @@
 # Changelog
 
+## [0.19.0.0] - 2026-08-18
+
+### Added
+
+- Opportunities opens with the verified program partners, naming the programme and the date the partner information was last checked.
+- Every listing now shows which organisation is behind it and when it was last verified, without opening the row.
+
+### Changed
+
+- The mission map is a portrait panel again, with smaller stops and labels so the landscape reads rather than the badges.
+
 ## [0.18.1.0] - 2026-08-18
 
 ### Changed

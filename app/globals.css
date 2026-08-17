@@ -9570,8 +9570,11 @@ html[lang="my"] .profile-stats dt { text-transform: none; letter-spacing: 0; }
    Mission map
    =================================================================== */
 
+/* The concept is a portrait panel, not a full-width banner. Capping the width
+   scales the whole scene down rather than stretching the terrain. */
 .mission-map {
-  margin: 0;
+  max-width: 660px;
+  margin: 0 auto;
   display: grid;
   gap: 10px;
   background: var(--surface);
@@ -9623,7 +9626,6 @@ html[lang="my"] .profile-stats dt { text-transform: none; letter-spacing: 0; }
   width: 100%;
   container-type: inline-size;
 }
-.mission-map { max-width: 100%; }
 .mission-map-scene { position: absolute; inset: 0; width: 100%; height: 100%; }
 
 .map-card {
@@ -9631,8 +9633,8 @@ html[lang="my"] .profile-stats dt { text-transform: none; letter-spacing: 0; }
   transform: translateY(-50%);
   display: flex;
   align-items: center;
-  gap: 9px;
-  padding: 9px 13px;
+  gap: 7px;
+  padding: 7px 10px;
   background: var(--surface);
   border: 1px solid var(--hairline);
   border-radius: 11px;
@@ -9646,7 +9648,7 @@ a.map-card:focus-visible { outline: 2px solid var(--navy-700); outline-offset: 2
 
 .map-card-copy { display: grid; gap: 1px; min-width: 0; }
 .map-card-copy strong {
-  font-size: var(--t-meta);
+  font-size: var(--t-label);
   line-height: 1.3;
   font-weight: 700;
   color: var(--ink);
@@ -9675,4 +9677,102 @@ a.map-card:focus-visible { outline: 2px solid var(--navy-700); outline-offset: 2
   /* The detail button would collide with the cards at this width; the current
      stop's own card is already a link to the same mission. */
   .map-detail { display: none; }
+}
+
+/* ===================================================================
+   Verified program partners
+   Real institutional marks, so the band names what it claims and dates
+   the check. Each mark keeps the ground it was drawn on rather than
+   being recoloured onto a shared one.
+   =================================================================== */
+
+.partner-band {
+  display: grid;
+  gap: 14px;
+  padding: 22px 24px;
+  background: linear-gradient(135deg, var(--navy-900), var(--navy-700));
+  border-radius: 14px;
+  color: #fff;
+}
+
+.partner-band-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-size: var(--t-label);
+  line-height: var(--l-label);
+  letter-spacing: 0.09em;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: var(--teal-500);
+}
+html[lang="my"] .partner-band-eyebrow { text-transform: none; letter-spacing: 0; }
+
+/* `h1, h2, h3, h4 { color: var(--navy) }` is a global element rule and --navy
+   is dark, which made this heading invisible on the band. Stated explicitly
+   rather than left to inherit the band's colour. */
+.partner-band-copy h2 {
+  color: #fff;
+  font-size: var(--t-h2);
+  line-height: var(--l-h2);
+  letter-spacing: var(--k-h2);
+  font-weight: 700;
+  margin-top: 6px;
+}
+.partner-band-copy p {
+  font-size: var(--t-meta);
+  line-height: var(--l-meta);
+  color: rgb(255 255 255 / 0.74);
+  max-width: 62ch;
+  margin-top: 4px;
+}
+
+.partner-band-marks { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; }
+
+.partner-mark {
+  display: inline-flex;
+  align-items: center;
+  height: 62px;
+  padding: 8px 14px;
+  border-radius: 10px;
+}
+/* The embassy seal is drawn on white and the college wordmark is white on
+   navy, so each tile matches its own mark's ground. */
+.partner-mark.light { background: #fff; }
+.partner-mark.dark { background: rgb(255 255 255 / 0.07); border: 1px solid rgb(255 255 255 / 0.16); }
+.partner-mark img { height: 100%; width: auto; display: block; }
+
+.partner-band-checked {
+  font-size: var(--t-label);
+  line-height: var(--l-label);
+  color: rgb(255 255 255 / 0.6);
+  font-variant-numeric: tabular-nums;
+}
+
+/* ---- listing rows: organisation and verification read without expanding ---- */
+.opp-row-org {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: var(--t-meta);
+  font-weight: 600;
+  color: var(--ink);
+}
+.opp-row-org svg { color: var(--muted-ink); flex: none; }
+
+.opp-row-verified {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 7px;
+  border-radius: 99px;
+  font-size: var(--t-label);
+  font-weight: 600;
+}
+.opp-row-verified.live { background: var(--teal-100); color: var(--teal-900); }
+.opp-row-verified.demo { background: var(--surface-sunk); color: var(--muted-ink); }
+
+@media (max-width: 720px) {
+  .partner-band { padding: 16px; }
+  .partner-mark { height: 50px; padding: 6px 10px; }
 }
