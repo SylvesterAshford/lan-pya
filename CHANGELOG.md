@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.18.0.0] - 2026-08-18
+
+### Changed
+
+- The traveller on the mission map is now the real illustration rather than a drawing of it.
+- The whole climb fits on screen without scrolling, and the stops are spread so no two labels overlap.
+- The level indicator above the map is a compact pill with space beneath it, instead of a full-width bar pressed against the map's own header.
+
 ## [0.17.0.0] - 2026-08-18
 
 ### Changed

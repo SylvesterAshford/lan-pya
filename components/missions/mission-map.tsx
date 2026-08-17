@@ -3,7 +3,7 @@
 import { useCallback, useSyncExternalStore } from "react";
 import { Link } from "@/i18n/navigation";
 import { Lock, Check, ChevronRight } from "lucide-react";
-import { MascotPaths } from "@/components/app/mascot";
+import { MASCOT_SRC, MASCOT_RATIO } from "@/components/app/mascot";
 import { toMyanmarDigits } from "@/lib/domain/deadlines";
 import type { Milestone } from "@/lib/domain/types";
 
@@ -50,8 +50,8 @@ type Geometry = {
   card: number;
 };
 
-const WIDE: Geometry = { W: 900, H: 1180, xs: [0.30, 0.46, 0.34, 0.55, 0.47], top: 150, bottom: 1090, r: 34, rCurrent: 44, mascot: 128, card: 250 };
-const NARROW: Geometry = { W: 380, H: 1080, xs: [0.30, 0.52, 0.32, 0.60, 0.46], top: 120, bottom: 1010, r: 25, rCurrent: 32, mascot: 92, card: 150 };
+const WIDE: Geometry = { W: 1120, H: 620, xs: [0.13, 0.30, 0.47, 0.64, 0.82], top: 116, bottom: 545, r: 27, rCurrent: 35, mascot: 124, card: 200 };
+const NARROW: Geometry = { W: 380, H: 660, xs: [0.18, 0.38, 0.58, 0.74, 0.86], top: 80, bottom: 596, r: 20, rCurrent: 26, mascot: 78, card: 130 };
 
 const WIDE_QUERY = "(min-width: 780px)";
 
@@ -231,9 +231,14 @@ export function MissionMap({
 
           {/* ---- the traveller, standing beside the stop you are on ---- */}
           {currentIndex >= 0 ? (
-            <g transform={`translate(${xAt(currentIndex) - (wide ? 175 : 118)},${yAt(currentIndex) - g.mascot}) scale(${g.mascot / 200})`}>
-              <MascotPaths />
-            </g>
+            <image
+              href={MASCOT_SRC}
+              x={xAt(currentIndex) - g.rCurrent - g.mascot * MASCOT_RATIO - (wide ? 10 : 6)}
+              y={yAt(currentIndex) - g.mascot + g.rCurrent}
+              width={g.mascot * MASCOT_RATIO}
+              height={g.mascot}
+              preserveAspectRatio="xMidYMax meet"
+            />
           ) : null}
         </svg>
 
@@ -263,6 +268,7 @@ export function MissionMap({
               </span>
               {stop.state === "locked" ? <Lock size={15} aria-hidden="true" className="map-card-lock" />
                 : stop.state === "done" ? <Check size={15} aria-hidden="true" className="map-card-check" />
+                : stop.state === "current" ? <ChevronRight size={16} aria-hidden="true" className="map-card-go" />
                 : null}
             </>
           );
@@ -278,20 +284,6 @@ export function MissionMap({
           );
         })}
 
-        {/* ---- the current stop's detail, opposite its card ---- */}
-        {currentIndex >= 0 && missionHref ? (
-          <div
-            className="map-detail"
-            style={{
-              top: `${((yAt(currentIndex) + g.rCurrent + 26) / g.H) * 100}%`,
-              left: `${((xAt(currentIndex) + g.rCurrent + 28) / g.W) * 100}%`,
-            }}
-          >
-            <Link className="button primary compact" href={missionHref}>
-              {labels.continueMission}<ChevronRight size={15} aria-hidden="true" />
-            </Link>
-          </div>
-        ) : null}
       </div>
 
       <figcaption>{labels.caption}</figcaption>
