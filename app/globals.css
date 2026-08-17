@@ -76,6 +76,26 @@
   --m-skin-dark: #c98757;
   --m-amber: #f0a830;
   --m-cream: #f4efe4;
+  /* Contour ink. The reference is an outlined illustration, and at map size
+     the outline is what keeps the figure readable against terrain. */
+  --m-line: #101d38;
+
+  /* ---- Map palette: the mission map scene ONLY ----
+     A fourth bounded palette, scoped like the emblem and mascot ones. These
+     are terrain colours and never appear in chrome. */
+  --map-sky: #eef4fb;
+  --map-sun: #fbe6b4;
+  --map-ridge-3: #b9cbdd;
+  --map-ridge-2: #cfdde9;
+  --map-ridge-1: #e4edf4;
+  --map-snow: #f6fafd;
+  --map-tree: #a9c4c0;
+  --map-path: #3f9e86;
+  --map-path-edge: #2b7a67;
+  --map-path-line: #d8f0e7;
+  --map-pole: #7d8b9c;
+  --map-flag-muted: #c3cedb;
+  --map-halo: #fdeec4;
 
   --em-1: #1d7f6e;
   --em-2: #2f6ea8;
@@ -9523,4 +9543,104 @@ html[lang="my"] .profile-stats dt { text-transform: none; letter-spacing: 0; }
   .profile-hero { grid-template-columns: 1fr; justify-items: center; text-align: center; }
   .profile-hero-copy { text-align: center; }
   .profile-stats { width: 100%; }
+}
+
+/* ===================================================================
+   Mission map
+   =================================================================== */
+
+.mission-map {
+  margin: 0;
+  display: grid;
+  gap: 10px;
+  background: var(--surface);
+  border: 1px solid var(--hairline);
+  border-radius: 16px;
+  overflow: hidden;
+}
+
+.mission-map-bar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  padding: 14px 18px;
+  background: var(--navy-700);
+  color: #fff;
+}
+.mission-map-crest { display: inline-flex; flex: none; }
+.mission-map-bar strong {
+  font-size: var(--t-title);
+  line-height: var(--l-title);
+  letter-spacing: var(--k-title);
+  font-weight: 700;
+}
+.mission-map-pill {
+  padding: 4px 11px;
+  background: rgb(255 255 255 / 0.14);
+  border-radius: 99px;
+  font-size: var(--t-label);
+  font-weight: 700;
+  white-space: nowrap;
+}
+.mission-map-steps {
+  margin-left: auto;
+  font-size: var(--t-meta);
+  color: rgb(255 255 255 / 0.78);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+.mission-map-steps b { color: #fff; font-weight: 700; }
+
+/* The stage is a fixed aspect box so the HTML cards, positioned in percent,
+   land exactly where the SVG draws their stop. */
+.mission-map-stage { position: relative; width: 100%; }
+.mission-map-scene { position: absolute; inset: 0; width: 100%; height: 100%; }
+
+.map-card {
+  position: absolute;
+  transform: translateY(-50%);
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 9px 13px;
+  background: var(--surface);
+  border: 1px solid var(--hairline);
+  border-radius: 11px;
+  box-shadow: 0 6px 18px rgb(15 23 42 / 0.10);
+  text-decoration: none;
+  color: inherit;
+}
+a.map-card:hover { border-color: var(--navy-500); }
+a.map-card:focus-visible { outline: 2px solid var(--navy-700); outline-offset: 2px; }
+.map-card.locked { background: var(--surface-sunk); box-shadow: none; }
+
+.map-card-copy { display: grid; gap: 1px; min-width: 0; }
+.map-card-copy strong {
+  font-size: var(--t-meta);
+  line-height: 1.3;
+  font-weight: 700;
+  color: var(--ink);
+}
+.map-card.locked .map-card-copy strong { color: var(--muted-ink); }
+.map-card-status { font-size: var(--t-label); font-weight: 600; color: var(--muted-ink); }
+.map-card-status.done { color: var(--teal-700); }
+.map-card-status.current { color: var(--navy-700); }
+.map-card-status.next { color: var(--amber-800); }
+.map-card-lock, .map-card-check { flex: none; color: var(--muted-ink); }
+.map-card-check { color: var(--teal-700); }
+
+.map-detail { position: absolute; }
+
+@media (max-width: 780px) {
+  .mission-map-bar { padding: 12px 14px; gap: 8px; }
+  .mission-map-steps { margin-left: 0; }
+  .map-card { padding: 7px 10px; gap: 6px; border-radius: 9px; }
+  /* Hard cap so a long stage name cannot push the card past the edge. */
+  .map-card { max-width: 46vw; }
+  .map-card-copy strong { font-size: var(--t-label); }
+  .map-card-status { font-size: 11px; }
+  /* The detail button would collide with the cards at this width; the current
+     stop's own card is already a link to the same mission. */
+  .map-detail { display: none; }
 }

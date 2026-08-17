@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.17.0.0] - 2026-08-18
+
+### Changed
+
+- Missions is a climb. Your path winds up a mountain, with the stage you are on lit and carrying the traveller, finished stages filled and ticked, and the ones above locked until you reach them. Each stop names itself on a card beside it.
+- The traveller now faces you instead of walking away.
+
 ## [0.16.0.0] - 2026-08-17
 
 ### Changed
