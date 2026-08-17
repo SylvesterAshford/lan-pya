@@ -1,5 +1,20 @@
 # Changelog
 
+## [0.9.0.0] - 2026-08-17
+
+### Added
+
+- Your path now has a level. Home shows where you are on a five-step ladder — Explorer, Starter, Maker, Practitioner, Trailblazer — with the exact requirements for the next one listed underneath, met and unmet. Levels are per career path and never transfer between them.
+- Reaching a new level is acknowledged once, with what you actually satisfied to get there. No confetti: levels describe progress inside Lan Pya and say so, because they do not claim you are employable.
+- Completed roadmap stages now carry an earned emblem, and missions show the emblem of the stage they belong to. Five marks with five different shapes, so they are still readable at a glance, in greyscale, and on a small screen.
+- Roadmaps and Missions carry a one-line version of the level meter.
+
+### Fixed
+
+- Verified work that was seeded rather than reviewed in the app never received its XP, so the demo account showed no progress despite holding verified proof. Those submissions have been credited with the XP they had already earned.
+- The level shown is no longer the one the database calculated. That formula counted XP alone with no ceiling, which would have called a learner "Level 51" for accumulating points without finishing anything. Every level now requires evidence as well as XP.
+- An empty progress bar was invisible against the card behind it, which is exactly when a learner most needs to see that a meter exists.
+
 ## [0.8.1.0] - 2026-08-17
 
 ### Changed
