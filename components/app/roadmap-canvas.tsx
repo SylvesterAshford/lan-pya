@@ -1,6 +1,8 @@
 "use client";
 
 import { useCallback, useSyncExternalStore } from "react";
+import { EMBLEM_SHAPES } from "@/components/app/emblem";
+import { emblemForStage, type EmblemKey } from "@/lib/domain/progress";
 import type { Milestone } from "@/lib/domain/types";
 
 /**
@@ -91,11 +93,41 @@ function wrap(text: string, max: number): string[] {
   return [lines[0], `${lines.slice(1).join(" ").slice(0, max - 1)}…`];
 }
 
+/**
+ * Completed *milestone* marker. Milestones are 36px sub-items hanging off a
+ * stage, so they keep the plain check: an emblem here would be too large for
+ * the node and would double-claim the stage's own achievement.
+ */
 function CheckBubble({ x, y }: { x: number; y: number }) {
   return (
     <g transform={`translate(${x - 9},${y - 9})`} aria-hidden="true">
       <circle cx="9" cy="9" r="9" fill="var(--node-done-border)" stroke="var(--surface)" strokeWidth="2" />
       <path d="M5.2 9.2 L7.8 11.8 L12.8 6.4" fill="none" stroke="var(--surface)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+    </g>
+  );
+}
+
+/**
+ * The earned emblem for a completed stage, drawn natively in the canvas SVG.
+ *
+ * It replaces a plain check bubble at the same anchor point. A check says
+ * "done"; the emblem says which stage was cleared, which is the difference
+ * between a progress indicator and a map that records a journey.
+ *
+ * A white disc sits behind it so the mark stays legible over the teal `done`
+ * node fill without needing a second colour ramp per node state.
+ */
+function StageEmblem({ kind, x, y }: { kind: EmblemKey; x: number; y: number }) {
+  const shape = EMBLEM_SHAPES[kind];
+  const D = 30;
+  return (
+    <g transform={`translate(${x - D / 2},${y - D / 2})`} aria-hidden="true">
+      <circle cx={D / 2} cy={D / 2} r={D / 2 + 2} fill="var(--surface)" />
+      <g transform={`scale(${D / 64})`}>
+        <path d={shape.shell} fill={shape.hue} />
+        <path d={shape.shell} fill="none" stroke="var(--em-ink)" strokeWidth="3" strokeLinejoin="round" />
+        <g dangerouslySetInnerHTML={{ __html: shape.glyph }} />
+      </g>
     </g>
   );
 }
@@ -229,7 +261,13 @@ export function RoadmapCanvas({
             <text className="rm-stage-label" x={g.CX} y={sy + 49} textAnchor="middle">{lines[1]}</text>
           </>
         )}
-        {st === "done" ? <CheckBubble x={stageX + g.SW - 4} y={sy + 4} /> : null}
+        {/* A completed stage carries its earned emblem where the plain check
+            bubble used to sit, so the map records what was achieved and not
+            only that something was. Same anchor point, so node geometry and
+            label centring are untouched. */}
+        {st === "done" ? (
+          <StageEmblem kind={emblemForStage(i, milestones.length)} x={stageX + g.SW - 4} y={sy + 4} />
+        ) : null}
       </g>,
     );
 

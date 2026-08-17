@@ -2,6 +2,10 @@ import { ArrowRight, BriefcaseBusiness, Clock3, Compass, Map } from "lucide-reac
 import { Link } from "@/i18n/navigation";
 import { requireUser } from "@/lib/auth";
 import { DeadlineChip } from "@/components/app/deadline-chip";
+import { LevelMeter } from "@/components/app/level-meter";
+import { LevelUpMoment } from "@/components/app/level-up-moment";
+import { localizeLevel, resolveProgress } from "@/lib/domain/progress";
+import { toMyanmarDigits } from "@/lib/domain/deadlines";
 import { getActivePathDashboard, getOpportunities, getRoadmap } from "@/lib/data/app-data";
 import { getAppCopy, localizeCareerTerm, localizeOpportunity, localizeRoadmapMilestone } from "@/lib/i18n/app-copy";
 
@@ -29,6 +33,15 @@ export default async function TodayPage({ params }: { params: Promise<{ locale: 
   const currentStage = nextStages.find((stage) => stage.status === "active") ?? nextStages[0];
   const nearbyOpportunities = opportunities.slice(0, 3).map((item) => localizeOpportunity(locale, item));
 
+  // The XP ledger has existed since 2026-08-13 and the dashboard has always
+  // returned a summed `xp`; nothing rendered it, and the RPC's own `level` is a
+  // flat xp/100 ladder with no evidence gate. The real ladder is resolved here.
+  const progress = resolveProgress(dashboard.xp, {
+    completedMissions: dashboard.completedMilestones,
+    verifiedCount: dashboard.verifiedCount,
+    stagesTouched: roadmap.filter((stage) => stage.status === "complete").length,
+  });
+
   return (
     <div className="app-page home-page">
       <section className="home-heading">
@@ -39,9 +52,54 @@ export default async function TodayPage({ params }: { params: Promise<{ locale: 
         <dl className="home-stats">
           <div><dd>{dashboard.completedMilestones}/{dashboard.totalMilestones}</dd><dt>{locale === "my" ? "ပြီးစီးသောအဆင့်" : "Milestones"}</dt></div>
           <div><dd>{dashboard.progressPercent}%</dd><dt>{locale === "my" ? "တိုးတက်မှု" : "Complete"}</dt></div>
-          <div><dd>{dashboard.xp}</dd><dt>XP</dt></div>
         </dl>
       </section>
+
+      {/* First element after the greeting: "where am I" is Home's whole job,
+          and a level with its gates answers it better than a bare XP figure
+          did. The raw number moved out of the stats row because a count with
+          no ladder beside it invites "out of what?" and answers nothing. */}
+      <LevelMeter progress={progress} locale={locale} pathTitle={pathTitle} />
+
+      {/* Fires once per promotion, tracked per path in localStorage. A first
+          visit only records the baseline, so a learner opening the app on a
+          new phone is never congratulated for a level they have had for
+          months. */}
+      <LevelUpMoment
+        pathKey={path.key}
+        rank={progress.level.rank}
+        hue={progress.level.hue}
+        levelName={localizeLevel(locale, progress.level)}
+        pathTitle={pathTitle}
+        satisfied={
+          locale === "my"
+            ? [`${toMyanmarDigits(progress.level.minXp)} XP ကျော်လွန်ပြီး`, progress.level.gate({
+              completedMissions: dashboard.completedMilestones,
+              verifiedCount: dashboard.verifiedCount,
+              stagesTouched: roadmap.filter((stage) => stage.status === "complete").length,
+            }).my]
+            : [`Passed ${progress.level.minXp} XP`, progress.level.gate({
+              completedMissions: dashboard.completedMilestones,
+              verifiedCount: dashboard.verifiedCount,
+              stagesTouched: roadmap.filter((stage) => stage.status === "complete").length,
+            }).en]
+        }
+        labels={locale === "my" ? {
+          reached: "{level} အဆင့်သို့ ရောက်ရှိပြီ",
+          subtitle: "{path} တွင် အဆင့် {n} / ၅",
+          earnedLead: "ဖြည့်ဆည်းပြီးသည်များ",
+          dismiss: "ဆက်လက်လုပ်ဆောင်မည်",
+          honesty: "အဆင့်များသည် Lan Pya အတွင်း တိုးတက်မှုကို ဖော်ပြသည်။ အလုပ်အကိုင် ရရှိနိုင်မှုကို မဆိုလိုပါ။",
+          close: "ပိတ်မည်",
+        } : {
+          reached: "You reached {level}",
+          subtitle: "Level {n} of 5 on {path}",
+          earnedLead: "What you satisfied",
+          dismiss: "Continue",
+          honesty: "Levels describe progress inside Lan Pya. They do not claim you are employable.",
+          close: "Close",
+        }}
+      />
 
       <section className="continue-panel">
         <div className="continue-copy">

@@ -156,6 +156,23 @@ Two palettes. They serve different surfaces and must not appear in the same comp
 | `--node-soon-border` | `#C9C3AE` | Coming-soon dashed border |
 | `--connector` | `#B6C4C0` | Dotted connector paths |
 
+### Emblem palette — stage emblems and level insignia only
+
+A third bounded palette, scoped exactly the way the canvas palette is. It exists because teal was the only expressive colour in the system and teal is also every button and link, which left the app no way to look like anything in particular.
+
+| Token | Hex | Use |
+|---|---|---|
+| `--em-1` | `#1D7F6E` | Foundations emblem |
+| `--em-2` | `#2F6EA8` | Build emblem |
+| `--em-3` | `#8A5FBF` | Review emblem |
+| `--em-4` | `#C2603F` | Capstone emblem |
+| `--em-5` | `#B4922A` | Verified emblem |
+| `--em-ink` | `#22201C` | Emblem outline |
+
+These five hues never appear in chrome: not on a button, chip, border, background, or icon. They appear inside an emblem silhouette or a level insignia and nowhere else. Breaking that scope destroys the teal/amber/purple meanings the same way mixing canvas and chrome amber would.
+
+`--em-5` on white is roughly 2.6:1, below the WCAG 2.2 floor of 3:1 for graphical objects. Every emblem therefore carries a 2.2px `--em-ink` outline, and **that outline is structural, not decoration** — it is what carries the contrast. Removing it breaks accessibility, not just the look.
+
 ### Color rules — non-negotiable
 
 1. **Teal means us, direction, progress.** Primary actions, the local track, active learning, completion.
@@ -310,6 +327,43 @@ Answers questions about the active roadmap. Modeled on the founder reference: as
 
 **Boundaries, regardless of implementation.** The tutor explains a roadmap. It never marks a milestone complete, never reviews submitted work, never creates or influences proof, and never claims a verification tier. PRODUCT.md: automated feedback never creates verified proof.
 
+## Path Progress
+
+Levels are **path-scoped**: XP never transfers between careers, so a learner viewing someone else's roadmap sees no level on it.
+
+### The ladder
+
+| Level | Name | XP minimum | Evidence gate |
+|---|---|---:|---|
+| 1 | Explorer | 0 | Account and path exploration complete |
+| 2 | Starter | 100 | At least one completed mission |
+| 3 | Maker | 300 | At least one human-reviewed mission |
+| 4 | Practitioner | 700 | Three human-reviewed missions across two stages |
+| 5 | Trailblazer | 1,200 | A verified capstone plus four reviewed missions |
+
+A level is reached only when **both** its XP minimum and its evidence gate pass, and the ladder does not skip: failing one rung stops the climb even when XP would allow a higher one. This is what prevents activity farming, and it is why the meter always shows the gates rather than only the number.
+
+Capstone is not yet a distinct mission type in the schema, so the Trailblazer gate approximates it as five verified proofs. Documented here rather than claimed as the full rule.
+
+The shipped `get_active_path_dashboard` RPC returns its own `level` computed as `floor(xp / 100) + 1` — uncapped and ungated. **That value is ignored.** Only the raw `xp` is consumed; the ladder is resolved in `lib/domain/progress.ts`.
+
+### The meter
+
+- **Full card, Home only.** Insignia, level name, band progress, every gate, and the honesty line.
+- **Compact strip, Roadmap and Missions.** Insignia, name, bar, `xp / next`. Repeating the full panel on every screen is how an app becomes a dashboard mosaic.
+- Fill measures distance **across the current band**, not the absolute total. 340 XP in the 300–700 band reads as 10%, not 48%.
+- Progress tracks carry an inset hairline. `--surface-sunk` on `--surface` is nearly no contrast, and at 0% the bar would otherwise vanish at exactly the moment it matters most.
+- Every meter is followed by: *"Levels describe progress inside Lan Pya. They do not claim you are employable."* Non-negotiable.
+
+### Emblems
+
+Five marks, each with **its own silhouette** — a wide pentagon, a cut-corner block, a diamond, a tall tower, a rosette. Shape carries identity; colour reinforces it. Five icons in five coloured circles is the most recognisable AI-generated layout there is, and it would also leave hue as the only differentiator, breaking colour rule 7.
+
+- A completed **stage** node carries its earned emblem. A completed **milestone** keeps the plain check: milestones are 36px sub-items, and an emblem there would double-claim the stage's achievement.
+- Emblems map to stage position, so a 5-stage and a 14-stage roadmap both span the full set. Adjacent stages on a long path may share a mark; inventing a sixth shape would produce marks nobody can tell apart.
+- Unearned emblems keep their silhouette at 30% opacity and greyscale, so an empty path still has shape.
+- **No standalone emblem shelf.** The founder plan excludes badge-collection visuals from the hackathon because they compete with proof. Emblems appear only next to the work that earned them.
+
 ## Components
 
 - **Primary action:** `--teal-700` background, white text, 8px radius. One per viewport.
@@ -392,3 +446,13 @@ Answers questions about the active roadmap. Modeled on the founder reference: as
 | 2026-08-17 | **Reduced motion gets a plain list, not a stilled arc** | Motion is the component's whole mechanism. Freezing a 3D arc leaves overlapping cards a learner cannot parse, so the fallback drops to a stacked list. |
 | 2026-08-17 | **Opportunity cards carry generated category artwork, not photography** | Design Spec §8 forbids stock imagery on core screens: it reads generic, risks depicting identifiable people, and costs mobile data this audience pays for. Each category gets geometry instead — a few hundred bytes, sharp at any zoom, recognisable before the label is read. |
 | 2026-08-17 | **Category art stays inside the teal family** | Amber means urgency and purple means the global track; neither is free for decoration. Categories differ by composition rather than hue. |
+| 2026-08-17 | **Third bounded palette added for emblems** | Teal was the only expressive colour in the system and teal is also every button and link, so the app had no way to look like anything. Five emblem hues, scoped exactly like the canvas palette: inside an emblem or insignia, never in chrome. This is the fix for "feels like AI slop", not more decoration. |
+| 2026-08-17 | **Each emblem gets its own silhouette, not a shared circle** | The first sketch was five glyphs in five coloured circles — the single most recognisable AI-generated layout, and it left hue as the only differentiator, breaking colour rule 7. A built-in greyscale test at 26px then caught a pentagon and a regular hexagon reading as the same blob, so Capstone became a tall narrow tower. |
+| 2026-08-17 | **Emblem outlines are structural, not decorative** | `--em-5` on white is ~2.6:1, under the 3:1 WCAG 2.2 floor for graphical objects. The 2.2px `--em-ink` boundary is what carries contrast, which frees the fill to be a colour that reads well. Removing the outline breaks accessibility. |
+| 2026-08-17 | **The level ladder is computed in TypeScript; the RPC's `level` is ignored** | `get_active_path_dashboard` returns `floor(xp / 100) + 1` — uncapped, ungated, and would call a learner "Level 51" for 5,000 XP with nothing completed. The founder plan requires both an XP minimum and an evidence gate at every rung. Only the raw `xp` is consumed. No migration. |
+| 2026-08-17 | **Meter fill measures the current band, not the absolute total** | 340 XP inside the 300–700 Maker band is 10% of the way to Practitioner, not 48% of 700. The bar answers "how far to the next level", which is the only question it is asked. |
+| 2026-08-17 | **No standalone emblem shelf on Home** | The founder plan excludes badge-collection visuals from the hackathon because they compete with proof. Emblems appear on the roadmap spine, on mission rows, and in the level-up moment — always attached to the work that earned them, never in a trophy case. |
+| 2026-08-17 | **Progress tracks carry an inset hairline** | `--surface-sunk` on `--surface` is nearly no contrast. At 0% the meter vanished entirely, which is exactly the moment a new learner most needs to see that a meter exists. |
+| 2026-08-17 | **Stages carry emblems; milestones keep the plain check** | Milestones are 36px sub-items hanging off a stage. An emblem there would be too large for the node and would double-claim the stage's own achievement. |
+| 2026-08-17 | **Seeded verified submissions backfilled with the XP they had already earned** | `record_review_decision` awards XP on verification, but seeded demo submissions were inserted as `verified` directly by migrations and bypassed the RPC, so they held proof with no XP. The demo learner's verified Frontend mission read as 0 XP. Backfill is anchored to submissions that are already verified *and* already have a proof item; it invents nothing. |
+| 2026-08-17 | **The demo account cannot pass an evidence gate, and that is kept** | `verified_count` counts only `data_origin = 'live'` proof, so demo proof never satisfies a gate and the demo account stops at Starter. A meter showing one gate met and one unmet demonstrates that levels cannot be bought with points, which a maxed account would hide. Note the asymmetry: demo XP counts, demo proof does not. |
