@@ -9342,3 +9342,34 @@ html[lang="my"] .opp-row-detail .opp-evidence strong { text-transform: none; let
   color: rgb(255 255 255 / 0.55);
 }
 html[lang="my"] .auth-roadmap figcaption { text-transform: none; letter-spacing: 0; }
+
+/* Mission trail. Scenery is flat SVG, so the whole illustration costs a few
+   hundred bytes and stays sharp at any zoom. */
+.mission-trail {
+  /* Hugs the drawing. Wider than the svg and the hill bands end in a hard
+     vertical edge against the white card. */
+  max-width: 456px;
+  margin: 0 auto;
+  display: grid;
+  gap: 10px;
+  justify-items: center;
+  background: var(--surface);
+  border: 1px solid var(--hairline);
+  border-radius: 14px;
+  /* Drawing runs edge to edge; the card's radius clips the terrain, so the
+     hills meet the border instead of stopping short against white. */
+  padding: 0 0 14px;
+  overflow: hidden;
+}
+.mission-trail svg { width: 100%; height: auto; display: block; }
+.mission-trail text { font-family: var(--font-sans), system-ui, sans-serif; }
+html[lang="my"] .mission-trail text { font-family: var(--font-my), sans-serif; }
+.mission-trail figcaption {
+  font-size: var(--t-label);
+  line-height: var(--l-label);
+  letter-spacing: 0.08em;
+  font-weight: 600;
+  text-transform: uppercase;
+  color: var(--muted-ink);
+}
+html[lang="my"] .mission-trail figcaption { text-transform: none; letter-spacing: 0; }

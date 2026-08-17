@@ -1,6 +1,7 @@
 import { ArrowRight, CircleDashed } from "lucide-react";
 import { Link } from "@/i18n/navigation";
 import { Emblem } from "@/components/app/emblem";
+import { MissionTrail } from "@/components/missions/mission-trail";
 import { LevelMeter } from "@/components/app/level-meter";
 import { emblemForStage, resolveProgress } from "@/lib/domain/progress";
 import { requireUser } from "@/lib/auth";
@@ -72,6 +73,21 @@ export default async function MissionsPage({ params }: { params: Promise<{ local
       {/* Compact, not the full Home card. Repeating a large panel on every
           screen is how an app becomes a dashboard mosaic. */}
       <LevelMeter progress={progress} locale={locale} variant="compact" />
+
+      {/* The same Milestone.status the roadmap canvas reads, walked at close
+          range. A stop is locked because the stage is upcoming, not because
+          three greyed circles looked good. */}
+      <MissionTrail
+        milestones={roadmap}
+        locale={locale}
+        labels={{
+          youAreHere: locale === "my" ? "သင် ဤနေရာတွင်" : "You are here",
+          locked: locale === "my" ? "မဖွင့်ရသေးပါ" : "Locked",
+          done: locale === "my" ? "ပြီးစီးပြီး" : "Complete",
+          stage: locale === "my" ? "အဆင့်" : "Stage",
+          caption: locale === "my" ? "သင့်လမ်းကြောင်း၏ နောက်တစ်ဆင့်များ" : "The next stops on your path",
+        }}
+      />
 
       <section className="mission-section">
         <header className="arena-head">
