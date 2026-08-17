@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.18.1.0] - 2026-08-18
+
+### Changed
+
+- The mission map is a proper mountain now: a dark summit lit from behind, ridges receding into haze, a treeline, drifting snow and a foreground of rocks and shoots. It runs the full length of the concept rather than being compressed into one screen.
+
 ## [0.18.0.0] - 2026-08-18
 
 ### Changed

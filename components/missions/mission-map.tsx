@@ -50,8 +50,8 @@ type Geometry = {
   card: number;
 };
 
-const WIDE: Geometry = { W: 1120, H: 620, xs: [0.13, 0.30, 0.47, 0.64, 0.82], top: 116, bottom: 545, r: 27, rCurrent: 35, mascot: 124, card: 200 };
-const NARROW: Geometry = { W: 380, H: 660, xs: [0.18, 0.38, 0.58, 0.74, 0.86], top: 80, bottom: 596, r: 20, rCurrent: 26, mascot: 78, card: 130 };
+const WIDE: Geometry = { W: 923, H: 1704, xs: [0.43, 0.57, 0.41, 0.52, 0.50], top: 300, bottom: 1470, r: 40, rCurrent: 52, mascot: 250, card: 270 };
+const NARROW: Geometry = { W: 923, H: 1704, xs: [0.40, 0.58, 0.38, 0.54, 0.50], top: 300, bottom: 1470, r: 40, rCurrent: 52, mascot: 250, card: 300 };
 
 const WIDE_QUERY = "(min-width: 780px)";
 
@@ -158,25 +158,92 @@ export function MissionMap({
 
       <div className="mission-map-stage" style={{ aspectRatio: `${g.W} / ${g.H}` }}>
         <svg viewBox={`0 0 ${g.W} ${g.H}`} className="mission-map-scene" aria-hidden="true">
-          {/* ---- sky and sun behind the peak ---- */}
-          <rect width={g.W} height={g.H} fill="var(--map-sky)" />
-          <circle cx={g.W * 0.5} cy={g.top - 34} r={g.W * 0.13} fill="var(--map-sun)" />
+          {/* ---- sky: cool at altitude, warming toward the snowline ---- */}
+          <defs>
+            <linearGradient id="mapSky" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0" stopColor="var(--map-sky-high)" />
+              <stop offset="0.42" stopColor="var(--map-sky)" />
+              <stop offset="1" stopColor="var(--map-sky-low)" />
+            </linearGradient>
+            <radialGradient id="mapSunGlow">
+              <stop offset="0" stopColor="var(--map-sun)" stopOpacity="0.95" />
+              <stop offset="0.55" stopColor="var(--map-sun)" stopOpacity="0.45" />
+              <stop offset="1" stopColor="var(--map-sun)" stopOpacity="0" />
+            </radialGradient>
+          </defs>
+          <rect width={g.W} height={g.H} fill="url(#mapSky)" />
 
-          {/* ---- far ridges: three bands, each lighter as it recedes ---- */}
-          <path d={`M0 ${g.top + 150} L${g.W * 0.18} ${g.top + 40} L${g.W * 0.32} ${g.top + 120} L${g.W * 0.5} ${g.top - 40} L${g.W * 0.68} ${g.top + 110} L${g.W * 0.84} ${g.top + 30} L${g.W} ${g.top + 160} L${g.W} ${g.H} L0 ${g.H} Z`} fill="var(--map-ridge-3)" />
-          <path d={`M0 ${g.top + 300} L${g.W * 0.22} ${g.top + 190} L${g.W * 0.44} ${g.top + 290} L${g.W * 0.62} ${g.top + 175} L${g.W * 0.82} ${g.top + 280} L${g.W} ${g.top + 215} L${g.W} ${g.H} L0 ${g.H} Z`} fill="var(--map-ridge-2)" />
-          <path d={`M0 ${g.top + 470} Q ${g.W * 0.3} ${g.top + 380}, ${g.W * 0.55} ${g.top + 450} T ${g.W} ${g.top + 400} L${g.W} ${g.H} L0 ${g.H} Z`} fill="var(--map-ridge-1)" />
-          {/* ---- snowfield the path climbs out of ---- */}
-          <path d={`M0 ${g.top + 660} Q ${g.W * 0.35} ${g.top + 590}, ${g.W * 0.62} ${g.top + 655} T ${g.W} ${g.top + 610} L${g.W} ${g.H} L0 ${g.H} Z`} fill="var(--map-snow)" />
+          {/* sun behind the summit, glow first so the peak occludes it */}
+          <circle cx={g.W * 0.5} cy={330} r={230} fill="url(#mapSunGlow)" />
+          <circle cx={g.W * 0.5} cy={330} r={118} fill="var(--map-sun)" />
 
-          {/* ---- conifers, thinning with altitude ---- */}
-          {[[0.09, 0.46], [0.15, 0.52], [0.87, 0.44], [0.79, 0.50], [0.93, 0.56], [0.06, 0.60]].map(([fx, fy], i) => {
-            const x = fx * g.W, y = g.top + fy * (g.bottom - g.top);
-            const h = (wide ? 46 : 30) * (0.8 + (i % 3) * 0.2);
+          {/* clouds: flat lozenges, no gradients, a few hundred bytes */}
+          {[[0.16, 250, 1], [0.82, 292, 0.9], [0.30, 168, 0.7], [0.72, 196, 0.8]].map(([fx, cy, k]) => (
+            <g key={`${fx}-${cy}`} fill="var(--map-cloud)" opacity="0.85">
+              <ellipse cx={fx * g.W} cy={cy} rx={54 * k} ry={16 * k} />
+              <ellipse cx={fx * g.W - 26 * k} cy={cy + 5 * k} rx={34 * k} ry={12 * k} />
+              <ellipse cx={fx * g.W + 30 * k} cy={cy + 6 * k} rx={30 * k} ry={11 * k} />
+            </g>
+          ))}
+
+          {/* ---- the summit: dark near face, lit far face, snow cap ---- */}
+          <path d={`M${g.W * 0.5} 196 L${g.W * 0.79} 560 L${g.W * 0.21} 560 Z`} fill="var(--map-peak)" />
+          <path d={`M${g.W * 0.5} 196 L${g.W * 0.79} 560 L${g.W * 0.5} 560 Z`} fill="var(--map-peak-lit)" />
+          <path d={`M${g.W * 0.5} 196 L${g.W * 0.575} 290 L${g.W * 0.53} 274 L${g.W * 0.487} 320 L${g.W * 0.45} 268 L${g.W * 0.425} 290 Z`} fill="var(--map-snowcap)" />
+
+          {/* flanking peaks, lower and hazier */}
+          <path d={`M${g.W * 0.17} 330 L${g.W * 0.44} 620 L0 620 Z`} fill="var(--map-ridge-3)" />
+          <path d={`M${g.W * 0.86} 356 L${g.W} 620 L${g.W * 0.58} 620 Z`} fill="var(--map-ridge-3)" />
+
+          {/* ---- mid ridges, each paler as it recedes ---- */}
+          <path d={`M0 700 Q ${g.W * 0.2} 560, ${g.W * 0.42} 660 T ${g.W * 0.78} 610 T ${g.W} 690 L${g.W} ${g.H} L0 ${g.H} Z`} fill="var(--map-ridge-2)" />
+          <path d={`M0 880 Q ${g.W * 0.26} 745, ${g.W * 0.55} 845 T ${g.W} 800 L${g.W} ${g.H} L0 ${g.H} Z`} fill="var(--map-ridge-1)" />
+
+          {/* ---- conifer belt along the treeline ---- */}
+          {Array.from({ length: 26 }, (_, i) => {
+            // Deterministic scatter: a seeded pattern rather than Math.random,
+            // so server and client render the same trees.
+            const t = (i * 37) % 100 / 100;
+            const x = 20 + t * (g.W - 40);
+            const band = i % 3;
+            const y = 690 + band * 66 + ((i * 53) % 40);
+            const h = 34 + ((i * 29) % 22) - band * 6;
             return (
-              <path key={`${fx}-${fy}`} d={`M${x} ${y - h} L${x + h * 0.34} ${y} L${x - h * 0.34} ${y} Z`} fill="var(--map-tree)" />
+              <g key={`tree-${i}`} opacity={0.92 - band * 0.16}>
+                <path d={`M${x} ${y - h} L${x + h * 0.3} ${y} L${x - h * 0.3} ${y} Z`} fill="var(--map-tree)" />
+                <path d={`M${x} ${y - h * 0.66} L${x + h * 0.24} ${y - h * 0.3} L${x - h * 0.24} ${y - h * 0.3} Z`} fill="var(--map-tree-lit)" />
+              </g>
             );
           })}
+
+          {/* ---- snowfield: the foreground the climb starts from ---- */}
+          <path d={`M0 1010 Q ${g.W * 0.3} 900, ${g.W * 0.62} 1000 T ${g.W} 950 L${g.W} ${g.H} L0 ${g.H} Z`} fill="var(--map-snow)" />
+          {/* contour lines, the reference's drifting snow texture */}
+          {[1080, 1180, 1290, 1410, 1530].map((cy, i) => (
+            <path
+              key={cy}
+              d={`M${-40 + i * 18} ${cy} Q ${g.W * 0.3} ${cy - 46}, ${g.W * 0.58} ${cy - 6} T ${g.W + 40} ${cy - 30}`}
+              fill="none"
+              stroke="var(--map-contour)"
+              strokeWidth="2"
+              opacity={0.5 - i * 0.06}
+            />
+          ))}
+
+          {/* ---- foreground rocks and shoots ---- */}
+          {[[0.12, 1600, 1], [0.86, 1560, 0.85], [0.30, 1650, 0.7], [0.68, 1620, 0.9]].map(([fx, cy, k]) => (
+            <g key={`rock-${fx}`}>
+              <ellipse cx={fx * g.W} cy={cy} rx={26 * k} ry={15 * k} fill="var(--map-rock)" />
+              <ellipse cx={fx * g.W - 8 * k} cy={cy - 5 * k} rx={16 * k} ry={9 * k} fill="var(--map-rock-lit)" />
+            </g>
+          ))}
+          {[[0.20, 1640], [0.78, 1600], [0.42, 1672], [0.60, 1655], [0.08, 1550]].map(([fx, cy]) => (
+            <g key={`shoot-${fx}`} stroke="var(--map-shoot)" strokeWidth="3" strokeLinecap="round" fill="none">
+              <path d={`M${fx * g.W} ${cy} q-10 -14 -4 -26`} />
+              <path d={`M${fx * g.W} ${cy} q10 -12 5 -22`} />
+              <path d={`M${fx * g.W} ${cy} v-16`} />
+            </g>
+          ))}
 
           {/* ---- the path: a ribbon with a dashed centre line ---- */}
           <path d={pathD} fill="none" stroke="var(--map-path-edge)" strokeWidth={wide ? 26 : 18} strokeLinecap="round" />

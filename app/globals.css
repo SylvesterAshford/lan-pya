@@ -83,19 +83,30 @@
   /* ---- Map palette: the mission map scene ONLY ----
      A fourth bounded palette, scoped like the emblem and mascot ones. These
      are terrain colours and never appear in chrome. */
-  --map-sky: #eef4fb;
-  --map-sun: #fbe6b4;
-  --map-ridge-3: #b9cbdd;
-  --map-ridge-2: #cfdde9;
-  --map-ridge-1: #e4edf4;
-  --map-snow: #f6fafd;
-  --map-tree: #a9c4c0;
-  --map-path: #3f9e86;
-  --map-path-edge: #2b7a67;
-  --map-path-line: #d8f0e7;
-  --map-pole: #7d8b9c;
+  --map-sky-high: #cfe0ee;
+  --map-sky: #e6eff8;
+  --map-sky-low: #f4f9fd;
+  --map-sun: #f9d68a;
+  --map-cloud: #dfe9f3;
+  --map-peak: #2f4a63;
+  --map-peak-lit: #48657f;
+  --map-snowcap: #f2f7fb;
+  --map-ridge-3: #9fb9cf;
+  --map-ridge-2: #bed2e0;
+  --map-ridge-1: #d8e6ef;
+  --map-snow: #f4f9fc;
+  --map-contour: #cbdae6;
+  --map-tree: #5f8f8a;
+  --map-tree-lit: #74a49c;
+  --map-rock: #b9c6d2;
+  --map-rock-lit: #cdd8e2;
+  --map-shoot: #6f9f92;
+  --map-path: #2f8f79;
+  --map-path-edge: #1f6e5d;
+  --map-path-line: #e4f4ee;
+  --map-pole: #6b7a8c;
   --map-flag-muted: #c3cedb;
-  --map-halo: #fdeec4;
+  --map-halo: #fbe6b0;
 
   --em-1: #1d7f6e;
   --em-2: #2f6ea8;
@@ -9610,7 +9621,6 @@ html[lang="my"] .profile-stats dt { text-transform: none; letter-spacing: 0; }
 .mission-map-stage {
   position: relative;
   width: 100%;
-  max-height: calc(100svh - 300px);
   container-type: inline-size;
 }
 .mission-map { max-width: 100%; }
