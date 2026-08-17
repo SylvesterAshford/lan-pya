@@ -1,5 +1,16 @@
 # Changelog
 
+## [0.13.1.0] - 2026-08-17
+
+### Changed
+
+- The mission trail now fills the screen instead of sitting in a narrow strip, with larger stops and full stage names on a desktop.
+- Trail stops are clickable. The stage you are on opens its mission, a finished stage opens its proof, and a locked stage stays inert.
+
+### Fixed
+
+- The in-progress mission row wrapped its arrow onto a second line.
+
 ## [0.13.0.0] - 2026-08-17
 
 ### Added

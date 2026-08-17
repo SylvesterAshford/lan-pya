@@ -8058,7 +8058,9 @@ html[lang="my"] .app-page .mission-title h1 {
 .mission-row:last-child { border-bottom: 0; }
 .mission-row:hover { background: var(--surface-sunk); }
 .mission-row:focus-visible { outline: 2px solid var(--teal-700); outline-offset: 2px; }
-.mission-row.current { grid-template-columns: 1fr auto auto; }
+/* Was `1fr auto auto`, from before current rows carried a stage emblem. The
+   emblem became a fourth child and pushed the chevron onto a second row. */
+.mission-row.current { grid-template-columns: auto 1fr auto auto; }
 
 .mission-check {
   display: grid;
@@ -9361,10 +9363,11 @@ html[lang="my"] .auth-roadmap figcaption { text-transform: none; letter-spacing:
 /* Mission trail. Scenery is flat SVG, so the whole illustration costs a few
    hundred bytes and stays sharp at any zoom. */
 .mission-trail {
-  /* Hugs the drawing. Wider than the svg and the hill bands end in a hard
-     vertical edge against the white card. */
-  max-width: 456px;
-  margin: 0 auto;
+  /* Fills the content column. An earlier version capped this at 456px, which
+     reproduced a phone screenshot's width on a desktop and stranded a narrow
+     strip in the middle of the screen. */
+  width: 100%;
+  margin: 0;
   display: grid;
   gap: 10px;
   justify-items: center;
@@ -9388,3 +9391,14 @@ html[lang="my"] .mission-trail text { font-family: var(--font-my), sans-serif; }
   color: var(--muted-ink);
 }
 html[lang="my"] .mission-trail figcaption { text-transform: none; letter-spacing: 0; }
+
+
+/* Trail stops are real targets: pointer, focus ring, and a lift on hover. */
+.trail-stop.is-link { cursor: pointer; }
+.trail-stop.is-link:focus-visible { outline: none; }
+.trail-stop.is-link:focus-visible > circle:not([fill="var(--surface)"]),
+.trail-stop.is-link:focus-visible > circle { stroke: var(--teal-700); stroke-width: 4; }
+.trail-stop.is-link:hover > circle { filter: brightness(0.97); }
+@media (prefers-reduced-motion: no-preference) {
+  .trail-stop.is-link > circle { transition: filter 160ms ease-out; }
+}
