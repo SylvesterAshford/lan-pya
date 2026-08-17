@@ -77,26 +77,32 @@ Missions previously lived inside Roadmaps at `/app/build`, which is why learners
 
 Every size in the app resolves to one of these tokens. A hardcoded `font-size` that is not one of these eight is a defect.
 
-| Token | Desktop | Mobile | Line height | Weight | Use |
+| Token | Size | Line height | Tracking | Weight | Use |
 |---|---|---|---|---|---|
-| `--t-display` | 28px | 24px | 1.2 | 800 | Page hero, roadmap title |
-| `--t-h1` | 22px | 20px | 1.25 | 700 | Screen title |
-| `--t-h2` | 18px | 17px | 1.35 | 700 | Section title |
-| `--t-title` | 16px | 16px | 1.4 | 600 | Card and list title |
-| `--t-body` | 15px | 15px | 1.6 | 400 | Body copy |
-| `--t-meta` | 13px | 13px | 1.5 | 400 | Supporting text, maintainer line |
-| `--t-label` | 11px | 11px | 1.4 | 600 | Uppercase label, chip, eyebrow. Tracking 0.04em |
-| `--t-node` | 13px | 13px | 1.35 | 600 | Roadmap node label |
+| `--t-display` | 32px | 1.05 | −0.8px | 700 | Page hero, roadmap title |
+| `--t-h1` | 24px | 1.15 | −0.6px | 700 | Screen title |
+| `--t-h2` | 20px | 1.30 | −0.4px | 700 | Section title |
+| `--t-title` | 17px | 1.35 | −0.2px | 600 | Card and list title |
+| `--t-body` | 16px | 1.60 | 0 | 400 | Body copy, **and button labels at 600** |
+| `--t-meta` | 14px | 1.50 | 0 | 400 | Supporting text, maintainer line |
+| `--t-label` | 12px | 1.40 | +0.08em | 600 | Uppercase label, chip, eyebrow |
+| `--t-node` | 13px | 1.35 | 0 | 600 | Roadmap node label |
 
-Body is 15px, not 14px, per Design Spec §5. The reference `.dc.html` uses 14px throughout, but it is a desktop mockup; this product is read on budget Android phones, frequently outdoors. Burmese carries more fine detail per character than Latin and suffers more at small sizes.
+Proportions are taken from Zapier: tight display leading, negative tracking on headings, and a display weight of 700 rather than 800, which at 32px reads confident instead of loud. The ladder sits one step below Zapier's own numbers because that is a desktop marketing site and this is a dense app read on budget phones.
 
-Letter spacing: `-0.4px` on display, `-0.2px` on h1, `0` elsewhere except labels.
+**Buttons take the body size at 600 weight.** Zapier's `button-md` is 18/600 against a body of 18/400: same size, heavier weight. This keeps the eight-token rule instead of inventing a ninth size for controls, and pairs with a 44px minimum control height.
+
+**Node labels stay 13px** in every context. The roadmap SVG geometry is built around that number.
+
+Body is 16px, per Design Spec §5 which asks for 15–16px. The reference `.dc.html` uses 14px throughout, but it is a desktop mockup; this product is read on budget Android phones, frequently outdoors. Burmese carries more fine detail per character than Latin and suffers more at small sizes.
+
+Letter spacing is part of the scale, not an afterthought: negative on every heading step, positive on labels. **Burmese sets all heading tracking to 0** — negative tracking damages Myanmar letterforms.
 
 **Stage node labels** use 14px/700 — one step above `--t-node` — because they sit on the spine and lead the reading order.
 
 ### Bilingual rules
 
-- Burmese body runs 16px/1.7 and Burmese meta 14px, one step larger than English for optical balance. This is the only permitted deviation from the scale.
+- Burmese body runs 17px/1.7 and Burmese meta 15px, one step larger than English for optical balance. This is the only permitted deviation from the scale.
 - English and Burmese preserve equivalent hierarchy and perceived size. Burmese never uses a different structural scale.
 - Burmese must be Unicode, never Zawgyi.
 - Never expose duplicate English and Burmese labels in one hierarchy.
@@ -362,3 +368,7 @@ Answers questions about the active roadmap. Modeled on the founder reference: as
 | 2026-08-17 | **In-mission progress is a deliverables checklist, not points** | Founder research note: gamification works on meaningful progress, not attendance; unclear rules are a recurring failure mode. A ticked deliverable is defensible in an interview. |
 | 2026-08-17 | **AI Tutor added as a scripted preview** | Taken from the founder reference. No model behind it, labelled Preview, and bounded so it never marks work done or influences proof, per PRODUCT.md. |
 | 2026-08-17 | **Header width bound to the content token** | Regression from the 820px content column change on 2026-08-16, which left the header at 1100px. |
+| 2026-08-17 | **Type scale rebuilt on Zapier proportions** | Sizes up one step (body 15→16, meta 13→14, label 11→12), display 28→32 at 1.05 leading and 700 weight, negative tracking added at every heading step. Colours deliberately untouched. |
+| 2026-08-17 | **Buttons take body size at 600, control height 44px** | They were 14px on a 40px target, which is timid for a primary action and below the touch minimum. Follows Zapier's own button = body-size-at-semibold rule rather than adding a ninth token. |
+| 2026-08-17 | **Compact list titles wrap to two lines instead of truncating** | At the larger scale, `text-overflow: ellipsis` was cutting opportunity names mid-word. Losing the end of "Junior Frontend Build Challenge" is worse than a taller row. |
+| 2026-08-17 | Rejected General Sans as a display face | Measured 283px against Plus Jakarta Sans' 284px on the same string. A third font download for an invisible difference. |
