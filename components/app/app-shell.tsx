@@ -13,6 +13,36 @@ import {
 import { usePathname } from "next/navigation";
 import { Link } from "@/i18n/navigation";
 import type { Profile } from "@/lib/domain/types";
+import {
+  Sidebar,
+  SidebarContent,
+  SidebarFooter,
+  SidebarGroup,
+  SidebarGroupLabel,
+  SidebarHeader,
+  SidebarInset,
+  SidebarMenu,
+  SidebarMenuButton,
+  SidebarMenuItem,
+  SidebarProvider,
+  SidebarRail,
+  SidebarTrigger,
+} from "@/components/ui/sidebar";
+
+/**
+ * Learner shell — sidebar on desktop, bottom tab bar on phones.
+ *
+ * Returns to the sidebar layout used before 2026-08-13, when it was replaced
+ * by a 60px top navigation. The information architecture does NOT revert with
+ * it: the old sidebar listed six destinations including a `build` route and a
+ * separate `paths` catalog, both of which have since moved for reasons the
+ * founder asked for. Missions is its own destination and the catalog lives
+ * under Me. Restoring the chrome should not undo those decisions.
+ *
+ * Below 860px the sidebar does not render at all and the bottom bar owns
+ * navigation. Rendering both and hiding one with CSS would put five duplicate
+ * links in the tab order and read every destination twice to a screen reader.
+ */
 
 type NavItem = {
   href: string;
@@ -56,74 +86,136 @@ const LEARNER_NAV: NavItem[] = [
     en: "Me",
     my: "ကျွန်ုပ်",
     icon: UserRound,
-    matches: (pathname) => ["/app/profile", "/app/proof", "/app/privacy"].some((route) => pathname.includes(route)),
+    matches: (pathname) => ["/app/profile", "/app/proof", "/app/privacy", "/app/careers"].some((route) => pathname.includes(route)),
   },
 ];
 
 export function AppShell({ children, profile, roles, locale }: { children: React.ReactNode; profile: Profile; roles: Set<string>; locale: string }) {
+  return (
+    <SidebarProvider>
+      <AppShellContent profile={profile} roles={roles} locale={locale}>{children}</AppShellContent>
+    </SidebarProvider>
+  );
+}
+
+function AppShellContent({ children, profile, roles, locale }: { children: React.ReactNode; profile: Profile; roles: Set<string>; locale: string }) {
   const pathname = usePathname();
-  const labelFor = (item: NavItem) => locale === "my" ? item.my : item.en;
+  const my = locale === "my";
+  const labelFor = (item: NavItem) => (my ? item.my : item.en);
   const accountLabel = profile.dataOrigin === "seeded_demo"
-    ? (locale === "my" ? "နမူနာအကောင့်" : "Demo account")
-    : (locale === "my" ? "သင့်အကောင့်" : "Your account");
-  const brandLabel = locale === "my" ? "လမ်းပြ" : "Lan Pya";
-  const updateLabel = locale === "my" ? "သောကြာနေ့တိုင်း အပ်ဒိတ်" : "Updated every Friday";
+    ? (my ? "နမူနာအကောင့်" : "Demo account")
+    : (my ? "သင့်အကောင့်" : "Your account");
+  const brandLabel = my ? "လမ်းပြ" : "Lan Pya";
+  const updateLabel = my ? "သောကြာနေ့တိုင်း အပ်ဒိတ်" : "Updated every Friday";
+  const navLabel = my ? "အဓိက လမ်းညွှန်" : "Primary navigation";
+
   const staffNav = [
     ...(roles.has("reviewer") || roles.has("reviewer_lead")
-      ? [{ href: "/app/review", label: locale === "my" ? "သုံးသပ်ရန်" : "Review", icon: SlidersHorizontal }]
+      ? [{ href: "/app/review", label: my ? "သုံးသပ်ရန်" : "Review", icon: SlidersHorizontal }]
       : []),
     ...(roles.has("admin")
-      ? [{ href: "/app/admin", label: locale === "my" ? "စီမံခန့်ခွဲမှု" : "Admin", icon: ShieldCheck }]
+      ? [{ href: "/app/admin", label: my ? "စီမံခန့်ခွဲမှု" : "Admin", icon: ShieldCheck }]
       : []),
   ];
 
-  const renderLearnerNav = (placement: "desktop" | "mobile") => LEARNER_NAV.map((item) => {
-    const active = item.matches(pathname);
-    const Icon = item.icon;
-    const label = labelFor(item);
-    return (
-      <Link
-        className={`app-nav-link ${placement}${active ? " active" : ""}`}
-        href={item.href}
-        aria-current={active ? "page" : undefined}
-        key={`${placement}-${item.href}`}
-      >
-        <Icon aria-hidden="true" />
-        <span>{label}</span>
-      </Link>
-    );
-  });
-
   return (
     <div className="app-frame">
-      <header className="app-header">
-        <div className="app-header-inner">
+      <Sidebar>
+        <SidebarHeader>
           <Link className="app-brand" href="/app/today" aria-label={brandLabel}>
             <span className="brand-mark" aria-hidden="true" />
             <strong>{brandLabel}</strong>
           </Link>
+          <SidebarTrigger />
+        </SidebarHeader>
 
-          <nav className="app-primary-nav" aria-label={locale === "my" ? "အဓိက လမ်းညွှန်" : "Primary navigation"}>
-            {renderLearnerNav("desktop")}
-          </nav>
+        <SidebarContent>
+          <SidebarGroup>
+            <SidebarGroupLabel>{my ? "လမ်းညွှန်" : "Navigate"}</SidebarGroupLabel>
+            <SidebarMenu aria-label={navLabel}>
+              {LEARNER_NAV.map((item) => {
+                const active = item.matches(pathname);
+                const Icon = item.icon;
+                return (
+                  <SidebarMenuItem key={item.href}>
+                    <SidebarMenuButton isActive={active}>
+                      <Link href={item.href} aria-current={active ? "page" : undefined}>
+                        <Icon aria-hidden="true" />
+                        <span>{labelFor(item)}</span>
+                      </Link>
+                    </SidebarMenuButton>
+                  </SidebarMenuItem>
+                );
+              })}
+            </SidebarMenu>
+          </SidebarGroup>
 
-          <div className="app-header-tools">
-            {staffNav.map(({ href, label, icon: Icon }) => {
-              const active = pathname.includes(href);
-              return <Link className={`staff-link${active ? " active" : ""}`} href={href} aria-current={active ? "page" : undefined} key={href}><Icon aria-hidden="true" /><span>{label}</span></Link>;
-            })}
-            <span className="update-chip">{updateLabel}</span>
-            <Link className="app-avatar" href="/app/profile" aria-label={`${accountLabel}: ${profile.alias}`} title={`${accountLabel}: ${profile.alias}`}>
-              {profile.alias.slice(0, 2).toUpperCase()}
-            </Link>
-          </div>
+          {staffNav.length ? (
+            <SidebarGroup>
+              <SidebarGroupLabel>{my ? "အဖွဲ့" : "Staff"}</SidebarGroupLabel>
+              <SidebarMenu>
+                {staffNav.map(({ href, label, icon: Icon }) => {
+                  const active = pathname.includes(href);
+                  return (
+                    <SidebarMenuItem key={href}>
+                      <SidebarMenuButton isActive={active}>
+                        <Link href={href} aria-current={active ? "page" : undefined}>
+                          <Icon aria-hidden="true" />
+                          <span>{label}</span>
+                        </Link>
+                      </SidebarMenuButton>
+                    </SidebarMenuItem>
+                  );
+                })}
+              </SidebarMenu>
+            </SidebarGroup>
+          ) : null}
+        </SidebarContent>
+
+        <SidebarFooter>
+          <span className="update-chip">{updateLabel}</span>
+          <Link className="sidebar-account" href="/app/profile" title={`${accountLabel}: ${profile.alias}`}>
+            <span className="app-avatar" aria-hidden="true">{profile.alias.slice(0, 2).toUpperCase()}</span>
+            <span className="sidebar-account-copy">
+              <strong>{profile.alias}</strong>
+              <small>{accountLabel}</small>
+            </span>
+          </Link>
+        </SidebarFooter>
+
+        <SidebarRail />
+      </Sidebar>
+
+      <SidebarInset className="app-workspace">
+        {/* Phones have no sidebar, so the brand and the Friday promise ride a
+            slim bar instead of vanishing. No hamburger: the bottom bar already
+            carries every destination. */}
+        <div className="app-mobile-bar">
+          <Link className="app-brand" href="/app/today" aria-label={brandLabel}>
+            <span className="brand-mark" aria-hidden="true" />
+            <strong>{brandLabel}</strong>
+          </Link>
+          <span className="update-chip">{updateLabel}</span>
         </div>
-      </header>
+        {children}
+      </SidebarInset>
 
-      <main className="app-workspace">{children}</main>
-
-      <nav className="app-bottom-nav" aria-label={locale === "my" ? "အဓိက လမ်းညွှန်" : "Primary navigation"}>
-        {renderLearnerNav("mobile")}
+      <nav className="app-bottom-nav" aria-label={navLabel}>
+        {LEARNER_NAV.map((item) => {
+          const active = item.matches(pathname);
+          const Icon = item.icon;
+          return (
+            <Link
+              className={`app-nav-link mobile${active ? " active" : ""}`}
+              href={item.href}
+              aria-current={active ? "page" : undefined}
+              key={`mobile-${item.href}`}
+            >
+              <Icon aria-hidden="true" />
+              <span>{labelFor(item)}</span>
+            </Link>
+          );
+        })}
       </nav>
     </div>
   );

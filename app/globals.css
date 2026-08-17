@@ -8858,3 +8858,251 @@ html[lang="my"] .app-page .mission-title h1 {
   background: var(--amber-100);
   color: var(--amber-800);
 }
+
+/* ===================================================================
+   Learner shell — sidebar on desktop, bottom tab bar on phones
+   Restores the pre-2026-08-13 sidebar layout. The 60px top navigation
+   that replaced it is no longer rendered; its rules above are inert.
+   =================================================================== */
+
+.sidebar-provider { display: contents; }
+
+.app-frame {
+  display: flex;
+  align-items: stretch;
+  min-height: 100svh;
+  color: var(--ink);
+  background: var(--canvas);
+}
+
+.app-sidebar {
+  position: sticky;
+  top: 0;
+  z-index: 40;
+  display: flex;
+  flex-direction: column;
+  flex: none;
+  width: 248px;
+  height: 100svh;
+  background: var(--surface);
+  border-right: 1px solid var(--hairline);
+  transition: width 240ms ease-in-out;
+}
+
+/* Collapsed keeps the icons: a rail you cannot read is still a rail you can
+   navigate, which is the point of collapsing rather than hiding. */
+.app-sidebar[data-state="collapsed"] { width: 68px; }
+.app-sidebar[data-state="collapsed"] .sidebar-group-label,
+.app-sidebar[data-state="collapsed"] .sidebar-menu-button span,
+.app-sidebar[data-state="collapsed"] .app-brand strong,
+.app-sidebar[data-state="collapsed"] .update-chip,
+.app-sidebar[data-state="collapsed"] .sidebar-account-copy { display: none; }
+.app-sidebar[data-state="collapsed"] .sidebar-header { justify-content: center; flex-wrap: wrap; gap: 8px; }
+.app-sidebar[data-state="collapsed"] .sidebar-menu-button > a { justify-content: center; padding: 0; }
+.app-sidebar[data-state="collapsed"] .sidebar-account { justify-content: center; }
+
+.sidebar-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  height: 60px;
+  flex: none;
+  padding: 0 14px;
+  border-bottom: 1px solid var(--hairline);
+}
+.sidebar-header .app-brand { flex: 1; min-width: 0; }
+
+.sidebar-trigger {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  color: var(--muted-ink);
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 7px;
+  cursor: pointer;
+}
+.sidebar-trigger:hover { color: var(--teal-700); background: var(--teal-050); border-color: var(--hairline); }
+.sidebar-trigger svg { width: 17px; height: 17px; }
+
+.sidebar-content {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  padding: 16px 10px;
+}
+
+.sidebar-group + .sidebar-group { margin-top: 20px; }
+
+.sidebar-group-label {
+  padding: 0 8px 8px;
+  font-size: var(--t-label);
+  line-height: var(--l-label);
+  letter-spacing: 0.08em;
+  font-weight: 600;
+  text-transform: uppercase;
+  color: var(--muted-ink);
+}
+html[lang="my"] .sidebar-group-label { text-transform: none; letter-spacing: 0; }
+
+.sidebar-menu { list-style: none; margin: 0; padding: 0; display: grid; gap: 2px; }
+.sidebar-menu-item { margin: 0; }
+
+.sidebar-menu-button > a {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  /* 44px minimum touch target, per DESIGN.md accessibility. */
+  min-height: 44px;
+  padding: 0 12px;
+  border-radius: 8px;
+  color: var(--muted-ink);
+  font-size: var(--t-meta);
+  font-weight: 600;
+  text-decoration: none;
+  transition: background 160ms ease-out, color 160ms ease-out;
+}
+.sidebar-menu-button > a svg { width: 18px; height: 18px; flex: none; }
+.sidebar-menu-button > a:hover { color: var(--teal-900); background: var(--teal-050); }
+.sidebar-menu-button[data-active] > a { color: var(--teal-900); background: var(--teal-100); }
+html[lang="my"] .sidebar-menu-button > a { font-size: var(--t-body); }
+
+.sidebar-footer {
+  flex: none;
+  display: grid;
+  gap: 10px;
+  padding: 12px 12px 16px;
+  border-top: 1px solid var(--hairline);
+}
+
+.sidebar-account {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 44px;
+  padding: 4px 6px;
+  border-radius: 8px;
+  text-decoration: none;
+}
+.sidebar-account:hover { background: var(--teal-050); }
+.sidebar-account-copy { display: grid; min-width: 0; }
+.sidebar-account-copy strong {
+  font-size: var(--t-meta);
+  font-weight: 600;
+  color: var(--ink);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.sidebar-account-copy small { font-size: var(--t-label); color: var(--muted-ink); }
+
+/* The drag edge. Decorative, and hidden from assistive tech because the
+   trigger button already exposes the same action with a label. */
+.sidebar-rail {
+  position: absolute;
+  top: 0;
+  right: -3px;
+  width: 6px;
+  height: 100%;
+  padding: 0;
+  background: transparent;
+  border: 0;
+  cursor: col-resize;
+}
+.sidebar-rail:hover { background: var(--teal-100); }
+
+.sidebar-inset,
+.app-workspace {
+  flex: 1;
+  min-width: 0;
+  min-height: 100svh;
+  font-size: var(--t-body);
+}
+
+/* The content column no longer shares a track with a full-width header, so it
+   is measured against the space left beside the sidebar rather than the
+   viewport. Without the sidebar subtraction, 78vw overflows on a laptop. */
+.app-workspace .app-page {
+  width: 100%;
+  max-width: clamp(720px, 76vw, 1180px);
+  padding: 32px 32px 80px;
+  margin: 0 auto;
+}
+
+@media (max-width: 860px) {
+  .app-frame { display: block; }
+  .app-workspace,
+  .sidebar-inset { min-height: calc(100svh - 64px); }
+  .app-workspace .app-page { max-width: 100%; padding: 24px 16px 96px; }
+
+  /* The bottom bar owns navigation on phones. Five equal columns; "Me" wrapped
+     onto a second row when this was hardcoded to four. */
+  .app-bottom-nav {
+    position: fixed;
+    z-index: 45;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    height: 64px;
+    background: var(--surface);
+    border-top: 1px solid var(--hairline);
+  }
+  .app-nav-link.mobile {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 3px;
+    min-width: 0;
+    padding: 0 2px;
+    color: var(--muted-ink);
+    font-size: var(--t-label);
+    font-weight: 600;
+    text-decoration: none;
+    text-align: center;
+    /* Hyphenation only. `overflow-wrap: anywhere` breaks mid-word without a
+       hyphen, which rendered "Opportunit / ies"; this gives "Oppor-tunities". */
+    hyphens: auto;
+  }
+  .app-nav-link.mobile svg { width: 19px; height: 19px; }
+  .app-nav-link.mobile.active { color: var(--teal-700); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .app-sidebar { transition: none; }
+}
+
+/* The inset is a flex item and must not carry auto margins: in flex layout an
+   auto margin absorbs free space, which pushed the workspace 264px right of
+   the sidebar and shrank it to 928px inside a 1192px track. */
+.app-frame > .sidebar-inset,
+.app-frame > .app-workspace {
+  margin: 0;
+}
+
+/* Slim mobile top bar. The sidebar carries the brand and account on desktop;
+   without this, phones lose both entirely and the app opens on a bare heading. */
+.app-mobile-bar { display: none; }
+
+@media (max-width: 860px) {
+  .app-mobile-bar {
+    position: sticky;
+    top: 0;
+    z-index: 44;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    height: 56px;
+    padding: 0 16px;
+    background: var(--surface);
+    border-bottom: 1px solid var(--hairline);
+  }
+  .app-mobile-bar .app-brand { flex: 1; min-width: 0; }
+  .app-mobile-bar .update-chip { flex: none; }
+}
