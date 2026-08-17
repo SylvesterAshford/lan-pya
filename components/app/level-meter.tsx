@@ -1,4 +1,5 @@
 import { LevelInsignia } from "@/components/app/emblem";
+import { StepsRing } from "@/components/app/steps-ring";
 import { toMyanmarDigits } from "@/lib/domain/deadlines";
 import { localizeGate, localizeLevel, type PathProgress } from "@/lib/domain/progress";
 
@@ -41,8 +42,8 @@ export function LevelMeter({
         </span>
         <span className="level-strip-xp">
           {progress.isMax
-            ? `${num(progress.xp)} XP`
-            : `${num(progress.xp)} / ${num(progress.next!.minXp)} XP`}
+            ? (my ? `ခြေလှမ်း ${num(progress.xp)}` : `${num(progress.xp)} steps`)
+            : (my ? `ခြေလှမ်း ${num(progress.xp)} / ${num(progress.next!.minXp)}` : `${num(progress.xp)} / ${num(progress.next!.minXp)} steps`)}
         </span>
       </div>
     );
@@ -50,35 +51,27 @@ export function LevelMeter({
 
   return (
     <section className="level-card" aria-label={my ? "လမ်းကြောင်း တိုးတက်မှု" : "Path progress"}>
-      <LevelInsignia rank={progress.level.rank} hue={progress.level.hue} size={62} />
+      <StepsRing progress={progress} locale={locale} />
 
       <div className="level-main">
         <div className="level-top">
           <span className="level-name">{name}</span>
           <span className="level-rank">
-            {my
-              ? `အဆင့် ${num(progress.level.rank)} / ${num(5)}`
-              : `Level ${progress.level.rank} of 5`}
+            {my ? `အဆင့် ${num(progress.level.rank)} / ${num(5)}` : `Level ${progress.level.rank} of 5`}
           </span>
           {pathTitle ? <span className="level-path">{pathTitle}</span> : null}
-        </div>
-
-        {/* The bar is decoration over a number that is always spelled out
-            below it, so a screen reader never depends on the graphic. */}
-        <div className="level-track" aria-hidden="true">
-          <div className="level-fill" style={{ width: `${percent}%` }} />
         </div>
 
         <p className="level-xp">
           {progress.isMax ? (
             my
-              ? `${num(progress.xp)} XP · အမြင့်ဆုံးအဆင့် ရောက်ရှိပြီး`
-              : `${num(progress.xp)} XP · highest level reached`
+              ? `${num(progress.xp)} ခြေလှမ်း · အမြင့်ဆုံးအဆင့် ရောက်ရှိပြီး`
+              : `${num(progress.xp)} steps · highest level reached`
           ) : (
             <>
-              <b>{num(progress.xp)}</b>
-              {` / ${num(progress.next!.minXp)} XP `}
-              {my ? "မှ" : "toward"} <b>{localizeLevel(locale, progress.next!)}</b>
+              <b>{num(progress.xpToNext)}</b>
+              {my ? ` ခြေလှမ်း ကျန်သည် — ` : " steps to "}
+              <b>{localizeLevel(locale, progress.next!)}</b>
             </>
           )}
         </p>
@@ -99,8 +92,6 @@ export function LevelMeter({
           </ul>
         ) : null}
 
-        {/* Non-negotiable. A level name is an internal progress marker and the
-            plan forbids it implying employability. */}
         <p className="level-honesty">
           {my
             ? "အဆင့်များသည် Lan Pya အတွင်း တိုးတက်မှုကို ဖော်ပြသည်။ အလုပ်အကိုင် ရရှိနိုင်မှုကို မဆိုလိုပါ။"
