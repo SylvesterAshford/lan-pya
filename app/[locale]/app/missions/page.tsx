@@ -80,12 +80,15 @@ export default async function MissionsPage({ params }: { params: Promise<{ local
       <MissionTrail
         milestones={roadmap}
         locale={locale}
+        missionHref={mission ? (missionHref[mission.key] ?? "/app/paths") : undefined}
+        proofHref="/app/proof"
         labels={{
           youAreHere: locale === "my" ? "သင် ဤနေရာတွင်" : "You are here",
           locked: locale === "my" ? "မဖွင့်ရသေးပါ" : "Locked",
           done: locale === "my" ? "ပြီးစီးပြီး" : "Complete",
           stage: locale === "my" ? "အဆင့်" : "Stage",
           caption: locale === "my" ? "သင့်လမ်းကြောင်း၏ နောက်တစ်ဆင့်များ" : "The next stops on your path",
+          open: locale === "my" ? "ဖွင့်ရန်" : "Open",
         }}
       />
 

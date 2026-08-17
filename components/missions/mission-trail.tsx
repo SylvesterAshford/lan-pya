@@ -1,3 +1,7 @@
+"use client";
+
+import { useCallback, useSyncExternalStore } from "react";
+import { useRouter } from "@/i18n/navigation";
 import { EMBLEM_SHAPES } from "@/components/app/emblem";
 import { MascotPaths } from "@/components/app/mascot";
 import { emblemForStage } from "@/lib/domain/progress";
@@ -8,40 +12,66 @@ import type { Milestone } from "@/lib/domain/types";
  * Mission trail.
  *
  * A winding path through soft terrain: completed stops filled, the one you are
- * on lit and carrying the traveller, the rest dashed until they unlock. The
- * founder's reference is a lesson-unit trail; this is its equivalent for a
- * career path.
+ * on lit and carrying the traveller, the rest dashed until they unlock.
  *
- * Consistency with the Roadmaps tab is structural, not stylistic. Both views
- * read the SAME `Milestone.status` — complete, active, next, upcoming — so a
- * stop cannot be lit here and dark there. The roadmap is the overview at full
- * density; this is the same journey at walking pace.
+ * Consistency with the Roadmaps tab is structural. Both views read the SAME
+ * `Milestone.status`, so a stop cannot be lit here and dark there. "Unlocked
+ * one after another" is a data claim, not a visual effect: a padlock appears
+ * because the database says the stage is upcoming.
  *
- * "Unlocked one after another" is therefore true rather than decorative: a
- * stop is locked because the database says the stage is upcoming, not because
- * a designer wanted three greyed circles.
+ * TWO GEOMETRIES, after the roadmap canvas. The first version shipped a single
+ * phone-width layout, which on a desktop stranded a 456px strip in the middle
+ * of the screen. A reference screenshot taken on a phone is not a desktop
+ * design, and reproducing it at that width was copying rather than designing.
  *
- * Scenery is deliberately held back. Hill bands and one sun, all flat SVG
- * paths costing a few hundred bytes, nothing behind a label. Design Spec §8:
- * the app's speed is the brand, and these learners pay for their data.
+ * Stops are interactive where there is somewhere to go: the current stage
+ * opens its mission, a completed stage opens its proof, and a locked stage is
+ * inert rather than a link that explains a refusal after the click.
  */
 
 type Stop = {
   key: string;
   order: number;
   title: string;
-  proof: string;
   state: "done" | "current" | "next" | "locked";
+  href?: string;
 };
+
+type Geometry = {
+  W: number; left: number; right: number; step: number; top: number;
+  radius: number; currentRadius: number; title: number; sub: number;
+  mascot: number; gap: number; stroke: number; dash: string;
+  /** SVG text does not wrap, so long titles run off the narrow viewBox. */
+  maxTitle: number;
+};
+
+const WIDE: Geometry = { W: 880, left: 250, right: 630, step: 172, top: 112, radius: 36, currentRadius: 45, title: 20, sub: 15, mascot: 64, gap: 28, stroke: 9, dash: "1 26", maxTitle: 40 };
+const NARROW: Geometry = { W: 360, left: 96, right: 252, step: 132, top: 96, radius: 27, currentRadius: 34, title: 15, sub: 12.5, mascot: 46, gap: 18, stroke: 7, dash: "1 22", maxTitle: 22 };
+
+const WIDE_QUERY = "(min-width: 780px)";
+
+function useWide() {
+  const subscribe = useCallback((cb: () => void) => {
+    if (typeof window === "undefined" || typeof window.matchMedia !== "function") return () => {};
+    const mq = window.matchMedia(WIDE_QUERY);
+    mq.addEventListener("change", cb);
+    return () => mq.removeEventListener("change", cb);
+  }, []);
+  return useSyncExternalStore(
+    subscribe,
+    () => (typeof window.matchMedia === "function" ? window.matchMedia(WIDE_QUERY).matches : false),
+    () => false,
+  );
+}
 
 /** Windows the path around the learner so the trail is a walk, not a map of
  *  twelve stages. One behind for context, the current stop, and three ahead. */
-function windowStops(milestones: Milestone[]): { stops: Milestone[]; offset: number } {
+function windowStops(milestones: Milestone[]) {
   const activeIndex = milestones.findIndex((m) => m.status === "active");
   const nextIndex = milestones.findIndex((m) => m.status === "next");
   const anchor = activeIndex >= 0 ? activeIndex : nextIndex >= 0 ? nextIndex : 0;
   const start = Math.max(0, anchor - 1);
-  return { stops: milestones.slice(start, start + 5), offset: start };
+  return { windowed: milestones.slice(start, start + 5), offset: start };
 }
 
 function stateOf(milestone: Milestone): Stop["state"] {
@@ -51,56 +81,46 @@ function stateOf(milestone: Milestone): Stop["state"] {
   return "locked";
 }
 
-/**
- * The traveller standing on the current stop.
- *
- * Draws the shared mascot inside the trail's own coordinate space rather than
- * nesting a second SVG. The figure is 132x200 in its own units; scaled to 46
- * tall here, which keeps the backpack and the amber sleeve readable while
- * staying small enough not to cover the node it stands on.
- */
-function Traveller({ x, y }: { x: number; y: number }) {
-  const H = 46;
-  const k = H / 200;
-  return (
-    <g transform={`translate(${x - (132 * k) / 2},${y - H}) scale(${k})`} aria-hidden="true">
-      <MascotPaths />
-    </g>
-  );
-}
-
 export function MissionTrail({
   milestones,
   locale,
+  missionHref,
+  proofHref,
   labels,
 }: {
   milestones: Milestone[];
   locale: string;
-  labels: { youAreHere: string; locked: string; done: string; stage: string; caption: string };
+  /** Where the stage you are on leads. Omitted when no mission is authored. */
+  missionHref?: string;
+  /** Where a completed stage leads. */
+  proofHref?: string;
+  labels: { youAreHere: string; locked: string; done: string; stage: string; caption: string; open: string };
 }) {
   const my = locale === "my";
+  const router = useRouter();
+  const wide = useWide();
+  const g = wide ? WIDE : NARROW;
   const num = (value: number) => (my ? toMyanmarDigits(value) : String(value));
-  const { stops: windowed, offset } = windowStops(milestones);
+
+  const { windowed, offset } = windowStops(milestones);
   if (!windowed.length) return null;
 
-  const stops: Stop[] = windowed.map((m) => ({
-    key: m.key,
-    order: m.order,
-    title: m.title,
-    proof: m.proof,
-    state: stateOf(m),
-  }));
+  const stops: Stop[] = windowed.map((m) => {
+    const state = stateOf(m);
+    return {
+      key: m.key,
+      order: m.order,
+      title: m.title,
+      state,
+      href: state === "current" ? missionHref : state === "done" ? proofHref : undefined,
+    };
+  });
 
-  const W = 360;
-  const STEP = 132;
-  // Deep enough that the sun clears the first stop's label, which it ran
-  // straight through at 64.
-  const TOP = 96;
-  const H = TOP + stops.length * STEP;
-  // Alternating sides give the path its wind. Labels always take the opposite
-  // side, so scenery and text never share space.
-  const xAt = (i: number) => (i % 2 === 0 ? 96 : 252);
-  const yAt = (i: number) => TOP + i * STEP;
+  // Reserve a partial step below the last stop, not a whole one: a full step
+  // left ~170px of empty terrain hanging under the final node.
+  const H = g.top + (stops.length - 1) * g.step + Math.round(g.step * 0.62);
+  const xAt = (i: number) => (i % 2 === 0 ? g.left : g.right);
+  const yAt = (i: number) => g.top + i * g.step;
 
   const pathD = stops.map((_, i) => {
     const x = xAt(i);
@@ -114,16 +134,15 @@ export function MissionTrail({
 
   return (
     <figure className="mission-trail">
-      <svg viewBox={`0 0 ${W} ${H}`} role="img" aria-label={labels.caption}>
-        {/* ---- scenery: behind everything, never under a label ---- */}
+      <svg viewBox={`0 0 ${g.W} ${H}`} role="img" aria-label={labels.caption}>
         <g aria-hidden="true">
-          <circle cx={W - 54} cy={44} r="30" fill="var(--amber-100)" />
+          <circle cx={g.W * 0.86} cy={g.top * 0.44} r={g.W * 0.082} fill="var(--amber-100)" />
           {[0.22, 0.52, 0.82].map((t, i) => {
             const y = H * t;
             return (
               <path
                 key={t}
-                d={`M0 ${y} C ${W * 0.28} ${y - 34}, ${W * 0.62} ${y + 30}, ${W} ${y - 14} L${W} ${H} L0 ${H} Z`}
+                d={`M0 ${y} C ${g.W * 0.28} ${y - 44}, ${g.W * 0.62} ${y + 38}, ${g.W} ${y - 18} L${g.W} ${H} L0 ${H} Z`}
                 fill={i % 2 === 0 ? "var(--teal-050)" : "var(--teal-100)"}
                 opacity={0.7}
               />
@@ -131,30 +150,48 @@ export function MissionTrail({
           })}
         </g>
 
-        {/* ---- the path: chunky dashes read as stepping stones ---- */}
-        <path
-          d={pathD}
-          fill="none"
-          stroke="var(--connector)"
-          strokeWidth="7"
-          strokeLinecap="round"
-          strokeDasharray="1 22"
-          aria-hidden="true"
-        />
+        <path d={pathD} fill="none" stroke="var(--connector)" strokeWidth={g.stroke} strokeLinecap="round" strokeDasharray={g.dash} aria-hidden="true" />
 
-        {/* ---- stops ---- */}
         {stops.map((stop, i) => {
           const x = xAt(i);
           const y = yAt(i);
           const labelLeft = i % 2 !== 0;
           const emblem = EMBLEM_SHAPES[emblemForStage(offset + i, milestones.length)];
-          const R = stop.state === "current" ? 34 : 27;
+          const R = stop.state === "current" ? g.currentRadius : g.radius;
+          const interactive = Boolean(stop.href);
+          const sub = stop.state === "current" ? labels.youAreHere
+            : stop.state === "done" ? labels.done
+            : stop.state === "locked" ? labels.locked
+            : `${labels.stage} ${num(stop.order)}`;
+
+          const go = () => { if (stop.href) router.push(stop.href); };
 
           return (
-            <g key={stop.key}>
-              {/* halo lifts the lit stop off the terrain */}
+            <g
+              key={stop.key}
+              className={`trail-stop ${stop.state}${interactive ? " is-link" : ""}`}
+              role={interactive ? "button" : undefined}
+              tabIndex={interactive ? 0 : undefined}
+              aria-label={interactive ? `${stop.title}. ${sub}. ${labels.open}` : undefined}
+              onClick={interactive ? go : undefined}
+              onKeyDown={interactive ? (event) => {
+                if (event.key === "Enter" || event.key === " ") { event.preventDefault(); go(); }
+              } : undefined}
+            >
+              {/* The label belongs to the stop, so the hit area spans both
+                  rather than asking for a tap on a 36px circle. */}
+              {interactive ? (
+                <rect
+                  x={labelLeft ? x - R - 240 : x - R - 8}
+                  y={y - R - 12}
+                  width={R * 2 + 248}
+                  height={R * 2 + 24}
+                  fill="transparent"
+                />
+              ) : null}
+
               {stop.state === "current" ? (
-                <circle cx={x} cy={y} r={R + 8} fill="var(--surface)" opacity="0.85" aria-hidden="true" />
+                <circle cx={x} cy={y} r={R + 9} fill="var(--surface)" opacity="0.85" aria-hidden="true" />
               ) : null}
 
               <circle
@@ -163,54 +200,51 @@ export function MissionTrail({
                 r={R}
                 fill={stop.state === "done" ? "var(--teal-500)" : stop.state === "locked" ? "var(--surface-sunk)" : "var(--surface)"}
                 stroke={stop.state === "done" ? "var(--teal-700)" : stop.state === "current" ? "var(--node-border)" : "var(--node-soon-border)"}
-                strokeWidth={stop.state === "current" ? 3.5 : 2.5}
-                strokeDasharray={stop.state === "locked" ? "5 5" : undefined}
-                aria-hidden="true"
+                strokeWidth={stop.state === "current" ? 4 : 3}
+                strokeDasharray={stop.state === "locked" ? "6 6" : undefined}
               />
 
-              {/* Done stops carry the stage emblem, the same mark the roadmap
-                  node and the mission row use. */}
               {stop.state === "done" ? (
-                <g transform={`translate(${x - 15},${y - 15}) scale(${30 / 64})`} aria-hidden="true">
+                <g transform={`translate(${x - R * 0.56},${y - R * 0.56}) scale(${(R * 1.12) / 64})`} aria-hidden="true">
                   <path d={emblem.shell} fill="#fff" />
                   <g dangerouslySetInnerHTML={{ __html: emblem.glyph.replace(/#fff/g, "var(--teal-700)") }} />
                 </g>
               ) : stop.state === "locked" ? (
-                <g transform={`translate(${x - 8},${y - 9})`} aria-hidden="true">
+                <g transform={`translate(${x - R * 0.3},${y - R * 0.34}) scale(${R / 27})`} aria-hidden="true">
                   <rect x="0" y="7" width="16" height="12" rx="2.5" fill="var(--node-soon-border)" />
                   <path d="M3.5 7 V4.5 a4.5 4.5 0 0 1 9 0 V7" fill="none" stroke="var(--node-soon-border)" strokeWidth="2.2" />
                 </g>
               ) : (
-                <text x={x} y={y + 7} textAnchor="middle" fontSize="19" fontWeight="800" fill="var(--node-border)" aria-hidden="true">
+                <text x={x} y={y + R * 0.26} textAnchor="middle" fontSize={R * 0.72} fontWeight="800" fill="var(--node-border)" aria-hidden="true">
                   {num(stop.order)}
                 </text>
               )}
 
-              {stop.state === "current" ? <Traveller x={x} y={y - R} /> : null}
+              {stop.state === "current" ? (
+                <g transform={`translate(${x - (132 * (g.mascot / 200)) / 2},${y - R - g.mascot}) scale(${g.mascot / 200})`} aria-hidden="true">
+                  <MascotPaths />
+                </g>
+              ) : null}
 
-              {/* label opposite the stop */}
               <text
-                x={labelLeft ? x - R - 18 : x + R + 18}
+                x={labelLeft ? x - R - g.gap : x + R + g.gap}
                 y={y - 3}
                 textAnchor={labelLeft ? "end" : "start"}
-                fontSize="15"
+                fontSize={g.title}
                 fontWeight="700"
                 fill={stop.state === "locked" ? "var(--muted-ink)" : "var(--ink)"}
               >
-                {stop.title.length > 27 ? `${stop.title.slice(0, 26)}…` : stop.title}
+                {stop.title.length > g.maxTitle ? `${stop.title.slice(0, g.maxTitle - 1)}\u2026` : stop.title}
               </text>
               <text
-                x={labelLeft ? x - R - 18 : x + R + 18}
-                y={y + 16}
+                x={labelLeft ? x - R - g.gap : x + R + g.gap}
+                y={y + g.title + 3}
                 textAnchor={labelLeft ? "end" : "start"}
-                fontSize="12.5"
+                fontSize={g.sub}
                 fontWeight="600"
                 fill="var(--muted-ink)"
               >
-                {stop.state === "current" ? labels.youAreHere
-                  : stop.state === "done" ? labels.done
-                  : stop.state === "locked" ? labels.locked
-                  : `${labels.stage} ${num(stop.order)}`}
+                {sub}
               </text>
             </g>
           );
