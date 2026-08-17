@@ -1,5 +1,17 @@
 # Changelog
 
+## [0.7.0.0] - 2026-08-17
+
+### Added
+
+- Missions is now its own destination in the main navigation, showing the mission you are on tagged with its roadmap stage, and every mission you have already had verified.
+- Ask the AI Tutor from Home. It opens as a popup with a compass mascot, answers questions about the roadmap you are following, and is clearly marked as a preview.
+
+### Changed
+
+- Roadmaps is the map again. Missions and the tutor moved out of tabs, because burying the work one level down was the problem in the first place.
+- The mobile bar carries five destinations without wrapping.
+
 ## [0.6.0.0] - 2026-08-17
 
 ### Added

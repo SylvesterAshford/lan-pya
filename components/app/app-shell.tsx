@@ -6,6 +6,7 @@ import {
   Map,
   ShieldCheck,
   SlidersHorizontal,
+  Sparkles,
   UserRound,
   type LucideIcon,
 } from "lucide-react";
@@ -34,7 +35,14 @@ const LEARNER_NAV: NavItem[] = [
     en: "Roadmaps",
     my: "လမ်းပြမြေပုံများ",
     icon: Map,
-    matches: (pathname) => ["/app/paths", "/app/roadmap", "/app/build", "/app/missions/"].some((route) => pathname.includes(route)),
+    matches: (pathname) => ["/app/paths", "/app/roadmap"].some((route) => pathname.includes(route)),
+  },
+  {
+    href: "/app/missions",
+    en: "Missions",
+    my: "လုပ်ငန်းများ",
+    icon: Sparkles,
+    matches: (pathname) => ["/app/missions", "/app/build"].some((route) => pathname.includes(route)),
   },
   {
     href: "/app/opportunities",

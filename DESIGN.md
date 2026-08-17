@@ -33,7 +33,7 @@ Where this file and those documents disagree, this file wins and the disagreemen
 
 ### Deliberate risks
 
-- **Four primary destinations only:** Home, Roadmaps, Opportunities, Me. Missions open from roadmap milestones; portfolio, privacy, language, and account controls live under Me.
+- **Five primary destinations:** Home, Roadmaps, Missions, Opportunities, Me. Missions were contextual under Roadmaps until 2026-08-17; learners could not find the work, so it earned a destination. Portfolio, privacy, language, and account controls still live under Me.
 - **A real node graph, not a card grid.** Connected SVG nodes with a dotted spine carry the core experience. No percentage bar substitutes for it.
 - **Two palettes that never touch.** Canvas amber is a node fill on the graph. Chrome amber is a small urgency pill. Mixing them destroys both meanings.
 
@@ -41,10 +41,11 @@ Where this file and those documents disagree, this file wins and the disagreemen
 
 ### Primary navigation
 
-1. **Home:** resume work, current progress, next milestones, nearby deadlines.
+1. **Home:** resume work, current progress, next milestones, nearby deadlines, and the tutor.
 2. **Roadmaps:** active path first, browse all paths on demand, then the connected roadmap canvas.
-3. **Opportunities:** deadline-led feed with compact provenance and readiness detail.
-4. **Me:** career profile, personalization, portfolio proof, language, privacy, account controls.
+3. **Missions:** the work. Active mission tagged with the stage it belongs to, and completed missions with their verification date.
+4. **Opportunities:** deadline-led feed with compact provenance and readiness detail.
+5. **Me:** career profile, personalization, portfolio proof, language, privacy, account controls.
 
 ### Path tabs
 
@@ -379,3 +380,7 @@ Answers questions about the active roadmap. Modeled on the founder reference: as
 | 2026-08-17 | **Rubric weights shown on each deliverable** | A learner should see what their work is scored against before starting, not after a review. The weights are the reviewer's actual rubric. |
 | 2026-08-17 | **Steps 4 and 5 are owned by submission state** | Review and Proof cannot be reached by clicking. You cannot navigate your way into "verified". |
 | 2026-08-17 | **Profile shows one Compass prompt instead of four "Not sure yet" rows** | Repeating the same empty value four times reads as broken rather than honest. Profile sections also drop card chrome for rules, matching the catalog. |
+| 2026-08-17 | **Missions promoted to a primary destination; four became five** | Reverses the "four destinations only" risk recorded on 2026-08-13. Missions were contextual under Roadmaps and learners could not find them. The mobile bar was hardcoded to four columns and wrapped "Me" onto a second row until fixed. |
+| 2026-08-17 | **Path tabs removed the same day they shipped** | A tab inside Roadmaps still buries the work one level down, which was the original complaint. Missions became a destination and the tutor a popup instead. |
+| 2026-08-17 | **Missions carry their stage as a tag in canvas amber** | A mission should visibly belong to a place on the map. Completed missions stay listed with their verification date rather than vanishing. |
+| 2026-08-17 | **Tutor is a mascot launcher plus a modal, per the founder reference** | A compass rose on an amber tile: the product's metaphor is the map, so the guide is a compass, not a generic robot. Escape closes, focus enters the dialog and returns to the launcher. |

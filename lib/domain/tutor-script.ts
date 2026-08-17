@@ -1,5 +1,4 @@
 import { getCareerTrack } from "@/lib/domain/career-tracks";
-import type { TutorQA } from "@/components/app/ai-tutor";
 
 /**
  * Prepared tutor answers.
@@ -11,6 +10,8 @@ import type { TutorQA } from "@/components/app/ai-tutor";
  *
  * There is no model behind this. See DESIGN.md "The AI Tutor".
  */
+export type TutorQA = { question: string; answer: string };
+
 export function getTutorScript(trackKey: string, locale: string): TutorQA[] {
   const track = getCareerTrack(trackKey);
   const stages = track.milestones;
