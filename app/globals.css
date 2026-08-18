@@ -11957,3 +11957,9 @@ a.paused-row:hover { background: var(--surface-sunk); }
   .switch-row, .paused-row { grid-template-columns: auto minmax(0, 1fr); }
   .switch-row > :last-child, .paused-row > :last-child { grid-column: 1 / -1; justify-self: start; }
 }
+
+/* The active sub-tab is a filled pill; the 2px bar underneath it was a second
+   active indicator for the same state. It also painted with --teal, which now
+   aliases to navy, so it read as a black rule under a green pill. */
+.me-nav a::after,
+.me-nav a.active::after { background: transparent; }

@@ -1,4 +1,3 @@
-import { Link } from "@/i18n/navigation";
 import { LevelMeter } from "@/components/app/level-meter";
 import { RoadmapTree } from "@/components/app/roadmap-tree";
 import { resolveProgress } from "@/lib/domain/progress";
@@ -45,7 +44,6 @@ export default async function RoadmapPage({
   return (
     <div className="app-page roadmap-page">
       <section className="page-heading roadmap-page-heading">
-        <Link className="back-link" href="/app/paths">← {locale === "my" ? "လမ်းပြမြေပုံများအားလုံး" : "All roadmaps"}</Link>
         <div className="roadmap-title-row">
           <div>
             <h1>{trackTitle}</h1>

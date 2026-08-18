@@ -1,13 +1,13 @@
 "use client";
 
 import {
+  BadgeCheck,
   BriefcaseBusiness,
   Home,
   Map,
   ShieldCheck,
   SlidersHorizontal,
   Sparkles,
-  UserRound,
   type LucideIcon,
 } from "lucide-react";
 import { usePathname } from "next/navigation";
@@ -82,12 +82,16 @@ const LEARNER_NAV: NavItem[] = [
     icon: BriefcaseBusiness,
     matches: (pathname) => pathname.includes("/app/opportunities"),
   },
+  // Portfolio earned the destination that "Me" had. The account row at the
+  // foot of the sidebar already opens the profile, so a nav item pointing at
+  // the same place was a second door to one room; the evidence a learner has
+  // built had none.
   {
-    href: "/app/profile",
-    en: "Me",
-    my: "ကျွန်ုပ်",
-    icon: UserRound,
-    matches: (pathname) => ["/app/profile", "/app/proof", "/app/privacy", "/app/careers"].some((route) => pathname.includes(route)),
+    href: "/app/proof",
+    en: "Portfolio",
+    my: "လက်ရာမှတ်တမ်း",
+    icon: BadgeCheck,
+    matches: (pathname) => ["/app/proof", "/app/profile", "/app/privacy", "/app/careers"].some((route) => pathname.includes(route)),
   },
 ];
 

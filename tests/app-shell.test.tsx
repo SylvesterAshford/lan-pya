@@ -21,9 +21,12 @@ describe("AppShell", () => {
     ["/en/app/missions", "Missions"],
     ["/en/app/missions/responsive-profile-card", "Missions"],
     ["/en/app/opportunities", "Opportunities"],
-    ["/en/app/profile", "Me"],
-    ["/en/app/proof", "Me"],
-    ["/en/app/privacy", "Me"],
+    // Portfolio took this destination from "Me": the account row in the sidebar
+    // footer already opens the profile, so the nav item was a second door to
+    // the same room while the learner's evidence had none.
+    ["/en/app/profile", "Portfolio"],
+    ["/en/app/proof", "Portfolio"],
+    ["/en/app/privacy", "Portfolio"],
   ])("maps %s to the %s destination", (route, label) => {
     pathname = route;
     render(<AppShell profile={DEMO_PROFILE} roles={new Set()} locale="en"><p>Page</p></AppShell>);
@@ -42,9 +45,11 @@ describe("AppShell", () => {
     render(<AppShell profile={DEMO_PROFILE} roles={new Set()} locale="en"><p>Page</p></AppShell>);
 
     // Five destinations, once each. One navigation, one tab stop apiece.
-    expect(screen.getAllByRole("link", { name: /Home|Roadmaps|Missions|Opportunities|Me/ })).toHaveLength(5);
+    expect(screen.getAllByRole("link", { name: /Home|Roadmaps|Missions|Opportunities|Portfolio/ })).toHaveLength(5);
+    // Build is reached from a mission, never from the nav. "Me" is gone: the
+    // account row in the footer is the way to the profile now.
     expect(screen.queryByRole("link", { name: "Build" })).not.toBeInTheDocument();
-    expect(screen.queryByRole("link", { name: "Portfolio" })).not.toBeInTheDocument();
+    expect(screen.queryByRole("link", { name: "Me" })).not.toBeInTheDocument();
   });
 
   it("renders only the selected language", () => {
