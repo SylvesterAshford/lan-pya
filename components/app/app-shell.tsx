@@ -147,7 +147,6 @@ function AppShellContent({ children, profile, roles, locale }: { children: React
 
         <SidebarContent>
           <SidebarGroup>
-            <SidebarGroupLabel>{my ? "လမ်းညွှန်" : "Navigate"}</SidebarGroupLabel>
             <SidebarMenu aria-label={navLabel}>
               {LEARNER_NAV.map((item) => {
                 const active = item.matches(pathname);
