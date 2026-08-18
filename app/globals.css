@@ -9819,7 +9819,9 @@ html[lang="my"] .partner-band-eyebrow { text-transform: none; letter-spacing: 0;
 .featured-opp.is-ready { border-left-color: var(--teal-600); }
 .featured-opp.is-partner { box-shadow: 0 6px 20px rgb(15 23 42 / 0.07); }
 
-.featured-opp-mark { width: 104px; }
+/* Centred against the text block rather than pinned to the top, where the
+   tile sat level with the eyebrow and looked like it had slipped upward. */
+.featured-opp-mark { width: 104px; align-self: center; }
 .featured-opp-art { width: 104px; height: 62px; border-radius: 9px; }
 
 /* The partner's own mark, on the ground it was drawn for. Contained rather
@@ -10030,3 +10032,14 @@ html[lang="my"] .featured-opp-kind { text-transform: none; letter-spacing: 0; }
 
 .profile-editor-error { font-size: var(--t-meta); color: var(--danger-ink, #b42318); }
 .profile-editor-actions { display: flex; gap: 8px; flex-wrap: wrap; }
+
+/* Category mark tile. Sized by whichever caller class it carries
+   (.featured-opp-art, .opp-row-art), so the icon scales with the tile rather
+   than needing a size per call site. */
+.category-art {
+  display: grid;
+  place-items: center;
+  background: var(--teal-050);
+  color: var(--teal-700);
+}
+.category-art > svg { width: 46%; height: auto; }
