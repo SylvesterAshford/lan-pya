@@ -74,10 +74,6 @@ export default async function MissionsPage({ params }: { params: Promise<{ local
         <p>{c.missions.body}</p>
       </section>
 
-      {/* Compact, not the full Home card. Repeating a large panel on every
-          screen is how an app becomes a dashboard mosaic. */}
-      <LevelMeter progress={progress} locale={locale} variant="compact" />
-
       <section className="mission-section">
         <header className="arena-head">
           <h3>{c.missions.active}</h3>
@@ -141,6 +137,11 @@ export default async function MissionsPage({ params }: { params: Promise<{ local
           </div>
         )}
       </section>
+
+      {/* Sits directly above the climb it is counting. The points on this
+          strip are what the stops on the map award, so the two belong to each
+          other rather than to opposite ends of the page. */}
+      <LevelMeter progress={progress} locale={locale} variant="compact" />
 
       {/* The same Milestone.status the roadmap canvas reads, drawn as a climb.
           A stop is locked because the stage is upcoming, not because three
