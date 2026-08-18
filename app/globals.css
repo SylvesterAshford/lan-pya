@@ -10218,3 +10218,1200 @@ html[lang="my"] .profile-section-label { text-transform: none; letter-spacing: 0
   .settings-row { grid-template-columns: minmax(0, 1fr); }
   .settings-row-control { justify-self: start; }
 }
+/* ===== home-climb ===== */
+/* ============================================================
+   Today's climb — the Home hero.
+   Companion to components/home/todays-climb.tsx.
+
+   This is the one dark surface on a light screen, so every colour that
+   sits on it is stated explicitly: inheriting --ink here would ship
+   invisible headings, which is exactly the bug the navy conversion hit.
+   Light text is expressed as translucent white over --navy-900 rather
+   than as new hex values, so the panel needs no fifth palette.
+
+   Terrain inside the scene uses the bounded --map-* palette and nothing
+   else, matching components/missions/mission-map.tsx. Chrome colours
+   never leak into the terrain, and terrain colours never leak out.
+   ============================================================ */
+
+.climb {
+  display: grid;
+  grid-template-columns: minmax(0, 1.02fr) minmax(0, 0.98fr);
+  align-items: center;
+  gap: var(--s-xl);
+  overflow: hidden;
+  padding: var(--s-xl) var(--s-lg);
+  background: var(--navy-900);
+  /* Borders first, no shadows: DESIGN.md elevation. The hairline is a lit
+     top edge rather than a full outline, which is what separates the panel
+     from the canvas without drawing a box around it. */
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: var(--r-card);
+}
+
+/* ---- left column: the copy ---- */
+
+.climb-copy {
+  min-width: 0;
+}
+
+.climb-greeting {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--s-sm);
+  margin: 0 0 var(--s-lg);
+}
+
+.climb-greeting > span {
+  color: rgba(255, 255, 255, 0.94);
+  font-size: var(--t-title);
+  line-height: var(--l-title);
+  letter-spacing: var(--k-title);
+  font-weight: 600;
+}
+
+.climb-greeting > small {
+  color: rgba(255, 255, 255, 0.62);
+  font-size: var(--t-meta);
+  line-height: var(--l-meta);
+}
+
+.climb-eyebrow {
+  display: block;
+  /* Teal on navy-900 measures ~5.7:1, clear of the 4.5:1 floor for a 12px
+     label. --teal-700 would not be: it is a colour for white grounds. */
+  color: var(--teal-500);
+  font-size: var(--t-label);
+  line-height: var(--l-label);
+  letter-spacing: 0.08em;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.climb-title {
+  margin: var(--s-sm) 0 0;
+  color: rgba(255, 255, 255, 0.98);
+  font-size: var(--t-display);
+  line-height: var(--l-display);
+  letter-spacing: var(--k-display);
+  font-weight: var(--w-display);
+  /* Long mission names break rather than push the grid wider. */
+  overflow-wrap: anywhere;
+}
+
+.climb-brief {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  overflow: hidden;
+  max-width: 46ch;
+  margin: var(--s-md) 0 0;
+  color: rgba(255, 255, 255, 0.72);
+  font-size: var(--t-body);
+  line-height: var(--l-body);
+}
+
+/* ---- meta: the points award, and only that ----
+   There is no time estimate here. No such field exists, and a fabricated
+   one would be the kind of unearned claim this product argues against.
+   The label carries "on verification"; the number never reads as banked. */
+
+.climb-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s-sm);
+  margin: var(--s-md) 0 0;
+}
+
+.climb-points {
+  display: inline-flex;
+  align-items: baseline;
+  gap: var(--s-xs);
+  padding: 6px var(--s-md);
+  color: rgba(255, 255, 255, 0.78);
+  font-size: var(--t-label);
+  line-height: var(--l-label);
+  letter-spacing: 0.04em;
+  background: rgba(255, 255, 255, 0.07);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: var(--r-chip);
+}
+
+.climb-points b {
+  color: rgba(255, 255, 255, 0.96);
+  font-size: var(--t-body);
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ---- the action ----
+   Amber fill with --amber-800 ink, never white: colour rule 8. 44px
+   minimum height and body size at 600 weight, per the button rule. */
+
+.climb-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s-sm);
+  min-height: 44px;
+  margin: var(--s-lg) 0 0;
+  padding: 0 var(--s-lg);
+  color: var(--amber-800);
+  font-size: var(--t-body);
+  font-weight: 600;
+  line-height: 1;
+  text-decoration: none;
+  background: var(--amber-500);
+  border: 1px solid var(--amber-500);
+  border-radius: var(--r-control);
+  transition: background 160ms ease-out, border-color 160ms ease-out;
+}
+
+.climb-cta:hover {
+  background: color-mix(in srgb, var(--amber-500) 88%, #ffffff);
+  border-color: color-mix(in srgb, var(--amber-500) 88%, #ffffff);
+}
+
+.climb-cta:focus-visible {
+  outline: 3px solid var(--amber-100);
+  outline-offset: 2px;
+}
+
+.climb-foot {
+  margin: var(--s-lg) 0 0;
+  color: rgba(255, 255, 255, 0.58);
+  font-size: var(--t-meta);
+  line-height: var(--l-meta);
+}
+
+.climb-foot-path {
+  color: rgba(255, 255, 255, 0.74);
+  font-weight: 600;
+}
+
+.climb-foot-dot {
+  padding: 0 var(--s-xs);
+}
+
+/* ---- right column: the scene ----
+   An inset tile, not a bleed. The terrain palette is a daylight one, so a
+   full-bleed scene would turn half the panel into a bright rectangle; a
+   bounded tile reads as an illustration the panel is holding. */
+
+.climb-scene {
+  position: relative;
+  aspect-ratio: 460 / 320;
+  width: 100%;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: var(--r-card);
+}
+
+.climb-scene-art {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.climb-mascot {
+  position: absolute;
+  right: 5%;
+  bottom: 4%;
+  /* Sized against the tile rather than in pixels, so the traveller keeps
+     his footing on the snowfield at every width. */
+  width: auto;
+  height: 50%;
+}
+
+/* ---- Burmese ----
+   Never letterspace Burmese and never all-caps it; heading tracking goes
+   to 0 because negative tracking damages Myanmar letterforms. Body and
+   meta step up one, the single permitted deviation from the scale. */
+
+html[lang="my"] .climb-eyebrow {
+  letter-spacing: 0;
+  text-transform: none;
+}
+
+html[lang="my"] .climb-title,
+html[lang="my"] .climb-greeting > span {
+  letter-spacing: 0;
+}
+
+html[lang="my"] .climb-brief {
+  font-size: 17px;
+  line-height: 1.7;
+}
+
+html[lang="my"] .climb-greeting > small,
+html[lang="my"] .climb-foot {
+  font-size: 15px;
+}
+
+html[lang="my"] .climb-points {
+  letter-spacing: 0;
+}
+
+/* ---- responsive ----
+   Below 860px the sidebar hands off to the bottom bar and the panel has a
+   phone's width to work with. The scene stacks under the copy instead of
+   competing with it for a 190px column. */
+
+@media (max-width: 860px) {
+  .climb {
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--s-lg);
+    padding: var(--s-lg) var(--s-md);
+  }
+
+  .climb-scene {
+    order: 2;
+  }
+
+  .climb-copy {
+    order: 1;
+  }
+}
+
+@media (max-width: 560px) {
+  .climb {
+    padding: var(--s-lg) var(--s-md);
+  }
+
+  .climb-title {
+    font-size: var(--t-h1);
+    line-height: var(--l-h1);
+    letter-spacing: var(--k-h1);
+  }
+
+  .climb-cta {
+    /* A phone gives the primary action the full row; a 124px button
+       floating in a 358px column reads as an afterthought. */
+    width: 100%;
+    justify-content: center;
+  }
+
+  .climb-mascot {
+    height: 46%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .climb-cta {
+    transition: none;
+  }
+}
+/* ===== home-momentum ===== */
+/* ============================================================
+   HOME — Momentum track + This week
+   Written for components/home/momentum-track.tsx and
+   components/home/this-week.tsx. Merge into app/globals.css.
+
+   Governed by DESIGN.md: borders first and no shadows on cards,
+   12px card radius, the eight-step type scale, the 4px spacing
+   scale, and the chrome palette only. Teal here means progress
+   and completion (--teal-500 / --teal-700), never the --teal
+   alias, which now points at navy.
+   ============================================================ */
+
+/* ---------- Momentum track ---------- */
+
+.momentum{
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--s-md);
+  padding: var(--s-md);
+  background: var(--surface);
+  border: 1px solid var(--hairline);
+  border-radius: var(--r-card);
+}
+
+.momentum-lede{
+  min-width: 0;
+}
+
+.momentum-title{
+  margin: 0;
+  font-size: var(--t-h2);
+  line-height: var(--l-h2);
+  letter-spacing: var(--k-h2);
+  font-weight: 700;
+  color: var(--ink);
+}
+
+.momentum-summary{
+  margin: var(--s-xs) 0 0;
+  font-size: var(--t-meta);
+  line-height: var(--l-meta);
+  color: var(--muted-ink);
+  font-variant-numeric: tabular-nums;
+}
+
+.momentum-track{
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: var(--s-sm);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.momentum-stage{
+  position: relative;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: var(--s-2xs);
+}
+
+/* The connector. Two half-segments per node so the run of solid teal can end
+   exactly at the node the learner is standing on. Drawn with border-top so the
+   dashed pattern is a real dash, not a repeating background. */
+.momentum-stage::before,
+.momentum-stage::after{
+  content: "";
+  position: absolute;
+  top: 17px;
+  border-top: 2px dashed var(--hairline);
+}
+
+.momentum-stage::before{
+  left: 0;
+  right: 50%;
+  margin-right: 22px;
+}
+
+.momentum-stage::after{
+  left: 50%;
+  right: 0;
+  margin-left: 22px;
+}
+
+.momentum-stage.is-first::before,
+.momentum-stage.is-last::after{
+  content: none;
+}
+
+.momentum-stage.line-in-solid::before,
+.momentum-stage.line-out-solid::after{
+  border-top-style: solid;
+  border-top-color: var(--teal-500);
+}
+
+.momentum-mark{
+  position: relative;
+  flex: none;
+  margin-bottom: var(--s-2xs);
+}
+
+.momentum-disc{
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 999px;
+  background: var(--surface-sunk);
+  border: 1px solid var(--hairline);
+  color: var(--muted-ink);
+}
+
+/* State never rides on colour alone (DESIGN.md colour rule 7): done adds a
+   check badge, locked adds a padlock and a dashed edge, current inverts the
+   fill and carries a ring plus aria-current. */
+.momentum-stage.is-done .momentum-disc{
+  background: var(--teal-100);
+  border-color: var(--teal-500);
+  color: var(--teal-700);
+}
+
+.momentum-stage.is-current .momentum-disc{
+  background: var(--teal-700);
+  border-color: var(--teal-700);
+  color: var(--on-solid);
+  outline: 2px solid var(--teal-100);
+  outline-offset: 3px;
+}
+
+.momentum-stage.is-locked .momentum-disc{
+  border-style: dashed;
+}
+
+.momentum-badge{
+  position: absolute;
+  top: -4px;
+  right: -6px;
+  display: grid;
+  place-items: center;
+  width: 18px;
+  height: 18px;
+  border-radius: 999px;
+  border: 1px solid var(--surface);
+}
+
+.momentum-badge.is-done{
+  background: var(--teal-500);
+  color: var(--on-solid);
+}
+
+.momentum-badge.is-locked{
+  background: var(--surface);
+  border-color: var(--hairline);
+  color: var(--muted-ink);
+}
+
+.momentum-name{
+  font-size: var(--t-meta);
+  line-height: var(--l-meta);
+  font-weight: 600;
+  color: var(--muted-ink);
+  overflow-wrap: anywhere;
+}
+
+.momentum-stage.is-done .momentum-name,
+.momentum-stage.is-current .momentum-name{
+  color: var(--ink);
+}
+
+.momentum-body{
+  font-size: var(--t-label);
+  line-height: var(--l-label);
+  color: var(--muted-ink);
+  overflow-wrap: anywhere;
+}
+
+/* Two columns from the tablet width up: the heading takes a fixed measure and
+   the track keeps the rest. minmax(0, …) is what stops the four nodes forcing
+   the grid wider than its container. */
+@media (min-width: 860px){
+  .momentum{
+    grid-template-columns: minmax(0, 240px) minmax(0, 1fr);
+    align-items: center;
+    gap: var(--s-xl);
+    padding: var(--s-lg);
+  }
+}
+
+/* Below 640px four columns would leave roughly 70px per node, which turns
+   "Opportunity" into four stacked fragments. The track turns vertical instead:
+   same four stages, same connector, read top to bottom. */
+@media (max-width: 639px){
+  .momentum-track{
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--s-md);
+  }
+
+  .momentum-stage{
+    flex-direction: row;
+    align-items: flex-start;
+    text-align: left;
+    gap: var(--s-sm);
+    flex-wrap: wrap;
+  }
+
+  /* One vertical segment per row, filling the gap above it. The half-segment
+     pair is horizontal-only geometry. */
+  .momentum-stage::before{
+    top: calc(var(--s-md) * -1);
+    bottom: auto;
+    left: 17px;
+    right: auto;
+    height: var(--s-md);
+    margin: 0;
+    border-top: 0;
+    border-left: 2px dashed var(--hairline);
+  }
+
+  .momentum-stage.line-in-solid::before{
+    border-left-style: solid;
+    border-left-color: var(--teal-500);
+  }
+
+  .momentum-stage::after{
+    content: none;
+  }
+
+  .momentum-mark{
+    margin-bottom: 0;
+  }
+
+  .momentum-name{
+    flex: 1 1 auto;
+    min-width: 0;
+    align-self: center;
+  }
+
+  .momentum-body{
+    flex: 1 1 100%;
+    padding-left: calc(36px + var(--s-sm));
+  }
+}
+
+/* ---------- This week ---------- */
+
+.week{
+  padding: var(--s-md);
+  background: var(--surface);
+  border: 1px solid var(--hairline);
+  border-radius: var(--r-card);
+}
+
+.week-head{
+  margin-bottom: var(--s-md);
+}
+
+.week-title{
+  margin: 0;
+  font-size: var(--t-h2);
+  line-height: var(--l-h2);
+  letter-spacing: var(--k-h2);
+  font-weight: 700;
+  color: var(--ink);
+}
+
+.week-body{
+  margin: var(--s-xs) 0 0;
+  font-size: var(--t-meta);
+  line-height: var(--l-meta);
+  color: var(--muted-ink);
+}
+
+.week-groups{
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr));
+  gap: var(--s-lg);
+  align-items: start;
+}
+
+.week-group{
+  min-width: 0;
+}
+
+.week-group-title{
+  display: flex;
+  align-items: center;
+  gap: var(--s-sm);
+  margin: 0 0 var(--s-sm);
+  font-size: var(--t-label);
+  line-height: var(--l-label);
+  letter-spacing: 0.08em;
+  font-weight: 600;
+  color: var(--muted-ink);
+}
+
+.week-group-title svg{
+  flex: none;
+  color: var(--muted-ink);
+}
+
+.week-group-title > span:first-of-type{
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.week-count{
+  flex: none;
+  padding: 0 var(--s-sm);
+  border-radius: var(--r-chip);
+  background: var(--surface-sunk);
+  border: 1px solid var(--hairline);
+  color: var(--muted-ink);
+  letter-spacing: 0;
+  font-variant-numeric: tabular-nums;
+}
+
+.week-list{
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.week-row{
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--s-sm);
+  padding: var(--s-sm) 0;
+  border-top: 1px solid var(--hairline);
+}
+
+.week-row:first-child{
+  border-top: 0;
+}
+
+.week-row-main{
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  flex: 1 1 180px;
+  min-width: 0;
+  text-decoration: none;
+  color: inherit;
+}
+
+.week-row-main:hover .week-row-title,
+.week-row-main:focus-visible .week-row-title{
+  text-decoration: underline;
+}
+
+.week-row-title{
+  font-size: var(--t-meta);
+  line-height: var(--l-meta);
+  font-weight: 600;
+  color: var(--ink);
+  /* Compact list titles wrap rather than truncate — Decisions Log 2026-08-17. */
+  overflow-wrap: anywhere;
+}
+
+.week-row-meta{
+  font-size: var(--t-label);
+  line-height: var(--l-label);
+  color: var(--muted-ink);
+  overflow-wrap: anywhere;
+}
+
+.week-resume{
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s-xs);
+  min-height: 36px;
+  padding: 0 var(--s-sm);
+  border: 1px solid var(--hairline);
+  border-radius: var(--r-control);
+  background: var(--surface);
+  color: var(--teal-700);
+  font-size: var(--t-label);
+  line-height: var(--l-label);
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.week-resume:hover{
+  border-color: var(--teal-500);
+}
+
+.week-more{
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s-xs);
+  min-height: 36px;
+  margin-top: var(--s-xs);
+  color: var(--teal-700);
+  font-size: var(--t-meta);
+  line-height: var(--l-meta);
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.week-more:hover{
+  text-decoration: underline;
+}
+
+.week-empty{
+  margin: 0;
+  padding: var(--s-md);
+  background: var(--surface-sunk);
+  border: 1px solid var(--hairline);
+  border-radius: var(--r-control);
+  font-size: var(--t-meta);
+  line-height: var(--l-meta);
+  color: var(--muted-ink);
+}
+
+@media (min-width: 860px){
+  .week{
+    padding: var(--s-lg);
+  }
+}
+/* ===== home-proof ===== */
+/* ===================================================================
+   Home — Proof growing  (.proofp-*)  and  Opportunity signal (.oppsig-*)
+   ===================================================================
+   Two Home panels that answer two different questions: what have I already
+   proved, and what is one thing worth applying to. Both are bordered
+   surfaces, never shadowed — DESIGN.md Elevation: borders first, no shadows
+   on cards. Both stay inside the chrome palette; teal carries verification
+   and progress, and the only amber in either panel arrives inside the shared
+   deadline chip, where amber means urgency and is required rather than
+   decorative.
+
+   Every size resolves to one of the eight type tokens, every gap to the 4px
+   spacing scale. Nothing here sets a colour or a radius that is not a token.
+   =================================================================== */
+
+.proofp,
+.oppsig {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-md);
+  padding: var(--s-md);
+  background: var(--surface);
+  border: 1px solid var(--hairline);
+  border-radius: var(--r-card);
+}
+
+/* -------------------------------------------------------------------
+   Shared panel header: title left, one link out right. The link wraps
+   under the title rather than squeezing it, so a long Burmese section
+   title never truncates on a 390px phone.
+   ------------------------------------------------------------------- */
+
+.proofp-head,
+.oppsig-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--s-sm);
+  min-width: 0;
+}
+
+.proofp-head h2,
+.oppsig-head h2 {
+  margin: 0;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: var(--s-sm);
+  font-size: var(--t-h2);
+  line-height: var(--l-h2);
+  letter-spacing: var(--k-h2);
+  font-weight: 700;
+  color: var(--ink);
+  overflow-wrap: anywhere;
+}
+
+.proofp-head h2 > svg {
+  flex: none;
+  color: var(--teal-700);
+}
+
+.proofp-link,
+.oppsig-link {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s-xs);
+  font-size: var(--t-meta);
+  line-height: var(--l-meta);
+  font-weight: 600;
+  color: var(--teal-700);
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.proofp-link:hover,
+.oppsig-link:hover {
+  text-decoration: underline;
+}
+
+.proofp-link > svg,
+.oppsig-link > svg {
+  flex: none;
+}
+
+/* ===================================================================
+   Proof growing
+   =================================================================== */
+
+/* Verified competencies. Teal, because teal means direction and completion
+   and these are things the learner's reviewed proof already carries. Rule 8:
+   on --teal-100 the text is --teal-900, never --muted-ink. */
+.proofp-chips {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s-sm);
+  min-width: 0;
+}
+
+.proofp-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s-xs);
+  max-width: 100%;
+  padding: 3px 10px;
+  background: var(--teal-100);
+  border-radius: var(--r-chip);
+  font-size: var(--t-label);
+  line-height: var(--l-label);
+  letter-spacing: 0.08em;
+  font-weight: 600;
+  color: var(--teal-900);
+  overflow-wrap: anywhere;
+}
+
+.proofp-chip > svg {
+  flex: none;
+}
+
+/* No proof yet is a fact the panel states, not a row it fills. */
+.proofp-empty {
+  margin: 0;
+  padding: var(--s-sm) var(--s-md);
+  background: var(--surface-sunk);
+  border-radius: var(--r-control);
+  font-size: var(--t-meta);
+  line-height: var(--l-meta);
+  color: var(--muted-ink);
+}
+
+/* The score line. The traveller stands beside the number rather than above
+   it, so the panel reads as one row instead of stacking two graphics. */
+.proofp-score {
+  display: flex;
+  align-items: center;
+  gap: var(--s-md);
+  min-width: 0;
+  padding-top: var(--s-sm);
+  border-top: 1px solid var(--hairline);
+}
+
+.proofp-score > img {
+  flex: none;
+}
+
+.proofp-figures {
+  margin: 0;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-2xs);
+}
+
+.proofp-points {
+  font-size: var(--t-h2);
+  line-height: var(--l-h2);
+  letter-spacing: var(--k-h2);
+  font-weight: 700;
+  color: var(--ink);
+  font-variant-numeric: tabular-nums;
+  overflow-wrap: anywhere;
+}
+
+.proofp-level {
+  font-size: var(--t-meta);
+  line-height: var(--l-meta);
+  font-weight: 600;
+  color: var(--teal-700);
+  overflow-wrap: anywhere;
+}
+
+.proofp-body {
+  margin: 0;
+  font-size: var(--t-meta);
+  line-height: var(--l-meta);
+  color: var(--muted-ink);
+  overflow-wrap: anywhere;
+}
+
+/* Burmese heading tracking is zero — negative tracking damages Myanmar
+   letterforms — and Burmese labels are never letterspaced. */
+html[lang="my"] .proofp-head h2,
+html[lang="my"] .proofp-points,
+html[lang="my"] .oppsig-head h2,
+html[lang="my"] .oppsig-title {
+  letter-spacing: 0;
+}
+
+html[lang="my"] .proofp-chip,
+html[lang="my"] .oppsig-chip,
+html[lang="my"] .oppsig-skills-head {
+  letter-spacing: 0;
+}
+
+/* ===================================================================
+   Opportunity signal
+   =================================================================== */
+
+.oppsig-empty {
+  margin: 0;
+  padding: var(--s-sm) var(--s-md);
+  background: var(--surface-sunk);
+  border-radius: var(--r-control);
+  font-size: var(--t-meta);
+  line-height: var(--l-meta);
+  color: var(--muted-ink);
+}
+
+.oppsig-item {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--s-md);
+  min-width: 0;
+}
+
+.oppsig-mark {
+  flex: none;
+}
+
+/* Each partner mark keeps its own ground rather than being recoloured onto a
+   shared tile, which would mean altering somebody's official mark. */
+.oppsig-logo {
+  display: grid;
+  place-items: center;
+  width: 64px;
+  height: 48px;
+  padding: 5px 7px;
+  border-radius: var(--r-control);
+  border: 1px solid var(--hairline);
+}
+
+/* The embassy seal is drawn on white, so its tile is white — not a surface
+   token that could follow a theme away from the artwork's own ground. */
+.oppsig-logo.light {
+  background: #fff;
+}
+
+.oppsig-logo.dark {
+  background: var(--navy-900);
+  border-color: var(--navy-900);
+}
+
+.oppsig-logo img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+/* Category mark, for every organisation that is not a named partner.
+   `.category-art` sets the teal fill and centres the glyph; the size is the
+   caller's, so it matches the partner tile exactly. */
+.oppsig-art {
+  width: 64px;
+  height: 48px;
+  border-radius: var(--r-control);
+  border: 1px solid var(--hairline);
+}
+
+/* Both classes, so this beats `.category-art > svg` regardless of which
+   stylesheet the bundler emits first. */
+.oppsig-art.category-art > svg {
+  width: 42%;
+}
+
+.oppsig-body {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-xs);
+}
+
+.oppsig-title {
+  margin: 0;
+  font-size: var(--t-title);
+  line-height: var(--l-title);
+  letter-spacing: var(--k-title);
+  font-weight: 600;
+  color: var(--ink);
+  overflow-wrap: anywhere;
+}
+
+.oppsig-org {
+  margin: 0;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--s-xs) var(--s-sm);
+  min-width: 0;
+  font-size: var(--t-meta);
+  line-height: var(--l-meta);
+  color: var(--muted-ink);
+  overflow-wrap: anywhere;
+}
+
+.oppsig-loc {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s-xs);
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.oppsig-loc > svg {
+  flex: none;
+}
+
+/* A heading with a count, the same shape the roadmap catalog uses. The count
+   is `supported.length` and nothing else, so the panel cannot overstate the
+   match: there is no score here to inflate. */
+.oppsig-skills-head {
+  margin: var(--s-sm) 0 0;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--s-sm);
+  min-width: 0;
+  font-size: var(--t-label);
+  line-height: var(--l-label);
+  letter-spacing: 0.08em;
+  font-weight: 600;
+  text-transform: uppercase;
+  color: var(--muted-ink);
+  overflow-wrap: anywhere;
+}
+
+.oppsig-count {
+  font-variant-numeric: tabular-nums;
+  color: var(--ink);
+}
+
+.oppsig-chips {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s-sm);
+  min-width: 0;
+}
+
+.oppsig-chip {
+  max-width: 100%;
+  padding: 3px 10px;
+  background: var(--teal-050);
+  border: 1px solid var(--hairline);
+  border-radius: var(--r-chip);
+  font-size: var(--t-label);
+  line-height: var(--l-label);
+  letter-spacing: 0.08em;
+  font-weight: 600;
+  color: var(--teal-900);
+  overflow-wrap: anywhere;
+}
+
+/* An empty evidence array says so. This is the same honesty rule the
+   featured row keeps: a card that goes quiet about what it does not have is
+   a match score wearing a disguise. */
+.oppsig-none {
+  margin: 0;
+  font-size: var(--t-meta);
+  line-height: var(--l-meta);
+  color: var(--muted-ink);
+}
+
+.oppsig-when {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s-sm);
+  margin-top: var(--s-sm);
+  min-width: 0;
+}
+
+/* Phones. The mark drops above the text so a 64px tile plus a long
+   organisation name never forces the panel wider than the viewport. */
+@media (max-width: 420px) {
+  .proofp,
+  .oppsig {
+    padding: 14px;
+    gap: 14px;
+  }
+
+  .oppsig-item {
+    flex-direction: column;
+    gap: var(--s-sm);
+  }
+}
+
+/* ===================================================================
+   Sidebar — dark navy shell
+   ===================================================================
+   The navigation is chrome; the canvas is work. They were the same near-white
+   separated by a hairline, so the shell had no edge. The fill is a blend of
+   two tokens the palette already defines (--navy-900 into --navy-700), which
+   is where the founder's reference colour sits, so no new colour enters the
+   system.
+
+   Every value the sidebar paints is declared here as a scoped token. Flipping
+   a background without restating the ink on it is exactly how this project
+   once shipped a screen of invisible headings; nothing below inherits a
+   light-canvas token by accident.
+   =================================================================== */
+
+.app-sidebar {
+  --nav-ink: #e8eef7;
+  --nav-muted: #97a6c0;
+  --nav-hairline: rgb(255 255 255 / 0.10);
+  --nav-hover-bg: rgb(255 255 255 / 0.06);
+  --nav-active-bg: rgb(255 255 255 / 0.11);
+  --nav-active-ink: #ffffff;
+
+  background: linear-gradient(158deg, var(--navy-900) 0%, var(--navy-700) 100%);
+  border-right: 1px solid var(--nav-hairline);
+  color: var(--nav-ink);
+}
+
+.app-sidebar .sidebar-header { border-bottom-color: var(--nav-hairline); }
+.app-sidebar .sidebar-footer { border-top-color: var(--nav-hairline); }
+
+.app-sidebar .app-brand strong,
+.app-sidebar .sidebar-brand-copy strong { color: var(--nav-ink); }
+
+.app-sidebar .sidebar-group-label { color: var(--nav-muted); }
+
+.app-sidebar .sidebar-trigger { color: var(--nav-muted); }
+.app-sidebar .sidebar-trigger:hover {
+  color: var(--nav-active-ink);
+  background: var(--nav-hover-bg);
+  border-color: var(--nav-hairline);
+}
+
+.app-sidebar .sidebar-menu-button > a { color: var(--nav-muted); }
+.app-sidebar .sidebar-menu-button > a:hover {
+  color: var(--nav-active-ink);
+  background: var(--nav-hover-bg);
+}
+.app-sidebar .sidebar-menu-button[data-active] > a,
+.app-sidebar .sidebar-menu-button[data-active="true"] > a {
+  color: var(--nav-active-ink);
+  background: var(--nav-active-bg);
+}
+/* Teal finally has something to read against. On white it was doing the work
+   of an accent with none of the contrast. */
+.app-sidebar .sidebar-menu-button[data-active] > a svg,
+.app-sidebar .sidebar-menu-button[data-active="true"] > a svg { color: var(--teal-500); }
+
+.app-sidebar .sidebar-account:hover { background: var(--nav-hover-bg); }
+.app-sidebar .sidebar-account-copy strong { color: var(--nav-ink); }
+.app-sidebar .sidebar-account-copy small { color: var(--nav-muted); }
+
+.app-sidebar .sidebar-rail:hover { background: var(--nav-hover-bg); }
+
+/* The chip is a quiet note, not a call-out; it borrows the hairline rather
+   than a light surface that would punch a hole in the column. */
+.app-sidebar .update-chip {
+  background: var(--nav-hover-bg);
+  border-color: var(--nav-hairline);
+  color: var(--nav-muted);
+}
+
+.app-sidebar :focus-visible { outline-color: var(--teal-500); }
+
+/* Greeting sits above the climb card, as the page's own heading. Inside the
+   card it competed with the stage title for the same reading position. */
+.home-greeting { display: grid; gap: 2px; margin-bottom: 14px; }
+.home-greeting h1 {
+  font-size: var(--t-h1);
+  line-height: var(--l-h1);
+  letter-spacing: var(--k-h1);
+  font-weight: 700;
+  color: var(--ink);
+}
+.home-greeting p { font-size: var(--t-meta); color: var(--muted-ink); }
+
+/* Collapsed rail: the 40px brand mark and the trigger were laid side by side
+   in a 68px column and overlapped. They stack instead. */
+.app-sidebar[data-state="collapsed"] .sidebar-header {
+  flex-direction: column;
+  height: auto;
+  gap: 6px;
+  padding: 10px 0;
+}
+.app-sidebar[data-state="collapsed"] .sidebar-brand .brand-mark,
+.app-sidebar[data-state="collapsed"] .app-brand .brand-mark { width: 32px; height: 32px; flex-basis: 32px; }

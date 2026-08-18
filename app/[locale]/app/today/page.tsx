@@ -1,67 +1,121 @@
-import { ArrowRight, BriefcaseBusiness, Clock3, Compass, Map } from "lucide-react";
 import { Link } from "@/i18n/navigation";
+import { Compass } from "lucide-react";
 import { requireUser } from "@/lib/auth";
-import { DeadlineChip } from "@/components/app/deadline-chip";
-import { LevelMeter } from "@/components/app/level-meter";
 import { LevelUpMoment } from "@/components/app/level-up-moment";
 import { ChangelogRail } from "@/components/app/changelog-rail";
+import { TodaysClimb } from "@/components/home/todays-climb";
+import { MomentumTrack } from "@/components/home/momentum-track";
+import { ThisWeek } from "@/components/home/this-week";
+import { ProofPanel } from "@/components/home/proof-panel";
+import { OpportunitySignal } from "@/components/home/opportunity-signal";
 import { getReleases } from "@/lib/domain/changelog";
 import { localizeLevel, resolveProgress } from "@/lib/domain/progress";
-import { toMyanmarDigits } from "@/lib/domain/deadlines";
-import { getActivePathDashboard, getOpportunities, getRoadmap } from "@/lib/data/app-data";
+import { byDeadlineAscending, getDeadlineStatus, toMyanmarDigits } from "@/lib/domain/deadlines";
+import { getActivePathDashboard, getOpportunities, getProfile, getProofItems, getRoadmap } from "@/lib/data/app-data";
 import { getAppCopy, localizeCareerTerm, localizeOpportunity, localizeRoadmapMilestone } from "@/lib/i18n/app-copy";
-
 export default async function TodayPage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
-  await requireUser(locale);
-  const [dashboard, opportunities] = await Promise.all([getActivePathDashboard(), getOpportunities()]);
+  const user = await requireUser(locale);
+  const [dashboard, opportunities, profile, proofItems] = await Promise.all([
+    getActivePathDashboard(),
+    getOpportunities(),
+    getProfile(user.id),
+    getProofItems(),
+  ]);
   const c = getAppCopy(locale);
   const path = dashboard.activePath;
   const mission = dashboard.nextMission;
+  const my = locale === "my";
+  const num = (value: number) => (my ? toMyanmarDigits(value) : String(value));
+
+  // The character follows the account. Home is the screen a learner opens most,
+  // so a hardcoded figure here would quietly undo the choice they made.
+  const alias = profile?.alias ?? "Learner";
+  const mascotVariant = profile?.avatar ?? "traveller";
+
+  // Time of day in the reader's timezone, not the server's. Vercel runs UTC;
+  // greeting a learner in Yangon "good morning" at 7pm would be a small lie
+  // told every evening.
+  const yangonHour = Number(
+    new Intl.DateTimeFormat("en-GB", { hour: "2-digit", hour12: false, timeZone: "Asia/Yangon" }).format(new Date()),
+  );
+  const greetingTemplate =
+    yangonHour < 12 ? c.home.greetingMorning : yangonHour < 17 ? c.home.greetingAfternoon : c.home.greetingEvening;
+  const greeting = greetingTemplate.replace("{name}", alias);
 
   if (!path || !mission) {
-    return <div className="app-page home-page"><section className="empty-path-state panel"><Compass size={24} aria-hidden="true" /><h1>{c.today.emptyTitle}</h1><p>{c.today.emptyBody}</p><Link className="button primary" href="/onboarding">{c.today.openCompass}</Link></section></div>;
+    return (
+      <div className="app-page home-page">
+        <section className="empty-path-state panel">
+          <Compass size={24} aria-hidden="true" />
+          <h1>{c.today.emptyTitle}</h1>
+          <p>{c.today.emptyBody}</p>
+          <Link className="button primary" href="/onboarding">{c.today.openCompass}</Link>
+        </section>
+      </div>
+    );
   }
 
   const roadmap = (await getRoadmap(path.key)).map((stage) => localizeRoadmapMilestone(locale, stage));
   const pathTitle = localizeCareerTerm(locale, path.key, path.title);
-  const missionTitle = localizeCareerTerm(locale, mission.key, mission.title);
-  const nextStages = roadmap.filter((stage) => stage.status !== "complete").slice(0, 3);
+  const nextStages = roadmap.filter((stage) => stage.status !== "complete");
   // Lead with the stage the learner is actually on. The controlled pilot has a
   // single authored mission attached to stage 1, so naming the mission here made
   // Home claim "Three-piece awareness campaign" while the roadmap and the list
   // below both said "Mobile production". The stage is the shared truth across
   // every surface; the mission is context under it.
   const currentStage = nextStages.find((stage) => stage.status === "active") ?? nextStages[0];
-  const nearbyOpportunities = opportunities.slice(0, 3).map((item) => localizeOpportunity(locale, item));
 
-  // The XP ledger has existed since 2026-08-13 and the dashboard has always
-  // returned a summed `xp`; nothing rendered it, and the RPC's own `level` is a
-  // flat xp/100 ladder with no evidence gate. The real ladder is resolved here.
   const progress = resolveProgress(dashboard.xp, {
     completedMissions: dashboard.completedMilestones,
     verifiedCount: dashboard.verifiedCount,
     stagesTouched: roadmap.filter((stage) => stage.status === "complete").length,
   });
 
+  const localizedOpportunities = opportunities.map((item) => localizeOpportunity(locale, item));
+  // Seven days is the window the panel claims, so the filter has to enforce it
+  // rather than trusting the ordering to be close enough.
+  const closingThisWeek = localizedOpportunities
+    .filter((item) => {
+      const { urgency } = getDeadlineStatus(item.deadline);
+      return urgency === "today" || urgency === "tomorrow" || urgency === "soon";
+    })
+    .sort(byDeadlineAscending)
+    .map((item) => ({ id: item.id, title: item.title, organization: item.organization, deadline: item.deadline }));
+
+  const paused = dashboard.pausedWork.map((work) => ({
+    missionKey: work.missionKey,
+    missionTitle: localizeCareerTerm(locale, work.missionKey, work.missionTitle),
+    pathTitle: localizeCareerTerm(locale, work.pathKey, work.pathTitle),
+  }));
+
+  // Competencies come from proof that is actually still standing. An
+  // invalidated record is not evidence, so it does not get to add a chip.
+  const competencies = [...new Set(proofItems.filter((item) => item.state === "active").flatMap((item) => item.competencies))];
+
+  // One submission, not yet verified, is one proof in progress. Anything more
+  // specific than that is not recorded.
+  const inProgressCount = mission.submissionState && mission.submissionState !== "verified" ? 1 : 0;
+
   return (
     <div className="app-page home-page">
-      <section className="home-heading">
-        <div>
-          <h1>{locale === "my" ? "ပြန်လည်ကြိုဆိုပါတယ်။" : "Welcome back."}</h1>
-          <p>{pathTitle} · {locale === "my" ? "ယနေ့ နောက်တစ်ဆင့်ကို ဆက်လုပ်ပါ" : "continue with one useful next step"}</p>
-        </div>
-        <dl className="home-stats">
-          <div><dd>{dashboard.completedMilestones}/{dashboard.totalMilestones}</dd><dt>{locale === "my" ? "ပြီးစီးသောအဆင့်" : "Milestones"}</dt></div>
-          <div><dd>{dashboard.progressPercent}%</dd><dt>{locale === "my" ? "တိုးတက်မှု" : "Complete"}</dt></div>
-        </dl>
-      </section>
+      <header className="home-greeting">
+        <h1>{greeting}</h1>
+        <p>{c.home.subtitle}</p>
+      </header>
 
-      {/* First element after the greeting: "where am I" is Home's whole job,
-          and a level with its gates answers it better than a bare XP figure
-          did. The raw number moved out of the stats row because a count with
-          no ladder beside it invites "out of what?" and answers nothing. */}
-      <LevelMeter progress={progress} locale={locale} pathTitle={pathTitle} />
+      <TodaysClimb
+        locale={locale}
+        mascotVariant={mascotVariant}
+        pathTitle={pathTitle}
+        missionTitle={currentStage ? currentStage.title : null}
+        missionBrief={currentStage ? currentStage.proof : null}
+        stageIndex={currentStage ? currentStage.order : 0}
+        stageTotal={roadmap.length}
+        missionHref="/app/build"
+        pointsAward={100}
+        labels={{ ...c.home.climb, subtitle: c.home.subtitle }}
+      />
 
       {/* Fires once per promotion, tracked per path in localStorage. A first
           visit only records the baseline, so a learner opening the app on a
@@ -74,7 +128,7 @@ export default async function TodayPage({ params }: { params: Promise<{ locale: 
         levelName={localizeLevel(locale, progress.level)}
         pathTitle={pathTitle}
         satisfied={
-          locale === "my"
+          my
             ? [`အမှတ် ${toMyanmarDigits(progress.level.minXp)} ကျော်လွန်ပြီး`, progress.level.gate({
               completedMissions: dashboard.completedMilestones,
               verifiedCount: dashboard.verifiedCount,
@@ -86,12 +140,12 @@ export default async function TodayPage({ params }: { params: Promise<{ locale: 
               stagesTouched: roadmap.filter((stage) => stage.status === "complete").length,
             }).en]
         }
-        labels={locale === "my" ? {
+        labels={my ? {
           reached: "{level} အဆင့်သို့ ရောက်ရှိပြီ",
           subtitle: "{path} တွင် အဆင့် {n} / ၅",
           earnedLead: "ဖြည့်ဆည်းပြီးသည်များ",
-          dismiss: "ဆက်လက်လုပ်ဆောင်မည်",
-          honesty: "အဆင့်များသည် Lan Pya အတွင်း တိုးတက်မှုကို ဖော်ပြသည်။ အလုပ်အကိုင် ရရှိနိုင်မှုကို မဆိုလိုပါ။",
+          dismiss: "ဆက်လုပ်မည်",
+          honesty: "အဆင့်များသည် Lan Pya အတွင်းရှိ တိုးတက်မှုကို ဖော်ပြသည်။ အလုပ်ရနိုင်သည်ဟု မဆိုလိုပါ။",
           close: "ပိတ်မည်",
         } : {
           reached: "You reached {level}",
@@ -103,36 +157,45 @@ export default async function TodayPage({ params }: { params: Promise<{ locale: 
         }}
       />
 
-      <section className="continue-panel">
-        <div className="continue-copy">
-          <span>{locale === "my" ? "ရပ်ထားသည့်နေရာမှ ဆက်လုပ်မည်" : "Continue where you left off"}</span>
-          <h2>{currentStage ? currentStage.title : missionTitle}</h2>
-          <p>{pathTitle} · {currentStage ? `${c.roadmap.step} ${currentStage.order}/${roadmap.length}` : missionTitle} · {mission.workState === "active" ? c.build.inProgress : c.build.available}</p>
-          <div className="continue-progress" role="progressbar" aria-valuemin={0} aria-valuemax={100} aria-valuenow={dashboard.progressPercent}><span style={{ width: `${dashboard.progressPercent}%` }} /></div>
-          <small>{dashboard.completedMilestones} {locale === "my" ? "အဆင့် ပြီးစီး" : "milestones complete"}</small>
-        </div>
-        <Link className="button gold" href="/app/build">{locale === "my" ? "ဆက်လုပ်မည်" : "Continue"}<ArrowRight size={16} aria-hidden="true" /></Link>
-      </section>
+      <MomentumTrack
+        locale={locale}
+        completedMilestones={dashboard.completedMilestones}
+        verifiedCount={dashboard.verifiedCount}
+        inProgressCount={inProgressCount}
+        labels={{
+          ...c.home.momentum,
+          summary: c.home.momentum.summary
+            .replace("{a}", num(dashboard.completedMilestones))
+            .replace("{b}", num(inProgressCount)),
+        }}
+      />
 
       <div className="home-grid">
-        <section className="home-section path-ahead">
-          <header><div><Map size={18} aria-hidden="true" /><h2>{locale === "my" ? "ရှေ့ဆက်ရမည့်လမ်း" : "Your path ahead"}</h2></div><Link href={`/app/roadmap?track=${path.key}`}>{locale === "my" ? "လမ်းပြမြေပုံဖွင့်မည်" : "Open roadmap"}</Link></header>
-          <div className="home-list">
-            {/* Every stage in this list is incomplete by construction, so a check mark
-                never belongs here. The active stage is marked by the "current" class,
-                and each row shows its real position on the roadmap rather than its
-                index in this slice of three. */}
-            {nextStages.map((stage) => <Link className={stage.status === "active" ? "current" : ""} href={`/app/roadmap?track=${path.key}#milestone-${stage.key}`} key={stage.key}><span className="home-step">{stage.order}</span><span><strong>{stage.title}</strong><small>{stage.proof}</small></span><ArrowRight size={15} aria-hidden="true" /></Link>)}
-          </div>
-        </section>
+        <ThisWeek locale={locale} closing={closingThisWeek} paused={paused} labels={c.home.week} />
 
-        <ChangelogRail releases={getReleases()} locale={locale} />
-
-        <section className="home-section deadlines">
-          <header><div><BriefcaseBusiness size={18} aria-hidden="true" /><h2>{locale === "my" ? "သင့်အတွက် သတ်မှတ်ရက်များ" : "Deadlines for you"}</h2></div><Link href="/app/opportunities">{locale === "my" ? "အားလုံးကြည့်မည်" : "See all"}</Link></header>
-          {nearbyOpportunities.length ? <div className="home-list">{nearbyOpportunities.map((item) => <Link href="/app/opportunities" key={item.id}><span className="deadline-icon"><Clock3 size={15} aria-hidden="true" /></span><span><strong>{item.title}</strong><small>{item.type}</small><DeadlineChip locale={locale} deadline={item.deadline} showIcon={false} /></span><ArrowRight size={15} aria-hidden="true" /></Link>)}</div> : <p className="home-empty">{c.opportunities.emptyBody}</p>}
-        </section>
+        <div className="home-side">
+          <ProofPanel
+            locale={locale}
+            competencies={competencies}
+            points={progress.xp}
+            levelName={localizeLevel(locale, progress.level)}
+            mascotVariant={mascotVariant}
+            labels={c.home.proof}
+          />
+          <OpportunitySignal
+            locale={locale}
+            item={localizedOpportunities[0] ?? null}
+            labels={c.home.signal}
+          />
+        </div>
       </div>
+
+      <ChangelogRail releases={getReleases()} locale={locale} />
+
+      <aside className="home-note">
+        <Compass size={16} aria-hidden="true" />
+        <p>{c.home.note}</p>
+      </aside>
     </div>
   );
 }
