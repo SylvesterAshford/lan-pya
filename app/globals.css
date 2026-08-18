@@ -8093,6 +8093,15 @@ html[lang="my"] .app-page .mission-title h1 {
 
 .mission-section { margin-top: var(--s-xl); }
 
+/* The level strip below is a floating pill, not a full-width block, so the
+   last completed badge and the strip otherwise run together with nothing
+   between them. This closes the list with the same hairline the rows use. */
+.mission-section-closing {
+  padding-bottom: var(--s-lg);
+  border-bottom: 1px solid var(--hairline);
+  margin-bottom: var(--s-lg);
+}
+
 .mission-row {
   display: grid;
   grid-template-columns: auto 1fr auto auto;
