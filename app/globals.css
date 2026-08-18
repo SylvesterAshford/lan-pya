@@ -10235,16 +10235,19 @@ html[lang="my"] .profile-section-label { text-transform: none; letter-spacing: 0
    ============================================================ */
 
 .climb {
+  position: relative;
   display: grid;
-  grid-template-columns: minmax(0, 1.02fr) minmax(0, 0.98fr);
+  /* The copy owns the left half; the scene is painted behind the whole card
+     and bleeds off the right edge, so the second column is empty space the
+     illustration shows through. */
+  grid-template-columns: minmax(0, 1fr) minmax(0, 0.92fr);
   align-items: center;
   gap: var(--s-xl);
   overflow: hidden;
   padding: var(--s-xl) var(--s-lg);
-  background: var(--navy-900);
-  /* Borders first, no shadows: DESIGN.md elevation. The hairline is a lit
-     top edge rather than a full outline, which is what separates the panel
-     from the canvas without drawing a box around it. */
+  /* Deeper than flat navy-900: the reference card is lit from the right,
+     where the illustration is. */
+  background: linear-gradient(100deg, var(--navy-900) 0%, #101a30 46%, #16233f 100%);
   border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: var(--r-card);
 }
@@ -10399,14 +10402,33 @@ html[lang="my"] .profile-section-label { text-transform: none; letter-spacing: 0
    full-bleed scene would turn half the panel into a bright rectangle; a
    bounded tile reads as an illustration the panel is holding. */
 
+/* Full bleed to the card's right edge. As an inset tile it read as a bright
+   rectangle pasted onto a near-black panel; bled and faded into the navy it
+   reads as one illustration the card is made of. */
 .climb-scene {
-  position: relative;
-  aspect-ratio: 460 / 320;
-  width: 100%;
+  position: absolute;
+  inset: 0 0 0 auto;
+  z-index: 0;
+  width: 62%;
   overflow: hidden;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: var(--r-card);
+  border: 0;
+  border-radius: 0;
 }
+
+/* The seam. Without it the daylight sky meets navy on a hard vertical line. */
+.climb-scene::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background:
+    linear-gradient(90deg, #101a30 0%, rgb(16 26 48 / 0.92) 12%, rgb(16 26 48 / 0.35) 34%, transparent 58%),
+    linear-gradient(0deg, rgb(16 26 48 / 0.55) 0%, transparent 26%);
+  pointer-events: none;
+}
+
+/* Copy sits above the artwork. */
+.climb-copy { position: relative; z-index: 2; }
 
 .climb-scene-art {
   display: block;
@@ -11415,3 +11437,77 @@ html[lang="my"] .oppsig-skills-head {
 }
 .app-sidebar[data-state="collapsed"] .sidebar-brand .brand-mark,
 .app-sidebar[data-state="collapsed"] .app-brand .brand-mark { width: 32px; height: 32px; flex-basis: 32px; }
+
+/* ===================================================================
+   Mobile navigation drawer
+   ===================================================================
+   The drawer replaced the bottom tab bar rather than joining it. Five
+   destinations in two places puts each one in the tab order twice and reads
+   each out twice; the sidebar used not to render on phones for exactly that
+   reason, so the bar went when the drawer arrived.
+   =================================================================== */
+
+.mobile-nav-trigger {
+  display: none;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  flex: none;
+  color: var(--ink);
+  background: transparent;
+  border: 1px solid var(--hairline);
+  border-radius: var(--r-control);
+  cursor: pointer;
+}
+.mobile-nav-trigger:hover { background: var(--surface-sunk); }
+.mobile-nav-trigger:focus-visible { outline: 2px solid var(--teal-700); outline-offset: 2px; }
+
+@media (max-width: 860px) {
+  .mobile-nav-trigger { display: grid; }
+
+  /* Off canvas until opened. Transform rather than display so it slides, and
+     so the closed state keeps its size for the animation. */
+  .app-sidebar[data-mobile="true"] {
+    position: fixed;
+    z-index: 60;
+    inset: 0 auto 0 0;
+    width: min(84vw, 300px);
+    height: 100svh;
+    transform: translateX(-100%);
+    transition: transform 220ms ease-in-out;
+  }
+  .app-sidebar[data-mobile="true"][data-state="expanded"] { transform: translateX(0); }
+
+  .sidebar-scrim {
+    position: fixed;
+    inset: 0;
+    z-index: 55;
+    background: rgb(8 13 24 / 0.45);
+  }
+
+  /* The bar the trigger sits in has to clear the drawer's own layer. */
+  .app-mobile-bar { position: relative; z-index: 50; gap: 10px; }
+
+  /* The bottom bar is gone, so the page no longer reserves room for it. */
+  .app-workspace .app-page { padding-bottom: 32px; }
+  .app-bottom-nav { display: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .app-sidebar[data-mobile="true"] { transition: none; }
+}
+
+/* The drawer's own close control. On desktop this button collapses the rail;
+   on a phone it dismisses the drawer, so it has to be reachable inside it. */
+@media (max-width: 860px) {
+  .app-sidebar[data-mobile="true"] .sidebar-trigger {
+    display: grid;
+    place-items: center;
+    margin-left: auto;
+    color: var(--nav-muted);
+  }
+  .app-sidebar[data-mobile="true"] .sidebar-trigger:hover {
+    color: var(--nav-active-ink);
+    background: var(--nav-hover-bg);
+  }
+}

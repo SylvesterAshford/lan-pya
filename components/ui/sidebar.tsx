@@ -11,7 +11,7 @@ import {
   type ButtonHTMLAttributes,
   type HTMLAttributes,
 } from "react";
-import { PanelLeft } from "lucide-react";
+import { PanelLeft, X } from "lucide-react";
 
 /**
  * Sidebar primitives, restored from the pre-2026-08-13 shell.
@@ -54,8 +54,11 @@ function useIsMobile() {
 type SidebarContextValue = {
   open: boolean;
   isMobile: boolean;
+  /** Drawer state on phones. Separate from `open`, which is the desktop rail. */
+  mobileOpen: boolean;
   setOpen: (open: boolean) => void;
   toggleSidebar: () => void;
+  closeMobile: () => void;
 };
 
 const SidebarContext = createContext<SidebarContextValue | null>(null);
@@ -68,9 +71,32 @@ export function useSidebar() {
 
 export function SidebarProvider({ children, defaultOpen = true }: { children: React.ReactNode; defaultOpen?: boolean }) {
   const [open, setOpen] = useState(defaultOpen);
+  // The drawer is its own state, not the rail's. A phone arriving with the
+  // desktop default would open the drawer over the page on every load, and
+  // syncing one state to the viewport would mean setting state from an effect,
+  // which this file exists to avoid.
+  const [mobileOpen, setMobileOpen] = useState(false);
   const isMobile = useIsMobile();
 
-  const toggleSidebar = useCallback(() => setOpen((value) => !value), []);
+  const toggleSidebar = useCallback(
+    () => (isMobile ? setMobileOpen((value) => !value) : setOpen((value) => !value)),
+    [isMobile],
+  );
+  const closeMobile = useCallback(() => setMobileOpen(false), []);
+
+  // Escape closes the drawer, and the page underneath does not scroll while it
+  // is open.
+  useEffect(() => {
+    if (!isMobile || !mobileOpen) return;
+    const onKey = (event: KeyboardEvent) => { if (event.key === "Escape") setMobileOpen(false); };
+    window.addEventListener("keydown", onKey);
+    const previous = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      window.removeEventListener("keydown", onKey);
+      document.body.style.overflow = previous;
+    };
+  }, [isMobile, mobileOpen]);
 
   // Cmd/Ctrl+B collapses the rail, the shortcut the original shipped with.
   useEffect(() => {
@@ -85,8 +111,8 @@ export function SidebarProvider({ children, defaultOpen = true }: { children: Re
   }, [toggleSidebar]);
 
   const value = useMemo(
-    () => ({ open, isMobile, setOpen, toggleSidebar }),
-    [open, isMobile, toggleSidebar],
+    () => ({ open, isMobile, mobileOpen, setOpen, toggleSidebar, closeMobile }),
+    [open, isMobile, mobileOpen, toggleSidebar, closeMobile],
   );
 
   return (
@@ -99,12 +125,29 @@ export function SidebarProvider({ children, defaultOpen = true }: { children: Re
 }
 
 export function Sidebar({ children, ...props }: HTMLAttributes<HTMLElement>) {
-  const { isMobile, open } = useSidebar();
+  const { isMobile, open, mobileOpen, closeMobile } = useSidebar();
 
-  // Not rendered at all on phones. Hiding it with CSS would leave five extra
-  // links in the tab order and read out twice to a screen reader, since the
-  // bottom bar carries the same destinations.
-  if (isMobile) return null;
+  // On a phone this is the navigation, not a second copy of it: the bottom bar
+  // was removed when the drawer landed, so the same five destinations are never
+  // in the tab order twice.
+  if (isMobile) {
+    return (
+      <>
+        {mobileOpen ? <div className="sidebar-scrim" onClick={closeMobile} aria-hidden="true" /> : null}
+        <aside
+          {...props}
+          className={`app-sidebar${props.className ? ` ${props.className}` : ""}`}
+          data-mobile="true"
+          data-state={mobileOpen ? "expanded" : "collapsed"}
+          // Hidden from assistive tech and from the tab order while closed;
+          // an off-screen drawer you can still tab into is a trap.
+          inert={mobileOpen ? undefined : true}
+        >
+          {children}
+        </aside>
+      </>
+    );
+  }
 
   return (
     <aside
@@ -154,18 +197,22 @@ export function SidebarInset(props: HTMLAttributes<HTMLElement>) {
 }
 
 export function SidebarTrigger({ className, ...props }: ButtonHTMLAttributes<HTMLButtonElement>) {
-  const { open, isMobile, toggleSidebar } = useSidebar();
-  if (isMobile) return null;
+  const { open, isMobile, mobileOpen, toggleSidebar } = useSidebar();
+
+  // On a phone this is the drawer's close control. A drawer you can only
+  // dismiss by guessing that the dimmed area is tappable is a drawer people
+  // get stuck in.
+  const expanded = isMobile ? mobileOpen : open;
   return (
     <button
       {...props}
       className={`sidebar-trigger${className ? ` ${className}` : ""}`}
       type="button"
-      aria-label={open ? "Collapse navigation" : "Expand navigation"}
-      aria-expanded={open}
+      aria-label={expanded ? "Collapse navigation" : "Expand navigation"}
+      aria-expanded={expanded}
       onClick={toggleSidebar}
     >
-      <PanelLeft aria-hidden="true" />
+      {isMobile ? <X aria-hidden="true" /> : <PanelLeft aria-hidden="true" />}
     </button>
   );
 }

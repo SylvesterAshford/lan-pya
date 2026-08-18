@@ -28,8 +28,12 @@ describe("AppShell", () => {
     pathname = route;
     render(<AppShell profile={DEMO_PROFILE} roles={new Set()} locale="en"><p>Page</p></AppShell>);
 
+    // One link per destination, not two. The mobile bottom bar was replaced by
+    // the navigation drawer, and the drawer reuses the same sidebar markup —
+    // so a destination appearing twice would now mean it is in the tab order
+    // twice and read out twice, which is the defect the swap removed.
     const links = screen.getAllByRole("link", { name: label });
-    expect(links).toHaveLength(2);
+    expect(links).toHaveLength(1);
     expect(links.every((link) => link.getAttribute("aria-current") === "page")).toBe(true);
   });
 
@@ -37,8 +41,8 @@ describe("AppShell", () => {
     pathname = "/en/app/today";
     render(<AppShell profile={DEMO_PROFILE} roles={new Set()} locale="en"><p>Page</p></AppShell>);
 
-    // Five destinations, rendered twice each: desktop bar and mobile bottom bar.
-    expect(screen.getAllByRole("link", { name: /Home|Roadmaps|Missions|Opportunities|Me/ })).toHaveLength(10);
+    // Five destinations, once each. One navigation, one tab stop apiece.
+    expect(screen.getAllByRole("link", { name: /Home|Roadmaps|Missions|Opportunities|Me/ })).toHaveLength(5);
     expect(screen.queryByRole("link", { name: "Build" })).not.toBeInTheDocument();
     expect(screen.queryByRole("link", { name: "Portfolio" })).not.toBeInTheDocument();
   });
@@ -47,7 +51,7 @@ describe("AppShell", () => {
     pathname = "/my/app/paths";
     render(<AppShell profile={{ ...DEMO_PROFILE, locale: "my" }} roles={new Set()} locale="my"><p>Page</p></AppShell>);
 
-    expect(screen.getAllByRole("link", { name: "လမ်းပြမြေပုံများ" })).toHaveLength(2);
+    expect(screen.getAllByRole("link", { name: "လမ်းပြမြေပုံများ" })).toHaveLength(1);
     expect(screen.queryByRole("link", { name: "Roadmaps" })).not.toBeInTheDocument();
   });
 

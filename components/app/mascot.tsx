@@ -25,13 +25,17 @@ type VariantArt = { key: MascotVariant; src: string; ratio: number; en: string; 
 /**
  * The characters a learner can pick between.
  *
- * Only variants with real artwork belong here. A picker whose options render
- * the same drawing is worse than no picker, so `traveller-f` appears the
- * moment its file does — add the entry, and the profile picker turns itself
- * on. Nothing else needs changing; the database already accepts the key.
+ * Only variants with real artwork belong here. Both are the founder's own
+ * drawings, prepared the same way — trimmed to the figure, resampled to 420px
+ * tall so the two characters draw at one scale, and encoded as WebP at about
+ * 17KB each. The picker on the profile turns itself on once there is more than
+ * one entry.
  */
 export const MASCOT_VARIANTS: VariantArt[] = [
-  { key: "traveller", src: "/art/traveller.webp", ratio: 139 / 420, en: "Traveller", my: "ခရီးသွား" },
+  // Labelled the way the founder described them. The picker shows the drawing
+  // itself, so these names are what a screen reader reads out.
+  { key: "traveller", src: "/art/traveller.webp", ratio: 139 / 420, en: "Traveller, male", my: "ခရီးသွား (အမျိုးသား)" },
+  { key: "traveller-f", src: "/art/traveller-f.webp", ratio: 132 / 420, en: "Traveller, female", my: "ခရီးသွား (အမျိုးသမီး)" },
 ];
 
 export function mascotArt(variant?: string | null): VariantArt {

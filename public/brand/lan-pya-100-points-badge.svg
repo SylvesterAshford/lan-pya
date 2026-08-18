@@ -1,0 +1,98 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 600" role="img" aria-labelledby="title desc">
+  <title id="title">Lan Pya Starter 100 Points badge</title>
+  <desc id="desc">A navy, teal and warm yellow collectible badge featuring a sunrise, mountain path, stars and the words Starter 100 Points.</desc>
+  <defs>
+    <linearGradient id="navyFace" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#17335D"/>
+      <stop offset="1" stop-color="#07162F"/>
+    </linearGradient>
+    <linearGradient id="tealMountain" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#22A699"/>
+      <stop offset="1" stop-color="#0F766E"/>
+    </linearGradient>
+    <linearGradient id="gold" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#FFD55A"/>
+      <stop offset="1" stop-color="#F59E0B"/>
+    </linearGradient>
+    <linearGradient id="rim" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#FFE18B"/>
+      <stop offset=".45" stop-color="#F59E0B"/>
+      <stop offset="1" stop-color="#B96705"/>
+    </linearGradient>
+    <filter id="shadow" x="-30%" y="-30%" width="160%" height="180%">
+      <feDropShadow dx="0" dy="16" stdDeviation="16" flood-color="#0F172A" flood-opacity=".24"/>
+    </filter>
+    <filter id="glow" x="-80%" y="-80%" width="260%" height="260%">
+      <feGaussianBlur stdDeviation="10"/>
+    </filter>
+  </defs>
+
+  <!-- Celebration sparks -->
+  <g fill="none" stroke-linecap="round">
+    <path d="M112 119 91 96M489 124l23-24M89 283H57M511 283h32M120 454l-22 23M480 454l23 23" stroke="#0F766E" stroke-width="10"/>
+    <path d="M174 73 164 43M426 73l10-30M72 374l-29 12M528 374l29 12" stroke="#F59E0B" stroke-width="9"/>
+    <circle cx="73" cy="184" r="9" fill="#F59E0B" stroke="none"/>
+    <circle cx="527" cy="184" r="9" fill="#0F766E" stroke="none"/>
+    <circle cx="172" cy="513" r="8" fill="#0F766E" stroke="none"/>
+    <circle cx="428" cy="513" r="8" fill="#F59E0B" stroke="none"/>
+  </g>
+
+  <!-- Medal -->
+  <g filter="url(#shadow)">
+    <circle cx="300" cy="286" r="222" fill="url(#rim)"/>
+    <circle cx="300" cy="286" r="207" fill="#FFF4CC"/>
+    <circle cx="300" cy="286" r="194" fill="url(#navyFace)"/>
+    <circle cx="300" cy="286" r="178" fill="none" stroke="#2A4C72" stroke-width="2" stroke-dasharray="4 13"/>
+
+    <!-- Sunrise and mountain journey -->
+    <circle cx="300" cy="176" r="54" fill="#F59E0B" opacity=".2" filter="url(#glow)"/>
+    <circle cx="300" cy="176" r="42" fill="url(#gold)"/>
+    <g stroke="#FCD56B" stroke-width="5" stroke-linecap="round">
+      <path d="M300 111V91M253 124l-14-16M347 124l14-16M237 166h-21M363 166h21"/>
+    </g>
+    <path d="m164 281 88-116 45 52 41-78 100 142Z" fill="#0A2949"/>
+    <path d="m252 165 45 52 16-31 29 34-35-21-10 18-22-25Z" fill="#DDF8F2" opacity=".88"/>
+    <path d="m338 139 100 142H290Z" fill="#0B5D63" opacity=".78"/>
+    <path d="M151 292c54-24 104-32 149-14 46 18 89 13 149-12v86H151Z" fill="url(#tealMountain)"/>
+    <path d="M292 199c-18 35-4 55 23 70 31 17 22 43-8 64-25 17-31 37-18 61" fill="none" stroke="#FFF4CC" stroke-width="12" stroke-linecap="round"/>
+    <path d="M292 199c-18 35-4 55 23 70 31 17 22 43-8 64-25 17-31 37-18 61" fill="none" stroke="#F59E0B" stroke-width="3" stroke-linecap="round" stroke-dasharray="3 12"/>
+
+    <!-- Small waypoints -->
+    <g>
+      <path d="M282 215c0-15 12-27 27-27s27 12 27 27c0 19-27 47-27 47s-27-28-27-47Z" fill="#F59E0B" stroke="#FFF4CC" stroke-width="5"/>
+      <circle cx="309" cy="215" r="8" fill="#0F172A"/>
+      <circle cx="289" cy="382" r="14" fill="#16A34A" stroke="#FFF" stroke-width="5"/>
+      <path d="m282 382 5 5 10-12" fill="none" stroke="#FFF" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+    </g>
+
+    <!-- Number panel -->
+    <path d="M162 326c42 18 88 27 138 27s96-9 138-27v111c-38 29-84 44-138 44s-100-15-138-44Z" fill="#F8FAFC"/>
+    <path d="M173 339c39 16 81 24 127 24s88-8 127-24" fill="none" stroke="#D8E6E2" stroke-width="3"/>
+    <text x="300" y="424" text-anchor="middle" fill="#0F172A" font-family="Inter,Arial,sans-serif" font-size="92" font-weight="900" letter-spacing="-5">100</text>
+    <text x="300" y="456" text-anchor="middle" fill="#0F766E" font-family="Inter,Arial,sans-serif" font-size="20" font-weight="850" letter-spacing="5">POINTS</text>
+  </g>
+
+  <!-- Starter ribbon -->
+  <g filter="url(#shadow)">
+    <path d="M128 457h344l-35 48H163Z" fill="url(#gold)"/>
+    <path d="m128 457-49 21 42 53 42-26Z" fill="#C97406"/>
+    <path d="m472 457 49 21-42 53-42-26Z" fill="#C97406"/>
+    <path d="m128 457 35 48-42 26 7-46Z" fill="#9F5704"/>
+    <path d="m472 457-35 48 42 26-7-46Z" fill="#9F5704"/>
+    <text x="300" y="491" text-anchor="middle" fill="#0F172A" font-family="Inter,Arial,sans-serif" font-size="25" font-weight="900" letter-spacing="4">STARTER</text>
+  </g>
+
+  <!-- Collectible stars -->
+  <g fill="#FFF4CC" stroke="#F59E0B" stroke-width="4">
+    <path d="m127 250 8 16 18 3-13 13 3 18-16-9-16 9 3-18-13-13 18-3Z"/>
+    <path d="m473 250 8 16 18 3-13 13 3 18-16-9-16 9 3-18-13-13 18-3Z"/>
+  </g>
+
+  <!-- Lan Pya mini mark -->
+  <g transform="translate(266 520) scale(.85)">
+    <rect width="80" height="54" rx="18" fill="#0F172A" stroke="#FFE18B" stroke-width="3"/>
+    <path d="M13 11h13v24c0 5 3 7 8 7h27v8H31c-11 0-18-6-18-15Z" fill="#F8FAFC"/>
+    <path d="M10 31h17c7 0 11-2 15-8l7-10 8 6-8 12c-6 9-12 12-23 12H10Z" fill="#0F766E"/>
+    <path d="m39 12 27-8-6 25-7-8-8 11-8-6 8-11Z" fill="#F59E0B"/>
+  </g>
+</svg>

@@ -1,5 +1,5 @@
 import { Mascot } from "@/components/app/mascot";
-import { StepsRing } from "@/components/app/steps-ring";
+import { PointsBadge } from "@/components/app/points-badge";
 import { toMyanmarDigits } from "@/lib/domain/deadlines";
 import { localizeLevel, type PathProgress } from "@/lib/domain/progress";
 
@@ -102,9 +102,18 @@ export function ProfileHero({
         </dl>
       </div>
 
+      {/* The collectible badge, not the dotted ring. Same slot, same rule: the
+          number and the level name are the learner's real ones, passed in from
+          the same `progress` record the tiles above are counted from. */}
       {progress ? (
         <div className="profile-hero-ring">
-          <StepsRing progress={progress} locale={locale} size={150} />
+          <PointsBadge
+            locale={locale}
+            points={progress.xp}
+            levelName={localizeLevel(locale, progress.level)}
+            labels={{ points: labels.steps }}
+            size={168}
+          />
         </div>
       ) : null}
     </section>

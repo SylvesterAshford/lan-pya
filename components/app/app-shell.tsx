@@ -13,6 +13,7 @@ import {
 import { usePathname } from "next/navigation";
 import { Link } from "@/i18n/navigation";
 import type { Profile } from "@/lib/domain/types";
+import { MobileNavTrigger } from "@/components/app/mobile-nav-trigger";
 import {
   Sidebar,
   SidebarContent,
@@ -187,10 +188,10 @@ function AppShellContent({ children, profile, roles, locale }: { children: React
       </Sidebar>
 
       <SidebarInset className="app-workspace">
-        {/* Phones have no sidebar, so the brand and the Friday promise ride a
-            slim bar instead of vanishing. No hamburger: the bottom bar already
-            carries every destination. */}
+        {/* The slim bar carries the brand and the trigger that opens the
+            drawer, which is now the only navigation on a phone. */}
         <div className="app-mobile-bar">
+          <MobileNavTrigger label={navLabel} />
           <Link className="app-brand" href="/app/today" aria-label={brandLabel}>
             <span className="brand-mark" aria-hidden="true" />
             <strong>{brandLabel}</strong>
@@ -200,23 +201,6 @@ function AppShellContent({ children, profile, roles, locale }: { children: React
         {children}
       </SidebarInset>
 
-      <nav className="app-bottom-nav" aria-label={navLabel}>
-        {LEARNER_NAV.map((item) => {
-          const active = item.matches(pathname);
-          const Icon = item.icon;
-          return (
-            <Link
-              className={`app-nav-link mobile${active ? " active" : ""}`}
-              href={item.href}
-              aria-current={active ? "page" : undefined}
-              key={`mobile-${item.href}`}
-            >
-              <Icon aria-hidden="true" />
-              <span>{labelFor(item)}</span>
-            </Link>
-          );
-        })}
-      </nav>
     </div>
   );
 }
