@@ -77,21 +77,26 @@ export function FeaturedOpportunity({
         ) : (
           <CategoryArt type={src.type} className="featured-opp-art" />
         )}
-        {partner ? (
-          <span className="featured-opp-partner">
-            <ShieldCheck size={11} aria-hidden="true" />
-            {labels.partner}
-          </span>
-        ) : null}
       </div>
 
       <div className="featured-opp-body">
         {/* "Partner challenge" is only earned when the organisation is actually
             a partner. A challenge from anyone else is a featured opportunity,
             which is true, rather than borrowed standing. */}
-        <span className="featured-opp-kind">
-          {partner && src.type.toLowerCase().includes("challenge") ? labels.challenge : labels.featured}
-        </span>
+        {/* The badge sits on the eyebrow line rather than under the mark. In
+            the mark column it had to wrap to two lines and read as a second
+            logo tile competing with the real one. */}
+        <p className="featured-opp-top">
+          <span className="featured-opp-kind">
+            {partner && src.type.toLowerCase().includes("challenge") ? labels.challenge : labels.featured}
+          </span>
+          {partner ? (
+            <span className="featured-opp-partner">
+              <ShieldCheck size={11} aria-hidden="true" />
+              {labels.partner}
+            </span>
+          ) : null}
+        </p>
 
         <h3>{item.title}</h3>
         <p className="featured-opp-org">

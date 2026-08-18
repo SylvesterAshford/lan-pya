@@ -92,7 +92,6 @@ export default async function MissionsPage({ params }: { params: Promise<{ local
           locked: locale === "my" ? "မဖွင့်ရသေးပါ" : "Locked",
           nextMission: locale === "my" ? "နောက်တစ်ခု" : "Next mission",
           continueMission: locale === "my" ? "ဆက်လုပ်မည်" : "Continue mission",
-          caption: locale === "my" ? "သင့်လမ်းကြောင်း၏ နောက်တစ်ဆင့်များ" : "The next stops on your path",
         }}
       />
 

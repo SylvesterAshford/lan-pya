@@ -116,7 +116,7 @@ export function MissionMap({
   proofHref?: string;
   labels: {
     stageOf: string; steps: string; youAreHere: string; complete: string;
-    locked: string; nextMission: string; continueMission: string; caption: string;
+    locked: string; nextMission: string; continueMission: string;
   };
 }) {
   const my = locale === "my";
@@ -425,7 +425,6 @@ export function MissionMap({
 
       </div>
 
-      <figcaption>{labels.caption}</figcaption>
     </figure>
   );
 }

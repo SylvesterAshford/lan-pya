@@ -9819,15 +9819,15 @@ html[lang="my"] .partner-band-eyebrow { text-transform: none; letter-spacing: 0;
 .featured-opp.is-ready { border-left-color: var(--teal-600); }
 .featured-opp.is-partner { box-shadow: 0 6px 20px rgb(15 23 42 / 0.07); }
 
-.featured-opp-mark { display: grid; gap: 5px; justify-items: center; width: 108px; }
-.featured-opp-art { width: 108px; height: 62px; border-radius: 9px; }
+.featured-opp-mark { width: 104px; }
+.featured-opp-art { width: 104px; height: 62px; border-radius: 9px; }
 
 /* The partner's own mark, on the ground it was drawn for. Contained rather
    than cropped: an official logo must not be trimmed to fit a tile. */
 .featured-opp-logo {
   display: grid;
   place-items: center;
-  width: 108px;
+  width: 104px;
   height: 62px;
   padding: 7px 9px;
   border-radius: 9px;
@@ -9836,18 +9836,22 @@ html[lang="my"] .partner-band-eyebrow { text-transform: none; letter-spacing: 0;
 .featured-opp-logo.light { background: #fff; }
 .featured-opp-logo.dark { background: var(--navy-900); border-color: var(--navy-900); }
 .featured-opp-logo img { width: 100%; height: 100%; object-fit: contain; }
+/* One line, always. It sits beside the eyebrow, so it has to stay a label
+   rather than growing into a block. */
 .featured-opp-partner {
   display: inline-flex;
   align-items: center;
   gap: 3px;
-  padding: 2px 7px;
+  padding: 1px 8px;
   background: var(--teal-100);
   border-radius: 99px;
   font-size: var(--t-label);
   font-weight: 700;
+  line-height: 1.5;
+  white-space: nowrap;
   color: var(--teal-900);
-  text-align: center;
 }
+.featured-opp-top { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
 
 .featured-opp-body { min-width: 0; display: grid; gap: 3px; align-content: start; }
 /* The row is spaced by its grid gap. Inherited block margins on the heading,
