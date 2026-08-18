@@ -1,4 +1,4 @@
-import { BadgeCheck, Compass, ShieldCheck, UserRound } from "lucide-react";
+import { Compass, ShieldCheck, UserRound } from "lucide-react";
 import { Link } from "@/i18n/navigation";
 
 export type MeTab = "profile" | "careers" | "portfolio" | "privacy";
@@ -15,18 +15,15 @@ export type MeTab = "profile" | "careers" | "portfolio" | "privacy";
 export function MeNav({
   locale,
   active,
-  proofCount,
   pathCount,
 }: {
   locale: string;
   active: MeTab;
-  proofCount?: number;
   pathCount?: number;
 }) {
   const items = [
     { key: "profile", href: "/app/profile", en: "Profile", my: "ပရိုဖိုင်", icon: UserRound, tone: "you" as const, count: undefined },
     { key: "careers", href: "/app/careers", en: "Careers", my: "လမ်းကြောင်းများ", icon: Compass, tone: "explore" as const, count: pathCount },
-    { key: "portfolio", href: "/app/proof", en: "Portfolio", my: "လက်ရာမှတ်တမ်း", icon: BadgeCheck, tone: "proof" as const, count: proofCount },
     { key: "privacy", href: "/app/privacy", en: "Privacy", my: "ကိုယ်ရေးလုံခြုံမှု", icon: ShieldCheck, tone: "private" as const, count: undefined },
   ] as const;
 

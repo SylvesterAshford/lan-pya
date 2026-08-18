@@ -9817,7 +9817,7 @@ html[lang="my"] .partner-band-eyebrow { text-transform: none; letter-spacing: 0;
   border-left: 4px solid var(--amber-500);
   border-radius: 14px;
 }
-.featured-opp.is-ready { border-left-color: var(--teal-600); }
+.featured-opp.is-ready { border-left-color: var(--teal-700); }
 .featured-opp.is-partner { box-shadow: 0 6px 20px rgb(15 23 42 / 0.07); }
 
 /* Centred against the text block rather than pinned to the top, where the
@@ -11849,7 +11849,7 @@ html[lang="my"] .oppsig-skills-head {
   border: 1px solid var(--hairline);
   /* The one accented edge on the page: this is the path you are actually on,
      and every other row here is a path you are not. */
-  border-left: 4px solid var(--teal-600);
+  border-left: 4px solid var(--teal-700);
   border-radius: var(--r-card);
 }
 
@@ -11993,3 +11993,644 @@ a.paused-row:hover { background: var(--surface-sunk); }
 /* Collapsed to a rail there is no room for a label, and a bare rule floating
    in a 68px column reads as a broken element. */
 .app-sidebar[data-state="collapsed"] .sidebar-group-label::after { display: none; }
+/* ===== passport ===== */
+/* ============================================================
+   Proof passport — components/proof/proof-passport.tsx
+   The navy block at the top of the Evidence Studio, from the
+   founder concept public/design/lan-pya-portfolio-evidence-studio.svg.
+
+   Tokens only. Borders first, no card shadow (DESIGN.md).
+   One accent per surface: teal carries "done" here, amber never
+   appears — nothing on this block is urgent.
+   ============================================================ */
+
+.passport{
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+  grid-template-areas:
+    "identity trail"
+    "counts   trail";
+  gap: var(--s-lg);
+  align-items: start;
+  max-width: 100%;
+  padding: var(--s-lg);
+  color: var(--surface);
+  background: var(--navy-900);
+  border: 1px solid var(--navy-500);
+  border-radius: var(--r-card);
+}
+
+/* ---- Identity ------------------------------------------------ */
+
+.passport-identity{
+  display: flex;
+  grid-area: identity;
+  gap: var(--s-md);
+  align-items: flex-start;
+  min-width: 0;
+}
+
+/* The traveller is a tall, narrow figure (~24px wide at 72px tall),
+   so the insignia hangs off its lower right rather than beside it. */
+.passport-figure{
+  position: relative;
+  display: inline-flex;
+  flex: none;
+  align-items: flex-end;
+  padding-right: 20px;
+  padding-bottom: var(--s-xs);
+}
+
+.passport-insignia{
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  display: inline-flex;
+  line-height: 0;
+}
+
+.passport-who{
+  min-width: 0;
+}
+
+.passport-eyebrow{
+  margin: 0;
+  color: var(--teal-500);
+  font-size: var(--t-label);
+  font-weight: 800;
+  line-height: var(--l-label);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  overflow-wrap: anywhere;
+}
+
+.passport-name{
+  margin: var(--s-xs) 0 0;
+  color: var(--surface);
+  font-size: var(--t-h1);
+  font-weight: var(--w-display);
+  line-height: var(--l-h1);
+  letter-spacing: var(--k-h1);
+  overflow-wrap: anywhere;
+}
+
+.passport-level{
+  margin: var(--s-2xs) 0 0;
+  color: var(--navy-100);
+  font-size: var(--t-title);
+  font-weight: 600;
+  line-height: var(--l-title);
+  letter-spacing: var(--k-title);
+  overflow-wrap: anywhere;
+}
+
+.passport-availability{
+  margin: var(--s-sm) 0 0;
+  color: var(--navy-100);
+  font-size: var(--t-meta);
+  line-height: var(--l-meta);
+  overflow-wrap: anywhere;
+}
+
+/* Nothing said yet. Quieter than a stated availability, still well
+   clear of 4.5:1 on the navy ground — an unanswered question is not
+   an error and is not styled as one. */
+.passport-availability.is-unset{
+  color: var(--hairline);
+}
+
+/* ---- The three counts ---------------------------------------- */
+
+.passport-counts{
+  display: grid;
+  grid-area: counts;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0;
+  margin: 0;
+}
+
+.passport-count{
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  padding: 0 var(--s-md);
+}
+
+.passport-count:first-child{
+  padding-left: 0;
+}
+
+.passport-count:last-child{
+  padding-right: 0;
+}
+
+.passport-count + .passport-count{
+  border-left: 1px solid var(--navy-500);
+}
+
+/* The figure reads first and the markup stays dt-then-dd, which is
+   the order the HTML spec and screen readers expect. */
+.passport-count dt{
+  order: 2;
+  margin: var(--s-2xs) 0 0;
+  color: var(--navy-100);
+  font-size: var(--t-meta);
+  font-weight: 400;
+  line-height: var(--l-meta);
+  letter-spacing: 0;
+  text-transform: none;
+  overflow-wrap: anywhere;
+}
+
+.passport-count dd{
+  order: 1;
+  margin: 0;
+  color: var(--surface);
+  font-size: var(--t-display);
+  font-weight: var(--w-display);
+  line-height: var(--l-display);
+  letter-spacing: var(--k-display);
+  font-variant-numeric: tabular-nums;
+}
+
+/* ---- Evidence trail ------------------------------------------ */
+
+.passport-trail{
+  grid-area: trail;
+  min-width: 0;
+}
+
+.passport-trail-head{
+  display: flex;
+  gap: var(--s-sm);
+  align-items: baseline;
+  margin: 0 0 var(--s-md);
+}
+
+.passport-trail-title{
+  color: var(--teal-500);
+  font-size: var(--t-label);
+  font-weight: 800;
+  line-height: var(--l-label);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  overflow-wrap: anywhere;
+}
+
+/* Two real numbers. At 0/4 the strip states that the trail has not
+   been started instead of leaving four empty stops to be read as
+   decoration. */
+.passport-trail-ratio{
+  margin-left: auto;
+  color: var(--surface);
+  font-size: var(--t-label);
+  font-weight: 800;
+  line-height: var(--l-label);
+  font-variant-numeric: tabular-nums;
+}
+
+.passport-trail-list{
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: var(--s-sm);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* The connecting track, purely decorative: the stops carry the
+   state. Inset to the centre of the first and last column so it
+   never runs past them. */
+.passport-trail-list::before{
+  content: "";
+  position: absolute;
+  top: 10px;
+  right: 12.5%;
+  left: 12.5%;
+  height: 2px;
+  background: var(--muted-ink);
+}
+
+.passport-step{
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-sm);
+  align-items: center;
+  min-width: 0;
+  text-align: center;
+}
+
+/* Done and pending differ by fill, by border weight and by the
+   presence of a character. Any one of the three survives greyscale
+   on its own. */
+.passport-step-stop{
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  font-size: var(--t-label);
+  font-weight: 800;
+  line-height: 1;
+  border-radius: var(--r-chip);
+}
+
+.passport-step[data-state="done"] .passport-step-stop{
+  color: var(--navy-900);
+  background: var(--teal-500);
+  border: 2px solid var(--teal-500);
+}
+
+.passport-step[data-state="pending"] .passport-step-stop{
+  background: var(--navy-900);
+  border: 2px solid var(--navy-100);
+}
+
+.passport-step-label{
+  color: var(--navy-100);
+  font-size: var(--t-label);
+  font-weight: 600;
+  line-height: var(--l-label);
+  letter-spacing: 0;
+  overflow-wrap: anywhere;
+}
+
+.passport-step[data-state="done"] .passport-step-label{
+  color: var(--surface);
+  font-weight: 700;
+}
+
+/* ---- Burmese -------------------------------------------------- */
+/* Never letterspaced, never all-caps (DESIGN.md). */
+
+html[lang="my"] .passport-eyebrow,
+html[lang="my"] .passport-trail-title{
+  letter-spacing: 0;
+  text-transform: none;
+}
+
+html[lang="my"] .passport-name,
+html[lang="my"] .passport-level,
+html[lang="my"] .passport-count dd{
+  letter-spacing: 0;
+}
+
+/* ---- Narrow ---------------------------------------------------- */
+
+@media (max-width: 860px){
+  .passport{
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-areas:
+      "identity"
+      "counts"
+      "trail";
+    gap: var(--s-md);
+  }
+
+  .passport-trail{
+    padding-top: var(--s-md);
+    border-top: 1px solid var(--navy-500);
+  }
+}
+
+@media (max-width: 480px){
+  .passport{
+    padding: var(--s-md);
+  }
+
+  .passport-identity{
+    gap: var(--s-sm);
+  }
+
+  /* Three 32px figures plus their labels do not fit one 390px row
+     without either truncating the labels or dropping below the 11px
+     floor, so the counts become rows. The figures stay full size:
+     they are the point of the block. */
+  .passport-counts{
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .passport-count{
+    flex-direction: row;
+    gap: var(--s-sm);
+    align-items: baseline;
+    padding: var(--s-sm) 0;
+  }
+
+  .passport-count + .passport-count{
+    border-top: 1px solid var(--navy-500);
+    border-left: 0;
+  }
+
+  .passport-count dt{
+    margin: 0;
+  }
+
+  .passport-count dd{
+    flex: none;
+    min-width: 2.5ch;
+  }
+
+  .passport-trail-list{
+    gap: var(--s-xs);
+  }
+}
+
+/* ===================================================================
+   Evidence Studio — completed work
+   =================================================================== */
+
+.work-block { margin-top: var(--s-xl); display: grid; gap: 12px; }
+.work-head { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; }
+.work-title {
+  font-size: var(--t-section);
+  line-height: var(--l-section);
+  letter-spacing: var(--k-section);
+  font-weight: 700;
+  color: var(--ink);
+  margin: 0;
+}
+.work-count { font-size: var(--t-label); font-weight: 600; color: var(--muted-ink); }
+
+.work-tools { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+.work-search {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex: 1;
+  min-width: 200px;
+  padding: 0 12px;
+  background: var(--surface);
+  border: 1px solid var(--hairline);
+  border-radius: var(--r-control);
+  color: var(--muted-ink);
+}
+.work-search input {
+  flex: 1;
+  min-width: 0;
+  padding: 9px 0;
+  font: inherit;
+  font-size: var(--t-meta);
+  color: var(--ink);
+  background: transparent;
+  border: 0;
+  outline: none;
+}
+.work-search:focus-within { border-color: var(--navy-500); }
+
+.work-filters { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+.work-filters-icon { color: var(--muted-ink); display: grid; place-items: center; }
+.work-filters button {
+  padding: 6px 12px;
+  font: inherit;
+  font-size: var(--t-label);
+  font-weight: 600;
+  color: var(--muted-ink);
+  background: var(--surface);
+  border: 1px solid var(--hairline);
+  border-radius: 99px;
+  cursor: pointer;
+}
+.work-filters button.on { color: var(--navy-900); background: var(--navy-100); border-color: var(--navy-100); }
+.work-filters button:focus-visible { outline: 2px solid var(--teal-700); outline-offset: 2px; }
+
+.work-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 12px;
+}
+.work-empty { font-size: var(--t-meta); line-height: var(--l-meta); color: var(--muted-ink); }
+
+/* ---- a case study ---- */
+
+.case-card {
+  display: grid;
+  gap: 6px;
+  align-content: start;
+  padding: 16px;
+  background: var(--surface);
+  border: 1px solid var(--hairline);
+  /* The accent edge states the claim: only verified work gets the teal one. */
+  border-left: 3px solid var(--hairline);
+  border-radius: var(--r-card);
+}
+.case-card.is-verified { border-left-color: var(--teal-700); }
+.case-card.is-in_review { border-left-color: var(--amber-500); }
+.case-card.is-draft { border-left-color: var(--muted-ink); }
+.case-card > * { margin: 0; }
+
+.case-card-top { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.case-card-seal { flex: none; }
+.case-card-mark {
+  display: grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  border-radius: 9px;
+  background: var(--surface-sunk);
+  color: var(--muted-ink);
+}
+.case-state {
+  padding: 2px 9px;
+  border-radius: 99px;
+  font-size: var(--t-label);
+  font-weight: 700;
+}
+.case-state.verified { background: var(--teal-100); color: var(--teal-900); }
+.case-state.in_review { background: var(--amber-100); color: var(--amber-800); }
+.case-state.draft { background: var(--surface-sunk); color: var(--muted-ink); }
+.case-demo {
+  padding: 2px 9px;
+  border-radius: 99px;
+  border: 1px solid var(--hairline);
+  font-size: var(--t-label);
+  font-weight: 600;
+  color: var(--muted-ink);
+}
+
+.case-eyebrow {
+  font-size: var(--t-label);
+  letter-spacing: 0.08em;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: var(--muted-ink);
+}
+html[lang="my"] .case-eyebrow { text-transform: none; letter-spacing: 0; }
+.case-title { font-size: var(--t-title); line-height: 1.3; font-weight: 700; color: var(--ink); }
+.case-summary { font-size: var(--t-meta); line-height: var(--l-meta); color: var(--muted-ink); }
+.case-summary.is-absent { font-style: italic; }
+
+.case-chips { list-style: none; display: flex; flex-wrap: wrap; gap: 6px; margin: 2px 0 0; padding: 0; }
+.case-chips li {
+  padding: 3px 9px;
+  border-radius: 99px;
+  background: var(--teal-050);
+  font-size: var(--t-label);
+  font-weight: 600;
+  color: var(--teal-900);
+}
+
+.case-card-foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-top: 6px;
+  padding-top: 10px;
+  border-top: 1px solid var(--hairline);
+}
+.case-card-foot small { font-size: var(--t-label); color: var(--muted-ink); }
+.case-action {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: var(--t-label);
+  font-weight: 700;
+  color: var(--teal-700);
+  text-decoration: none;
+}
+.case-action:hover { text-decoration: underline; }
+
+/* ===================================================================
+   Proof-to-Resume Builder
+   =================================================================== */
+
+.resume-block {
+  margin-top: var(--s-xl);
+  display: grid;
+  gap: 10px;
+  padding: 20px;
+  background: var(--surface);
+  border: 1px solid var(--hairline);
+  border-radius: var(--r-card);
+}
+.resume-block > * { margin: 0; }
+.resume-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: var(--t-section);
+  line-height: var(--l-section);
+  font-weight: 700;
+  color: var(--ink);
+}
+.resume-title svg { color: var(--teal-700); }
+.resume-intro, .resume-empty, .resume-hint {
+  font-size: var(--t-meta);
+  line-height: var(--l-meta);
+  color: var(--muted-ink);
+  max-width: 74ch;
+}
+
+.resume-picks { list-style: none; margin: 6px 0 0; padding: 0; display: grid; gap: 6px; }
+.resume-picks label {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 10px;
+  align-items: center;
+  padding: 10px 12px;
+  border: 1px solid var(--hairline);
+  border-radius: var(--r-control);
+  cursor: pointer;
+}
+.resume-picks label.on { border-color: var(--teal-700); background: var(--teal-050); }
+/* The box is the control; the checkbox stays for keyboards and readers. */
+.resume-picks input { position: absolute; width: 1px; height: 1px; opacity: 0; }
+.resume-pick-box {
+  display: grid;
+  place-items: center;
+  width: 20px;
+  height: 20px;
+  border: 1px solid var(--hairline);
+  border-radius: 6px;
+  background: var(--surface);
+  color: var(--on-solid);
+}
+.resume-picks label.on .resume-pick-box { background: var(--teal-700); border-color: var(--teal-700); }
+.resume-picks label:focus-within { outline: 2px solid var(--teal-700); outline-offset: 2px; }
+.resume-pick-copy { display: grid; gap: 1px; min-width: 0; }
+.resume-pick-copy strong { font-size: var(--t-meta); font-weight: 700; color: var(--ink); }
+.resume-pick-copy small { font-size: var(--t-label); color: var(--muted-ink); }
+
+.resume-actions { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; margin-top: 4px; }
+.resume-selected { font-size: var(--t-label); font-weight: 600; color: var(--muted-ink); }
+
+.resume-draft { display: grid; gap: 12px; margin-top: 6px; }
+.resume-sheet {
+  display: grid;
+  gap: 14px;
+  padding: 22px;
+  background: var(--surface);
+  border: 1px solid var(--hairline);
+  border-radius: var(--r-card);
+}
+.resume-sheet header h3 { font-size: var(--t-h1); line-height: var(--l-h1); font-weight: 700; color: var(--ink); margin: 0; }
+.resume-sheet header p { font-size: var(--t-meta); color: var(--muted-ink); margin: 2px 0 0; }
+.resume-sheet h4 {
+  font-size: var(--t-label);
+  letter-spacing: 0.08em;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: var(--muted-ink);
+  margin: 0 0 6px;
+}
+html[lang="my"] .resume-sheet h4 { text-transform: none; letter-spacing: 0; }
+.resume-skills { font-size: var(--t-meta); line-height: var(--l-meta); color: var(--ink); margin: 0; }
+.resume-edit-hint { font-size: var(--t-label); color: var(--muted-ink); margin: 0 0 8px; }
+
+.resume-bullets { list-style: none; margin: 0; padding: 0; display: grid; gap: 12px; }
+.resume-bullets li { display: grid; gap: 3px; }
+.resume-bullets textarea {
+  width: 100%;
+  padding: 9px 11px;
+  font: inherit;
+  font-size: var(--t-meta);
+  line-height: var(--l-meta);
+  color: var(--ink);
+  background: var(--surface);
+  border: 1px solid var(--hairline);
+  border-radius: var(--r-control);
+  resize: vertical;
+}
+.resume-bullets textarea:focus-visible { outline: 2px solid var(--navy-500); outline-offset: 1px; }
+/* The source stays with the line in print as well as on screen. */
+.resume-source { font-size: var(--t-label); color: var(--muted-ink); }
+
+.resume-export { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+.resume-export small { font-size: var(--t-label); color: var(--muted-ink); }
+.resume-docx { flex-basis: 100%; }
+
+/* ===================================================================
+   Print: the résumé sheet, nothing else
+   ===================================================================
+   A learner printing this wants the document, not the app around it. The
+   textareas become plain text because a printed form field with a scrollbar
+   is not a résumé.
+   =================================================================== */
+
+@media print {
+  body * { visibility: hidden; }
+  #resume-sheet, #resume-sheet * { visibility: visible; }
+  #resume-sheet {
+    position: absolute;
+    inset: 0 auto auto 0;
+    width: 100%;
+    padding: 0;
+    border: 0;
+    border-radius: 0;
+  }
+  #resume-sheet textarea {
+    padding: 0;
+    border: 0;
+    resize: none;
+    overflow: hidden;
+    height: auto;
+    background: transparent;
+  }
+  .resume-edit-hint { display: none; }
+  .resume-bullets li { break-inside: avoid; }
+}

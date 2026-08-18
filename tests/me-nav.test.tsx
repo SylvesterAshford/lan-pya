@@ -11,11 +11,11 @@ afterEach(() => cleanup());
 
 describe("MeNav", () => {
   it.each([
+    // Portfolio left this sub-nav when it became a sidebar destination; two
+    // routes to one page is two places to keep in step.
     ["en", "profile", "Profile", "/app/profile"],
-    ["en", "portfolio", "Portfolio", "/app/proof"],
     ["en", "privacy", "Privacy", "/app/privacy"],
     ["my", "profile", "ပရိုဖိုင်", "/app/profile"],
-    ["my", "portfolio", "လက်ရာမှတ်တမ်း", "/app/proof"],
     ["my", "privacy", "ကိုယ်ရေးလုံခြုံမှု", "/app/privacy"],
   ] as const)("marks the %s %s destination active", (locale, active, label, href) => {
     render(<MeNav locale={locale} active={active} />);
