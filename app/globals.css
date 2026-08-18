@@ -11648,3 +11648,312 @@ html[lang="my"] .oppsig-skills-head {
   .profile-hero { grid-template-columns: minmax(0, 1fr); }
   .profile-hero .profile-stats { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
 }
+
+/* The stat row is a <dl>, which browsers indent with a default inline padding.
+   That 25px was pushing the tiles right of the name and the identity line they
+   sit under, so nothing in the hero shared a left edge. */
+.profile-hero .profile-stats { padding: 0; }
+/* ===== path management ===== */
+/* ===================================================================
+   PROFILE — ACTIVE PATH PROGRESS AND PATH SWITCHING
+   Appended to app/globals.css after the .profile-section block.
+
+   The path chooser moved off its own tab onto the account surface, so it
+   has to speak the profile's grammar instead of bringing the old chooser's
+   grammar with it: one column, a small uppercase label per section,
+   hairlines between sections, and no card inside a card. That rules out
+   .your-path (a tinted, left-bordered panel) and .explore-link (a bordered
+   box) verbatim, so the same information is restated here in rows.
+   =================================================================== */
+
+/* The parent is `justify-items: start`, which shrink-wraps block children to
+   their content width; a progress bar has no content width to shrink to. */
+.profile-section > .profile-path-progress,
+.profile-section > .profile-alt-list,
+.profile-section > .profile-catalog-link { width: 100%; justify-self: stretch; }
+
+.profile-path-progress {
+  display: grid;
+  gap: var(--s-sm);
+  max-width: 620px;
+  margin-top: var(--s-xs);
+}
+
+/* Bar first, figure after it: the bar is the picture and the figure is the
+   caption. The old chooser set a 32px display number beside the bar, which
+   at this altitude would outshout the section label above it. */
+.profile-path-meter {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: var(--s-sm) var(--s-md);
+  align-items: center;
+}
+
+.profile-path-bar {
+  height: 6px;
+  /* DESIGN.md "The meter": the track carries an inset hairline, because
+     --surface-sunk on --surface is nearly no contrast and a 0% bar would
+     otherwise vanish at exactly the moment it matters most. */
+  background: var(--surface-sunk);
+  border: 1px solid var(--hairline);
+  border-radius: var(--r-chip);
+  overflow: hidden;
+}
+
+.profile-path-bar > span {
+  display: block;
+  height: 100%;
+  background: var(--teal-500);
+  transition: width 240ms ease-in-out;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .profile-path-bar > span { transition: none; }
+}
+
+/* Figure and unit on one line: the number carries the weight, the word after
+   it says what the number counts. Colour is never the only cue. */
+.profile-path-pct {
+  font-size: var(--t-meta);
+  line-height: var(--l-meta);
+  color: var(--muted-ink);
+  white-space: nowrap;
+}
+
+.profile-path-pct strong {
+  font-weight: 700;
+  color: var(--teal-700);
+  font-variant-numeric: tabular-nums;
+}
+
+.profile-path-step {
+  font-size: var(--t-meta);
+  line-height: var(--l-meta);
+  color: var(--muted-ink);
+  font-variant-numeric: tabular-nums;
+}
+
+/* ---------- Alternatives ---------- */
+
+/* Rows, not cards. DESIGN.md Components: prefer rows, sections and
+   whitespace over grids of equal cards, and the section already has its
+   own hairline above it. */
+.profile-alt-list {
+  display: grid;
+  gap: 0;
+  margin: var(--s-xs) 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.profile-alt-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: var(--s-sm) var(--s-md);
+  align-items: center;
+  padding: var(--s-md) 0;
+  border-bottom: 1px solid var(--hairline);
+}
+
+.profile-alt-row:first-child { padding-top: var(--s-sm); }
+.profile-alt-row:last-child { border-bottom: 0; }
+
+.profile-alt-copy strong {
+  display: block;
+  font-size: var(--t-title);
+  line-height: var(--l-title);
+  letter-spacing: var(--k-title);
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.profile-alt-copy small {
+  display: block;
+  margin-top: var(--s-2xs);
+  font-size: var(--t-meta);
+  line-height: var(--l-meta);
+  color: var(--muted-ink);
+}
+
+/* The switch control sits inline in the row; the shared .path-switch-action
+   rule adds a top margin meant for the old stacked chooser card. */
+.profile-alt-row .path-switch-action { margin-top: 0; }
+
+/* The confirmation opens in place and needs the full row, otherwise it is a
+   12px-padded panel squeezed into the button's column. */
+.profile-alt-row .path-switch-confirm {
+  grid-column: 1 / -1;
+  justify-self: stretch;
+}
+
+/* ---------- The full catalog, leaving quietly ---------- */
+
+/* Two suggestions are a decision; the whole catalog is a different activity.
+   It reads as a link with a subtitle rather than a third choice, so it does
+   not compete with the two rows above it. */
+.profile-catalog-link {
+  display: flex;
+  align-items: center;
+  gap: var(--s-md);
+  margin-top: var(--s-sm);
+  padding: var(--s-sm) 0;
+  color: inherit;
+  text-decoration: none;
+  border-radius: var(--r-control);
+}
+
+.profile-catalog-link span { flex: 1; min-width: 0; }
+
+.profile-catalog-link strong {
+  display: block;
+  font-size: var(--t-body);
+  font-weight: 700;
+  color: var(--teal-700);
+}
+
+.profile-catalog-link small {
+  display: block;
+  margin-top: var(--s-2xs);
+  font-size: var(--t-meta);
+  line-height: var(--l-meta);
+  color: var(--muted-ink);
+}
+
+.profile-catalog-link svg { flex-shrink: 0; color: var(--teal-700); }
+.profile-catalog-link:hover strong { text-decoration: underline; }
+.profile-catalog-link:focus-visible { outline: 2px solid var(--teal-700); outline-offset: 2px; }
+
+@media (max-width: 620px) {
+  /* 44px controls cannot share a 320px row with a path title. */
+  .profile-alt-row { grid-template-columns: minmax(0, 1fr); }
+  .profile-alt-row .path-switch-action { justify-self: start; }
+}
+
+/* ===================================================================
+   Careers — your track, and switching it
+   ===================================================================
+   This tab answers two questions: which path am I on, and what else is there.
+   The track card answers the first, the switcher answers "can I change it",
+   and the arena catalog below answers the second. Each is labelled, so the
+   three never blur into one long list of paths.
+   =================================================================== */
+
+.track-card {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  gap: 18px;
+  align-items: center;
+  margin-top: var(--s-lg);
+  padding: 18px 20px;
+  background: var(--surface);
+  border: 1px solid var(--hairline);
+  /* The one accented edge on the page: this is the path you are actually on,
+     and every other row here is a path you are not. */
+  border-left: 4px solid var(--teal-600);
+  border-radius: var(--r-card);
+}
+
+.track-card-mark {
+  display: grid;
+  place-items: center;
+  width: 52px;
+  height: 52px;
+  border-radius: 14px;
+  background: var(--teal-050);
+  color: var(--teal-700);
+}
+
+.track-card-copy { min-width: 0; display: grid; gap: 3px; }
+.track-card-copy > * { margin: 0; }
+.track-card-eyebrow {
+  font-size: var(--t-label);
+  letter-spacing: 0.09em;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: var(--teal-700);
+}
+html[lang="my"] .track-card-eyebrow { text-transform: none; letter-spacing: 0; }
+.track-card-copy h2 {
+  font-size: var(--t-section);
+  line-height: var(--l-section);
+  letter-spacing: var(--k-section);
+  font-weight: 700;
+  color: var(--ink);
+}
+.track-card-copy p { font-size: var(--t-meta); line-height: var(--l-meta); color: var(--muted-ink); }
+
+.track-card-meter { display: flex; align-items: center; gap: 10px; margin-top: 8px; }
+.track-card-bar {
+  flex: 1;
+  height: 7px;
+  min-width: 0;
+  border-radius: 99px;
+  background: var(--surface-sunk);
+  box-shadow: inset 0 0 0 1px var(--hairline);
+  overflow: hidden;
+}
+.track-card-bar > span { display: block; height: 100%; border-radius: 99px; background: var(--teal-500); }
+.track-card-meter strong { font-size: var(--t-meta); font-weight: 700; color: var(--teal-700); }
+.track-card-step { font-size: var(--t-label); color: var(--muted-ink); }
+
+.track-card-actions { display: grid; gap: 8px; justify-items: stretch; }
+.track-card-actions .button { justify-content: center; white-space: nowrap; }
+
+/* ---- switcher ---- */
+
+.switch-block { margin-top: var(--s-xl); display: grid; gap: 10px; justify-items: start; }
+.switch-block > header { display: flex; align-items: center; gap: 8px; }
+.switch-icon { display: grid; place-items: center; width: 26px; height: 26px; border-radius: 8px; background: var(--amber-100); color: var(--amber-800); }
+.switch-block h2 {
+  font-size: var(--t-label);
+  letter-spacing: 0.09em;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: var(--muted-ink);
+  margin: 0;
+}
+html[lang="my"] .switch-block h2 { text-transform: none; letter-spacing: 0; }
+
+.switch-list { list-style: none; margin: 0; padding: 0; width: 100%; display: grid; gap: 8px; }
+.switch-row {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  gap: 12px;
+  align-items: center;
+  padding: 12px 14px;
+  background: var(--surface);
+  border: 1px solid var(--hairline);
+  border-radius: var(--r-card);
+}
+.switch-row-mark { display: grid; place-items: center; width: 34px; height: 34px; border-radius: 9px; background: var(--surface-sunk); color: var(--teal-700); }
+.switch-row-copy { min-width: 0; display: grid; gap: 1px; }
+.switch-row-copy strong { font-size: var(--t-meta); font-weight: 700; color: var(--ink); }
+.switch-row-copy small { font-size: var(--t-label); line-height: var(--l-meta); color: var(--muted-ink); }
+
+/* ---- paused and previous ---- */
+
+.paused-row {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  gap: 12px;
+  align-items: center;
+  padding: 11px 8px;
+  margin: 0 -8px;
+  border-bottom: 1px solid var(--hairline);
+  border-radius: var(--r-control);
+  color: inherit;
+  text-decoration: none;
+}
+.paused-row:last-child { border-bottom: 0; }
+a.paused-row:hover { background: var(--surface-sunk); }
+.paused-row-mark { display: grid; place-items: center; width: 32px; height: 32px; border-radius: 9px; background: var(--surface-sunk); color: var(--muted-ink); }
+.paused-row-copy { min-width: 0; display: grid; gap: 1px; }
+.paused-row-copy strong { font-size: var(--t-meta); font-weight: 700; color: var(--ink); }
+.paused-row-copy small { font-size: var(--t-label); color: var(--muted-ink); }
+
+@media (max-width: 720px) {
+  .track-card { grid-template-columns: auto minmax(0, 1fr); }
+  .track-card-actions { grid-column: 1 / -1; grid-auto-flow: column; grid-auto-columns: 1fr; }
+  .switch-row, .paused-row { grid-template-columns: auto minmax(0, 1fr); }
+  .switch-row > :last-child, .paused-row > :last-child { grid-column: 1 / -1; justify-self: start; }
+}

@@ -43,6 +43,7 @@ export function TodaysClimb({
   stageTotal,
   missionHref,
   pointsAward,
+  levelRank,
   labels,
 }: {
   locale: string;
@@ -57,6 +58,11 @@ export function TodaysClimb({
   stageTotal: number;
   missionHref: string;
   pointsAward: number;
+  /** The learner's current level on this path, 1–5. The emblem beside the
+   *  award is the learner's own insignia, the same one the profile shows; it
+   *  reports where they stand today and says nothing about what this mission
+   *  would promote them to. */
+  levelRank: number;
   labels: {
     eyebrow: string;
     continueMission: string;
@@ -97,6 +103,7 @@ export function TodaysClimb({
               <PointsBadge
                 locale={locale}
                 points={pointsAward}
+                rank={levelRank}
                 levelName=""
                 labels={{ points: labels.points }}
                 size={26}

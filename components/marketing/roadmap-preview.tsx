@@ -35,7 +35,7 @@ export function RoadmapPreview({ locale }: { locale: string }) {
       ];
 
   const forkNote = my ? "လမ်းခွဲသည် — နှစ်ခုစလုံး ဖွင့်ထားသည်" : "The path splits — both stay open";
-  const localTrack = my ? "ရန်ကုန်" : "Yangon track";
+  const localTrack = my ? "ပြည်တွင်း" : "Local track";
   const globalTrack = my ? "နိုင်ငံတကာ" : "Global track";
   const caption = my
     ? "Frontend Developer လမ်းကြောင်း၏ ပထမသုံးဆင့်"

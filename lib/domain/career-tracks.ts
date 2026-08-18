@@ -160,20 +160,32 @@ export function mergeTrackMilestones(trackKey: string, rows: Milestone[]) {
  * (see TODOS.md "Real fork schema"). Until then this must stay labelled as a
  * preview wherever it appears, per the honest-availability rule in PRODUCT.md.
  */
-const TRACK_FORKS: Record<string, { en: TrackFork; my: TrackFork }> = {
-  "frontend-developer": {
-    en: {
-      note: "The path splits here — both stay open",
-      local: { title: "Yangon track", subtitle: "Local jobs · Burmese-first" },
-      global: { title: "Global track", subtitle: "Remote & abroad · English-first" },
-    },
-    my: {
-      note: "ဤနေရာတွင် လမ်းခွဲသည် — နှစ်ခုစလုံး ဖွင့်ထားသည်",
-      local: { title: "ရန်ကုန် လမ်းကြောင်း", subtitle: "ပြည်တွင်းအလုပ် · မြန်မာဘာသာ ဦးစားပေး" },
-      global: { title: "နိုင်ငံတကာ လမ်းကြောင်း", subtitle: "အဝေးမှ / ပြည်ပ · အင်္ဂလိပ်ဘာသာ ဦးစားပေး" },
-    },
+/**
+ * The fork every path reaches: work at home, or work for people abroad.
+ *
+ * "Local", not "Yangon". The distinction is domestic versus remote-and-abroad,
+ * which is true for a learner in Mandalay or Taunggyi exactly as it is in
+ * Yangon; naming one city told everyone else the branch was not for them.
+ *
+ * It is also the default for every track rather than an entry only the
+ * frontend path had. The choice is a fact about the job market, not about
+ * frontend, so a path without it was simply missing the ending.
+ */
+const DEFAULT_FORK: { en: TrackFork; my: TrackFork } = {
+  en: {
+    note: "The path splits here — both stay open",
+    local: { title: "Local track", subtitle: "Local jobs · Burmese-first" },
+    global: { title: "Global track", subtitle: "Remote & abroad · English-first" },
+  },
+  my: {
+    note: "ဤနေရာတွင် လမ်းခွဲသည် — နှစ်ခုစလုံး ဖွင့်ထားသည်",
+    local: { title: "ပြည်တွင်း လမ်းကြောင်း", subtitle: "ပြည်တွင်းအလုပ် · မြန်မာဘာသာ ဦးစားပေး" },
+    global: { title: "နိုင်ငံတကာ လမ်းကြောင်း", subtitle: "အဝေးမှ / ပြည်ပ · အင်္ဂလိပ်ဘာသာ ဦးစားပေး" },
   },
 };
+
+/** Per-track overrides, when a path's fork genuinely differs. */
+const TRACK_FORKS: Record<string, { en: TrackFork; my: TrackFork }> = {};
 
 export type TrackFork = {
   note: string;
@@ -182,7 +194,6 @@ export type TrackFork = {
 };
 
 export function getTrackFork(trackKey: string, locale: string): TrackFork | undefined {
-  const entry = TRACK_FORKS[trackKey];
-  if (!entry) return undefined;
+  const entry = TRACK_FORKS[trackKey] ?? DEFAULT_FORK;
   return locale === "my" ? entry.my : entry.en;
 }

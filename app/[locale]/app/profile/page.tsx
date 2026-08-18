@@ -1,4 +1,4 @@
-import { ArrowRight, Globe2, Settings2, ShieldCheck } from "lucide-react";
+import { Globe2, ShieldCheck } from "lucide-react";
 import { Link } from "@/i18n/navigation";
 import { MeNav } from "@/components/app/me-nav";
 import { ProfileEditor } from "@/components/app/profile-editor";
@@ -6,27 +6,15 @@ import { ProfileHero } from "@/components/app/profile-hero";
 import { resolveProgress } from "@/lib/domain/progress";
 import { CAREER_PATH_CATALOG } from "@/lib/domain/career-recommendations";
 import { requireUser } from "@/lib/auth";
-import { getActivePathDashboard, getCareerPreferences, getPathHistory, getProfile, getProofItems, getRoadmap } from "@/lib/data/app-data";
-import { formatAppDate, getAppCopy, localizeCareerTerm, localizePathDescription, localizePreference } from "@/lib/i18n/app-copy";
+import { getActivePathDashboard, getPathHistory, getProfile, getProofItems, getRoadmap } from "@/lib/data/app-data";
+import { formatAppDate, getAppCopy, localizeCareerTerm } from "@/lib/i18n/app-copy";
 
 export default async function ProfilePage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
   const user = await requireUser(locale);
   const c = getAppCopy(locale);
-  const [profile, preferences, dashboard, history, proof] = await Promise.all([getProfile(user.id), getCareerPreferences(user.id), getActivePathDashboard(), getPathHistory(user.id), getProofItems()]);
-  // Four rows of "Not sure yet" reads as broken rather than honest. If the
-  // Compass has not actually been answered, say that once and offer to fix it.
-  const hasPreferences = Boolean(
-    preferences && (
-      preferences.interests.length > 0 ||
-      preferences.preferredWork !== "not_sure" ||
-      preferences.immediateGoal !== "not_sure" ||
-      preferences.deviceAccess !== "not_sure"
-    ),
-  );
+  const [profile, dashboard, history, proof] = await Promise.all([getProfile(user.id), getActivePathDashboard(), getPathHistory(user.id), getProofItems()]);
   if (!profile) return null;
-  const switchLocale = locale === "my" ? "en" : "my";
-  const previousPaths = history.filter((path) => path.state === "previous");
 
   // Levels are path-scoped, so a learner with no active path has no level.
   const roadmap = dashboard.activePath ? await getRoadmap(dashboard.activePath.key) : [];
@@ -43,6 +31,8 @@ export default async function ProfilePage({ params }: { params: Promise<{ locale
   const activeSince = activeEntry?.lastActivatedAt
     ? formatAppDate(locale, activeEntry.lastActivatedAt)
     : null;
+
+  const switchLocale = locale === "my" ? "en" : "my";
 
   return <div className="app-page profile-page">
     <MeNav locale={locale} active="profile" pathCount={CAREER_PATH_CATALOG.length} />
@@ -81,74 +71,6 @@ export default async function ProfilePage({ params }: { params: Promise<{ locale
         rhythm. Four eyebrow-plus-headline blocks all shouted at the same
         volume, and the layout changed shape twice on the way down. */}
     <div className="profile-sections">
-      <section className="profile-section">
-        <h2 className="profile-section-label">{c.profile.activePath}</h2>
-        {/* Level, points and progress live in the hero tiles. Repeating them
-            here was the same three numbers twice on one screen. */}
-        <p className="profile-section-lead">
-          {dashboard.activePath
-            ? localizeCareerTerm(locale, dashboard.activePath.key, dashboard.activePath.title)
-            : c.profile.noPath}
-        </p>
-        <p className="profile-section-body">
-          {dashboard.activePath
-            ? localizePathDescription(locale, dashboard.activePath.key, dashboard.activePath.description)
-            : c.profile.noPathBody}
-        </p>
-        <Link className="text-link" href="/app/paths">
-          {c.profile.changePath} <ArrowRight size={16} aria-hidden="true" />
-        </Link>
-      </section>
-
-      <section className="profile-section">
-        <h2 className="profile-section-label">{c.profile.guides}</h2>
-        {hasPreferences ? (
-          <dl className="profile-facts">
-            <div><dt>{c.profile.interests}</dt><dd>{preferences?.interests.length ? preferences.interests.map((item) => localizePreference(locale, item)).join(" · ") : c.profile.notSure}</dd></div>
-            <div><dt>{c.profile.preferredWork}</dt><dd>{preferences?.preferredWork ? localizePreference(locale, preferences.preferredWork) : c.profile.notSure}</dd></div>
-            <div><dt>{c.profile.nearGoal}</dt><dd>{preferences?.immediateGoal ? localizePreference(locale, preferences.immediateGoal) : c.profile.notSure}</dd></div>
-            <div><dt>{c.profile.device}</dt><dd>{preferences?.deviceAccess ? localizePreference(locale, preferences.deviceAccess) : c.profile.notSure}</dd></div>
-            <div><dt>{c.profile.weekly}</dt><dd>{profile.weeklyHours}</dd></div>
-          </dl>
-        ) : (
-          // One line, not a card inside a card. An empty state does not earn
-          // half the page width to say it is empty.
-          <p className="profile-section-body">{c.profile.compassEmpty}</p>
-        )}
-        <Link className="text-link" href="/onboarding">
-          <Settings2 size={16} aria-hidden="true" /> {hasPreferences ? c.profile.update : c.profile.compassEmptyAction}
-        </Link>
-      </section>
-
-      {previousPaths.length || dashboard.pausedWork.length ? (
-        <section className="profile-section">
-          <h2 className="profile-section-label">{c.profile.previous}</h2>
-          {previousPaths.length ? (
-            <div className="previous-path-list">
-              {previousPaths.map((path) => (
-                <div key={path.key}>
-                  <strong>{localizeCareerTerm(locale, path.key, path.title)}</strong>
-                  <small>{c.profile.pausedPath} · {c.profile.lastActive} {path.lastActivatedAt ? formatAppDate(locale, path.lastActivatedAt) : c.profile.recently}</small>
-                </div>
-              ))}
-            </div>
-          ) : null}
-          {dashboard.pausedWork.length ? (
-            <div className="paused-work-list">
-              {dashboard.pausedWork.map((work) => (
-                <Link key={work.missionKey} href="/app/paths">
-                  <span>
-                    <strong>{localizeCareerTerm(locale, work.missionKey, work.missionTitle)}</strong>
-                    <small>{localizeCareerTerm(locale, work.pathKey, work.pathTitle)}</small>
-                  </span>
-                  <ArrowRight size={17} aria-hidden="true" />
-                </Link>
-              ))}
-            </div>
-          ) : null}
-        </section>
-      ) : null}
-
       <section className="profile-section">
         <h2 className="profile-section-label">{c.profile.account}</h2>
         {/* One row per setting: what it is and its value on the left, the

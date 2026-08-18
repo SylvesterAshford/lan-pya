@@ -40,6 +40,7 @@ export function LevelMeter({
         <PointsBadge
           locale={locale}
           points={progress.xp}
+          rank={progress.level.rank}
           levelName={localizeLevel(locale, progress.level)}
           labels={{ points: my ? "အမှတ်" : "Points" }}
           size={34}

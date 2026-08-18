@@ -114,6 +114,7 @@ export default async function TodayPage({ params }: { params: Promise<{ locale: 
         stageTotal={roadmap.length}
         missionHref="/app/build"
         pointsAward={100}
+        levelRank={progress.level.rank}
         labels={{ ...c.home.climb, subtitle: c.home.subtitle }}
       />
 

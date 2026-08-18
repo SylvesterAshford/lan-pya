@@ -141,10 +141,13 @@ export function MissionMap({
     };
   });
 
-  // Bottom stop is index 0 and sits lowest: the climb reads upward, so the
-  // first stop of the window is drawn last in screen terms.
+  // Reads top to bottom, the way the page around it does: the first stop of
+  // the window sits highest and each later one is further down. The founder
+  // asked for this direction explicitly; it trades the literal "climb upward"
+  // reading of the terrain for the reading order everything else on the screen
+  // already uses.
   const n = stops.length;
-  const yAt = (i: number) => g.bottom - (i * (g.bottom - g.top)) / (n - 1 || 1);
+  const yAt = (i: number) => g.top + (i * (g.bottom - g.top)) / (n - 1 || 1);
   // Shape-critical art is laid out in the centred `art` band; background that
   // should reach the edges keeps using g.W directly.
   const ax = (f: number) => (g.W - g.art) / 2 + f * g.art;

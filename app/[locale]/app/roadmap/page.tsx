@@ -17,9 +17,14 @@ export default async function RoadmapPage({
   const { locale } = await params;
   const c = getAppCopy(locale);
   const { track: requestedTrack } = await searchParams;
-  const track = getCareerTrack(requestedTrack);
 
-  const [milestonesRaw, dashboard] = await Promise.all([getRoadmap(track.key), getActivePathDashboard()]);
+  // No track asked for means "my roadmap". Defaulting to the catalog's first
+  // entry showed a learner somebody else's path on the tab named after theirs,
+  // which is why the tab needed a card and a click to reach the real thing.
+  const dashboard = await getActivePathDashboard();
+  const track = getCareerTrack(requestedTrack ?? dashboard.activePath?.key);
+
+  const milestonesRaw = await getRoadmap(track.key);
   const milestones = (milestonesRaw as Milestone[]).map((milestone) => localizeRoadmapMilestone(locale, milestone));
 
   const trackTitle = localizeCareerTerm(locale, track.key, track.title);

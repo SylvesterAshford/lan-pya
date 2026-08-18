@@ -112,6 +112,7 @@ export function ProfileHero({
           <PointsBadge
             locale={locale}
             points={progress.xp}
+            rank={progress.level.rank}
             levelName={localizeLevel(locale, progress.level)}
             labels={{ points: labels.steps }}
             size={168}

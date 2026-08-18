@@ -62,7 +62,7 @@ const LEARNER_NAV: NavItem[] = [
     matches: (pathname) => pathname.includes("/app/today"),
   },
   {
-    href: "/app/paths",
+    href: "/app/roadmap",
     en: "Roadmaps",
     my: "လမ်းပြမြေပုံများ",
     icon: Map,
