@@ -291,7 +291,7 @@ export function MissionMap({
           {Array.from({ length: 5 }, (_, i) => g.H * (0.05 + i * 0.062)).map((cy, i) => (
             <path
               key={cy}
-              d={`M${-40 + i * 18} ${cy} Q ${g.W * 0.3} ${cy + 46}, ${g.W * 0.58} ${cy + 6} T ${g.W + 40} ${cy + 30}`}
+              d={`M${-40 + i * 18} ${cy} Q ${g.W * 0.3} ${cy - 46}, ${g.W * 0.58} ${cy - 6} T ${g.W + 40} ${cy - 30}`}
               fill="none"
               stroke="var(--map-contour)"
               strokeWidth="2"
@@ -316,18 +316,57 @@ export function MissionMap({
             );
           })}
 
-          {/* ---- rocks and shoots where the climb starts, at the top ---- */}
-          {[[0.12, 104, 1], [0.86, 144, 0.85], [0.30, 54, 0.7], [0.68, 84, 0.9]].map(([fx, down, k]) => (
+          {/* ---- where the climb starts ----
+              Snow mounds first, then rocks bedded into them, then grass in
+              clumps. Six objects floating on empty snow read as debris; things
+              that sit on something read as ground. Every shoot grows upward
+              from its own base, so nothing hangs. */}
+
+          {/* Low mounds, so the rocks and grass have something to stand on. */}
+          {[[0.14, 118, 1.6], [0.62, 92, 1.3], [0.88, 156, 1.1], [0.36, 178, 1.45]].map(([fx, down, k]) => (
+            <ellipse
+              key={`mound-${fx}`}
+              cx={fx * g.W}
+              cy={down + 10 * k}
+              rx={70 * k}
+              ry={17 * k}
+              fill="var(--map-snow)"
+              opacity="0.75"
+            />
+          ))}
+
+          {/* Boulders in clusters: a big one with a smaller companion. */}
+          {[[0.12, 104, 1], [0.86, 144, 0.85], [0.30, 54, 0.7], [0.68, 84, 0.9], [0.50, 150, 0.6]].map(([fx, down, k]) => (
             <g key={`rock-${fx}`}>
               <ellipse cx={fx * g.W} cy={down} rx={26 * k} ry={15 * k} fill="var(--map-rock)" />
               <ellipse cx={fx * g.W - 8 * k} cy={down - 5 * k} rx={16 * k} ry={9 * k} fill="var(--map-rock-lit)" />
+              <ellipse cx={fx * g.W + 30 * k} cy={down + 7 * k} rx={12 * k} ry={7 * k} fill="var(--map-rock)" />
+              <ellipse cx={fx * g.W + 27 * k} cy={down + 4 * k} rx={7 * k} ry={4 * k} fill="var(--map-rock-lit)" />
             </g>
           ))}
-          {[[0.20, 168], [0.78, 128], [0.42, 196], [0.60, 180], [0.08, 78]].map(([fx, down]) => (
-            <g key={`shoot-${fx}`} stroke="var(--map-shoot)" strokeWidth="3" strokeLinecap="round" fill="none">
-              <path d={`M${fx * g.W} ${down} q-10 -14 -4 -26`} />
-              <path d={`M${fx * g.W} ${down} q10 -12 5 -22`} />
-              <path d={`M${fx * g.W} ${down} v-16`} />
+
+          {/* Grass in clumps of three, each blade rising from the same base. */}
+          {[[0.20, 168], [0.78, 128], [0.42, 196], [0.60, 180], [0.08, 78], [0.33, 122], [0.71, 206], [0.94, 108]].map(([fx, down], i) => {
+            const lean = i % 2 === 0 ? 1 : -1;
+            return (
+              <g key={`shoot-${fx}`} stroke="var(--map-shoot)" strokeWidth="3" strokeLinecap="round" fill="none">
+                <path d={`M${fx * g.W} ${down} q${-10 * lean} -14 ${-4 * lean} -26`} />
+                <path d={`M${fx * g.W} ${down} q${10 * lean} -12 ${5 * lean} -22`} />
+                <path d={`M${fx * g.W} ${down} v-16`} />
+                <path d={`M${fx * g.W + 13 * lean} ${down + 4} q${5 * lean} -9 ${2 * lean} -15`} strokeWidth="2.4" />
+                <path d={`M${fx * g.W - 12 * lean} ${down + 3} q${-4 * lean} -8 ${-1 * lean} -13`} strokeWidth="2.4" />
+              </g>
+            );
+          })}
+
+          {/* Trail cairns: the marker a walker actually leaves on a snowfield,
+              and the only object up here that reads as put there on purpose. */}
+          {[[0.26, 138], [0.82, 190]].map(([fx, down]) => (
+            <g key={`cairn-${fx}`}>
+              <ellipse cx={fx * g.W} cy={down} rx={13} ry={6} fill="var(--map-rock)" />
+              <ellipse cx={fx * g.W} cy={down - 9} rx={10} ry={5} fill="var(--map-rock-lit)" />
+              <ellipse cx={fx * g.W} cy={down - 17} rx={7} ry={4} fill="var(--map-rock)" />
+              <ellipse cx={fx * g.W} cy={down - 23} rx={4} ry={3} fill="var(--map-rock-lit)" />
             </g>
           ))}
 
