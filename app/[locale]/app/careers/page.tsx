@@ -1,12 +1,13 @@
 import { ChevronRight } from "lucide-react";
 import { Link } from "@/i18n/navigation";
 import { MeNav } from "@/components/app/me-nav";
+import { ArenaMark } from "@/components/paths/arena-mark";
 import { PreviewPathsDisclosure } from "@/components/paths/preview-paths-disclosure";
 import { requireUser } from "@/lib/auth";
 import { getActivePathDashboard } from "@/lib/data/app-data";
 import { CAREER_PATH_CATALOG, getAvailabilityLabel, type CareerPathCatalogItem } from "@/lib/domain/career-recommendations";
 import { toMyanmarDigits } from "@/lib/domain/deadlines";
-import { getAppCopy, localizeArena, localizeCareerTerm, localizePathDescription } from "@/lib/i18n/app-copy";
+import { getAppCopy, localizeArena, localizeCareerTerm } from "@/lib/i18n/app-copy";
 
 /**
  * The full career catalog.
@@ -44,13 +45,17 @@ export default async function CareersPage({ params }: { params: Promise<{ locale
     }
   };
 
+  // One shape on every row: how long the path is, then where it starts when
+  // that is known. It used to return stages, or stages plus first mission, or
+  // a description, depending on state — so the same line meant three things
+  // down one column.
   const substance = (path: CareerPathCatalogItem) => {
     const state = getAvailabilityLabel(path);
+    const stages = `${num(path.stageCount)} ${c.careers.stages}`;
     if (state === "operational" || state === "controlled_pilot") {
-      return [`${path.stageCount} ${c.careers.stages}`, `${c.paths.firstMission}: ${path.firstMission}`].filter(Boolean).join(" · ");
+      return `${stages} · ${c.paths.firstMission}: ${path.firstMission}`;
     }
-    if (state === "no_missions_yet") return `${path.stageCount} ${c.careers.stages}`;
-    return localizePathDescription(locale, path.key, path.description);
+    return stages;
   };
 
   const renderArenas = (items: CareerPathCatalogItem[]) => groupByArena(items).map(([arena, paths]) => (
@@ -64,11 +69,20 @@ export default async function CareersPage({ params }: { params: Promise<{ locale
         const isActive = path.key === activeKey;
         return (
           <Link className={`path-row${isActive ? " is-active" : ""}`} href={`/app/roadmap?track=${path.key}`} key={path.key}>
+            <span className="path-row-mark" aria-hidden="true">
+              <ArenaMark arena={path.arena} />
+            </span>
             <span className="path-row-copy">
-              <strong>{localizeCareerTerm(locale, path.key, path.title)}</strong>
+              <span className="path-row-title">
+                <strong>{localizeCareerTerm(locale, path.key, path.title)}</strong>
+                {/* Where you are is a fact about you; the pill on the right is a
+                    fact about the path. They shared one slot, so an active path
+                    stopped reporting whether it could be started at all. */}
+                {isActive ? <span className="path-row-here">{c.careers.yourPathHere}</span> : null}
+              </span>
               <small>{substance(path)}</small>
             </span>
-            {isActive ? <span className="avail here">{c.careers.yourPathHere}</span> : <span className={`avail ${state.tone}`}>{state.text}</span>}
+            <span className={`avail ${state.tone}`}>{state.text}</span>
             <ChevronRight className="path-row-chevron" size={16} aria-hidden="true" />
           </Link>
         );

@@ -7464,7 +7464,8 @@ html[lang="my"] .mission-focus h2{
 
 .path-row {
   display: grid;
-  grid-template-columns: 1fr auto auto;
+  /* mark | copy | availability | chevron */
+  grid-template-columns: auto minmax(0, 1fr) auto auto;
   gap: var(--s-md);
   align-items: center;
   padding: 11px var(--s-sm);
@@ -10043,3 +10044,177 @@ html[lang="my"] .featured-opp-kind { text-transform: none; letter-spacing: 0; }
   color: var(--teal-700);
 }
 .category-art > svg { width: 46%; height: auto; }
+
+/* ===================================================================
+   Profile sections — one hierarchy
+   ===================================================================
+   The hero carries the only headline on this page. Everything below is a
+   labelled section in one column at one rhythm. Previously each of the four
+   was an eyebrow plus a display-size headline, so nothing read as primary,
+   and the layout changed from two columns to a list to a button rail on the
+   way down. Borders separate; DESIGN.md forbids shadows on cards.
+   =================================================================== */
+
+.profile-sections {
+  display: grid;
+  gap: 0;
+  margin-top: 4px;
+}
+
+.profile-section {
+  display: grid;
+  gap: 6px;
+  justify-items: start;
+  padding: 22px 0;
+  border-top: 1px solid var(--hairline);
+}
+.profile-section:first-child { border-top: 0; padding-top: 8px; }
+/* The section is spaced by its grid gap. Inherited block margins on the
+   heading, paragraphs and lists were adding ~20px between every pair and
+   made a tight section look like four loose ones. */
+.profile-section > * { margin: 0; }
+/* Lists want the column, not their shrink-wrapped content width; the parent
+   grid is justify-items:start so they have to say so. */
+.profile-section > .previous-path-list,
+.profile-section > .paused-work-list,
+.profile-section > .settings-list,
+.profile-section > .profile-facts { width: 100%; justify-self: stretch; }
+
+/* A label, not a headline. Small, quiet, and the same on every section, so
+   the eye reads them as siblings instead of four competing titles. */
+.profile-section-label {
+  font-size: var(--t-label);
+  letter-spacing: 0.09em;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: var(--muted-ink);
+}
+html[lang="my"] .profile-section-label { text-transform: none; letter-spacing: 0; }
+
+.profile-section-lead {
+  font-size: var(--t-section);
+  line-height: var(--l-section);
+  letter-spacing: var(--k-section);
+  font-weight: 700;
+  color: var(--ink);
+}
+.profile-section-body {
+  font-size: var(--t-meta);
+  line-height: var(--l-meta);
+  color: var(--muted-ink);
+  max-width: 68ch;
+}
+
+/* Label/value pairs on one line each: the shape account details and compass
+   answers both want, so the two sections stop looking like different pages. */
+.profile-facts { display: grid; gap: 8px; width: 100%; max-width: 620px; }
+.profile-facts > div {
+  display: grid;
+  grid-template-columns: 148px minmax(0, 1fr);
+  gap: 4px 16px;
+  align-items: baseline;
+}
+.profile-facts dt { font-size: var(--t-label); font-weight: 600; color: var(--muted-ink); }
+.profile-facts dd { font-size: var(--t-meta); line-height: var(--l-meta); color: var(--ink); margin: 0; }
+
+/* Side by side. The shared .profile-actions rule stacks them for the old
+   layout, so the direction has to be restated here. */
+.profile-section .profile-actions {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-top: 10px;
+  /* The parent grid is justify-items:start, which shrink-wraps this flex row
+     to one button's width and wrapped the second onto its own line. */
+  justify-self: stretch;
+  width: 100%;
+}
+/* The sign-out form is styled full-width for the old stacked layout, which
+   pushed it onto its own flex line. */
+.profile-section .profile-actions form { width: auto; }
+
+@media (max-width: 620px) {
+  .profile-facts > div { grid-template-columns: minmax(0, 1fr); }
+  .profile-section { padding: 18px 0; }
+}
+
+/* ===================================================================
+   Career catalog rows
+   =================================================================== */
+
+.path-row-mark {
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  border-radius: var(--r-control);
+  background: var(--teal-050);
+  color: var(--teal-700);
+}
+.path-row.is-active .path-row-mark { background: var(--teal-100); }
+
+.path-row-title { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+
+/* "Your path" is a fact about the reader and sits with the name. The pill on
+   the right is a fact about the path. One slot held both, so an active path
+   stopped saying whether it could be started. */
+.path-row-here {
+  padding: 1px 8px;
+  border-radius: 99px;
+  background: var(--teal-100);
+  color: var(--teal-900);
+  font-size: var(--t-label);
+  font-weight: 700;
+  line-height: 1.5;
+  white-space: nowrap;
+}
+
+/* ===================================================================
+   Settings list
+   ===================================================================
+   Label left, value and its control right, one row per setting, separated by
+   hairlines. Replaces a three-part row that put the heading in one column,
+   a label/value table in another, and the buttons in a right rail — three
+   alignments for four pieces of information.
+   =================================================================== */
+
+.settings-list {
+  width: 100%;
+  max-width: 620px;
+  display: grid;
+  border: 1px solid var(--hairline);
+  border-radius: var(--r-card, 12px);
+  overflow: hidden;
+}
+.settings-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 12px 16px;
+  align-items: center;
+  padding: 12px 16px;
+  border-top: 1px solid var(--hairline);
+}
+.settings-row:first-child { border-top: 0; }
+.settings-row dt,
+.settings-row-label {
+  font-size: var(--t-label);
+  font-weight: 600;
+  color: var(--muted-ink);
+}
+.settings-row dd,
+.settings-row-value {
+  margin: 0;
+  font-size: var(--t-meta);
+  line-height: var(--l-meta);
+  color: var(--ink);
+  word-break: break-word;
+}
+.settings-row-main { display: grid; gap: 2px; min-width: 0; }
+.settings-row-control { justify-self: end; }
+
+@media (max-width: 520px) {
+  .settings-row { grid-template-columns: minmax(0, 1fr); }
+  .settings-row-control { justify-self: start; }
+}

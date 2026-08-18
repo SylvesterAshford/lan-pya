@@ -58,8 +58,9 @@ export function Mascot({
   const art = mascotArt(variant);
   const w = Math.round(size * art.ratio);
   return (
-    // eslint-disable-next-line @next/next/no-img-element -- fixed-size local
-    // art with known intrinsic dimensions; the loader adds no value here.
+    // fixed-size local art with known intrinsic dimensions; the loader adds
+    // no value here.
+    // eslint-disable-next-line @next/next/no-img-element
     <img
       src={art.src}
       className={className}
