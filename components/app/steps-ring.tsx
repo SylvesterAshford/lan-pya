@@ -15,7 +15,7 @@ import { localizeLevel, type PathProgress } from "@/lib/domain/progress";
  * segment of the journey to the next level, filled dots are ground covered.
  * Reading the picture and reading the number give the same answer.
  *
- * The unit is steps, not XP. "XP" is borrowed from games and means nothing in
+ * The unit is points, not XP. "XP" is borrowed from games and means nothing in
  * a product whose whole metaphor is a map walked by a traveller. Steps belong
  * here, and no competitor uses them. The ladder is unchanged: the thresholds
  * and evidence gates from the founder plan still decide the level.
@@ -50,8 +50,8 @@ export function StepsRing({
       role="img"
       aria-label={
         my
-          ? `${localizeLevel(locale, progress.level)} — ခြေလှမ်း ${num(progress.xp)}`
-          : `${localizeLevel(locale, progress.level)}, ${num(progress.xp)} steps`
+          ? `${localizeLevel(locale, progress.level)} — အမှတ် ${num(progress.xp)}`
+          : `${localizeLevel(locale, progress.level)}, ${num(progress.xp)} points`
       }
     >
       {Array.from({ length: DOTS }, (_, i) => {
@@ -78,7 +78,7 @@ export function StepsRing({
         {num(progress.xp)}
       </text>
       <text x={C} y={C + 26} textAnchor="middle" fontSize="10" fontWeight="600" letterSpacing="0.8" fill="var(--muted-ink)">
-        {my ? "ခြေလှမ်း" : "STEPS"}
+        {my ? "အမှတ်" : "POINTS"}
       </text>
     </svg>
   );

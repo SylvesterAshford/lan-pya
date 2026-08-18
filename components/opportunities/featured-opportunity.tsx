@@ -2,6 +2,7 @@ import { ArrowRight, MapPin, ShieldCheck } from "lucide-react";
 import { CategoryArt } from "@/components/opportunities/category-art";
 import { DeadlineChip } from "@/components/app/deadline-chip";
 import { toMyanmarDigits } from "@/lib/domain/deadlines";
+import { findPartner } from "@/lib/domain/partners";
 import { formatAppDate, localizeReadiness } from "@/lib/i18n/app-copy";
 import type { OpportunityCard } from "@/lib/domain/types";
 
@@ -28,14 +29,6 @@ import type { OpportunityCard } from "@/lib/domain/types";
  * unearned claim the band exists to avoid.
  */
 
-/** Organisations named in the partner band. Kept here so the badge and the
- *  band cannot drift apart: a listing is a partner listing or it is not. */
-const PARTNER_ORGS = ["u.s. embassy rangoon", "strategy first international college"];
-
-function isPartner(organization: string) {
-  return PARTNER_ORGS.includes(organization.trim().toLowerCase());
-}
-
 export type FeaturedLabels = {
   partner: string;
   featured: string;
@@ -53,22 +46,37 @@ export function FeaturedOpportunity({
   entry,
   locale,
   labels,
+  lead = false,
 }: {
   entry: { source: OpportunityCard; display: OpportunityCard };
   locale: string;
   labels: FeaturedLabels;
+  /** The first row takes the filled action. That is reading order, not a claim
+   *  about readiness — the readiness pill is what states that. */
+  lead?: boolean;
 }) {
   const my = locale === "my";
   const item = entry.display;
   const src = entry.source;
   const num = (value: number) => (my ? toMyanmarDigits(value) : String(value));
-  const partner = isPartner(src.organization);
+  // The organisation's own mark when it is a partner we can name, and the
+  // category illustration otherwise — never a generic tile standing in for a
+  // logo the listing has not earned.
+  const partner = findPartner(src.organization);
   const ready = src.readiness === "Ready now";
 
   return (
     <article className={`featured-opp${partner ? " is-partner" : ""}${ready ? " is-ready" : ""}`}>
       <div className="featured-opp-mark">
-        <CategoryArt type={src.type} className="featured-opp-art" />
+        {partner ? (
+          <span className={`featured-opp-logo ${partner.ground}`}>
+            {/* eslint-disable-next-line @next/next/no-img-element -- local art
+                with known intrinsic size; the loader adds nothing. */}
+            <img src={partner.src} alt={partner.name} width={partner.width} height={partner.height} decoding="async" />
+          </span>
+        ) : (
+          <CategoryArt type={src.type} className="featured-opp-art" />
+        )}
         {partner ? (
           <span className="featured-opp-partner">
             <ShieldCheck size={11} aria-hidden="true" />
@@ -117,7 +125,7 @@ export function FeaturedOpportunity({
       <div className="featured-opp-side">
         <DeadlineChip locale={locale} deadline={item.deadline} />
         <a
-          className={`button ${ready ? "primary" : "secondary"} compact`}
+          className={`button ${lead ? "primary" : "secondary"} compact`}
           href={item.sourceUrl}
           target="_blank"
           rel="noreferrer"

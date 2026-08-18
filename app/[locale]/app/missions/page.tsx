@@ -86,7 +86,7 @@ export default async function MissionsPage({ params }: { params: Promise<{ local
         proofHref="/app/proof"
         labels={{
           stageOf: locale === "my" ? "အဆင့် {a} / {b}" : "Stage {a} of {b}",
-          steps: locale === "my" ? "ခြေလှမ်း" : "steps",
+          steps: locale === "my" ? "အမှတ်" : "points",
           youAreHere: locale === "my" ? "သင် ဤနေရာတွင်" : "You are here",
           complete: locale === "my" ? "ပြီးစီးပြီး" : "Complete",
           locked: locale === "my" ? "မဖွင့်ရသေးပါ" : "Locked",

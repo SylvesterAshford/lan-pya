@@ -191,8 +191,8 @@ export function OpportunityBoard({
           row with a bigger border. */}
       {scope === "for-you" && !hasFilters && filtered.length > 1 ? (
         <div className="featured-opp-pair">
-          {filtered.slice(0, 2).map((entry) => (
-            <FeaturedOpportunity key={`featured-${entry.display.id}`} entry={entry} locale={locale} labels={labels.featured} />
+          {filtered.slice(0, 2).map((entry, i) => (
+            <FeaturedOpportunity key={`featured-${entry.display.id}`} entry={entry} locale={locale} labels={labels.featured} lead={i === 0} />
           ))}
         </div>
       ) : null}

@@ -16,8 +16,10 @@ describe("application localization", () => {
   });
 
   it("localizes known seeded opportunities without changing live source identity", () => {
-    const localized = localizeOpportunity("my", DEMO_OPPORTUNITIES[0]);
-    expect(localized.id).toBe(DEMO_OPPORTUNITIES[0].id);
-    expect(localized.title).toBe("Frontend တည်ဆောက်မှု စိန်ခေါ်ပွဲ");
+    const intern = DEMO_OPPORTUNITIES.find((item) => item.id === "seed-internship")!;
+    const localized = localizeOpportunity("my", intern);
+    expect(localized.id).toBe(intern.id);
+    expect(localized.sourceUrl).toBe(intern.sourceUrl);
+    expect(localized.title).toBe("ဒစ်ဂျစ်တယ် စွန့်ဦးတီထွင်မှု အစီအစဉ် အလုပ်သင်");
   });
 });

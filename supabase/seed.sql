@@ -93,17 +93,21 @@ on conflict do nothing;
 -- ─── Opportunities ───────────────────────────────────────────────────────────
 
 insert into public.opportunities(id,title,organization,type,location,deadline,source_url,status,last_verified_at,data_origin) values
-('14000000-0000-0000-0000-000000000001','Junior Frontend Build Challenge', 'Lan Pya Pilot Partner',   'Challenge',   'Remote · Myanmar',  '2026-08-20','https://example.com/frontend-challenge',    'published','2026-08-11T03:00:00Z','seeded_demo'),
-('14000000-0000-0000-0000-000000000002','Frontend Engineering Internship', 'Myanmar Product Studio',  'Internship',  'Yangon · Hybrid',   '2026-08-29','https://example.com/frontend-internship',   'published','2026-08-11T03:00:00Z','seeded_demo'),
-('14000000-0000-0000-0000-000000000003','Digital Skills Scholarship',      'Future Skills Myanmar',   'Scholarship', 'Online',            '2026-09-12','https://example.com/digital-scholarship',   'published','2026-08-11T03:00:00Z','seeded_demo')
+('14000000-0000-0000-0000-000000000001','Digital Entrepreneurship Community Challenge','U.S. Embassy Rangoon','Challenge','Remote · Myanmar','2026-08-26','https://example.com/digital-entrepreneurship-challenge','published','2026-08-11T03:00:00Z','seeded_demo'),
+('14000000-0000-0000-0000-000000000002','Digital Entrepreneurship Program Intern','Strategy First International College','Internship','Yangon · Hybrid','2026-08-24','https://example.com/digital-entrepreneurship-intern','published','2026-08-11T03:00:00Z','seeded_demo'),
+('14000000-0000-0000-0000-000000000003','Digital Skills Scholarship',      'Future Skills Myanmar',   'Scholarship', 'Online',            '2026-09-12','https://example.com/digital-scholarship',   'published','2026-08-11T03:00:00Z','seeded_demo'),
+('14000000-0000-0000-0000-000000000004','Junior Frontend Build Challenge', 'Lan Pya Pilot Partner',   'Challenge',   'Remote · Myanmar',  '2026-09-02','https://example.com/frontend-challenge',    'published','2026-08-11T03:00:00Z','seeded_demo')
 on conflict do nothing;
 
 insert into public.opportunity_requirements(opportunity_id,competency_id,label,requirement_type) values
 ('14000000-0000-0000-0000-000000000001','13000000-0000-0000-0000-000000000001','Semantic HTML',          'required'),
 ('14000000-0000-0000-0000-000000000001','13000000-0000-0000-0000-000000000002','Responsive CSS',         'required'),
+('14000000-0000-0000-0000-000000000001','13000000-0000-0000-0000-000000000004','JavaScript foundations', 'required'),
 ('14000000-0000-0000-0000-000000000002','13000000-0000-0000-0000-000000000001','Semantic HTML',          'required'),
 ('14000000-0000-0000-0000-000000000002','13000000-0000-0000-0000-000000000002','Responsive CSS',         'required'),
-('14000000-0000-0000-0000-000000000002','13000000-0000-0000-0000-000000000004','JavaScript foundations', 'required'),
+('14000000-0000-0000-0000-000000000002','13000000-0000-0000-0000-000000000003','Accessible structure',   'required'),
 ('14000000-0000-0000-0000-000000000002','13000000-0000-0000-0000-000000000005','Deployment history',     'required'),
-('14000000-0000-0000-0000-000000000003',null,                                 'Current university enrollment','unknown')
+('14000000-0000-0000-0000-000000000003',null,                                 'Current university enrollment','unknown'),
+('14000000-0000-0000-0000-000000000004','13000000-0000-0000-0000-000000000001','Semantic HTML',          'required'),
+('14000000-0000-0000-0000-000000000004','13000000-0000-0000-0000-000000000002','Responsive CSS',         'required')
 on conflict do nothing;

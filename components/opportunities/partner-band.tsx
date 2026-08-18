@@ -1,4 +1,5 @@
 import { ShieldCheck } from "lucide-react";
+import { PARTNERS } from "@/lib/domain/partners";
 import { formatAppDate } from "@/lib/i18n/app-copy";
 
 /**
@@ -18,19 +19,6 @@ import { formatAppDate } from "@/lib/i18n/app-copy";
  * its own ground rather than being forced onto a shared one, which would have
  * meant recolouring somebody's official mark.
  */
-
-type Partner = {
-  name: string;
-  src: string;
-  /** The ground the mark was drawn on; the tile matches it. */
-  ground: "light" | "dark";
-  width: number;
-};
-
-const PARTNERS: Partner[] = [
-  { name: "U.S. Embassy Rangoon", src: "/art/partner-us-embassy-rangoon.webp", ground: "light", width: 321 },
-  { name: "Strategy First International College", src: "/art/partner-strategy-first.webp", ground: "dark", width: 430 },
-];
 
 export function PartnerBand({
   locale,
@@ -64,7 +52,7 @@ export function PartnerBand({
           <span key={partner.name} className={`partner-mark ${partner.ground}`} title={partner.name}>
             {/* eslint-disable-next-line @next/next/no-img-element -- local art
                 with known intrinsic size; the loader adds nothing. */}
-            <img src={partner.src} alt={partner.name} width={partner.width} height={120} decoding="async" />
+            <img src={partner.src} alt={partner.name} width={partner.width} height={partner.height} decoding="async" />
           </span>
         ))}
       </div>

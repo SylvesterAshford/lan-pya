@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useSyncExternalStore } from "react";
+import { useCallback, useEffect, useRef, useSyncExternalStore } from "react";
 import { Link } from "@/i18n/navigation";
 import { Lock, Check, ChevronRight } from "lucide-react";
 import { MASCOT_SRC, MASCOT_RATIO } from "@/components/app/mascot";
@@ -27,7 +27,7 @@ import type { Milestone } from "@/lib/domain/types";
  * appears because the database says the stage is upcoming.
  *
  * Two departures from the reference, both deliberate. It shows "240 XP" and a
- * "7 day streak"; this product measures steps, and the founder plan rules out
+ * "7 day streak"; this product measures points, and the founder plan rules out
  * coercive daily streaks in favour of a weekly rhythm with a grace week. A
  * streak counter here would contradict the research the plan cites.
  */
@@ -121,11 +121,11 @@ export function MissionMap({
 }) {
   const my = locale === "my";
   const wide = useWide();
+  const stage = useRef<HTMLDivElement | null>(null);
   const g = wide ? WIDE : NARROW;
   const num = (v: number) => (my ? toMyanmarDigits(v) : String(v));
 
   const { windowed } = windowStops(milestones);
-  if (!windowed.length) return null;
 
   const stops: Stop[] = windowed.map((m) => {
     const state = stateOf(m);
@@ -159,6 +159,48 @@ export function MissionMap({
   const currentIndex = stops.findIndex((s) => s.state === "current");
   const doneCount = milestones.filter((m) => m.status === "complete").length;
 
+  // Opening the tab should land on the stop you are on, not on the top of a
+  // map that is taller than the window. Empty deps already make this
+  // once-per-mount; a "have I done this" ref on top of that only broke it,
+  // because StrictMode's second pass saw the flag from the first and bailed.
+  useEffect(() => {
+    if (!stage.current) return;
+
+    // If the reader moves first, they have chosen where to look; leave them.
+    let cancelled = false;
+    const release = () => { cancelled = true; };
+    window.addEventListener("wheel", release, { once: true, passive: true });
+    window.addEventListener("touchstart", release, { once: true, passive: true });
+    window.addEventListener("keydown", release, { once: true });
+
+    const centre = () => {
+      // Queried rather than held on a ref: the current stop renders as a
+      // next-intl <Link>, which does not forward one, so a ref here was always
+      // null and the page never moved.
+      const el = stage.current?.querySelector<HTMLElement>(".map-card.current");
+      if (cancelled || !el) return;
+      const r = el.getBoundingClientRect();
+      // Explicit "auto" because the document sets scroll-behavior: smooth, and
+      // animating the page on arrival reads as the layout still settling.
+      window.scrollTo({ top: Math.max(0, window.scrollY + r.top + r.height / 2 - window.innerHeight / 2), behavior: "auto" });
+    };
+
+    // Twice: once when the wide/narrow choice has settled and moved the stop,
+    // and again after the router's own scroll handling, which otherwise puts
+    // the page back at the top a frame later.
+    const first = window.setTimeout(centre, 60);
+    const second = window.setTimeout(centre, 320);
+    return () => {
+      window.clearTimeout(first);
+      window.clearTimeout(second);
+      window.removeEventListener("wheel", release);
+      window.removeEventListener("touchstart", release);
+      window.removeEventListener("keydown", release);
+    };
+  }, []);
+
+  if (!stops.length) return null;
+
   return (
     <figure className="mission-map">
       <header className="mission-map-bar">
@@ -180,7 +222,7 @@ export function MissionMap({
       {/* The stage's aspect ratio is set in CSS, not from `g`. The wide/narrow
           choice resolves after hydration, and driving the box height from it
           made the whole map jump on load. */}
-      <div className="mission-map-stage">
+      <div className="mission-map-stage" ref={stage}>
         <svg viewBox={`0 0 ${g.W} ${g.H}`} className="mission-map-scene" aria-hidden="true">
           {/* ---- sky: cool at altitude, warming toward the snowline ---- */}
           <defs>

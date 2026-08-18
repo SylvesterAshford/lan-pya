@@ -42,8 +42,8 @@ export function LevelMeter({
         </span>
         <span className="level-strip-xp">
           {progress.isMax
-            ? (my ? `ခြေလှမ်း ${num(progress.xp)}` : `${num(progress.xp)} steps`)
-            : (my ? `ခြေလှမ်း ${num(progress.xp)} / ${num(progress.next!.minXp)}` : `${num(progress.xp)} / ${num(progress.next!.minXp)} steps`)}
+            ? (my ? `အမှတ် ${num(progress.xp)}` : `${num(progress.xp)} points`)
+            : (my ? `အမှတ် ${num(progress.xp)} / ${num(progress.next!.minXp)}` : `${num(progress.xp)} / ${num(progress.next!.minXp)} points`)}
         </span>
       </div>
     );
@@ -65,12 +65,12 @@ export function LevelMeter({
         <p className="level-xp">
           {progress.isMax ? (
             my
-              ? `${num(progress.xp)} ခြေလှမ်း · အမြင့်ဆုံးအဆင့် ရောက်ရှိပြီး`
-              : `${num(progress.xp)} steps · highest level reached`
+              ? `${num(progress.xp)} အမှတ် · အမြင့်ဆုံးအဆင့် ရောက်ရှိပြီး`
+              : `${num(progress.xp)} points · highest level reached`
           ) : (
             <>
               <b>{num(progress.xpToNext)}</b>
-              {my ? ` ခြေလှမ်း ကျန်သည် — ` : " steps to "}
+              {my ? ` အမှတ် ကျန်သည် — ` : " points to "}
               <b>{localizeLevel(locale, progress.next!)}</b>
             </>
           )}
