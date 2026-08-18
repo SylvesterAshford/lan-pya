@@ -1,4 +1,4 @@
-import { LevelInsignia } from "@/components/app/emblem";
+import { PointsBadge } from "@/components/app/points-badge";
 import { StepsRing } from "@/components/app/steps-ring";
 import { toMyanmarDigits } from "@/lib/domain/deadlines";
 import { localizeGate, localizeLevel, type PathProgress } from "@/lib/domain/progress";
@@ -35,7 +35,16 @@ export function LevelMeter({
   if (variant === "compact") {
     return (
       <div className="level-strip">
-        <LevelInsignia rank={progress.level.rank} hue={progress.level.hue} size={30} />
+        {/* The collectible badge, emblem only. The hexagon was a second,
+            unrelated rank language sitting next to it. */}
+        <PointsBadge
+          locale={locale}
+          points={progress.xp}
+          levelName={localizeLevel(locale, progress.level)}
+          labels={{ points: my ? "အမှတ်" : "Points" }}
+          size={34}
+          mark
+        />
         <strong>{name}</strong>
         <span className="level-strip-track" aria-hidden="true">
           <span style={{ width: `${percent}%` }} />

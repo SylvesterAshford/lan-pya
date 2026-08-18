@@ -5,7 +5,7 @@ import { MissionMap } from "@/components/missions/mission-map";
 import { LevelMeter } from "@/components/app/level-meter";
 import { emblemForStage, resolveProgress } from "@/lib/domain/progress";
 import { requireUser } from "@/lib/auth";
-import { getActivePathDashboard, getProofItems, getRoadmap } from "@/lib/data/app-data";
+import { getActivePathDashboard, getProfile, getProofItems, getRoadmap } from "@/lib/data/app-data";
 import { getAppCopy, formatAppDate, localizeCareerTerm, localizeRoadmapMilestone } from "@/lib/i18n/app-copy";
 import type { Milestone } from "@/lib/domain/types";
 
@@ -25,9 +25,13 @@ function stateLabel(c: ReturnType<typeof getAppCopy>, workState: string, submiss
 
 export default async function MissionsPage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
-  await requireUser(locale);
+  const user = await requireUser(locale);
   const c = getAppCopy(locale);
-  const [dashboard, proof] = await Promise.all([getActivePathDashboard(), getProofItems()]);
+  const [dashboard, proof, profile] = await Promise.all([
+    getActivePathDashboard(),
+    getProofItems(),
+    getProfile(user.id),
+  ]);
 
   if (!dashboard.activePath) {
     return (
@@ -80,6 +84,7 @@ export default async function MissionsPage({ params }: { params: Promise<{ local
       <MissionMap
         milestones={roadmap}
         locale={locale}
+        mascotVariant={profile?.avatar}
         pathTitle={localizeCareerTerm(locale, pathKey, dashboard.activePath.title)}
         steps={progress.xp}
         missionHref={mission ? (missionHref[mission.key] ?? "/app/paths") : undefined}

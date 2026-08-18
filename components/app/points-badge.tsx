@@ -87,6 +87,7 @@ export function PointsBadge({
   levelName,
   labels,
   size = 168,
+  mark = false,
   className,
 }: {
   locale: string;
@@ -97,6 +98,10 @@ export function PointsBadge({
   /** The word "Points" in the reader's language. */
   labels: { points: string };
   size?: number;
+  /** Emblem only: the medal without the number panel or the level ribbon. At
+   *  the ~30px this is drawn at in a rank chip or a proof row, the text is
+   *  illegible, and an unreadable number is worse than none. */
+  mark?: boolean;
   className?: string;
 }) {
   const my = locale === "my";
@@ -193,6 +198,8 @@ export function PointsBadge({
 
         {/* Number panel. The two figures below are the only part of this file
             that is not fixed artwork. */}
+        {mark ? null : (
+          <>
         <path d="M162 326c42 18 88 27 138 27s96-9 138-27v111c-38 29-84 44-138 44s-100-15-138-44Z" fill="#F8FAFC" />
         <path d="M173 339c39 16 81 24 127 24s88-8 127-24" fill="none" stroke="#D8E6E2" strokeWidth="3" />
         <text
@@ -226,9 +233,12 @@ export function PointsBadge({
         >
           {labelText}
         </text>
+          </>
+        )}
       </g>
 
       {/* Level ribbon */}
+      {mark ? null : (
       <g filter="url(#pb-shadow)" aria-hidden="true">
         <path d="M128 457h344l-35 48H163Z" fill="url(#pb-gold)" />
         <path d="m128 457-49 21 42 53 42-26Z" fill="#C97406" />
@@ -251,6 +261,7 @@ export function PointsBadge({
           {levelText}
         </text>
       </g>
+      )}
 
       {/* Collectible stars */}
       <g fill="#FFF4CC" stroke="#F59E0B" strokeWidth="4" aria-hidden="true">

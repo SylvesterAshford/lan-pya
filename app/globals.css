@@ -11511,3 +11511,28 @@ html[lang="my"] .oppsig-skills-head {
     background: var(--nav-hover-bg);
   }
 }
+
+/* The badge sits inside the points pill on the climb card. */
+.climb-points { display: inline-flex; align-items: center; gap: 8px; }
+.climb-points svg { flex: none; }
+
+/* Home's closing note. It carried a class and no rules, so it rendered as bare
+   text under the last card instead of the quiet panel it is on Opportunities. */
+.home-note {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 10px;
+  align-items: start;
+  margin-top: 4px;
+  padding: 14px 16px;
+  background: var(--surface-sunk);
+  border: 1px solid var(--hairline);
+  border-radius: var(--r-card);
+}
+.home-note svg { margin-top: 1px; color: var(--teal-700); }
+.home-note p {
+  font-size: var(--t-meta);
+  line-height: var(--l-meta);
+  color: var(--muted-ink);
+  max-width: 78ch;
+}

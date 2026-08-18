@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useRef, useSyncExternalStore } from "react";
 import { Link } from "@/i18n/navigation";
 import { Lock, Check, ChevronRight } from "lucide-react";
-import { MASCOT_SRC, MASCOT_RATIO } from "@/components/app/mascot";
+import { mascotArt } from "@/components/app/mascot";
 import { toMyanmarDigits } from "@/lib/domain/deadlines";
 import type { Milestone } from "@/lib/domain/types";
 
@@ -102,6 +102,7 @@ function stateOf(m: Milestone): Stop["state"] {
 export function MissionMap({
   milestones,
   locale,
+  mascotVariant,
   pathTitle,
   steps,
   missionHref,
@@ -110,6 +111,10 @@ export function MissionMap({
 }: {
   milestones: Milestone[];
   locale: string;
+  /** The account's chosen character. The map draws the same figure the profile
+   *  and Home do; hardcoding one here made the choice look like it had not
+   *  taken effect. */
+  mascotVariant?: string | null;
   pathTitle: string;
   steps: number;
   missionHref?: string;
@@ -121,6 +126,7 @@ export function MissionMap({
 }) {
   const my = locale === "my";
   const wide = useWide();
+  const art = mascotArt(mascotVariant);
   const stage = useRef<HTMLDivElement | null>(null);
   const g = wide ? WIDE : NARROW;
   const num = (v: number) => (my ? toMyanmarDigits(v) : String(v));
@@ -367,14 +373,14 @@ export function MissionMap({
           {/* ---- the traveller, standing beside the stop you are on ---- */}
           {currentIndex >= 0 ? (
             <image
-              href={MASCOT_SRC}
+              href={art.src}
               x={
                 cardOnLeft(currentIndex)
                   ? xAt(currentIndex) + g.rCurrent + (wide ? 10 : 6)
-                  : xAt(currentIndex) - g.rCurrent - g.mascot * MASCOT_RATIO - (wide ? 10 : 6)
+                  : xAt(currentIndex) - g.rCurrent - g.mascot * art.ratio - (wide ? 10 : 6)
               }
               y={yAt(currentIndex) - g.mascot + g.rCurrent}
-              width={g.mascot * MASCOT_RATIO}
+              width={g.mascot * art.ratio}
               height={g.mascot}
               preserveAspectRatio="xMidYMax meet"
             />

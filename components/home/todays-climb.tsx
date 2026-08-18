@@ -1,4 +1,5 @@
 import { ArrowRight } from "lucide-react";
+import { PointsBadge } from "@/components/app/points-badge";
 import { Link } from "@/i18n/navigation";
 import { Mascot } from "@/components/app/mascot";
 import { toMyanmarDigits } from "@/lib/domain/deadlines";
@@ -90,6 +91,17 @@ export function TodaysClimb({
         {hasMission ? (
           <p className="climb-meta">
             <span className="climb-points">
+              {/* The same collectible the profile shows, emblem only: at this
+                  size its own numerals would be illegible, so the figure beside
+                  it does the counting. */}
+              <PointsBadge
+                locale={locale}
+                points={pointsAward}
+                levelName=""
+                labels={{ points: labels.points }}
+                size={26}
+                mark
+              />
               <b>{num(pointsAward)}</b> {labels.points}
             </span>
           </p>
