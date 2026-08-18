@@ -11544,3 +11544,105 @@ html[lang="my"] .oppsig-skills-head {
 .changelog-rail > header { padding-top: 14px; padding-bottom: 12px; }
 .changelog-rail .changelog-list li { padding-left: 18px; padding-right: 18px; }
 .changelog-rail .changelog-more { display: block; padding: 12px 18px 14px; }
+
+/* ===================================================================
+   Sidebar navigation — liquid glass
+   ===================================================================
+   The item reads as a pane of glass lying on the navy, not a grey block cut
+   out of it: a translucent white fill the gradient shows through, a light
+   rim on all four sides, and a highlight along the top inside edge where a
+   real edge would catch light.
+
+   backdrop-filter is the effect, not the fallback. Where it is unsupported —
+   or where the reader has asked for less transparency — the same rule set
+   resolves to an opaque fill, so the label never sits on bare navy.
+   =================================================================== */
+
+.app-sidebar .sidebar-menu-button > a {
+  position: relative;
+  border: 1px solid transparent;
+  transition: background 160ms ease-out, color 160ms ease-out, border-color 160ms ease-out;
+}
+
+.app-sidebar .sidebar-menu-button > a:hover {
+  background: rgb(255 255 255 / 0.07);
+  border-color: rgb(255 255 255 / 0.10);
+}
+
+.app-sidebar .sidebar-menu-button[data-active] > a,
+.app-sidebar .sidebar-menu-button[data-active="true"] > a {
+  background: rgb(255 255 255 / 0.12);
+  border-color: rgb(255 255 255 / 0.22);
+  /* Inset only. A drop shadow would make it hover above the rail; this is a
+     thickness cue, which is what glass has. */
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 0.20),
+    inset 0 -1px 0 rgb(0 0 0 / 0.15);
+}
+
+@supports ((backdrop-filter: blur(6px)) or (-webkit-backdrop-filter: blur(6px))) {
+  .app-sidebar .sidebar-menu-button > a:hover {
+    -webkit-backdrop-filter: blur(6px) saturate(140%);
+    backdrop-filter: blur(6px) saturate(140%);
+  }
+  .app-sidebar .sidebar-menu-button[data-active] > a,
+  .app-sidebar .sidebar-menu-button[data-active="true"] > a {
+    background: rgb(255 255 255 / 0.10);
+    -webkit-backdrop-filter: blur(10px) saturate(160%);
+    backdrop-filter: blur(10px) saturate(160%);
+  }
+}
+
+/* Asked for less transparency: give them a solid fill instead of a thinner
+   one, so contrast goes up rather than down. */
+@media (prefers-reduced-transparency: reduce) {
+  .app-sidebar .sidebar-menu-button[data-active] > a,
+  .app-sidebar .sidebar-menu-button[data-active="true"] > a {
+    background: var(--navy-500);
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .app-sidebar .sidebar-menu-button > a { transition: none; }
+}
+
+/* The rim must not swallow the focus ring. */
+.app-sidebar .sidebar-menu-button > a:focus-visible {
+  outline: 2px solid var(--teal-500);
+  outline-offset: 2px;
+}
+
+/* ===================================================================
+   Profile hero composition
+   ===================================================================
+   The copy column took every spare pixel while the stat tiles were capped at
+   420px, so a third of the card was empty between the tiles and the badge.
+   The tiles now span the column they are in, and the account label sits on
+   the identity line instead of alone on a line of its own.
+   =================================================================== */
+
+.profile-hero-meta {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.profile-hero-meta .profile-demo { margin: 0; }
+
+.profile-hero .profile-stats {
+  max-width: none;
+  margin-top: 14px;
+}
+
+@media (max-width: 860px) {
+  .profile-hero { grid-template-columns: auto minmax(0, 1fr); }
+  /* The badge drops beneath rather than squeezing the tiles to nothing. */
+  .profile-hero > :last-child { grid-column: 1 / -1; justify-self: start; }
+}
+
+@media (max-width: 560px) {
+  .profile-hero { grid-template-columns: minmax(0, 1fr); }
+  .profile-hero .profile-stats { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
+}

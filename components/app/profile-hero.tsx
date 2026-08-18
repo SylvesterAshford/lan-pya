@@ -76,6 +76,7 @@ export function ProfileHero({
           <h2>{alias}</h2>
           {editor}
         </div>
+        <div className="profile-hero-meta">
         <p className="profile-hero-line">
           {headline ?? (
             <>
@@ -85,6 +86,7 @@ export function ProfileHero({
           )}
         </p>
         {isDemo ? <span className="avail prev profile-demo">{labels.demo}</span> : null}
+        </div>
 
         <dl className="profile-stats">
           <div>
