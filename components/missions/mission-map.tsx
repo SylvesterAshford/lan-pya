@@ -42,7 +42,14 @@ type Stop = {
 
 type Geometry = {
   W: number; H: number;
-  /** Fractions of W, bottom stop first. The climb narrows toward the peak. */
+  /**
+   * Width of the band the composition was authored in. The summit and the
+   * climb are placed inside this band and centred; everything else spans the
+   * full canvas. Widening W therefore extends the scenery sideways instead of
+   * stretching the peak flat.
+   */
+  art: number;
+  /** Fractions of `art`, bottom stop first. The climb narrows toward the peak. */
   xs: number[];
   top: number; bottom: number;
   r: number; rCurrent: number;
@@ -50,10 +57,17 @@ type Geometry = {
   card: number;
 };
 
-const WIDE: Geometry = { W: 923, H: 1704, xs: [0.43, 0.57, 0.41, 0.52, 0.50], top: 300, bottom: 1470, r: 31, rCurrent: 40, mascot: 196, card: 232 };
-const NARROW: Geometry = { W: 923, H: 1704, xs: [0.40, 0.58, 0.38, 0.54, 0.50], top: 300, bottom: 1470, r: 31, rCurrent: 40, mascot: 196, card: 250 };
+// Landscape on a desktop column, portrait on a phone. The desktop canvas is
+// wider than the composition and a little shorter, so the map fills the column
+// it sits in rather than leaving ~220px of dead page on either side, and the
+// stops and traveller sit a shade smaller inside it.
+const WIDE: Geometry = { W: 1320, H: 1400, art: 923, xs: [0.43, 0.57, 0.41, 0.52, 0.50], top: 300, bottom: 1290, r: 28, rCurrent: 36, mascot: 176, card: 215 };
+const NARROW: Geometry = { W: 923, H: 1704, art: 923, xs: [0.40, 0.58, 0.38, 0.54, 0.50], top: 300, bottom: 1470, r: 31, rCurrent: 40, mascot: 196, card: 250 };
 
-const WIDE_QUERY = "(min-width: 780px)";
+// The width at which the landscape canvas has enough column to be worth it.
+// `.mission-map` in globals.css caps and shapes the box at this same width;
+// the two describe one layout and have to move together.
+const WIDE_QUERY = "(min-width: 1300px)";
 
 function useWide() {
   const subscribe = useCallback((cb: () => void) => {
@@ -125,7 +139,14 @@ export function MissionMap({
   // first stop of the window is drawn last in screen terms.
   const n = stops.length;
   const yAt = (i: number) => g.bottom - (i * (g.bottom - g.top)) / (n - 1 || 1);
-  const xAt = (i: number) => g.xs[i % g.xs.length] * g.W;
+  // Shape-critical art is laid out in the centred `art` band; background that
+  // should reach the edges keeps using g.W directly.
+  const ax = (f: number) => (g.W - g.art) / 2 + f * g.art;
+  const xAt = (i: number) => ax(g.xs[i % g.xs.length]);
+  // Which side a stop's card takes. Declared once because the traveller has to
+  // stand on the other side of the same stop, and the two used to be worked out
+  // independently — which stood him underneath his own card.
+  const cardOnLeft = (i: number) => xAt(i) > g.W / 2;
 
   const pathD = stops.map((_, i) => {
     const x = xAt(i), y = yAt(i);
@@ -156,7 +177,10 @@ export function MissionMap({
         </span>
       </header>
 
-      <div className="mission-map-stage" style={{ aspectRatio: `${g.W} / ${g.H}` }}>
+      {/* The stage's aspect ratio is set in CSS, not from `g`. The wide/narrow
+          choice resolves after hydration, and driving the box height from it
+          made the whole map jump on load. */}
+      <div className="mission-map-stage">
         <svg viewBox={`0 0 ${g.W} ${g.H}`} className="mission-map-scene" aria-hidden="true">
           {/* ---- sky: cool at altitude, warming toward the snowline ---- */}
           <defs>
@@ -187,9 +211,9 @@ export function MissionMap({
           ))}
 
           {/* ---- the summit: dark near face, lit far face, snow cap ---- */}
-          <path d={`M${g.W * 0.5} 196 L${g.W * 0.79} 560 L${g.W * 0.21} 560 Z`} fill="var(--map-peak)" />
-          <path d={`M${g.W * 0.5} 196 L${g.W * 0.79} 560 L${g.W * 0.5} 560 Z`} fill="var(--map-peak-lit)" />
-          <path d={`M${g.W * 0.5} 196 L${g.W * 0.575} 290 L${g.W * 0.53} 274 L${g.W * 0.487} 320 L${g.W * 0.45} 268 L${g.W * 0.425} 290 Z`} fill="var(--map-snowcap)" />
+          <path d={`M${ax(0.5)} 196 L${ax(0.79)} 560 L${ax(0.21)} 560 Z`} fill="var(--map-peak)" />
+          <path d={`M${ax(0.5)} 196 L${ax(0.79)} 560 L${ax(0.5)} 560 Z`} fill="var(--map-peak-lit)" />
+          <path d={`M${ax(0.5)} 196 L${ax(0.575)} 290 L${ax(0.53)} 274 L${ax(0.487)} 320 L${ax(0.45)} 268 L${ax(0.425)} 290 Z`} fill="var(--map-snowcap)" />
 
           {/* flanking peaks, lower and hazier */}
           <path d={`M${g.W * 0.17} 330 L${g.W * 0.44} 620 L0 620 Z`} fill="var(--map-ridge-3)" />
@@ -200,7 +224,7 @@ export function MissionMap({
           <path d={`M0 880 Q ${g.W * 0.26} 745, ${g.W * 0.55} 845 T ${g.W} 800 L${g.W} ${g.H} L0 ${g.H} Z`} fill="var(--map-ridge-1)" />
 
           {/* ---- conifer belt along the treeline ---- */}
-          {Array.from({ length: 26 }, (_, i) => {
+          {Array.from({ length: Math.round((26 * g.W) / 923) }, (_, i) => {
             // Deterministic scatter: a seeded pattern rather than Math.random,
             // so server and client render the same trees.
             const t = (i * 37) % 100 / 100;
@@ -219,7 +243,7 @@ export function MissionMap({
           {/* ---- snowfield: the foreground the climb starts from ---- */}
           <path d={`M0 1010 Q ${g.W * 0.3} 900, ${g.W * 0.62} 1000 T ${g.W} 950 L${g.W} ${g.H} L0 ${g.H} Z`} fill="var(--map-snow)" />
           {/* contour lines, the reference's drifting snow texture */}
-          {[1080, 1180, 1290, 1410, 1530].map((cy, i) => (
+          {Array.from({ length: 5 }, (_, i) => 1010 + ((i + 1) * (g.H - 1010)) / 6).map((cy, i) => (
             <path
               key={cy}
               d={`M${-40 + i * 18} ${cy} Q ${g.W * 0.3} ${cy - 46}, ${g.W * 0.58} ${cy - 6} T ${g.W + 40} ${cy - 30}`}
@@ -231,17 +255,19 @@ export function MissionMap({
           ))}
 
           {/* ---- foreground rocks and shoots ---- */}
-          {[[0.12, 1600, 1], [0.86, 1560, 0.85], [0.30, 1650, 0.7], [0.68, 1620, 0.9]].map(([fx, cy, k]) => (
+          {/* Measured up from the bottom edge rather than pinned to absolute
+              y, so the same shapes sit correctly on both canvas heights. */}
+          {[[0.12, 104, 1], [0.86, 144, 0.85], [0.30, 54, 0.7], [0.68, 84, 0.9]].map(([fx, up, k]) => (
             <g key={`rock-${fx}`}>
-              <ellipse cx={fx * g.W} cy={cy} rx={26 * k} ry={15 * k} fill="var(--map-rock)" />
-              <ellipse cx={fx * g.W - 8 * k} cy={cy - 5 * k} rx={16 * k} ry={9 * k} fill="var(--map-rock-lit)" />
+              <ellipse cx={fx * g.W} cy={g.H - up} rx={26 * k} ry={15 * k} fill="var(--map-rock)" />
+              <ellipse cx={fx * g.W - 8 * k} cy={g.H - up - 5 * k} rx={16 * k} ry={9 * k} fill="var(--map-rock-lit)" />
             </g>
           ))}
-          {[[0.20, 1640], [0.78, 1600], [0.42, 1672], [0.60, 1655], [0.08, 1550]].map(([fx, cy]) => (
+          {[[0.20, 64], [0.78, 104], [0.42, 32], [0.60, 49], [0.08, 154]].map(([fx, up]) => (
             <g key={`shoot-${fx}`} stroke="var(--map-shoot)" strokeWidth="3" strokeLinecap="round" fill="none">
-              <path d={`M${fx * g.W} ${cy} q-10 -14 -4 -26`} />
-              <path d={`M${fx * g.W} ${cy} q10 -12 5 -22`} />
-              <path d={`M${fx * g.W} ${cy} v-16`} />
+              <path d={`M${fx * g.W} ${g.H - up} q-10 -14 -4 -26`} />
+              <path d={`M${fx * g.W} ${g.H - up} q10 -12 5 -22`} />
+              <path d={`M${fx * g.W} ${g.H - up} v-16`} />
             </g>
           ))}
 
@@ -300,7 +326,11 @@ export function MissionMap({
           {currentIndex >= 0 ? (
             <image
               href={MASCOT_SRC}
-              x={xAt(currentIndex) - g.rCurrent - g.mascot * MASCOT_RATIO - (wide ? 10 : 6)}
+              x={
+                cardOnLeft(currentIndex)
+                  ? xAt(currentIndex) + g.rCurrent + (wide ? 10 : 6)
+                  : xAt(currentIndex) - g.rCurrent - g.mascot * MASCOT_RATIO - (wide ? 10 : 6)
+              }
               y={yAt(currentIndex) - g.mascot + g.rCurrent}
               width={g.mascot * MASCOT_RATIO}
               height={g.mascot}
@@ -315,7 +345,7 @@ export function MissionMap({
           // Place the card on whichever side actually has room, not on
           // alternating indexes. Index parity put three of five cards
           // off-screen at 360px, where they were clipped rather than wrapped.
-          const leftSide = x > g.W / 2;
+          const leftSide = cardOnLeft(i);
           const style = {
             top: `${(y / g.H) * 100}%`,
             [leftSide ? "right" : "left"]: `${((leftSide ? g.W - x + g.r + 28 : x + g.r + 28) / g.W) * 100}%`,

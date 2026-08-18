@@ -285,8 +285,11 @@ export function OpportunityBoard({
         </section>
       )}
       <aside className="opp-note">
-        <strong>{labels.noteTitle}</strong>
-        <p>{labels.noteBody}</p>
+        <ShieldCheck size={16} aria-hidden="true" />
+        <div>
+          <strong>{labels.noteTitle}</strong>
+          <p>{labels.noteBody}</p>
+        </div>
       </aside>
     </div>
   );
