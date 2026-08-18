@@ -13,10 +13,12 @@ describe("MeNav", () => {
   it.each([
     // Portfolio left this sub-nav when it became a sidebar destination; two
     // routes to one page is two places to keep in step.
+    // Privacy left this strip too. It is reachable from the account section on
+    // the profile, which is where the rest of the account controls live.
     ["en", "profile", "Profile", "/app/profile"],
-    ["en", "privacy", "Privacy", "/app/privacy"],
+    ["en", "careers", "Careers", "/app/careers"],
     ["my", "profile", "ပရိုဖိုင်", "/app/profile"],
-    ["my", "privacy", "ကိုယ်ရေးလုံခြုံမှု", "/app/privacy"],
+    ["my", "careers", "လမ်းကြောင်းများ", "/app/careers"],
   ] as const)("marks the %s %s destination active", (locale, active, label, href) => {
     render(<MeNav locale={locale} active={active} />);
     expect(screen.getByRole("link", { name: label })).toHaveAttribute("aria-current", "page");
