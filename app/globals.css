@@ -9959,3 +9959,70 @@ html[lang="my"] .featured-opp-kind { text-transform: none; letter-spacing: 0; }
   .featured-opp-side { grid-auto-flow: row; }
   .featured-opp-side .button { justify-self: start; }
 }
+
+/* ===================================================================
+   Profile editor
+   =================================================================== */
+
+/* Block, not flex. The name and the edit button are inline neighbours; the
+   open form is block-level and therefore starts its own line without needing a
+   flex basis to resolve against a column that shrink-wraps to its contents. */
+.profile-hero-name { display: block; }
+.profile-hero-name h2 { display: inline; margin-right: 10px; vertical-align: middle; }
+.profile-edit-open { vertical-align: middle; }
+.profile-edit-open { flex: none; }
+
+.profile-editor {
+  display: grid;
+  gap: 10px;
+  min-width: 0;
+  max-width: 420px;
+  margin: 2px 0 8px;
+  padding: 14px;
+  background: var(--surface-sunk);
+  border: 1px solid var(--hairline);
+  border-radius: 12px;
+}
+.profile-editor label { display: grid; gap: 4px; }
+.profile-editor label > span {
+  font-size: var(--t-label);
+  font-weight: 600;
+  color: var(--muted-ink);
+}
+.profile-editor input[type="text"],
+.profile-editor input:not([type]) {
+  width: 100%;
+  padding: 8px 10px;
+  font: inherit;
+  font-size: var(--t-meta);
+  color: var(--ink);
+  background: var(--surface);
+  border: 1px solid var(--hairline);
+  border-radius: 9px;
+}
+.profile-editor input:focus-visible { outline: 2px solid var(--navy-500); outline-offset: 1px; }
+
+.profile-editor-characters { display: flex; gap: 10px; flex-wrap: wrap; border: 0; padding: 0; }
+.profile-editor-characters legend {
+  font-size: var(--t-label);
+  font-weight: 600;
+  color: var(--muted-ink);
+  padding: 0 0 4px;
+}
+/* The character itself is the control, so the radio is visually hidden rather
+   than removed — it stays the thing keyboards and screen readers operate. */
+.profile-editor-characters label {
+  display: grid;
+  place-items: center;
+  padding: 6px 12px;
+  background: var(--surface);
+  border: 1px solid var(--hairline);
+  border-radius: 10px;
+  cursor: pointer;
+}
+.profile-editor-characters label.on { border-color: var(--navy-500); box-shadow: 0 0 0 1px var(--navy-500) inset; }
+.profile-editor-characters input { position: absolute; width: 1px; height: 1px; opacity: 0; }
+.profile-editor-characters label:focus-within { outline: 2px solid var(--navy-500); outline-offset: 2px; }
+
+.profile-editor-error { font-size: var(--t-meta); color: var(--danger-ink, #b42318); }
+.profile-editor-actions { display: flex; gap: 8px; flex-wrap: wrap; }

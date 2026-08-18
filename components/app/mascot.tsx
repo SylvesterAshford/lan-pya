@@ -18,27 +18,50 @@
  * an SVG `<image>` inside its own coordinate space rather than as a DOM node.
  */
 
-export const MASCOT_SRC = "/art/traveller.webp";
+export type MascotVariant = "traveller" | "traveller-f";
+
+type VariantArt = { key: MascotVariant; src: string; ratio: number; en: string; my: string };
+
+/**
+ * The characters a learner can pick between.
+ *
+ * Only variants with real artwork belong here. A picker whose options render
+ * the same drawing is worse than no picker, so `traveller-f` appears the
+ * moment its file does — add the entry, and the profile picker turns itself
+ * on. Nothing else needs changing; the database already accepts the key.
+ */
+export const MASCOT_VARIANTS: VariantArt[] = [
+  { key: "traveller", src: "/art/traveller.webp", ratio: 139 / 420, en: "Traveller", my: "ခရီးသွား" },
+];
+
+export function mascotArt(variant?: string | null): VariantArt {
+  return MASCOT_VARIANTS.find((v) => v.key === variant) ?? MASCOT_VARIANTS[0];
+}
+
+export const MASCOT_SRC = MASCOT_VARIANTS[0].src;
 
 /** Natural proportions of the prepared asset, so callers can size by height
  *  without guessing the width and squashing the figure. */
-export const MASCOT_RATIO = 139 / 420;
+export const MASCOT_RATIO = MASCOT_VARIANTS[0].ratio;
 
 export function Mascot({
   size = 120,
+  variant,
   className,
   title,
 }: {
   size?: number;
+  variant?: string | null;
   className?: string;
   title?: string;
 }) {
-  const w = Math.round(size * MASCOT_RATIO);
+  const art = mascotArt(variant);
+  const w = Math.round(size * art.ratio);
   return (
     // eslint-disable-next-line @next/next/no-img-element -- fixed-size local
     // art with known intrinsic dimensions; the loader adds no value here.
     <img
-      src={MASCOT_SRC}
+      src={art.src}
       className={className}
       width={w}
       height={size}

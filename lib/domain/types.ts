@@ -18,6 +18,10 @@ export type SubmissionState =
 export type Profile = {
   id: string;
   alias: string;
+  /** The learner's own line for the profile hero, or null to derive one. */
+  headline: string | null;
+  /** Which character they picked; see MASCOT_VARIANTS. */
+  avatar: string;
   locale: "en" | "my";
   goal: string;
   weeklyHours: string;

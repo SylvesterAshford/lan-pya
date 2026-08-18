@@ -25,6 +25,9 @@ import { localizeLevel, type PathProgress } from "@/lib/domain/progress";
  */
 export function ProfileHero({
   alias,
+  headline,
+  avatar,
+  editor,
   pathTitle,
   since,
   progress,
@@ -35,6 +38,13 @@ export function ProfileHero({
   labels,
 }: {
   alias: string;
+  /** The learner's own line. Falls back to the derived path line when unset,
+   *  so clearing it restores a real sentence rather than blanking the slot. */
+  headline: string | null;
+  avatar: string;
+  /** Rendered next to the name. Passed in because the hero is a server
+   *  component and the editor needs to be a client one. */
+  editor?: React.ReactNode;
   pathTitle: string | null;
   /** Formatted month the learner started this path, or null when unknown. */
   since: string | null;
@@ -51,7 +61,7 @@ export function ProfileHero({
   return (
     <section className="profile-hero">
       <div className="profile-hero-figure">
-        <Mascot size={132} />
+        <Mascot size={132} variant={avatar} />
         {progress ? (
           <span className="profile-level-pill">
             <span className="profile-level-dot" data-hue={progress.level.hue} aria-hidden="true" />
@@ -62,10 +72,17 @@ export function ProfileHero({
       </div>
 
       <div className="profile-hero-copy">
-        <h2>{alias}</h2>
+        <div className="profile-hero-name">
+          <h2>{alias}</h2>
+          {editor}
+        </div>
         <p className="profile-hero-line">
-          {pathTitle ?? labels.noPath}
-          {since ? <span className="profile-since"> · {labels.since} {since}</span> : null}
+          {headline ?? (
+            <>
+              {pathTitle ?? labels.noPath}
+              {since ? <span className="profile-since"> · {labels.since} {since}</span> : null}
+            </>
+          )}
         </p>
         {isDemo ? <span className="avail prev profile-demo">{labels.demo}</span> : null}
 

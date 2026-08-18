@@ -4,6 +4,8 @@ import { CAREER_TRACKS } from "./career-tracks";
 export const DEMO_PROFILE: Profile = {
   id: "seeded-thiri",
   alias: "Thiri",
+  headline: null,
+  avatar: "traveller",
   locale: "en",
   goal: "Frontend Web Developer",
   weeklyHours: "4–6 hours",

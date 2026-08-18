@@ -25,6 +25,7 @@ export async function getProfile(userId: string): Promise<Profile | null> {
   if (!data) return null;
   return {
     id: String(data.user_id), alias: String(data.alias ?? "Learner"),
+    headline: data.headline ? String(data.headline) : null, avatar: String(data.avatar ?? "traveller"),
     locale: data.locale === "my" ? "my" : "en", goal: String(data.goal ?? "Frontend Web Developer"),
     weeklyHours: String(data.weekly_hours ?? "4–6 hours"), onboardingComplete: Boolean(data.onboarding_complete),
     dataOrigin: data.data_origin === "seeded_demo" ? "seeded_demo" : "live",

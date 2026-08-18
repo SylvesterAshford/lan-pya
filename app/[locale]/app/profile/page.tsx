@@ -1,6 +1,7 @@
 import { ArrowRight, Globe2, Settings2, ShieldCheck } from "lucide-react";
 import { Link } from "@/i18n/navigation";
 import { MeNav } from "@/components/app/me-nav";
+import { ProfileEditor } from "@/components/app/profile-editor";
 import { ProfileHero } from "@/components/app/profile-hero";
 import { resolveProgress } from "@/lib/domain/progress";
 import { CAREER_PATH_CATALOG } from "@/lib/domain/career-recommendations";
@@ -48,6 +49,16 @@ export default async function ProfilePage({ params }: { params: Promise<{ locale
     <section className="page-heading compact-heading"><h1>{c.profile.title}</h1><p>{c.profile.body}</p></section>
     <ProfileHero
       alias={profile.alias}
+      headline={profile.headline}
+      avatar={profile.avatar}
+      editor={
+        <ProfileEditor
+          alias={profile.alias}
+          headline={profile.headline}
+          avatar={profile.avatar}
+          labels={c.profile.editor}
+        />
+      }
       pathTitle={dashboard.activePath ? localizeCareerTerm(locale, dashboard.activePath.key, dashboard.activePath.title) : null}
       since={activeSince}
       progress={progress}
