@@ -10421,9 +10421,11 @@ html[lang="my"] .profile-section-label { text-transform: none; letter-spacing: 0
   position: absolute;
   inset: 0;
   z-index: 1;
+  /* Only the seam, not a veil over the whole illustration. The earlier mix
+     dimmed the sunrise it was supposed to be blending into. */
   background:
-    linear-gradient(90deg, #101a30 0%, rgb(16 26 48 / 0.92) 12%, rgb(16 26 48 / 0.35) 34%, transparent 58%),
-    linear-gradient(0deg, rgb(16 26 48 / 0.55) 0%, transparent 26%);
+    linear-gradient(90deg, #101a30 0%, rgb(16 26 48 / 0.86) 8%, rgb(16 26 48 / 0.30) 24%, transparent 44%),
+    linear-gradient(0deg, rgb(16 26 48 / 0.30) 0%, transparent 18%);
   pointer-events: none;
 }
 
