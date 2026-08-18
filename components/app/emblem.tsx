@@ -50,10 +50,17 @@ export const EMBLEM_SHAPES: Record<EmblemKey, EmblemShape> = {
   },
   // Rosette: the only emblem with a broken outline, so verification reads as
   // different in kind from the stages that lead to it.
+  //
+  // Carries the collectible badge's material — navy face, gold rim, white
+  // check — rather than the flat gold it used to be, so a verified proof and
+  // the points badge read as one family. It keeps the rosette silhouette
+  // because they are still different claims. This is the one emblem outside
+  // the --em-* palette (DESIGN.md scopes that palette to stage emblems and the
+  // level insignia); the founder asked for it to match the badge.
   verified: {
-    hue: "var(--em-5)",
+    hue: "var(--navy-700)",
     shell: "M32 2 L40 10 L51 8 L54 19 L63 26 L57 36 L60 47 L49 51 L43 61 L32 57 L21 61 L15 51 L4 47 L7 36 L1 26 L10 19 L13 8 L24 10 Z",
-    glyph: '<path d="M22 33 L29 40 L43 24" stroke="#fff" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>',
+    glyph: '<circle cx="32" cy="32" r="20" fill="none" stroke="#F5B93B" stroke-width="2.4" opacity="0.9"/><path d="M22 33 L29 40 L43 24" stroke="#fff" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>',
   },
 };
 

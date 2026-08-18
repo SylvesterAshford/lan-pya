@@ -11536,3 +11536,11 @@ html[lang="my"] .oppsig-skills-head {
   color: var(--muted-ink);
   max-width: 78ch;
 }
+
+/* The changelog card had padding only on its header, so every row's pill sat
+   against the left border and the date against the right. The dividers stay
+   full-bleed — that is what makes it read as a list — but the content is
+   inset to the same 18px the header already used. */
+.changelog-rail > header { padding-top: 14px; padding-bottom: 12px; }
+.changelog-rail .changelog-list li { padding-left: 18px; padding-right: 18px; }
+.changelog-rail .changelog-more { display: block; padding: 12px 18px 14px; }
