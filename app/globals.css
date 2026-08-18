@@ -11963,3 +11963,33 @@ a.paused-row:hover { background: var(--surface-sunk); }
    aliases to navy, so it read as a black rule under a green pill. */
 .me-nav a::after,
 .me-nav a.active::after { background: transparent; }
+
+/* ===================================================================
+   Sidebar rhythm and group separators
+   ===================================================================
+   Items sat 2px apart, so the glass pill on the active one touched its
+   neighbours and the rail read as one block. A group heading now carries a
+   rule out to the edge, which is what separates "the loop inside Lan Pya"
+   from "openings somebody else owns" without adding a divider element.
+   =================================================================== */
+
+.app-sidebar .sidebar-menu { gap: 6px; }
+.app-sidebar .sidebar-group + .sidebar-group { margin-top: 22px; }
+
+.app-sidebar .sidebar-group-label {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 8px;
+}
+/* The rule fills whatever the label leaves. */
+.app-sidebar .sidebar-group-label::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: var(--nav-hairline);
+}
+
+/* Collapsed to a rail there is no room for a label, and a bare rule floating
+   in a 68px column reads as a broken element. */
+.app-sidebar[data-state="collapsed"] .sidebar-group-label::after { display: none; }

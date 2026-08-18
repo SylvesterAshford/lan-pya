@@ -75,13 +75,7 @@ const LEARNER_NAV: NavItem[] = [
     icon: Sparkles,
     matches: (pathname) => ["/app/missions", "/app/build"].some((route) => pathname.includes(route)),
   },
-  {
-    href: "/app/opportunities",
-    en: "Opportunities",
-    my: "အခွင့်အလမ်းများ",
-    icon: BriefcaseBusiness,
-    matches: (pathname) => pathname.includes("/app/opportunities"),
-  },
+
   // Portfolio earned the destination that "Me" had. The account row at the
   // foot of the sidebar already opens the profile, so a nav item pointing at
   // the same place was a second door to one room; the evidence a learner has
@@ -92,6 +86,23 @@ const LEARNER_NAV: NavItem[] = [
     my: "လက်ရာမှတ်တမ်း",
     icon: BadgeCheck,
     matches: (pathname) => ["/app/proof", "/app/profile", "/app/privacy", "/app/careers"].some((route) => pathname.includes(route)),
+  },
+];
+
+/**
+ * Opportunities sits apart, under its own heading.
+ *
+ * The four above are the loop inside Lan Pya: learn, build, prove, keep. This
+ * one points out of the app at real openings somebody else owns. Grouping it
+ * with the loop implied it was another place to practise.
+ */
+const APPLY_NAV: NavItem[] = [
+  {
+    href: "/app/opportunities",
+    en: "Opportunities",
+    my: "အခွင့်အလမ်းများ",
+    icon: BriefcaseBusiness,
+    matches: (pathname) => pathname.includes("/app/opportunities"),
   },
 ];
 
@@ -139,6 +150,26 @@ function AppShellContent({ children, profile, roles, locale }: { children: React
             <SidebarGroupLabel>{my ? "လမ်းညွှန်" : "Navigate"}</SidebarGroupLabel>
             <SidebarMenu aria-label={navLabel}>
               {LEARNER_NAV.map((item) => {
+                const active = item.matches(pathname);
+                const Icon = item.icon;
+                return (
+                  <SidebarMenuItem key={item.href}>
+                    <SidebarMenuButton isActive={active}>
+                      <Link href={item.href} aria-current={active ? "page" : undefined}>
+                        <Icon aria-hidden="true" />
+                        <span>{labelFor(item)}</span>
+                      </Link>
+                    </SidebarMenuButton>
+                  </SidebarMenuItem>
+                );
+              })}
+            </SidebarMenu>
+          </SidebarGroup>
+
+          <SidebarGroup>
+            <SidebarGroupLabel>{my ? "လျှောက်ထားရန်" : "Apply"}</SidebarGroupLabel>
+            <SidebarMenu>
+              {APPLY_NAV.map((item) => {
                 const active = item.matches(pathname);
                 const Icon = item.icon;
                 return (

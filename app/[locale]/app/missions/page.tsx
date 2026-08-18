@@ -78,28 +78,6 @@ export default async function MissionsPage({ params }: { params: Promise<{ local
           screen is how an app becomes a dashboard mosaic. */}
       <LevelMeter progress={progress} locale={locale} variant="compact" />
 
-      {/* The same Milestone.status the roadmap canvas reads, drawn as a climb.
-          A stop is locked because the stage is upcoming, not because three
-          greyed circles looked good. */}
-      <MissionMap
-        milestones={roadmap}
-        locale={locale}
-        mascotVariant={profile?.avatar}
-        pathTitle={localizeCareerTerm(locale, pathKey, dashboard.activePath.title)}
-        steps={progress.xp}
-        missionHref={mission ? (missionHref[mission.key] ?? "/app/paths") : undefined}
-        proofHref="/app/proof"
-        labels={{
-          stageOf: locale === "my" ? "အဆင့် {a} / {b}" : "Stage {a} of {b}",
-          steps: locale === "my" ? "အမှတ်" : "points",
-          youAreHere: locale === "my" ? "သင် ဤနေရာတွင်" : "You are here",
-          complete: locale === "my" ? "ပြီးစီးပြီး" : "Complete",
-          locked: locale === "my" ? "မဖွင့်ရသေးပါ" : "Locked",
-          nextMission: locale === "my" ? "နောက်တစ်ခု" : "Next mission",
-          continueMission: locale === "my" ? "ဆက်လုပ်မည်" : "Continue mission",
-        }}
-      />
-
       <section className="mission-section">
         <header className="arena-head">
           <h3>{c.missions.active}</h3>
@@ -163,6 +141,28 @@ export default async function MissionsPage({ params }: { params: Promise<{ local
           </div>
         )}
       </section>
+
+      {/* The same Milestone.status the roadmap canvas reads, drawn as a climb.
+          A stop is locked because the stage is upcoming, not because three
+          greyed circles looked good. */}
+      <MissionMap
+        milestones={roadmap}
+        locale={locale}
+        mascotVariant={profile?.avatar}
+        pathTitle={localizeCareerTerm(locale, pathKey, dashboard.activePath.title)}
+        steps={progress.xp}
+        missionHref={mission ? (missionHref[mission.key] ?? "/app/paths") : undefined}
+        proofHref="/app/proof"
+        labels={{
+          stageOf: locale === "my" ? "အဆင့် {a} / {b}" : "Stage {a} of {b}",
+          steps: locale === "my" ? "အမှတ်" : "points",
+          youAreHere: locale === "my" ? "သင် ဤနေရာတွင်" : "You are here",
+          complete: locale === "my" ? "ပြီးစီးပြီး" : "Complete",
+          locked: locale === "my" ? "မဖွင့်ရသေးပါ" : "Locked",
+          nextMission: locale === "my" ? "နောက်တစ်ခု" : "Next mission",
+          continueMission: locale === "my" ? "ဆက်လုပ်မည်" : "Continue mission",
+        }}
+      />
     </div>
   );
 }
