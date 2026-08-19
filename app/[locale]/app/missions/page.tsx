@@ -106,7 +106,7 @@ export default async function MissionsPage({ params }: { params: Promise<{ local
         )}
       </section>
 
-      <section className="mission-section">
+      <section className="mission-section mission-section-closing">
         <header className="arena-head">
           <h3>{c.missions.completed}</h3>
           <span className="arena-count">· {verified.length}</span>

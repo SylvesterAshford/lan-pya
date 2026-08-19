@@ -263,7 +263,25 @@ The chosen track renders downstream nodes at full colour; the unchosen track ren
 
 ### Detail panel
 
-`--surface` background, `--hairline` border, 3px `--teal-700` left edge, `--teal-050` fill on the proof-target block. **It is a light surface.** The shipped app used dark navy `#0f172a` here, an undocumented third surface inside a light application; that is removed. There is no dark inspector surface in this system.
+The step brief is **a dialog, not a column.** Nothing is open when the canvas loads; clicking a stage node opens it, and closing it returns the reader to the map. It shipped as a persistent 320px sticky column beside the canvas, which squeezed both: the graph could not breathe and the brief wrapped to two-word columns. The brief answers a click, so it behaves like one.
+
+**One component, two presentations,** switching at the app's 860px breakpoint:
+
+- **Desktop — centred modal.** `min(460px, 100%)` wide, `min(760px, 88vh)` tall, scrim `rgb(4 52 44 / 0.42)`, 160ms veil and 200ms rise.
+- **Phone — bottom sheet.** Full width, `88vh` cap, top corners rounded, entering from the bottom edge, which is the reachable half of a one-handed phone.
+
+Surface in both: `--surface` background, `--hairline` border, `--shadow-overlay`, 3px `--teal-700` accent on the leading edge — the left edge as a modal, the top edge as a sheet — and `--teal-050` fill on the proof-target block. **It is a light surface.** The shipped app used dark navy `#0f172a` here, an undocumented third surface inside a light application; that is removed. There is no dark inspector surface in this system.
+
+Content is unchanged and stays complete at every width: the `Selected path · NN` eyebrow, status pill, title, description, estimate and placement, `What you will cover`, the proof target, and the state's call to action. `What you will cover` is load-bearing on a phone, not supplementary: the narrow canvas geometry drops the left/right branch skills so that no pinch-zoom is ever required, and this list is then the only place those skills exist.
+
+Dialog behaviour, all required:
+
+- `role="dialog"`, `aria-modal="true"`, named by the step title via `aria-labelledby`.
+- Focus moves into the dialog on open and returns to the node that opened it on close. The stage node reports `aria-haspopup="dialog"` and `aria-expanded`.
+- Escape closes. A scrim click closes. A visible close control sits in the pinned heading, labelled from copy in both languages.
+- Tab is trapped inside; the page behind does not scroll; the dialog is unmounted while closed, so it is never in the tab order or the accessibility tree.
+- No `aria-live` region. The old panel needed one because content swapped in place; a dialog announces itself, and both together would say it twice.
+- Both animations are dropped under `prefers-reduced-motion`.
 
 ## Deadlines
 
@@ -499,3 +517,4 @@ Five marks, each with **its own silhouette** — a wide pentagon, a cut-corner b
 | 2026-08-18 | **Each partner mark keeps its own ground** | The embassy seal is drawn on white and the college wordmark is white on navy. Each sits on a tile matching its own ground rather than being recoloured onto a shared one, which would mean altering somebody's official mark. |
 | 2026-08-18 | **Organisation and verification read without expanding a row** | Who is behind a listing and when it was last checked are the two facts that decide whether it is worth trusting, so neither should cost a click. |
 | 2026-08-18 | **Map furniture scaled to the terrain** | Badges, cards and the traveller were sized for a compressed scene and dominated the full-length one. The panel is capped to 660px, which scales the whole scene rather than stretching the terrain. |
+| 2026-08-19 | **Roadmap step brief became a dialog** | The canvas and the brief shared one row, and neither fitted: a 780px graph and a 320px column of two-word lines. The brief is a response to a click, not ambient context. As a dialog it frees the full content width for the map, and the page cap drops from 1200px to 920px because there is no second column to reserve. Modal on desktop, bottom sheet on phones — the same component, since the brief is the only place a phone can read the branch skills the narrow canvas geometry omits. |

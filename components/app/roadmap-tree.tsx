@@ -1,40 +1,18 @@
 "use client";
 
-import { useMemo, useState } from "react";
-import { Link } from "@/i18n/navigation";
+import { useCallback, useMemo, useRef, useState } from "react";
 import type { Milestone } from "@/lib/domain/types";
-import { StatusPill } from "@/components/app/status-pill";
 import { RoadmapCanvas, type ForkConfig } from "@/components/app/roadmap-canvas";
+import { RoadmapDetailDialog } from "@/components/app/roadmap-detail-dialog";
 import { getAppCopy } from "@/lib/i18n/app-copy";
 
-type RoadmapDetail = {
-  leftLabel: string;
-  left: string[];
-  rightLabel: string;
-  right: string[];
-  estimate: string;
-};
-
-function detailFor(c: ReturnType<typeof getAppCopy>["roadmap"], milestone: Milestone): RoadmapDetail {
-  if (milestone.left?.length && milestone.right?.length) {
-    return {
-      leftLabel: milestone.leftLabel ?? c.learn,
-      left: milestone.left,
-      rightLabel: milestone.rightLabel ?? c.prove,
-      right: milestone.right,
-      estimate: milestone.estimate ?? c.selfPaced,
-    };
-  }
-  // Fallback for milestones that only carry title/description/proof (e.g. from DB rows).
-  return {
-    leftLabel: c.learn,
-    left: [milestone.description],
-    rightLabel: c.prove,
-    right: [milestone.proof],
-    estimate: milestone.estimate ?? c.selfPaced,
-  };
-}
-
+/**
+ * The roadmap workspace: canvas at full content width, step brief on demand.
+ *
+ * The brief was a permanent column here until it became a dialog. Nothing
+ * opens on load — a reader arrives at the map, not at a step somebody else
+ * picked for them.
+ */
 export function RoadmapTree({
   locale = "en",
   milestones,
@@ -55,19 +33,44 @@ export function RoadmapTree({
     milestones.find((item) => item.status === "active") ??
     milestones.find((item) => item.status === "next") ??
     milestones[0];
-  const [selectedKey, setSelectedKey] = useState(current?.key ?? "");
+
+  // Null, always, on first render: the dialog is a response to a click.
+  const [openKey, setOpenKey] = useState<string | null>(null);
   const selected = useMemo(
-    () => milestones.find((item) => item.key === selectedKey) ?? current,
-    [current, milestones, selectedKey],
+    () => milestones.find((item) => item.key === openKey) ?? null,
+    [milestones, openKey],
   );
+
+  // The element that opened the dialog, so focus can go back to exactly where
+  // the reader left it. A stage node is an SVG <g>, not an HTMLElement, which
+  // is why this is typed on the shared Element interface.
+  const triggerRef = useRef<SVGGElement | HTMLElement | null>(null);
+
   const completedCount = milestones.filter((item) => item.status === "complete").length;
   const progress = milestones.length ? Math.round((completedCount / milestones.length) * 100) : 0;
 
-  function selectMilestone(key: string) {
-    setSelectedKey(key);
+  function selectMilestone(key: string, trigger: SVGGElement | HTMLElement | null) {
+    triggerRef.current = trigger;
+    setOpenKey(key);
     window.history.replaceState(null, "", `#milestone-${key}`);
-    // Optional call: scrollIntoView is absent in jsdom.
-    document.getElementById("roadmap-detail")?.scrollIntoView?.({ behavior: "smooth", block: "nearest" });
+  }
+
+  const closeDetail = useCallback(() => {
+    setOpenKey(null);
+    // Returning focus to the node keeps a keyboard reader in the map instead
+    // of dropping them at the top of the document.
+    triggerRef.current?.focus?.();
+    triggerRef.current = null;
+  }, []);
+
+  /** "Jump to my position ↓" means jump, not open: it moves the reader to the
+   *  node on the canvas and hands them focus so Enter opens the brief. */
+  function jumpToCurrent() {
+    if (!current) return;
+    // Milestone keys are authored slugs, so no escaping is needed here.
+    const node = document.querySelector<SVGGElement>(`[data-node-key="${current.key}"]`);
+    node?.scrollIntoView?.({ behavior: "smooth", block: "center" });
+    node?.focus?.();
   }
 
   function missionHref(milestone: Milestone) {
@@ -76,8 +79,7 @@ export function RoadmapTree({
       : "/app/missions/responsive-profile-card";
   }
 
-  if (!selected) return null;
-  const selectedDetail = detailFor(c, selected);
+  if (!current) return null;
 
   return (
     <div className="roadmap-workspace">
@@ -99,11 +101,9 @@ export function RoadmapTree({
           >
             <span style={{ width: `${progress}%` }} />
           </div>
-          {current ? (
-            <button type="button" className="roadmap-position-link" onClick={() => selectMilestone(current.key)}>
-              {current.status === "active" ? c.jump : c.startHere}
-            </button>
-          ) : null}
+          <button type="button" className="roadmap-position-link" onClick={jumpToCurrent}>
+            {current.status === "active" ? c.jump : c.startHere}
+          </button>
         </header>
 
         <div className="roadmap-legend" aria-label={c.careerTracks}>
@@ -116,7 +116,7 @@ export function RoadmapTree({
         <div className="roadmap-canvas-scroll">
           <RoadmapCanvas
             milestones={milestones}
-            selectedKey={selected.key}
+            selectedKey={openKey ?? ""}
             onSelect={selectMilestone}
             fork={fork}
             labels={{
@@ -130,62 +130,17 @@ export function RoadmapTree({
         </div>
       </section>
 
-      <aside className={`roadmap-detail-panel ${selected.status}`} id="roadmap-detail" aria-live="polite">
-        <div className="roadmap-detail-heading">
-          <span className="eyebrow">
-            {c.selected} · {String(selected.order).padStart(2, "0")}
-          </span>
-          <StatusPill
-            tone={selected.status === "complete" ? "success" : selected.status === "active" ? "warning" : "neutral"}
-          >
-            {statusLabels[selected.status]}
-          </StatusPill>
-        </div>
-        <h2>{selected.title}</h2>
-        <p>{selected.description}</p>
-
-        <dl className="roadmap-detail-meta">
-          <div>
-            <dt>{c.estimated}</dt>
-            <dd>{selectedDetail.estimate}</dd>
-          </div>
-          <div>
-            <dt>{c.placement}</dt>
-            <dd>
-              {c.step} {selected.order}/{milestones.length}
-            </dd>
-          </div>
-        </dl>
-
-        <div className="roadmap-detail-section">
-          <span className="roadmap-detail-label">{c.whatCover}</span>
-          <ul>
-            {[...selectedDetail.left, ...selectedDetail.right].map((skill) => (
-              <li key={skill}>{skill}</li>
-            ))}
-          </ul>
-        </div>
-
-        <div className="roadmap-proof-target">
-          <span>{c.proofTarget}</span>
-          <strong>{selected.proof}</strong>
-          <small>{c.completion}</small>
-        </div>
-
-        {selected.status === "active" ? (
-          <Link className="button primary full" href={missionHref(selected)}>
-            {c.continueMission}
-          </Link>
-        ) : null}
-        {selected.status === "complete" ? (
-          <Link className="button outline full" href="/app/proof">
-            {c.viewProof}
-          </Link>
-        ) : null}
-        {selected.status === "next" || selected.status === "upcoming" ? (
-          <p className="roadmap-visible-note">{c.visibleNote}</p>
-        ) : null}
-      </aside>
+      {selected ? (
+        <RoadmapDetailDialog
+          locale={locale}
+          copy={c}
+          milestone={selected}
+          statusLabel={statusLabels[selected.status]}
+          totalSteps={milestones.length}
+          missionHref={missionHref(selected)}
+          onClose={closeDetail}
+        />
+      ) : null}
     </div>
   );
 }

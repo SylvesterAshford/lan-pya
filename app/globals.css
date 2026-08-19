@@ -6890,9 +6890,11 @@ html[lang="my"] .mission-focus h2{
    Supersedes every earlier .roadmap-* rule in this file.
    ============================================================ */
 
+/* One column. The step brief is a dialog now, not a second column, so the
+   canvas gets the whole content width instead of sharing a squeezed row. */
 .roadmap-workspace{
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 320px;
+  grid-template-columns: minmax(0, 1fr);
   gap: var(--s-lg);
   align-items: start;
 }
@@ -7086,27 +7088,76 @@ html[lang="my"] .mission-focus h2{
 .rm-track.global .rm-track-title{ fill: var(--purple-900); }
 .rm-track.global .rm-track-sub{ fill: var(--purple-500); }
 
-/* ---- detail panel: a LIGHT surface. There is no dark inspector. ---- */
-.roadmap-detail-panel{
-  position: sticky;
-  top: 80px;
-  padding: var(--s-md) var(--s-lg);
+/* ---- step brief: a LIGHT surface. There is no dark inspector. ----
+   Modal on desktop, bottom sheet at the app's 860px breakpoint. One
+   component, two presentations: only these rules differ. */
+.roadmap-detail-overlay{
+  position: fixed;
+  inset: 0;
+  z-index: 70;
+  display: grid;
+  place-items: center;
+  padding: var(--s-md);
+  background: rgb(4 52 44 / 0.42);
+  animation: roadmap-detail-veil 160ms ease-out;
+}
+
+.roadmap-detail-dialog{
+  display: flex;
+  flex-direction: column;
+  width: min(460px, 100%);
+  max-height: min(760px, 88vh);
+  overflow: hidden;
   color: var(--ink);
   background: var(--surface);
   border: 1px solid var(--hairline);
   border-left: 3px solid var(--teal-700);
   border-radius: var(--r-card);
-  box-shadow: none;
+  box-shadow: var(--shadow-overlay);
+  animation: roadmap-detail-rise 200ms ease-out;
 }
 
-.roadmap-detail-panel .roadmap-detail-heading{
+.roadmap-detail-dialog:focus{ outline: none; }
+
+.roadmap-detail-dialog .roadmap-detail-heading{
+  flex: 0 0 auto;
   display: flex;
   align-items: center;
-  justify-content: space-between;
   gap: var(--s-sm);
+  padding: var(--s-md) var(--s-md) var(--s-sm) var(--s-lg);
+  border-bottom: 1px solid var(--hairline);
 }
 
-.roadmap-detail-panel .eyebrow{
+/* The eyebrow takes the slack so the pill and the close control stay right. */
+.roadmap-detail-dialog .roadmap-detail-heading .eyebrow{ flex: 1 1 auto; }
+
+.roadmap-detail-close{
+  flex: 0 0 auto;
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  color: var(--muted-ink);
+  background: none;
+  border: 0;
+  border-radius: var(--r-control);
+  cursor: pointer;
+}
+
+.roadmap-detail-close:hover{ color: var(--ink); background: var(--surface-sunk); }
+
+/* Only the brief scrolls; the heading and its close control stay reachable. */
+.roadmap-detail-body{
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  padding: var(--s-md) var(--s-lg) var(--s-lg);
+}
+
+@keyframes roadmap-detail-veil { from { opacity: 0 } to { opacity: 1 } }
+@keyframes roadmap-detail-rise { from { opacity: 0; transform: translateY(10px) } to { opacity: 1; transform: none } }
+
+.roadmap-detail-dialog .eyebrow{
   font-size: var(--t-label);
   font-weight: 600;
   letter-spacing: 0.04em;
@@ -7114,8 +7165,8 @@ html[lang="my"] .mission-focus h2{
   color: var(--teal-700);
 }
 
-.roadmap-detail-panel h2{
-  margin: var(--s-sm) 0 var(--s-xs);
+.roadmap-detail-dialog h2{
+  margin: 0 0 var(--s-xs);
   font-size: var(--t-h2);
   letter-spacing: var(--k-h2);
   line-height: var(--l-h2);
@@ -7123,7 +7174,7 @@ html[lang="my"] .mission-focus h2{
   color: var(--ink);
 }
 
-.roadmap-detail-panel > p{
+.roadmap-detail-lede{
   margin: 0 0 var(--s-md);
   font-size: var(--t-meta);
   line-height: var(--l-meta);
@@ -7170,7 +7221,7 @@ html[lang="my"] .mission-focus h2{
 
 .roadmap-detail-section ul{
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 1fr;
   gap: 6px var(--s-md);
   margin: 0;
   padding-left: var(--s-md);
@@ -7223,14 +7274,33 @@ html[lang="my"] .mission-focus h2{
 
 @media (prefers-reduced-motion: reduce) {
   .rm-node .rm-body, .roadmap-progress-track > span{ transition: none; }
+  .roadmap-detail-overlay, .roadmap-detail-dialog{ animation: none; }
 }
 
-/* Narrow: single-column spine, no horizontal scroll, detail panel below. */
+/* Narrow: single-column spine, no horizontal scroll, and the step brief
+   arrives as a bottom sheet — the reachable edge of a one-handed phone. */
 @media (max-width: 859px){
-  .roadmap-workspace { grid-template-columns: minmax(0, 1fr); }
-  .roadmap-detail-panel { position: static; }
   .roadmap-canvas-scroll { overflow-x: hidden; padding: var(--s-md) 0; }
-  .roadmap-detail-section ul { grid-template-columns: 1fr; }
+  .roadmap-detail-overlay { padding: 0; place-items: end stretch; }
+  .roadmap-detail-dialog {
+    width: 100%;
+    max-height: 88vh;
+    /* The teal accent moves to the edge the sheet enters from. */
+    border-left: 1px solid var(--hairline);
+    border-top: 3px solid var(--teal-700);
+    border-radius: var(--r-card) var(--r-card) 0 0;
+    animation-name: roadmap-detail-sheet;
+  }
+  .roadmap-detail-dialog .roadmap-detail-heading { padding-left: var(--s-md); }
+  .roadmap-detail-body { padding: var(--s-md); }
+}
+
+@keyframes roadmap-detail-sheet { from { transform: translateY(16px) } to { transform: none } }
+
+/* Restated after the sheet rules: the `animation-name` set inside the narrow
+   breakpoint would otherwise out-cascade the earlier reduced-motion reset. */
+@media (prefers-reduced-motion: reduce) {
+  .roadmap-detail-overlay, .roadmap-detail-dialog{ animation: none; }
 }
 
 /* ============================================================
@@ -7244,9 +7314,11 @@ html[lang="my"] .mission-focus h2{
   max-width: var(--content-max);
 }
 
-/* Canvas (780) + gap (24) + detail panel (320) + page padding (76). */
+/* Canvas (780) + page padding (76). The detail panel that used to claim the
+   other 344px is a dialog now, so the page no longer reserves a column for
+   it and the canvas is not stranded in the middle of a 1200px measure. */
 .app-workspace .roadmap-page, .roadmap-page{
-  max-width: max(1200px, var(--content-max));
+  max-width: min(920px, var(--content-max));
 }
 
 .roadmap-page-heading{ max-width: var(--content-max); }
@@ -8092,6 +8164,15 @@ html[lang="my"] .app-page .mission-title h1 {
    ============================================================ */
 
 .mission-section { margin-top: var(--s-xl); }
+
+/* The level strip below is a floating pill, not a full-width block, so the
+   last completed badge and the strip otherwise run together with nothing
+   between them. This closes the list with the same hairline the rows use. */
+.mission-section-closing {
+  padding-bottom: var(--s-lg);
+  border-bottom: 1px solid var(--hairline);
+  margin-bottom: var(--s-lg);
+}
 
 .mission-row {
   display: grid;
@@ -12633,4 +12714,608 @@ html[lang="my"] .resume-sheet h4 { text-transform: none; letter-spacing: 0; }
   }
   .resume-edit-hint { display: none; }
   .resume-bullets li { break-inside: avoid; }
+}
+/* ===== proof passport ===== */
+/* ============================================================
+   Proof passport — components/proof/proof-passport.tsx
+   The navy block at the top of the Evidence Studio, from the
+   founder concept public/design/lan-pya-portfolio-evidence-studio.svg.
+
+   Tokens only. Borders first, no card shadow (DESIGN.md).
+   One accent per surface: teal carries "done" here, amber never
+   appears — nothing on this block is urgent.
+   ============================================================ */
+
+.passport{
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+  grid-template-areas:
+    "identity trail"
+    "counts   trail";
+  gap: var(--s-lg);
+  align-items: start;
+  max-width: 100%;
+  padding: var(--s-lg);
+  color: var(--surface);
+  background: var(--navy-900);
+  border: 1px solid var(--navy-500);
+  border-radius: var(--r-card);
+}
+
+/* ---- Identity ------------------------------------------------ */
+
+.passport-identity{
+  display: flex;
+  grid-area: identity;
+  gap: var(--s-md);
+  align-items: flex-start;
+  min-width: 0;
+}
+
+/* The traveller is a tall, narrow figure (~24px wide at 72px tall),
+   so the insignia hangs off its lower right rather than beside it. */
+.passport-figure{
+  position: relative;
+  display: inline-flex;
+  flex: none;
+  align-items: flex-end;
+  padding-right: 20px;
+  padding-bottom: var(--s-xs);
+}
+
+.passport-insignia{
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  display: inline-flex;
+  line-height: 0;
+}
+
+.passport-who{
+  min-width: 0;
+}
+
+.passport-eyebrow{
+  margin: 0;
+  color: var(--teal-500);
+  font-size: var(--t-label);
+  font-weight: 800;
+  line-height: var(--l-label);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  overflow-wrap: anywhere;
+}
+
+.passport-name{
+  margin: var(--s-xs) 0 0;
+  color: var(--surface);
+  font-size: var(--t-h1);
+  font-weight: var(--w-display);
+  line-height: var(--l-h1);
+  letter-spacing: var(--k-h1);
+  overflow-wrap: anywhere;
+}
+
+.passport-level{
+  margin: var(--s-2xs) 0 0;
+  color: var(--navy-100);
+  font-size: var(--t-title);
+  font-weight: 600;
+  line-height: var(--l-title);
+  letter-spacing: var(--k-title);
+  overflow-wrap: anywhere;
+}
+
+.passport-availability{
+  margin: var(--s-sm) 0 0;
+  color: var(--navy-100);
+  font-size: var(--t-meta);
+  line-height: var(--l-meta);
+  overflow-wrap: anywhere;
+}
+
+/* Nothing said yet. Quieter than a stated availability, still well
+   clear of 4.5:1 on the navy ground — an unanswered question is not
+   an error and is not styled as one. */
+.passport-availability.is-unset{
+  color: var(--hairline);
+}
+
+/* ---- The three counts ---------------------------------------- */
+
+.passport-counts{
+  display: grid;
+  grid-area: counts;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0;
+  margin: 0;
+}
+
+.passport-count{
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  padding: 0 var(--s-md);
+}
+
+.passport-count:first-child{
+  padding-left: 0;
+}
+
+.passport-count:last-child{
+  padding-right: 0;
+}
+
+.passport-count + .passport-count{
+  border-left: 1px solid var(--navy-500);
+}
+
+/* The figure reads first and the markup stays dt-then-dd, which is
+   the order the HTML spec and screen readers expect. */
+.passport-count dt{
+  order: 2;
+  margin: var(--s-2xs) 0 0;
+  color: var(--navy-100);
+  font-size: var(--t-meta);
+  font-weight: 400;
+  line-height: var(--l-meta);
+  letter-spacing: 0;
+  text-transform: none;
+  overflow-wrap: anywhere;
+}
+
+.passport-count dd{
+  order: 1;
+  margin: 0;
+  color: var(--surface);
+  font-size: var(--t-display);
+  font-weight: var(--w-display);
+  line-height: var(--l-display);
+  letter-spacing: var(--k-display);
+  font-variant-numeric: tabular-nums;
+}
+
+/* ---- Evidence trail ------------------------------------------ */
+
+.passport-trail{
+  grid-area: trail;
+  min-width: 0;
+}
+
+.passport-trail-head{
+  display: flex;
+  gap: var(--s-sm);
+  align-items: baseline;
+  margin: 0 0 var(--s-md);
+}
+
+.passport-trail-title{
+  color: var(--teal-500);
+  font-size: var(--t-label);
+  font-weight: 800;
+  line-height: var(--l-label);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  overflow-wrap: anywhere;
+}
+
+/* Two real numbers. At 0/4 the strip states that the trail has not
+   been started instead of leaving four empty stops to be read as
+   decoration. */
+.passport-trail-ratio{
+  margin-left: auto;
+  color: var(--surface);
+  font-size: var(--t-label);
+  font-weight: 800;
+  line-height: var(--l-label);
+  font-variant-numeric: tabular-nums;
+}
+
+.passport-trail-list{
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: var(--s-sm);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* The connecting track, purely decorative: the stops carry the
+   state. Inset to the centre of the first and last column so it
+   never runs past them. */
+.passport-trail-list::before{
+  content: "";
+  position: absolute;
+  top: 10px;
+  right: 12.5%;
+  left: 12.5%;
+  height: 2px;
+  background: var(--muted-ink);
+}
+
+.passport-step{
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-sm);
+  align-items: center;
+  min-width: 0;
+  text-align: center;
+}
+
+/* Done and pending differ by fill, by border weight and by the
+   presence of a character. Any one of the three survives greyscale
+   on its own. */
+.passport-step-stop{
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  font-size: var(--t-label);
+  font-weight: 800;
+  line-height: 1;
+  border-radius: var(--r-chip);
+}
+
+.passport-step[data-state="done"] .passport-step-stop{
+  color: var(--navy-900);
+  background: var(--teal-500);
+  border: 2px solid var(--teal-500);
+}
+
+.passport-step[data-state="pending"] .passport-step-stop{
+  background: var(--navy-900);
+  border: 2px solid var(--navy-100);
+}
+
+.passport-step-label{
+  color: var(--navy-100);
+  font-size: var(--t-label);
+  font-weight: 600;
+  line-height: var(--l-label);
+  letter-spacing: 0;
+  overflow-wrap: anywhere;
+}
+
+.passport-step[data-state="done"] .passport-step-label{
+  color: var(--surface);
+  font-weight: 700;
+}
+
+/* ---- Burmese -------------------------------------------------- */
+/* Never letterspaced, never all-caps (DESIGN.md). */
+
+html[lang="my"] .passport-eyebrow,
+html[lang="my"] .passport-trail-title{
+  letter-spacing: 0;
+  text-transform: none;
+}
+
+html[lang="my"] .passport-name,
+html[lang="my"] .passport-level,
+html[lang="my"] .passport-count dd{
+  letter-spacing: 0;
+}
+
+/* ---- Narrow ---------------------------------------------------- */
+
+@media (max-width: 860px){
+  .passport{
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-areas:
+      "identity"
+      "counts"
+      "trail";
+    gap: var(--s-md);
+  }
+
+  .passport-trail{
+    padding-top: var(--s-md);
+    border-top: 1px solid var(--navy-500);
+  }
+}
+
+@media (max-width: 480px){
+  .passport{
+    padding: var(--s-md);
+  }
+
+  .passport-identity{
+    gap: var(--s-sm);
+  }
+
+  /* Three 32px figures plus their labels do not fit one 390px row
+     without either truncating the labels or dropping below the 11px
+     floor, so the counts become rows. The figures stay full size:
+     they are the point of the block. */
+  .passport-counts{
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .passport-count{
+    flex-direction: row;
+    gap: var(--s-sm);
+    align-items: baseline;
+    padding: var(--s-sm) 0;
+  }
+
+  .passport-count + .passport-count{
+    border-top: 1px solid var(--navy-500);
+    border-left: 0;
+  }
+
+  .passport-count dt{
+    margin: 0;
+  }
+
+  .passport-count dd{
+    flex: none;
+    min-width: 2.5ch;
+  }
+
+  .passport-trail-list{
+    gap: var(--s-xs);
+  }
+}
+
+/* ===================================================================
+   Evidence Studio — completed work
+   =================================================================== */
+
+.studio-page { display: grid; gap: var(--s-xl); }
+
+.work-block { display: grid; gap: 12px; }
+.work-head { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+.work-title {
+  font-size: var(--t-section);
+  line-height: var(--l-section);
+  letter-spacing: var(--k-section);
+  font-weight: 700;
+  color: var(--ink);
+  margin: 0;
+}
+.work-count { font-size: var(--t-label); font-weight: 600; color: var(--muted-ink); }
+
+.work-tools { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+.work-search {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex: 1;
+  min-width: 200px;
+  padding: 0 12px;
+  background: var(--surface);
+  border: 1px solid var(--hairline);
+  border-radius: var(--r-control);
+  color: var(--muted-ink);
+}
+.work-search input {
+  flex: 1;
+  min-width: 0;
+  padding: 9px 0;
+  font: inherit;
+  font-size: var(--t-meta);
+  color: var(--ink);
+  background: transparent;
+  border: 0;
+  outline: none;
+}
+.work-search:focus-within { border-color: var(--navy-500); }
+
+.work-filters { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+.work-filters-icon { color: var(--muted-ink); display: grid; place-items: center; }
+.work-filters button {
+  padding: 6px 12px;
+  font-size: var(--t-label);
+  font-weight: 600;
+  color: var(--muted-ink);
+  background: var(--surface);
+  border: 1px solid var(--hairline);
+  border-radius: 99px;
+  cursor: pointer;
+}
+.work-filters button.on { color: var(--teal-900); background: var(--teal-100); border-color: var(--teal-100); }
+.work-filters button:focus-visible { outline: 2px solid var(--teal-700); outline-offset: 2px; }
+
+.work-empty { font-size: var(--t-meta); line-height: var(--l-meta); color: var(--muted-ink); }
+.work-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 14px; }
+
+/* ---- case study card ---- */
+
+.case-card {
+  display: grid;
+  gap: 6px;
+  align-content: start;
+  padding: 16px;
+  background: var(--surface);
+  border: 1px solid var(--hairline);
+  border-radius: var(--r-card);
+}
+.case-card > * { margin: 0; }
+/* Only verified gets the accented edge. An unreviewed submission wearing it
+   would claim at a glance what it has not earned. */
+.case-card.is-verified { border-left: 3px solid var(--teal-600); }
+.case-card.is-in_review { border-left: 3px solid var(--amber-500); }
+.case-card.is-draft { border-left: 3px solid var(--hairline); }
+
+.case-card-top { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.case-card-mark { display: grid; place-items: center; width: 30px; height: 30px; border-radius: 9px; background: var(--surface-sunk); color: var(--muted-ink); }
+.case-state { padding: 2px 9px; border-radius: 99px; font-size: var(--t-label); font-weight: 700; }
+.case-state.verified { background: var(--teal-100); color: var(--teal-900); }
+.case-state.in_review { background: var(--amber-100); color: var(--amber-800); }
+.case-state.draft { background: var(--surface-sunk); color: var(--muted-ink); }
+.case-demo { padding: 2px 8px; border-radius: 99px; font-size: var(--t-label); font-weight: 600; color: var(--muted-ink); border: 1px solid var(--hairline); }
+
+.case-eyebrow {
+  font-size: var(--t-label);
+  letter-spacing: 0.08em;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: var(--muted-ink);
+  margin-top: 4px;
+}
+html[lang="my"] .case-eyebrow { text-transform: none; letter-spacing: 0; }
+.case-title { font-size: var(--t-title); line-height: 1.25; font-weight: 700; color: var(--ink); }
+.case-summary { font-size: var(--t-meta); line-height: var(--l-meta); color: var(--muted-ink); }
+.case-summary.is-absent { font-style: italic; }
+
+.case-chips { list-style: none; margin: 4px 0 0; padding: 0; display: flex; flex-wrap: wrap; gap: 6px; }
+.case-chips li { padding: 3px 9px; border-radius: 99px; background: var(--surface-sunk); font-size: var(--t-label); font-weight: 600; color: var(--muted-ink); }
+
+.case-card-foot { display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: wrap; padding-top: 10px; margin-top: 4px; border-top: 1px solid var(--hairline); }
+.case-card-foot small { font-size: var(--t-label); color: var(--muted-ink); }
+.case-action { display: inline-flex; align-items: center; gap: 4px; font-size: var(--t-label); font-weight: 700; color: var(--teal-700); text-decoration: none; }
+.case-action:hover { text-decoration: underline; }
+
+/* ===================================================================
+   Proof-to-Resume Builder
+   =================================================================== */
+
+.resume-block {
+  display: grid;
+  gap: 12px;
+  padding: 20px;
+  background: var(--surface);
+  border: 1px solid var(--hairline);
+  border-radius: var(--r-card);
+}
+.resume-block > * { margin: 0; }
+.resume-title { display: flex; align-items: center; gap: 8px; font-size: var(--t-section); line-height: var(--l-section); font-weight: 700; color: var(--ink); }
+.resume-title svg { color: var(--teal-700); }
+.resume-intro, .resume-hint, .resume-empty { font-size: var(--t-meta); line-height: var(--l-meta); color: var(--muted-ink); max-width: 74ch; }
+
+.resume-picks { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
+.resume-picks label {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 10px;
+  align-items: center;
+  padding: 11px 13px;
+  background: var(--surface);
+  border: 1px solid var(--hairline);
+  border-radius: var(--r-control);
+  cursor: pointer;
+}
+.resume-picks label.on { border-color: var(--teal-600); background: var(--teal-050); }
+.resume-picks input { position: absolute; width: 1px; height: 1px; opacity: 0; }
+.resume-picks label:focus-within { outline: 2px solid var(--teal-700); outline-offset: 2px; }
+.resume-pick-box {
+  display: grid;
+  place-items: center;
+  width: 20px;
+  height: 20px;
+  border-radius: 6px;
+  border: 1.5px solid var(--hairline);
+  background: var(--surface);
+  color: var(--surface);
+}
+.resume-picks label.on .resume-pick-box { background: var(--teal-600); border-color: var(--teal-600); }
+.resume-pick-copy { display: grid; gap: 1px; min-width: 0; }
+.resume-pick-copy strong { font-size: var(--t-meta); font-weight: 700; color: var(--ink); }
+.resume-pick-copy small { font-size: var(--t-label); color: var(--muted-ink); }
+
+.resume-actions { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+.resume-selected { font-size: var(--t-label); font-weight: 600; color: var(--muted-ink); }
+.resume-actions .button { margin-left: auto; }
+
+.resume-draft { display: grid; gap: 12px; margin-top: 4px; }
+.resume-sheet {
+  display: grid;
+  gap: 16px;
+  padding: 24px;
+  background: var(--surface);
+  border: 1px solid var(--hairline);
+  border-radius: var(--r-card);
+}
+.resume-sheet > * { margin: 0; }
+.resume-sheet header h3 { font-size: var(--t-section); font-weight: 700; color: var(--ink); margin: 0; }
+.resume-sheet header p { font-size: var(--t-meta); color: var(--muted-ink); margin: 2px 0 0; }
+.resume-sheet h4 {
+  font-size: var(--t-label);
+  letter-spacing: 0.09em;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: var(--muted-ink);
+  margin: 0 0 6px;
+}
+html[lang="my"] .resume-sheet h4 { text-transform: none; letter-spacing: 0; }
+.resume-skills { font-size: var(--t-meta); line-height: var(--l-meta); color: var(--ink); margin: 0; }
+.resume-edit-hint { font-size: var(--t-label); color: var(--muted-ink); margin: 0 0 8px; }
+
+.resume-bullets { list-style: none; margin: 0; padding: 0; display: grid; gap: 12px; }
+.resume-bullets li { display: grid; gap: 4px; }
+.resume-bullets textarea {
+  width: 100%;
+  padding: 9px 11px;
+  font: inherit;
+  font-size: var(--t-meta);
+  line-height: var(--l-meta);
+  color: var(--ink);
+  background: var(--surface);
+  border: 1px solid var(--hairline);
+  border-radius: var(--r-control);
+  resize: vertical;
+}
+.resume-bullets textarea:focus-visible { outline: 2px solid var(--teal-700); outline-offset: 1px; }
+/* The source rides with the line, on screen and on paper. A bullet whose
+   evidence you cannot name is what this builder exists to prevent. */
+.resume-source { font-size: var(--t-label); color: var(--muted-ink); }
+
+.resume-export { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+.resume-export small { font-size: var(--t-label); color: var(--muted-ink); }
+.resume-docx { opacity: 0.85; }
+
+@media (max-width: 620px) {
+  .resume-block, .resume-sheet { padding: 16px; }
+  .resume-actions .button { margin-left: 0; width: 100%; justify-content: center; }
+}
+
+/* ===================================================================
+   Print — the résumé sheet only
+   ===================================================================
+   Everything else on the page is a control for building the sheet, and a
+   control has no meaning on paper. The sources stay: they are the part that
+   makes the document checkable.
+   =================================================================== */
+
+@media print {
+  .app-sidebar,
+  .sidebar-scrim,
+  .app-mobile-bar,
+  .app-bottom-nav,
+  .page-heading,
+  .passport,
+  .work-block,
+  .resume-picks,
+  .resume-actions,
+  .resume-export,
+  .resume-intro,
+  .resume-title,
+  .resume-edit-hint,
+  .tutor-launcher,
+  .changelog-rail { display: none !important; }
+
+  html, body, .app-frame, .app-workspace, .sidebar-inset, .app-page {
+    display: block !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    background: #fff !important;
+  }
+  .resume-block { border: 0 !important; padding: 0 !important; background: #fff !important; }
+  .resume-sheet { border: 0 !important; padding: 0 !important; }
+  .resume-bullets textarea {
+    border: 0 !important;
+    padding: 0 !important;
+    resize: none !important;
+    /* Textareas clip to their box on paper; sizing to content is what makes
+       every edited line print in full. */
+    height: auto !important;
+    field-sizing: content;
+    overflow: visible !important;
+  }
+  .resume-bullets li { break-inside: avoid; }
+  a[href]::after { content: "" !important; }
 }
