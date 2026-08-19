@@ -412,6 +412,37 @@ Five marks, each with **its own silhouette** — a wide pentagon, a cut-corner b
 - **Avoid:** ambient animation, bouncing rewards, repeated entrance effects, motion that competes with the learner's work.
 - Respect `prefers-reduced-motion`.
 
+## Breakpoints
+
+Before this list existed the stylesheet switched layout at seventeen different
+widths — 400, 420, 480, 520, 560, 620, 639, 640, 650, 720, 760, 780, 859, 860,
+900, 920, 1080 — several of them the same intent picked twice, so two similar
+cards stacked at different widths for no reason anybody could state. They are
+now eight, and these five carry the structure:
+
+| Name | Width | What changes here |
+|---|---|---|
+| Phone | **480px** | One column. Cards give up their side-by-side arrangement. |
+| Wide phone / small tablet | **700px** | Content that needs two dimensions gets them. The roadmap draws topic nodes either side of the spine from here up, and the mission map's stop cards stop being sized for a tablet. |
+| App shell | **860px** | Chrome, not content: the sidebar hands off to the bottom bar and dialogs become bottom sheets. Load-bearing and long-standing; do not move it to tidy the list. |
+| Wide | **920px** | Panels that hold two columns of their own. |
+| Desktop | **1300px** | The mission map takes its landscape geometry. |
+
+Three component-level widths survive because merging them would have moved
+layouts this pass could not verify: **560**, **640** and **1080**. Prefer the
+five above for anything new, and fold a straggler in when you are already
+working on the component that owns it.
+
+**These are a convention, not tokens.** A CSS custom property cannot be used
+inside a media query, so nothing enforces this list except the person editing
+the file. That is exactly why it is written down.
+
+**860 is about chrome, 700 is about content, and they are not the same
+question.** The roadmap used 860 to decide whether it had room to draw
+branches, which meant every iPad in portrait was handed the phone drawing: a
+328px strip with roughly 250px of empty white down each side and no topics on
+it at all.
+
 ## Marketing surfaces
 
 Everything above governs **the app**: the eight-step type scale, the

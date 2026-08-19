@@ -630,7 +630,7 @@ fieldset{
 }
 
 .assessment-card{
-  max-width: 720px;
+  max-width: 700px;
   padding: 42px 46px;
   margin: 54px auto 0;
   background: var(--surface);
@@ -1146,7 +1146,7 @@ fieldset{
 }
 
 .next-action-copy > p{
-  max-width: 650px;
+  max-width: 640px;
   margin-bottom: 18px;
   color: var(--muted);
   font-size: var(--t-body);
@@ -2720,7 +2720,7 @@ fieldset{
 }
 
 .opportunity-details p{
-  max-width: 720px;
+  max-width: 700px;
   margin: 5px 0;
   color: var(--slate);
   font-size: var(--t-label);
@@ -2935,7 +2935,7 @@ fieldset{
   }
 }
 
-@media (max-width: 620px) {
+@media (max-width: 640px) {
   .welcome-nav{
     height: 72px;
     padding: 0 18px;
@@ -3164,7 +3164,7 @@ fieldset{
 
 /* Personalized Career Compass and active-path workspace */
 .compact-heading{
-  max-width: 760px;
+  max-width: 700px;
 }
 
 .compass-grid .choice-card{
@@ -3243,7 +3243,7 @@ fieldset{
 
 .empty-path-state{
   display: grid;
-  max-width: 620px;
+  max-width: 640px;
   gap: 12px;
   justify-items: start;
   padding: 32px;
@@ -3552,7 +3552,7 @@ fieldset{
 }
 
 .mission-focus-copy{
-  max-width: 720px;
+  max-width: 700px;
 }
 
 .mission-focus h2{
@@ -3567,7 +3567,7 @@ fieldset{
 }
 
 .build-path-spine{
-  max-width: 780px;
+  max-width: 700px;
   margin-top: 42px;
 }
 
@@ -3636,7 +3636,7 @@ fieldset{
 }
 
 .paused-work{
-  max-width: 780px;
+  max-width: 700px;
   padding: 22px;
   margin-top: 24px;
 }
@@ -3958,7 +3958,7 @@ fieldset{
   }
 }
 
-@media (max-width: 650px) {
+@media (max-width: 640px) {
   .assessment-card{
     padding: 28px 20px;
     margin-top: 28px;
@@ -4102,7 +4102,7 @@ a{ color: inherit; text-decoration: none; }
 
 /* Hero copy block — directly below logo, tight spacing */
 .auth-brand-panel > div{
-  max-width: 420px;
+  max-width: 480px;
   margin-top: 32px;
 }
 
@@ -4640,7 +4640,7 @@ dt{ color:var(--muted); font-size:var(--t-label); font-weight:800; text-transfor
   .build-hero{ align-items:flex-start; flex-direction:column; }
 }
 
-@media (max-width: 650px) {
+@media (max-width: 640px) {
   .arena-switcher, .path-preview-grid, .mission-library{ grid-template-columns:1fr; }
   .arena-switcher{ margin-bottom:30px; }
   .section-heading, .portfolio-summary{ align-items:flex-start; flex-direction:column; }
@@ -4715,7 +4715,7 @@ dt{ color:var(--muted); font-size:var(--t-label); font-weight:800; text-transfor
   .demo-columns{ margin-right: 20px; margin-left: 20px; }
 }
 
-@media (max-width: 650px) {
+@media (max-width: 640px) {
   /* Auth — compact for mobile */
   .auth-brand-panel{
     padding: 28px 20px 24px;
@@ -4771,7 +4771,7 @@ dt{ color:var(--muted); font-size:var(--t-label); font-weight:800; text-transfor
 }
 
 /* Small phones — 375px and below */
-@media (max-width: 400px){
+@media (max-width: 480px){
   .auth-brand-panel {
     padding: 22px 14px 18px;
   }
@@ -5145,7 +5145,7 @@ dt{ color:var(--muted); font-size:var(--t-label); font-weight:800; text-transfor
 }
 
 .sidebar-inset .page-heading, .sidebar-inset .page-intro, .sidebar-inset .mission-title{
-  max-width: 780px;
+  max-width: 700px;
   margin-bottom: 34px;
 }
 
@@ -5348,7 +5348,7 @@ dt{ color:var(--muted); font-size:var(--t-label); font-weight:800; text-transfor
   }
 }
 
-@media (max-width: 520px) {
+@media (max-width: 560px) {
   .app-topbar-context span{
     display: none;
   }
@@ -6019,7 +6019,7 @@ html[lang="my"] .active-path-copy p, html[lang="my"] .career-identity p, html[la
 }
 
 .roadmap-title-row > div{
-  max-width: 720px;
+  max-width: 700px;
 }
 
 .roadmap-title-row > span{
@@ -6292,7 +6292,7 @@ html[lang="my"] .mission-focus h2{
   letter-spacing: var(--k-title);
 }
 
-@media (max-width: 900px) {
+@media (max-width: 920px) {
   .app-header-inner{
     gap: 16px;
   }
@@ -6310,7 +6310,7 @@ html[lang="my"] .mission-focus h2{
   }
 }
 
-@media (max-width: 760px) {
+@media (max-width: 700px) {
   .app-header{
     height: 54px;
   }
@@ -6505,7 +6505,7 @@ html[lang="my"] .mission-focus h2{
   }
 }
 
-@media (max-width: 420px) {
+@media (max-width: 480px) {
   .app-workspace .page-heading h1, .app-workspace .home-heading h1{
     font-size: var(--t-h1);
     letter-spacing: var(--k-h1);
@@ -6656,6 +6656,27 @@ html[lang="my"] .mission-focus h2{
   display: block;
   margin: 0 auto;
   max-width: 100%;
+  /* Without this the element keeps the height from its own attribute while
+     max-width shrinks it, so the drawing is scaled to fit and then centred
+     inside a taller box — a band of blank above and below the map. It only
+     showed between 860 and 1000px before; lowering the wide breakpoint to 700
+     made it every tablet. */
+  height: auto;
+}
+
+/* A floor on the drawing's width above the wide breakpoint.
+   `max-width: 100%` alone means a 1000-unit canvas on a 768px tablet renders at
+   0.73 scale, which takes the 12.5px topic labels to about 9px. DESIGN.md is
+   explicit that node labels stay 13px in every context, and a map you have to
+   squint at is not a map. Below this floor the canvas scrolls sideways inside
+   its own container instead, which is a normal thing for a diagram to do and
+   never moves the page itself. */
+@media (min-width: 700px){
+  /* 820, chosen against real tablet widths: an iPad at 834 hides about 18px
+     of the drawing, a 10th-gen at 810 about 42, an iPad mini at 768 about 84.
+     Higher keeps more label size and hides more map; this is the point where
+     the common case is effectively whole. */
+  .roadmap-svg{ min-width: 820px; }
 }
 
 /* ---- phase bands ----
@@ -6991,7 +7012,7 @@ html[lang="my"] .mission-focus h2{
 
 /* Narrow: single-column spine, no horizontal scroll, and the step brief
    arrives as a bottom sheet — the reachable edge of a one-handed phone. */
-@media (max-width: 859px){
+@media (max-width: 860px){
   .roadmap-canvas-scroll { overflow-x: hidden; padding: var(--s-md) 0; }
   .roadmap-detail-overlay { padding: 0; place-items: end stretch; }
   .roadmap-detail-dialog {
@@ -7443,7 +7464,7 @@ html[lang="my"] .app-page .mission-title h1 {
 
 /* ---- tutor ---- */
 .tutor {
-  max-width: 620px;
+  max-width: 640px;
   background: var(--surface);
   border: 1px solid var(--hairline);
   border-radius: var(--r-card);
@@ -7596,7 +7617,7 @@ html[lang="my"] .app-page .mission-title h1 {
    the in-mission progress signal, deliberately not points.
    ============================================================ */
 
-.runner { max-width: 720px; }
+.runner { max-width: 700px; }
 
 .runner-rail {
   display: flex;
@@ -8389,7 +8410,7 @@ html[lang="my"] .app-page .mission-title h1 {
   .opp-scrub span, .opp-card { transition: none; }
 }
 
-@media (max-width: 720px) {
+@media (max-width: 700px) {
   .opp-evidence { grid-template-columns: 1fr; gap: var(--s-sm); }
   .opp-rail { height: 300px; }
   .opp-card { width: 244px; min-height: 240px; margin-left: -122px; margin-top: -120px; }
@@ -8415,7 +8436,7 @@ html[lang="my"] .app-page .mission-title h1 {
 .opp-card-foot { margin-top: 6px; }
 .opp-card:not(.active) .opp-card-foot { opacity: 0.75; }
 
-@media (max-width: 720px) {
+@media (max-width: 700px) {
   .opp-card-art { height: 92px; }
 }
 
@@ -9171,7 +9192,7 @@ html[lang="my"] .opp-row-detail .opp-evidence strong { text-transform: none; let
 }
 .opp-row-detail footer small { flex: 1; min-width: 180px; font-size: var(--t-meta); color: var(--muted-ink); }
 
-@media (max-width: 720px) {
+@media (max-width: 700px) {
   .opp-row-detail .opp-evidence { grid-template-columns: 1fr; gap: 12px; }
   .opp-row-head { flex-wrap: wrap; gap: 10px; }
   .opp-row-art { width: 44px; height: 36px; }
@@ -9308,7 +9329,7 @@ html[lang="my"] .steps-ring text { font-family: var(--font-my), sans-serif; }
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 10px;
   margin-top: 16px;
-  max-width: 420px;
+  max-width: 480px;
 }
 .profile-stats > div {
   background: var(--surface-sunk);
@@ -9430,6 +9451,7 @@ html[lang="my"] .profile-stats dt { text-transform: none; letter-spacing: 0; }
 
 .map-card {
   position: absolute;
+  max-width: var(--map-card-max, 27%);
   transform: translateY(-50%);
   display: flex;
   align-items: center;
@@ -9466,7 +9488,7 @@ a.map-card:focus-visible { outline: 2px solid var(--navy-700); outline-offset: 2
 .map-card.current { border-color: var(--navy-500); box-shadow: 0 8px 22px rgb(15 23 42 / 0.16); }
 .map-card-go { flex: none; color: var(--navy-700); }
 
-@media (max-width: 780px) {
+@media (max-width: 700px) {
   .mission-map-bar { padding: 12px 14px; gap: 8px; }
   .mission-map-steps { margin-left: 0; }
   .map-card { padding: 7px 10px; gap: 6px; border-radius: 9px; }
@@ -9572,7 +9594,7 @@ html[lang="my"] .partner-band-eyebrow { text-transform: none; letter-spacing: 0;
 .opp-row-verified.live { background: var(--teal-100); color: var(--teal-900); }
 .opp-row-verified.demo { background: var(--surface-sunk); color: var(--muted-ink); }
 
-@media (max-width: 720px) {
+@media (max-width: 700px) {
   .partner-band { padding: 16px; }
   .partner-mark { height: 50px; padding: 6px 10px; }
 }
@@ -9701,7 +9723,7 @@ html[lang="my"] .featured-opp-kind { text-transform: none; letter-spacing: 0; }
   color: var(--ink);
 }
 
-@media (max-width: 620px) {
+@media (max-width: 640px) {
   /* No room for two columns; fall back to label over value. */
   .featured-opp-evidence { grid-template-columns: minmax(0, 1fr); gap: 0; }
   .featured-opp-evidence dt:not(:first-of-type) { margin-top: 6px; }
@@ -9741,7 +9763,7 @@ html[lang="my"] .featured-opp-kind { text-transform: none; letter-spacing: 0; }
   .featured-opp-side small { grid-column: 1 / -1; }
 }
 
-@media (max-width: 520px) {
+@media (max-width: 560px) {
   .featured-opp { grid-template-columns: minmax(0, 1fr); }
   .featured-opp-mark { width: auto; justify-items: start; grid-auto-flow: column; justify-content: start; align-items: center; gap: 10px; }
   .featured-opp-art { width: 62px; height: 48px; }
@@ -9765,7 +9787,7 @@ html[lang="my"] .featured-opp-kind { text-transform: none; letter-spacing: 0; }
   display: grid;
   gap: 10px;
   min-width: 0;
-  max-width: 420px;
+  max-width: 480px;
   margin: 2px 0 8px;
   padding: 14px;
   background: var(--surface-sunk);
@@ -9889,7 +9911,7 @@ html[lang="my"] .profile-section-label { text-transform: none; letter-spacing: 0
 
 /* Label/value pairs on one line each: the shape account details and compass
    answers both want, so the two sections stop looking like different pages. */
-.profile-facts { display: grid; gap: 8px; width: 100%; max-width: 620px; }
+.profile-facts { display: grid; gap: 8px; width: 100%; max-width: 640px; }
 .profile-facts > div {
   display: grid;
   grid-template-columns: 148px minmax(0, 1fr);
@@ -9917,7 +9939,7 @@ html[lang="my"] .profile-section-label { text-transform: none; letter-spacing: 0
    pushed it onto its own flex line. */
 .profile-section .profile-actions form { width: auto; }
 
-@media (max-width: 620px) {
+@media (max-width: 640px) {
   .profile-facts > div { grid-template-columns: minmax(0, 1fr); }
   .profile-section { padding: 18px 0; }
 }
@@ -9964,7 +9986,7 @@ html[lang="my"] .profile-section-label { text-transform: none; letter-spacing: 0
 
 .settings-list {
   width: 100%;
-  max-width: 620px;
+  max-width: 640px;
   display: grid;
   border: 1px solid var(--hairline);
   border-radius: var(--r-card, 12px);
@@ -9996,7 +10018,7 @@ html[lang="my"] .profile-section-label { text-transform: none; letter-spacing: 0
 .settings-row-main { display: grid; gap: 2px; min-width: 0; }
 .settings-row-control { justify-self: end; }
 
-@media (max-width: 520px) {
+@media (max-width: 560px) {
   .settings-row { grid-template-columns: minmax(0, 1fr); }
   .settings-row-control { justify-self: start; }
 }
@@ -10503,7 +10525,7 @@ html[lang="my"] .climb-points {
 /* Below 640px four columns would leave roughly 70px per node, which turns
    "Opportunity" into four stacked fragments. The track turns vertical instead:
    same four stages, same connector, read top to bottom. */
-@media (max-width: 639px){
+@media (max-width: 640px){
   .momentum-track{
     grid-template-columns: minmax(0, 1fr);
     gap: var(--s-md);
@@ -11115,7 +11137,7 @@ html[lang="my"] .oppsig-skills-head {
 
 /* Phones. The mark drops above the text so a 64px tile plus a long
    organisation name never forces the panel wider than the viewport. */
-@media (max-width: 420px) {
+@media (max-width: 480px) {
   .proofp,
   .oppsig {
     padding: 14px;
@@ -11460,7 +11482,7 @@ html[lang="my"] .oppsig-skills-head {
 .profile-path-progress {
   display: grid;
   gap: var(--s-sm);
-  max-width: 620px;
+  max-width: 640px;
   margin-top: var(--s-xs);
 }
 
@@ -11608,7 +11630,7 @@ html[lang="my"] .oppsig-skills-head {
 .profile-catalog-link:hover strong { text-decoration: underline; }
 .profile-catalog-link:focus-visible { outline: 2px solid var(--teal-700); outline-offset: 2px; }
 
-@media (max-width: 620px) {
+@media (max-width: 640px) {
   /* 44px controls cannot share a 320px row with a path title. */
   .profile-alt-row { grid-template-columns: minmax(0, 1fr); }
   .profile-alt-row .path-switch-action { justify-self: start; }
@@ -11736,7 +11758,7 @@ a.paused-row:hover { background: var(--surface-sunk); }
 .paused-row-copy strong { font-size: var(--t-meta); font-weight: 700; color: var(--ink); }
 .paused-row-copy small { font-size: var(--t-label); color: var(--muted-ink); }
 
-@media (max-width: 720px) {
+@media (max-width: 700px) {
   .track-card { grid-template-columns: auto minmax(0, 1fr); }
   .track-card-actions { grid-column: 1 / -1; grid-auto-flow: column; grid-auto-columns: 1fr; }
   .switch-row, .paused-row { grid-template-columns: auto minmax(0, 1fr); }
@@ -13104,7 +13126,7 @@ html[lang="my"] .resume-sheet h4 { text-transform: none; letter-spacing: 0; }
 .resume-export small { font-size: var(--t-label); color: var(--muted-ink); }
 .resume-docx { opacity: 0.85; }
 
-@media (max-width: 620px) {
+@media (max-width: 640px) {
   .resume-block, .resume-sheet { padding: 16px; }
   .resume-actions .button { margin-left: 0; width: 100%; justify-content: center; }
 }
@@ -13518,7 +13540,7 @@ html[lang="my"] .hero-copy h1{
     padding-bottom: 84px;
   }
   .hero-copy h1{ max-width: none; }
-  .hero-scene{ max-width: 620px; }
+  .hero-scene{ max-width: 640px; }
   .journey-steps{ grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 30px 18px; }
   .journey-steps li:nth-child(3)::before{ display: none; }
 }
@@ -13822,7 +13844,7 @@ html[lang="my"] .hero-copy h1{
 
 .privacy-copy svg{ flex: none; color: var(--muted-ink); }
 
-@media (max-width: 900px){
+@media (max-width: 920px){
   .auth-shell{ grid-template-columns: minmax(0, 1fr); }
   .auth-brand-panel{
     /* The climb and the promises are the argument; on a phone the scenery
@@ -13964,7 +13986,7 @@ html[lang="my"] .hero-copy h1{
 .auth-scene{ z-index: 1; }
 .auth-brand-panel > *:not(.auth-terrain):not(.auth-scene){ position: relative; z-index: 2; }
 
-@media (max-width: 900px){
+@media (max-width: 920px){
   .auth-terrain{ display: none; }
 }
 
@@ -14139,4 +14161,30 @@ html[lang="my"] .hero-copy h1{
   .resume-dialog-head,
   .resume-dialog-close{ display: none; }
   .resume-dialog-body{ padding: 0; overflow: visible; }
+}
+
+/* ---- the climb on a phone ----
+   The stop cards are sized as a share of a 923-unit canvas, which is right on
+   a tablet and wrong on a 390px screen: 27% of 390 is 105px, and a title like
+   "Portfolio and hiring capstone" needs four lines to fit that. The geometry
+   leaves about 55% of the width clear beside each stop, so the card can take
+   most of it and still never cross the trail it is labelling. */
+@media (max-width: 700px){
+  .map-card{
+    max-width: 44%;
+    gap: 6px;
+    padding: 8px 9px;
+    border-radius: 10px;
+  }
+  .map-card-copy strong{
+    font-size: var(--t-meta);
+    line-height: 1.25;
+  }
+  .map-card-status{ font-size: 11px; }
+}
+
+/* Below the phone breakpoint the trail itself narrows, so the cards take the
+   last of the slack rather than the trail. */
+@media (max-width: 480px){
+  .map-card{ max-width: 46%; padding: 7px 8px; }
 }

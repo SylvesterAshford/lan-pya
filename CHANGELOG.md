@@ -1,5 +1,17 @@
 # Changelog
 
+## [0.25.0.0] - 2026-08-20
+
+### Changed
+
+- iPads show the real roadmap. Held upright, an iPad was being given the phone drawing: a narrow strip down the middle of the screen with most of the glass empty and none of the topic boxes on it. It now draws the full branching map from tablet width up.
+- The climb reads properly on a phone. Each stop's card was sized as a share of a tablet-width drawing, which on a phone left it about a third of the screen wide, so titles broke across four lines and the cards sat on top of the trail. They are wider and shorter now, and clear of the path.
+- The roadmap no longer leaves a band of blank above and below itself on a tablet.
+
+### Fixed
+
+- Layout switched at seventeen different screen widths, several of them the same intent picked twice. Eight remain, five of which are named in DESIGN.md with what each one is for.
+
 ## [0.24.0.0] - 2026-08-19
 
 ### Changed

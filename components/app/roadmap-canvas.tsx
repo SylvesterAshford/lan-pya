@@ -152,8 +152,14 @@ function HereMarker({ cx, top, label }: { cx: number; top: number; label: string
 }
 
 /** SSR-safe viewport match. Server and first client paint agree on the narrow
- *  geometry, which is also the correct default for this product's audience. */
-const WIDE_QUERY = "(min-width: 860px)";
+ *  geometry, which is also the correct default for this product's audience.
+ *
+ *  700, not the app shell's 860. Those are two different questions. 860 is
+ *  where the sidebar hands off to a bottom bar, which is about chrome. This is
+ *  about whether there is room to draw topic nodes either side of the spine,
+ *  and at 768 there is: an iPad in portrait was being handed a 328px strip
+ *  with 250px of empty white down each side and no topics on it at all. */
+const WIDE_QUERY = "(min-width: 700px)";
 
 function useWideViewport() {
   const subscribe = useCallback((cb: () => void) => {
