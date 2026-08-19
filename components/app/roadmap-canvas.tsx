@@ -14,7 +14,7 @@ import type { Milestone } from "@/lib/domain/types";
  * Two geometries rather than one scaled canvas: scaling the 780px desktop
  * viewBox down to a 360px phone would render 13px node labels at ~6px. The
  * narrow geometry drops the branches and keeps stage nodes on the spine; the
- * branch skills move into the detail panel. See DESIGN.md "Roadmap canvas".
+ * branch skills move into the detail dialog. See DESIGN.md "Roadmap canvas".
  */
 
 export type ForkConfig = {
@@ -161,7 +161,8 @@ export function RoadmapCanvas({
 }: {
   milestones: Milestone[];
   selectedKey: string;
-  onSelect: (key: string) => void;
+  /** Receives the node element too, so the caller can return focus to it. */
+  onSelect: (key: string, trigger: SVGGElement) => void;
   fork?: ForkConfig;
   labels: { stage: string; verified: string; inProgress: string; upcoming: string; comingSoon: string };
 }) {
@@ -223,15 +224,19 @@ export function RoadmapCanvas({
         className={`rm-node rm-stage ${st}${selected ? " selected" : ""}`}
         role="button"
         tabIndex={st === "soon" ? -1 : 0}
-        aria-pressed={selected}
+        data-node-key={m.key}
+        // The node opens the step brief in a dialog, so it reports what it
+        // opens and whether that thing is open — not a pressed toggle state.
+        aria-haspopup="dialog"
+        aria-expanded={st === "soon" ? undefined : selected}
         aria-disabled={st === "soon" || undefined}
         aria-label={`${labels.stage} ${m.order}: ${m.title}. ${statusLabel(st)}`}
-        onClick={() => st !== "soon" && onSelect(m.key)}
+        onClick={(e) => st !== "soon" && onSelect(m.key, e.currentTarget)}
         onKeyDown={(e) => {
           if (st === "soon") return;
           if (e.key === "Enter" || e.key === " ") {
             e.preventDefault();
-            onSelect(m.key);
+            onSelect(m.key, e.currentTarget);
           }
         }}
       >

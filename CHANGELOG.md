@@ -1,5 +1,17 @@
 # Changelog
 
+## [0.20.0.0] - 2026-08-19
+
+### Added
+
+- A roadmap stop now opens a step brief. Clicking a stage on the map brings up its detail over the map rather than beside it, and closes on Escape, on the scrim, or from the close control.
+
+### Changed
+
+- The roadmap tab no longer carries the level strip, and the blank band above the map is gone. The roadmap says what the path is and where you are on it; the level belongs on Today and on Me, where the points are the subject.
+- The Evidence Studio counts only work that has been reviewed and still stands. Unreviewed work never reaches the passport figures, the skills list or the resume builder, and a mission with no written summary says so rather than having one written for it.
+- The completed mission list closes with a rule before the level strip, so the last badge and the strip no longer run together.
+
 ## [0.19.1.0] - 2026-08-19
 
 ### Fixed

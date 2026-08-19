@@ -1,6 +1,4 @@
-import { LevelMeter } from "@/components/app/level-meter";
 import { RoadmapTree } from "@/components/app/roadmap-tree";
-import { resolveProgress } from "@/lib/domain/progress";
 import { getActivePathDashboard, getRoadmap } from "@/lib/data/app-data";
 import { getCareerTrack, getTrackFork } from "@/lib/domain/career-tracks";
 import type { Milestone } from "@/lib/domain/types";
@@ -29,17 +27,9 @@ export default async function RoadmapPage({
   const trackTitle = localizeCareerTerm(locale, track.key, track.title);
   const stageCount = milestones.length;
 
-  // Levels are path-scoped: XP never transfers between careers. So the strip
-  // appears only when you are looking at your OWN path. Browsing someone
-  // else's roadmap must not imply you have a level on it.
-  const isActivePath = dashboard.activePath?.key === track.key;
-  const progress = isActivePath
-    ? resolveProgress(dashboard.xp, {
-      completedMissions: dashboard.completedMilestones,
-      verifiedCount: dashboard.verifiedCount,
-      stagesTouched: milestones.filter((stage) => stage.status === "complete").length,
-    })
-    : null;
+  // No level strip here. The roadmap answers "what is the path and where am
+  // I on it", which the canvas header already counts in verified milestones.
+  // The level lives on Today and on Me, where XP is the subject.
 
   return (
     <div className="app-page roadmap-page">
@@ -52,8 +42,6 @@ export default async function RoadmapPage({
           <span>{stageCount} {c.roadmap.stages}</span>
         </div>
       </section>
-
-      {progress ? <LevelMeter progress={progress} locale={locale} variant="compact" /> : null}
 
       <RoadmapTree locale={locale} milestones={milestones} fork={getTrackFork(track.key, locale)} />
     </div>
