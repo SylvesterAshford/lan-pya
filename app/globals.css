@@ -12615,7 +12615,11 @@ html[lang="my"] .passport-count dd{
   align-items: stretch;
 }
 .studio-split .resume-block { margin-top: 0; }
-.studio-split .passport { align-content: space-between; }
+.studio-split .passport {
+  align-content: space-between;
+  padding: var(--s-xl);
+  row-gap: var(--s-xl);
+}
 
 @media (max-width: 1080px) {
   .studio-split { grid-template-columns: minmax(0, 1fr); }
@@ -13296,7 +13300,7 @@ html[lang="my"] .passport-count dd{
 .case-card > * { margin: 0; }
 /* Only verified gets the accented edge. An unreviewed submission wearing it
    would claim at a glance what it has not earned. */
-.case-card.is-verified { border-left: 3px solid var(--teal-600); }
+.case-card.is-verified { border-left: 3px solid var(--teal-700); }
 .case-card.is-in_review { border-left: 3px solid var(--amber-500); }
 .case-card.is-draft { border-left: 3px solid var(--hairline); }
 
@@ -13358,9 +13362,18 @@ html[lang="my"] .case-eyebrow { text-transform: none; letter-spacing: 0; }
   border-radius: var(--r-control);
   cursor: pointer;
 }
-.resume-picks label.on { border-color: var(--teal-600); background: var(--teal-050); }
+/* Selection has to be visible across the room. --teal-050 is two steps off
+   white, which on a white card read as "maybe selected"; --teal-100 is the
+   token the system already reserves for a teal ground. */
+.resume-picks label.on {
+  border-color: var(--teal-700);
+  background: var(--teal-100);
+  box-shadow: inset 3px 0 0 var(--teal-700);
+}
 .resume-picks input { position: absolute; width: 1px; height: 1px; opacity: 0; }
-.resume-picks label:focus-within { outline: 2px solid var(--teal-700); outline-offset: 2px; }
+/* Offset 1px, not 2: at 2 the ring cleared the border and drew a second
+   outline outside it, so a focused selection wore two teal rings. */
+.resume-picks label:focus-within { outline: 2px solid var(--teal-700); outline-offset: 1px; }
 .resume-pick-box {
   display: grid;
   place-items: center;
@@ -13371,13 +13384,35 @@ html[lang="my"] .case-eyebrow { text-transform: none; letter-spacing: 0; }
   background: var(--surface);
   color: var(--surface);
 }
-.resume-picks label.on .resume-pick-box { background: var(--teal-600); border-color: var(--teal-600); }
+.resume-picks label.on .resume-pick-box { background: var(--teal-700); border-color: var(--teal-700); }
 .resume-pick-copy { display: grid; gap: 1px; min-width: 0; }
 .resume-pick-copy strong { font-size: var(--t-meta); font-weight: 700; color: var(--ink); }
+.resume-picks label.on .resume-pick-copy small { color: var(--teal-900); }
 .resume-pick-copy small { font-size: var(--t-label); color: var(--muted-ink); }
 
-.resume-actions { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+.resume-actions { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
 .resume-selected { font-size: var(--t-label); font-weight: 600; color: var(--muted-ink); }
+/* These two are <button>s wearing .text-link, so they arrived with the
+   browser's own grey chrome and with the global .text-link's 20px top margin.
+   Both fought the row: the native box made them look like disabled buttons,
+   and the margin dropped them below the line everything else sits on. */
+.resume-actions .text-link {
+  display: inline-flex;
+  align-items: center;
+  min-height: 34px;
+  margin: 0;
+  padding: 0 10px;
+  background: transparent;
+  border: 0;
+  border-radius: var(--r-control);
+  color: var(--teal-700);
+  font-size: var(--t-label);
+  font-weight: 700;
+  cursor: pointer;
+}
+.resume-actions .text-link:hover { background: var(--teal-050); }
+/* Only the primary is pushed right. Applied to every button the auto margin
+   distributed the slack between them, and nothing lined up. */
 .resume-actions .button { margin-left: auto; }
 
 .resume-draft { display: grid; gap: 12px; margin-top: 4px; }
