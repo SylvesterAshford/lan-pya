@@ -73,11 +73,12 @@ export function RoadmapTree({
     node?.focus?.();
   }
 
-  function missionHref(milestone: Milestone) {
-    return milestone.key.startsWith("content-")
-      ? "/app/missions/content-creator-awareness"
-      : "/app/missions/responsive-profile-card";
-  }
+  // "Continue current mission" goes to the climb, not to a mission detail page.
+  // It used to guess a page from the milestone key, which meant every stage on
+  // every track landed on one of two hardcoded missions — usually the wrong
+  // one, and never the learner's actual position. The climb centres itself on
+  // the current stop on arrival, so this lands exactly where the label says.
+  const missionsHref = "/app/missions";
 
   if (!current) return null;
 
@@ -125,6 +126,10 @@ export function RoadmapTree({
               inProgress: c.inProgress,
               upcoming: c.upcoming,
               comingSoon: c.comingSoon ?? c.upcoming,
+              // Same wording the climb on Missions uses for the same idea, so
+              // the two screens name the learner's position identically.
+              youAreHere: locale === "my" ? "သင် ဤနေရာတွင်" : "You are here",
+              phase: locale === "my" ? "အဆင့်ပိုင်း" : "Phase",
             }}
           />
         </div>
@@ -137,7 +142,7 @@ export function RoadmapTree({
           milestone={selected}
           statusLabel={statusLabels[selected.status]}
           totalSteps={milestones.length}
-          missionHref={missionHref(selected)}
+          missionHref={missionsHref}
           onClose={closeDetail}
         />
       ) : null}
