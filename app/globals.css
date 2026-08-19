@@ -167,6 +167,11 @@
   --t-label: 12px;     --l-label: 1.4;
   --t-node: 13px;      --l-node: 1.35;
 
+  /* Marketing surfaces only. DESIGN.md scopes these to the landing page; an
+     app screen using them is a defect. */
+  --t-hero: clamp(40px, 7vw, 72px);
+  --t-hero-sub: clamp(17px, 1.4vw, 20px);
+
   /* Display weight drops 800 -> 700. At 32px, 800 shouts; "Quiet Guidance"
      wants confident, not loud. */
   --w-display: 700;
@@ -263,6 +268,10 @@ html[lang="my"] body{
   --t-meta: 15px;   --l-meta: 1.6;
   --t-title: 18px;
   --t-node: 14px;
+  /* Marketing surfaces. Burmese words are longer and the glyphs are taller, so
+     72px ran the hero to five lines and pushed the paragraph below the fold. */
+  --t-hero: clamp(30px, 4.4vw, 46px);
+  --t-hero-sub: clamp(16px, 1.3vw, 19px);
   --l-h1: 1.34;
   --l-h2: 1.45;
   /* Burmese letterforms carry their own rhythm; negative tracking damages them. */
@@ -524,33 +533,6 @@ fieldset{
   border: 0;
 }
 
-/* Welcome */
-
-.welcome-shell{
-  min-height: 100vh;
-  overflow: hidden;
-  color: var(--on-solid);
-  background:
-    radial-gradient(circle at 78% 26%, rgba(245, 158, 11, 0.13), transparent 22%),
-    radial-gradient(circle at 10% 100%, rgba(15, 118, 110, 0.32), transparent 32%),
-    var(--navy);
-}
-
-.welcome-shell::before{
-  position: absolute;
-  top: 88px;
-  right: 4vw;
-  width: clamp(200px, 30vw, 410px);
-  height: clamp(200px, 30vw, 410px);
-  pointer-events: none;
-  content: "";
-  border: 1px solid rgba(255, 255, 255, 0.045);
-  border-radius: 50%;
-  box-shadow: 0 0 0 72px rgba(255, 255, 255, 0.018),
-    0 0 0 144px rgba(255, 255, 255, 0.014);
-  overflow: hidden;
-}
-
 .welcome-nav{
   position: relative;
   z-index: 2;
@@ -587,282 +569,6 @@ fieldset{
   box-shadow: 0 0 0 4px rgba(83, 214, 200, 0.12);
 }
 
-.welcome-hero{
-  position: relative;
-  z-index: 1;
-  display: grid;
-  max-width: 1220px;
-  min-height: 650px;
-  grid-template-columns: minmax(0, 1.06fr) minmax(420px, 0.94fr);
-  align-items: center;
-  gap: 74px;
-  padding: 64px 28px 94px;
-  margin: 0 auto;
-}
-
-.hero-kicker{
-  display: block;
-  margin-bottom: 24px;
-  color: #79d7cc;
-  font-size: var(--t-label);
-  font-weight: 800;
-  letter-spacing: 0.18em;
-}
-
-.hero-copy h1{
-  max-width: 670px;
-  margin-bottom: 26px;
-  color: var(--on-solid);
-  font-size: clamp(42px, 5vw, 66px);
-  font-weight: 780;
-  letter-spacing: -0.055em;
-  line-height: 1.03;
-}
-
-.hero-copy h1 em{
-  color: var(--yellow);
-  font-style: normal;
-}
-
-.hero-copy > p{
-  max-width: 610px;
-  margin-bottom: 32px;
-  color: #bdc9d9;
-  font-size: var(--t-title);
-  letter-spacing: var(--k-title);
-  line-height: 1.7;
-}
-
-.hero-actions{
-  display: flex;
-  flex-wrap: wrap;
-  gap: 12px;
-}
-
-.hero-trust{
-  display: flex;
-  flex-wrap: wrap;
-  gap: 22px;
-  margin-top: 28px;
-  color: #8ea0b6;
-  font-size: var(--t-label);
-  font-weight: 650;
-}
-
-.hero-trust span::before{
-  margin-right: 7px;
-  color: #53d6c8;
-  content: "✓";
-}
-
-.proof-window{
-  overflow: hidden;
-  color: var(--slate);
-  background: var(--surface);
-  border: 1px solid rgba(255, 255, 255, 0.16);
-  border-radius: 15px;
-  box-shadow: var(--shadow-lg);
-  transform: rotate(0.7deg);
-}
-
-.window-bar{
-  display: flex;
-  height: 46px;
-  align-items: center;
-  gap: 6px;
-  padding: 0 16px;
-  background: #f1f5f9;
-  border-bottom: 1px solid var(--line);
-}
-
-.window-bar > span{
-  width: 8px;
-  height: 8px;
-  background: var(--line-strong);
-  border-radius: 50%;
-}
-
-.window-bar > span:first-child{
-  background: var(--yellow);
-}
-
-.window-bar small{
-  margin-left: auto;
-  color: var(--muted);
-  font-size: var(--t-label);
-  font-weight: 800;
-  letter-spacing: 0.13em;
-}
-
-.window-body{
-  padding: 29px;
-}
-
-.mini-label{
-  color: var(--teal);
-  font-size: var(--t-label);
-  font-weight: 800;
-  letter-spacing: 0.14em;
-}
-
-.window-body h2{
-  margin: 8px 0 9px;
-  color: var(--navy);
-  font-size: 24px;
-  letter-spacing: -0.03em;
-}
-
-.window-body > p{
-  margin-bottom: 18px;
-  color: var(--muted);
-  font-size: var(--t-meta);
-  line-height: 1.55;
-}
-
-.window-progress{
-  height: 6px;
-  overflow: hidden;
-  background: #edf2f7;
-  border-radius: 5px;
-}
-
-.window-progress span{
-  display: block;
-  width: 41%;
-  height: 100%;
-  background: var(--teal);
-}
-
-.proof-stages{
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  margin-top: 25px;
-}
-
-.proof-stages > div{
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 9px;
-  /* Future steps stay secondary but must remain readable: #94a3b8 on the white
-     mockup card measured 2.34:1, well under AA. */
-  color: var(--muted-ink);
-  text-align: center;
-}
-
-.proof-stages > div:not(:last-child)::after{
-  position: absolute;
-  top: 17px;
-  left: 68%;
-  width: 65%;
-  height: 2px;
-  content: "";
-  background: var(--line);
-}
-
-.proof-stages b{
-  z-index: 1;
-  display: grid;
-  width: 34px;
-  height: 34px;
-  place-items: center;
-  font-size: var(--t-label);
-  background: #f1f5f9;
-  border: 1px solid var(--line);
-  border-radius: 50%;
-}
-
-.proof-stages strong, .proof-stages span{
-  font-size: var(--t-label);
-  font-weight: 750;
-}
-
-.proof-stages small{
-  display: block;
-  margin-top: 3px;
-  font-size: var(--t-label);
-  font-weight: 500;
-}
-
-.proof-stages .done{
-  /* teal-500 is a fill token; text on white needs teal-700 (DESIGN.md Color). */
-  color: var(--teal-700);
-}
-
-.proof-stages .done b{
-  color: var(--on-solid);
-  /* A fill carrying white text needs teal-700: white on teal-500 measures
-     3.39:1, and an 11px bold numeral is not "large text" under WCAG. */
-  background: var(--teal-700);
-  border-color: var(--teal-700);
-}
-
-.proof-stages .done::after{
-  background: var(--success) !important;
-}
-
-.proof-stages .active{
-  color: var(--navy);
-}
-
-.proof-stages .active b{
-  color: var(--navy);
-  background: var(--yellow);
-  border-color: var(--yellow);
-  box-shadow: 0 0 0 5px var(--yellow-soft);
-}
-
-.window-evidence{
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 14px;
-  margin-top: 24px;
-  background: var(--teal-soft);
-  border: 1px solid #c6e5e1;
-  border-radius: 8px;
-}
-
-.evidence-mark{
-  display: grid;
-  width: 28px;
-  height: 28px;
-  place-items: center;
-  color: var(--on-solid);
-  font-size: var(--t-meta);
-  font-weight: 800;
-  background: var(--teal);
-  border-radius: 7px;
-}
-
-.window-evidence strong, .window-evidence small{
-  display: block;
-}
-
-.window-evidence strong{
-  color: var(--navy);
-  font-size: var(--t-label);
-}
-
-.window-evidence small{
-  margin-top: 3px;
-  color: var(--muted);
-  font-size: var(--t-label);
-}
-
-.screen-board{
-  position: relative;
-  z-index: 1;
-  display: grid;
-  max-width: 1220px;
-  grid-template-columns: minmax(250px, 0.6fr) minmax(0, 1.4fr);
-  align-items: center;
-  gap: 48px;
-  padding: 92px 28px 88px;
-  margin: 0 auto;
-}
-
 .screen-board-copy h2{
   max-width: 430px;
   margin-bottom: 18px;
@@ -878,29 +584,6 @@ fieldset{
   color: #aebdd0;
   font-size: var(--t-body);
   line-height: 1.7;
-}
-
-.screen-board figure{
-  margin: 0;
-}
-
-.screen-board img{
-  display: block;
-  width: 100%;
-  height: auto;
-  border: 1px solid rgba(255, 255, 255, 0.16);
-  border-radius: 10px;
-  box-shadow: var(--shadow-lg);
-}
-
-.screen-board figcaption{
-  margin-top: 11px;
-  color: #7f91a8;
-  font-size: var(--t-label);
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  text-align: right;
-  text-transform: uppercase;
 }
 
 /* Assessment */
@@ -3142,10 +2825,6 @@ fieldset{
 }
 
 @media (max-width: 1080px) {
-  .welcome-hero{
-    grid-template-columns: 1fr 430px;
-    gap: 36px;
-  }
 
   .sidebar{
     width: 218px;
@@ -3170,24 +2849,6 @@ fieldset{
 }
 
 @media (max-width: 860px) {
-  .welcome-hero{
-    grid-template-columns: 1fr;
-    padding-top: 58px;
-  }
-
-  .hero-copy{
-    max-width: 690px;
-  }
-
-  .proof-window{
-    max-width: 560px;
-    transform: none;
-  }
-
-  .screen-board{
-    grid-template-columns: 1fr;
-    padding-top: 62px;
-  }
 
   .stat-strip{
     grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -3283,57 +2944,6 @@ fieldset{
   .prototype-pill{
     padding: 7px 9px;
     font-size: var(--t-label);
-  }
-
-  .welcome-hero{
-    min-height: auto;
-    padding: 48px 18px 60px;
-  }
-
-  .hero-copy h1{
-    font-size: 42px;
-  }
-
-  .hero-copy > p{
-    font-size: var(--t-body);
-  }
-
-  .hero-actions .button{
-    width: 100%;
-  }
-
-  .hero-trust{
-    flex-direction: column;
-    gap: 9px;
-  }
-
-  .proof-window{
-    max-width: 100%;
-    transform: none;
-    font-size: var(--t-meta);
-  }
-
-  .proof-window .proof-stages{
-    grid-template-columns: repeat(2, 1fr);
-    gap: 12px;
-  }
-
-  .proof-window .proof-stages > div:not(:last-child)::after{
-    display: none;
-  }
-
-  .window-body{
-    padding: 18px;
-  }
-
-  .window-body h2{
-    font-size: var(--t-h2);
-    letter-spacing: var(--k-h2);
-  }
-
-  .screen-board{
-    gap: 34px;
-    padding: 54px 18px 60px;
   }
 
   .assessment-top{
@@ -7474,17 +7084,6 @@ html[lang="my"] .mission-focus h2{
 .rmp-track { font-size: var(--t-meta); font-weight: 700; }
 .rmp-track.local { fill: var(--teal-900); }
 .rmp-track.global { fill: var(--purple-900); }
-
-/* Removing the four-column card grid left a large gap between the hero and the
-   roadmap section. Close it rather than letting the page look truncated. */
-.welcome-hero {
-  min-height: 560px;
-  padding-bottom: 56px;
-}
-
-.screen-board {
-  padding-top: 56px;
-}
 
 /* ============================================================
    DEADLINE COUNTDOWN — DESIGN.md "Deadlines".
@@ -13536,4 +13135,394 @@ html[lang="my"] .resume-sheet h4 { text-transform: none; letter-spacing: 0; }
   }
   .resume-bullets li { break-inside: avoid; }
   a[href]::after { content: "" !important; }
+}
+
+/* ============================================================
+   LANDING PAGE
+   A marketing surface, governed by DESIGN.md "Marketing surfaces"
+   rather than by the app's eight-step scale. Nothing in this block
+   is used behind /app.
+   ============================================================ */
+
+.welcome-shell{
+  position: relative;
+  min-height: 100vh;
+  /* clip, not hidden: the glow and arcs bleed past the viewport on purpose,
+     and `hidden` would create a scroll container that traps the page. */
+  overflow: clip;
+  color: var(--on-solid);
+  background: var(--navy-900);
+}
+
+/* ---- hero ---- */
+
+.welcome-hero{
+  position: relative;
+  z-index: 1;
+  display: grid;
+  max-width: 1220px;
+  grid-template-columns: minmax(0, 1.02fr) minmax(0, 0.98fr);
+  align-items: center;
+  gap: 48px;
+  padding: 64px 28px 116px;
+  margin: 0 auto;
+}
+
+/* Atmosphere. A dawn bleeding in from the top right and two long arcs that
+   imply a curve bigger than the screen. Light and distance, not ornament —
+   DESIGN.md forbids decorative blobs and this is neither. */
+.hero-sky{
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.hero-glow{
+  position: absolute;
+  top: -34%;
+  right: -12%;
+  width: min(1120px, 92vw);
+  aspect-ratio: 1;
+  background: radial-gradient(
+    circle,
+    rgba(239, 159, 39, 0.20),
+    rgba(239, 159, 39, 0.065) 38%,
+    transparent 62%
+  );
+}
+
+.hero-arcs{
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.hero-arcs path{
+  fill: none;
+  stroke: rgba(255, 255, 255, 0.07);
+  stroke-width: 1;
+}
+
+.hero-copy{
+  position: relative;
+  z-index: 1;
+}
+
+.hero-kicker{
+  display: block;
+  margin-bottom: 20px;
+  color: var(--teal-500);
+  font-size: var(--t-label);
+  font-weight: 800;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+.hero-copy h1{
+  max-width: 13ch;
+  margin: 0 0 24px;
+  color: var(--on-solid);
+  font-size: var(--t-hero);
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  line-height: 1.02;
+}
+
+/* `ch` measures the width of a zero, which says nothing useful about Burmese,
+   and 1.02 leading collides the stacked marks Burmese sets above and below the
+   line. Both get their own values here rather than being scaled down. */
+html[lang="my"] .hero-copy h1{
+  max-width: 20ch;
+  letter-spacing: 0;
+  line-height: 1.38;
+}
+
+.hero-copy > p{
+  max-width: 46ch;
+  margin: 0 0 32px;
+  color: #b9c6d8;
+  font-size: var(--t-hero-sub);
+  line-height: 1.55;
+}
+
+.hero-actions{
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.hero-trust{
+  display: flex;
+  flex-wrap: wrap;
+  gap: 22px;
+  margin-top: 30px;
+  color: #93a5bd;
+  font-size: var(--t-label);
+  font-weight: 650;
+}
+
+.hero-trust span::before{
+  margin-right: 7px;
+  color: var(--teal-500);
+  content: "✓";
+}
+
+/* ---- the rotating word ---- */
+
+.rotator{
+  /* Inline-block with a floor under it: the word grows from "a job" to
+     "an interview" as it types, and without a reserved width the line it sits
+     on re-breaks on almost every keystroke. The floor covers the short words,
+     so only the genuinely long ones move anything. */
+  display: inline-block;
+  min-width: 6.4ch;
+  color: var(--amber-500);
+}
+
+.rotator-caret{
+  display: inline-block;
+  width: 0.055em;
+  min-width: 3px;
+  height: 0.78em;
+  margin-left: 0.05em;
+  vertical-align: baseline;
+  background: var(--amber-500);
+  animation: rotator-blink 1s steps(1, end) infinite;
+}
+
+@keyframes rotator-blink{
+  0%, 50% { opacity: 1; }
+  50.01%, 100% { opacity: 0; }
+}
+
+/* ---- the summit and the cards pinned to it ---- */
+
+.hero-scene{
+  position: relative;
+  z-index: 1;
+}
+
+.summit{
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+/* The trail draws itself once on arrival. Once, not on a loop: the ambient
+   allowance in DESIGN.md is spent on the headline. */
+.summit-trail-line{
+  stroke-dasharray: 1500;
+  stroke-dashoffset: 1500;
+  animation: trail-draw 2.2s ease-out 0.25s forwards;
+}
+
+@keyframes trail-draw{
+  to { stroke-dashoffset: 0; }
+}
+
+.summit-stop circle:first-child{
+  fill: var(--navy-900);
+  stroke: var(--teal-500);
+  stroke-width: 3;
+}
+
+.summit-stop path{
+  stroke: var(--teal-500);
+}
+
+.summit-stop.ahead circle:first-child{
+  stroke: var(--amber-500);
+}
+
+.summit-stop.ahead circle:last-child{
+  fill: var(--amber-500);
+}
+
+.hero-pins{
+  position: absolute;
+  inset: 0;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.hero-pin{
+  position: absolute;
+  display: grid;
+  gap: 3px;
+  width: min(238px, 44%);
+  padding: 11px 13px;
+  background: rgba(11, 18, 35, 0.86);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 10px;
+}
+
+/* Anchored to the three stops on the trail, which sit at 27%/80%, 40%/52%
+   and 58%/28% of the drawing. Each card sits just to the right of its stop. */
+.hero-pin.mission{ left: 31%; top: 72%; }
+.hero-pin.proof{ left: 43%; top: 44%; }
+.hero-pin.door{ left: 55%; top: 19%; }
+
+.hero-pin-label{
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  color: var(--teal-500);
+}
+
+.hero-pin.door .hero-pin-label{ color: var(--amber-500); }
+
+.hero-pin strong{
+  color: #fff;
+  font-size: var(--t-meta);
+  font-weight: 700;
+  line-height: 1.3;
+}
+
+.hero-pin small{
+  color: #9fb0c6;
+  font-size: var(--t-label);
+  line-height: 1.4;
+}
+
+/* ---- the climb, said plainly, on light ground ---- */
+
+.journey{
+  position: relative;
+  z-index: 1;
+  padding: 40px 28px 88px;
+  background: var(--navy-050);
+  color: var(--ink);
+  text-align: center;
+}
+
+/* The same ridge the hero ends on, so the page reads as one landscape
+   rather than two stacked sections. */
+.journey-crest{
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 88px;
+  transform: translateY(-100%);
+}
+
+.journey-crest path{ fill: var(--navy-050); }
+
+.journey h2{
+  max-width: 20ch;
+  margin: 0 auto;
+  color: var(--navy-900);
+  font-size: clamp(26px, 3.2vw, 38px);
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  line-height: 1.1;
+}
+
+.journey-steps{
+  display: grid;
+  max-width: 980px;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 18px;
+  margin: 40px auto 0;
+  padding: 0;
+  list-style: none;
+}
+
+.journey-steps li{
+  position: relative;
+  display: grid;
+  gap: 5px;
+  justify-items: center;
+  padding: 0 10px;
+}
+
+/* The dashes carry the fact that these are one sequence, not four features. */
+.journey-steps li + li::before{
+  position: absolute;
+  top: 19px;
+  left: -13px;
+  width: 26px;
+  border-top: 1px dashed #c3cddd;
+  content: "";
+}
+
+.journey-num{
+  display: grid;
+  width: 38px;
+  height: 38px;
+  place-items: center;
+  color: var(--teal-700);
+  font-size: var(--t-label);
+  font-weight: 800;
+  background: var(--surface);
+  border: 1px solid #cfd8e6;
+  border-radius: 50%;
+}
+
+.journey-steps strong{
+  margin-top: 4px;
+  color: var(--navy-900);
+  font-size: var(--t-title);
+  font-weight: 700;
+}
+
+.journey-steps small{
+  max-width: 20ch;
+  color: var(--muted-ink);
+  font-size: var(--t-meta);
+  line-height: 1.45;
+}
+
+.journey-foot{
+  margin: 34px 0 24px;
+  color: var(--muted-ink);
+  font-size: var(--t-meta);
+}
+
+/* ---- narrower ---- */
+
+@media (max-width: 1000px){
+  .welcome-hero{
+    grid-template-columns: minmax(0, 1fr);
+    gap: 40px;
+    padding-bottom: 84px;
+  }
+  .hero-copy h1{ max-width: none; }
+  .hero-scene{ max-width: 620px; }
+  .journey-steps{ grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 30px 18px; }
+  .journey-steps li:nth-child(3)::before{ display: none; }
+}
+
+@media (max-width: 640px){
+  .welcome-hero{ padding: 40px 20px 68px; }
+  .hero-copy h1{
+    /* The headline stops trying to hold one line once there is no line to
+       hold; the rotating word wraps with the rest. */
+    text-wrap: balance;
+  }
+  /* The pinned cards stop being pins and become a list under the drawing:
+     overlaid on a 360px screen they cover the trail they are describing. */
+  .hero-pins{
+    position: static;
+    display: grid;
+    gap: 8px;
+    margin-top: 16px;
+  }
+  .hero-pin{
+    position: static;
+    width: auto;
+  }
+  .journey{ padding: 28px 20px 64px; }
+  .journey-steps{ grid-template-columns: minmax(0, 1fr); gap: 22px; }
+  .journey-steps li + li::before{ display: none; }
+}
+
+@media (prefers-reduced-motion: reduce){
+  .summit-trail-line{ animation: none; stroke-dashoffset: 0; }
+  /* The word never types, so there is nothing for a caret to sit after. */
+  .rotator-caret{ display: none; }
 }

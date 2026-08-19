@@ -412,6 +412,35 @@ Five marks, each with **its own silhouette** — a wide pentagon, a cut-corner b
 - **Avoid:** ambient animation, bouncing rewards, repeated entrance effects, motion that competes with the learner's work.
 - Respect `prefers-reduced-motion`.
 
+## Marketing surfaces
+
+Everything above governs **the app**: the eight-step type scale, the
+minimal-functional motion rule, the borders-not-shadows rule. Those rules exist
+for a dense workspace read on budget phones, often outdoors, by someone trying
+to get work done. The scale's own rationale says so: it sits below Zapier's
+because "that is a desktop marketing site and this is a dense app".
+
+The landing page is the desktop marketing site. It has one job the app never
+has: convincing somebody who has never heard of Lan Pya to stay for ten more
+seconds. It gets a larger scale and one piece of ambient motion. Nothing here
+applies to any screen behind `/app`.
+
+| Token | Size | Line height | Tracking | Weight | Use |
+|---|---|---|---|---|---|
+| `--t-hero` | clamp(40px, 7vw, 72px) | 1.02 | −2px | 800 | Landing hero headline only |
+| `--t-hero-sub` | clamp(17px, 1.4vw, 20px) | 1.55 | 0 | 400 | The paragraph under it |
+
+**Ambient motion is allowed once, in the hero, and nowhere else.** The final
+word of the headline cycles through what proof is actually for. It is permitted
+because it carries meaning rather than decorating: a reader who watches it
+learns the product's argument. It is not permitted to spread. A second looping
+thing on this page, or any looping thing inside the app, is a defect.
+
+Every rule that is about honesty rather than density still holds on this page:
+the palette does not change, contrast minimums do not change, controls keep
+their 44px target, and `prefers-reduced-motion` stops the cycle on its first
+word rather than reducing its speed.
+
 ## Accessibility
 
 - Target WCAG 2.2 AA across learner, reviewer, and proof-sharing flows.

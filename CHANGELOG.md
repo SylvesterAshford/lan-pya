@@ -1,5 +1,18 @@
 # Changelog
 
+## [0.22.0.0] - 2026-08-19
+
+### Changed
+
+- The landing page is rebuilt. It opens on a summit at first light, with the trail you would actually climb drawing itself towards the top, and the headline finishes itself: "Start building" becomes proof, then a portfolio, then an interview, then a job.
+- Three cards sit on the trail where the work happens, so the first thing a stranger sees is the whole promise in order: finish a mission, have it checked by a person, be able to show it to somebody hiring.
+- The page closes on the climb said plainly, four stops on light ground, with a rule under each one to say they are a sequence and not a feature list.
+- "Start my path" is now "Let's start".
+
+### Removed
+
+- The fake browser window showing a mission, and the roadmap diagram beneath it. Both showed the product's furniture to somebody who had not yet been given a reason to care about it.
+
 ## [0.21.3.0] - 2026-08-19
 
 ### Fixed
