@@ -46,37 +46,13 @@ export function SiteFooter({ locale }: { locale: string }) {
           </p>
         </section>
 
-        <div className="foot-main">
-          <div className="foot-brand">
-            <Link href="/" className="brand-lockup static light" aria-label="Lan Pya">
-              <span className="brand-mark">လ</span>
-              <span><strong>Lan Pya</strong><small>လမ်းပြ</small></span>
-            </Link>
-            <p>
-              {my
-                ? "လမ်းပြသည် အလုပ်အကိုင်ရည်မှန်းချက်တစ်ခုကို လမ်းကြောင်း၊ လက်တွေ့လုပ်ငန်းနှင့် မျှဝေနိုင်သော သက်သေအဖြစ် ပြောင်းပေးသည်။"
-                : "Lan Pya turns one career goal into a roadmap, real work, and proof you can share."}
-            </p>
-          </div>
-
-          <nav className="foot-links" aria-label={my ? "အောက်ခြေ လင့်ခ်များ" : "Footer"}>
-            <div>
-              <h2>{my ? "စတင်ရန်" : "Get started"}</h2>
-              <Link href="/login">{my ? "အကောင့်ဝင်ရန်" : "Sign in"}</Link>
-              <Link href="/login?demo=1">{my ? "နမူနာအကောင့် အသုံးပြုမည်" : "Use the demo account"}</Link>
-              <Link href="/demo">{my ? "နမူနာ ကြည့်ရန်" : "See the demo"}</Link>
-            </div>
-            <div>
-              <h2>{my ? "ဘာသာစကား" : "Language"}</h2>
-              <Link href="/" locale="en" hrefLang="en">English</Link>
-              <Link href="/" locale="my" hrefLang="my">မြန်မာ</Link>
-            </div>
-          </nav>
-        </div>
-
         <div className="foot-legal">
           <small>© {new Date().getFullYear()} Lan Pya · {my ? "ရန်ကုန်၊ မြန်မာ" : "Yangon, Myanmar"}</small>
           <small>{my ? "မူလအတိုင်း ကိုယ်ရေးကိုယ်တာလုံခြုံ — သင်မမျှဝေမချင်း သင့်လက်ရာကို မည်သူမျှ မမြင်ရပါ။" : "Private by default. Nobody sees your work until you share it."}</small>
+          <nav className="foot-lang" aria-label={my ? "ဘာသာစကား" : "Language"}>
+            <Link href="/" locale="en" hrefLang="en" className={my ? "" : "on"}>English</Link>
+            <Link href="/" locale="my" hrefLang="my" className={my ? "on" : ""}>မြန်မာ</Link>
+          </nav>
         </div>
       </div>
     </footer>

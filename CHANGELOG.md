@@ -1,5 +1,16 @@
 # Changelog
 
+## [0.23.1.0] - 2026-08-19
+
+### Changed
+
+- The two halves of the sign-in screen are equal. One side had been given roughly 60% of the width, which made the split look accidental rather than chosen.
+- The sign-in screen fits on one screen. Reaching the button that signs you in required scrolling, which is a poor thing to ask of the page whose only job is that button. Nothing was removed to achieve it: the same fields, the same demo account details, the same words, with the spacing between them tightened.
+
+### Removed
+
+- The links band in the footer. The language choice it held moves down to the last line, so a Burmese reader on an English page still has a way across.
+
 ## [0.23.0.0] - 2026-08-19
 
 ### Changed
