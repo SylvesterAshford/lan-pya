@@ -228,7 +228,22 @@ export function MissionMap({
       {/* The stage's aspect ratio is set in CSS, not from `g`. The wide/narrow
           choice resolves after hydration, and driving the box height from it
           made the whole map jump on load. */}
-      <div className="mission-map-stage" ref={stage}>
+      {/* The stage's aspect ratio has to match the scene's viewBox or the SVG
+          letterboxes inside it — which is what happened when the canvas became
+          as tall as the track requires while the CSS still described a fixed
+          1320x1400 box: the map shrank to a narrow column with blank margins
+          either side. Both ratios are derived from the stop count, which is
+          known on the server, so this does not reintroduce the load-time jump
+          that moved them into the stylesheet originally. Only the wide/narrow
+          choice waits for hydration, and the media query handles that. */}
+      <div
+        className="mission-map-stage"
+        ref={stage}
+        style={{
+          "--map-ar-narrow": `${NARROW.W} / ${NARROW.top + Math.max(1, n - 1) * NARROW.gap + NARROW.tail}`,
+          "--map-ar-wide": `${WIDE.W} / ${WIDE.top + Math.max(1, n - 1) * WIDE.gap + WIDE.tail}`,
+        } as React.CSSProperties}
+      >
         <svg viewBox={`0 0 ${g.W} ${H}`} className="mission-map-scene" aria-hidden="true">
           {/* ---- sky: cool at altitude, warming toward the snowline ---- */}
           <defs>

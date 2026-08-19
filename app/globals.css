@@ -9807,10 +9807,10 @@ html[lang="my"] .profile-stats dt { text-transform: none; letter-spacing: 0; }
   position: relative;
   width: 100%;
   container-type: inline-size;
-  /* Mirrors NARROW's viewBox. Set here rather than inline because the wide/
-     narrow decision only resolves after hydration, and a JS-driven height
-     made the map jump on load. */
-  aspect-ratio: 923 / 1704;
+  /* Mirrors NARROW's viewBox. The height half is supplied by the component as
+     --map-ar-narrow because it grows with the track; the fallback is a
+     five-stop climb, the shape this was before the map showed every stage. */
+  aspect-ratio: var(--map-ar-narrow, 923 / 1704);
 }
 
 /* Landscape canvas. These numbers are WIDE and WIDE_QUERY in
@@ -9820,7 +9820,7 @@ html[lang="my"] .profile-stats dt { text-transform: none; letter-spacing: 0; }
   /* Full column width, so both edges sit on the same line as everything else
      on the page. */
   .mission-map { max-width: none; }
-  .mission-map-stage { aspect-ratio: 1320 / 1400; }
+  .mission-map-stage { aspect-ratio: var(--map-ar-wide, 1320 / 1400); }
 }
 .mission-map-scene { position: absolute; inset: 0; width: 100%; height: 100%; }
 
@@ -12619,6 +12619,30 @@ html[lang="my"] .passport-count dd{
   align-content: space-between;
   padding: var(--s-xl);
   row-gap: var(--s-xl);
+}
+
+/* The ridge fills the band the stretched card opens up in its middle. It only
+   earns its place at that height, so it stays hidden until the two cards are
+   actually sitting side by side. */
+.passport { position: relative; overflow: hidden; }
+.passport-ridge { display: none; }
+.passport > *:not(.passport-ridge) { position: relative; z-index: 1; }
+
+@media (min-width: 1081px) {
+  .studio-split .passport-ridge {
+    display: block;
+    position: absolute;
+    left: 0;
+    right: 0;
+    /* Anchored to the counts row it sits behind, not to the card, so a taller
+       card grows the empty space above the ridge rather than stretching it. */
+    bottom: 96px;
+    width: 100%;
+    height: 120px;
+    z-index: 0;
+  }
+  .passport-ridge .ridge-far { fill: var(--navy-500); opacity: 0.30; }
+  .passport-ridge .ridge-near { fill: var(--teal-700); opacity: 0.22; }
 }
 
 @media (max-width: 1080px) {
