@@ -80,12 +80,17 @@ const LEARNER_NAV: NavItem[] = [
   // foot of the sidebar already opens the profile, so a nav item pointing at
   // the same place was a second door to one room; the evidence a learner has
   // built had none.
+  //
+  // It claims only its own route. Inheriting the account pages lit a Portfolio
+  // tab over the profile, which read as though the profile lived inside the
+  // portfolio. Those pages are reached from the account row at the foot of the
+  // sidebar, so they leave the primary nav unhighlighted — which is honest.
   {
     href: "/app/proof",
     en: "Portfolio",
     my: "လက်ရာမှတ်တမ်း",
     icon: BadgeCheck,
-    matches: (pathname) => ["/app/proof", "/app/profile", "/app/privacy", "/app/careers"].some((route) => pathname.includes(route)),
+    matches: (pathname) => pathname.includes("/app/proof"),
   },
 ];
 

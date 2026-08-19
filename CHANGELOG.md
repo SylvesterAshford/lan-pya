@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.19.1.0] - 2026-08-19
+
+### Fixed
+
+- The profile no longer lights up the Portfolio tab in the sidebar. Portfolio marks the portfolio; the profile, careers and privacy pages are reached from the account row and leave the navigation unmarked.
+
 ## [0.19.0.0] - 2026-08-18
 
 ### Added

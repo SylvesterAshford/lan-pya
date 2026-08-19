@@ -24,9 +24,9 @@ describe("AppShell", () => {
     // Portfolio took this destination from "Me": the account row in the sidebar
     // footer already opens the profile, so the nav item was a second door to
     // the same room while the learner's evidence had none.
-    ["/en/app/profile", "Portfolio"],
+    // It claims that route and no other: the account pages are reached from
+    // the account row, not from here.
     ["/en/app/proof", "Portfolio"],
-    ["/en/app/privacy", "Portfolio"],
   ])("maps %s to the %s destination", (route, label) => {
     pathname = route;
     render(<AppShell profile={DEMO_PROFILE} roles={new Set()} locale="en"><p>Page</p></AppShell>);
@@ -38,6 +38,20 @@ describe("AppShell", () => {
     const links = screen.getAllByRole("link", { name: label });
     expect(links).toHaveLength(1);
     expect(links.every((link) => link.getAttribute("aria-current") === "page")).toBe(true);
+  });
+
+  it.each([
+    "/en/app/profile",
+    "/en/app/privacy",
+    "/en/app/careers",
+  ])("leaves the primary nav unmarked on %s", (route) => {
+    pathname = route;
+    render(<AppShell profile={DEMO_PROFILE} roles={new Set()} locale="en"><p>Page</p></AppShell>);
+
+    // The account pages hang off the account row, not off a nav destination.
+    // Lighting Portfolio here told the learner they were looking at their
+    // evidence when they were looking at their account.
+    expect(screen.getByRole("link", { name: "Portfolio" })).not.toHaveAttribute("aria-current");
   });
 
   it("renders the five learner destinations", () => {
