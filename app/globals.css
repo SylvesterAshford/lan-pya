@@ -13976,3 +13976,167 @@ html[lang="my"] .hero-copy h1{
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
+
+/* ---- passport, second attempt ----
+   Stretching is gone. It was fine on a desktop and wrong on a phone, where the
+   split is one column and a sticky card sat on top of the work underneath it.
+   The card keeps its own size at every width, is sticky only where there is a
+   second column for it to sit beside, and its own ground fills it so there is
+   no empty navy to explain. */
+
+.studio-split{ align-items: start; }
+
+.studio-split .passport{
+  align-content: space-between;
+  row-gap: var(--s-lg);
+  padding: clamp(24px, 2.4vw, 34px);
+  min-height: 400px;
+  max-height: none;
+  position: static;
+}
+
+@media (min-width: 1081px){
+  /* Only where there is a column beside it. On one column, sticky means the
+     card follows you down over the content it is supposed to sit above. */
+  .studio-split .passport{
+    position: sticky;
+    top: var(--s-lg);
+  }
+}
+
+/* The backdrop covers the whole card rather than a band at its foot. */
+.passport-ridge{ display: none; }
+
+@media (min-width: 700px){
+  .studio-split .passport-ridge{
+    display: block;
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+  }
+  .passport-ridge .ridge-contours path{
+    fill: none;
+    stroke: rgb(255 255 255 / 0.06);
+    stroke-width: 1;
+    vector-effect: non-scaling-stroke;
+  }
+  .passport-ridge .ridge-far{ fill: var(--navy-500); opacity: 0.26; }
+  .passport-ridge .ridge-near{ fill: var(--teal-700); opacity: 0.20; }
+}
+
+/* "Research" was breaking mid-word, because the label allowed a break at any
+   character. These are single words on a four-across strip; they do not wrap. */
+.passport-step-label{
+  overflow-wrap: normal;
+  white-space: nowrap;
+}
+
+.passport-trail-list{
+  grid-template-columns: repeat(4, auto);
+  justify-content: space-between;
+}
+
+/* ---- the résumé draft, in a dialog ---- */
+
+.resume-dialog-overlay{
+  position: fixed;
+  inset: 0;
+  z-index: 70;
+  display: grid;
+  place-items: center;
+  padding: var(--s-md);
+  background: rgb(4 52 44 / 0.42);
+}
+
+.resume-dialog{
+  display: flex;
+  width: min(620px, 100%);
+  max-height: min(760px, 88vh);
+  flex-direction: column;
+  overflow: hidden;
+  color: var(--ink);
+  background: var(--surface);
+  border: 1px solid var(--hairline);
+  border-left: 3px solid var(--teal-700);
+  border-radius: var(--r-card);
+  box-shadow: var(--shadow-overlay);
+}
+
+.resume-dialog:focus{ outline: none; }
+
+.resume-dialog-head{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--s-md);
+  padding: var(--s-md) var(--s-lg);
+  border-bottom: 1px solid var(--hairline);
+}
+
+.resume-dialog-head h2{
+  margin: 0;
+  color: var(--navy);
+  font-size: var(--t-h2);
+  font-weight: 700;
+}
+
+.resume-dialog-close{
+  display: grid;
+  width: 40px;
+  height: 40px;
+  flex: none;
+  place-items: center;
+  color: var(--muted-ink);
+  background: transparent;
+  border: 0;
+  border-radius: var(--r-control);
+  cursor: pointer;
+}
+
+.resume-dialog-close:hover{ background: var(--navy-050); color: var(--ink); }
+
+.resume-dialog-body{
+  min-height: 0;
+  padding: var(--s-lg);
+  overflow-y: auto;
+}
+
+.resume-dialog-body .resume-draft{ margin-top: 0; }
+
+.resume-reopen{
+  margin: 0;
+  padding: 0;
+  color: var(--teal-700);
+  font-size: var(--t-meta);
+  font-weight: 700;
+  background: transparent;
+  border: 0;
+  cursor: pointer;
+  justify-self: start;
+}
+
+/* Printing from inside the dialog. The sheet's print rule positions it
+   absolutely against its nearest positioned ancestor, so the overlay has to
+   stop being a fixed, scrolling, clipped box or the draft prints as one
+   cropped page. */
+@media print{
+  .resume-dialog-overlay{
+    position: static;
+    display: block;
+    padding: 0;
+    background: none;
+  }
+  .resume-dialog{
+    width: auto;
+    max-height: none;
+    overflow: visible;
+    border: 0;
+    border-radius: 0;
+    box-shadow: none;
+  }
+  .resume-dialog-head,
+  .resume-dialog-close{ display: none; }
+  .resume-dialog-body{ padding: 0; overflow: visible; }
+}
