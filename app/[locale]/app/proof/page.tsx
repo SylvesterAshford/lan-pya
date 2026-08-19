@@ -1,3 +1,4 @@
+import { Link } from "@/i18n/navigation";
 import { ProofPassport } from "@/components/proof/proof-passport";
 import { ResumeBuilder } from "@/components/proof/resume-builder";
 import { WorkGrid } from "@/components/proof/work-grid";
@@ -90,12 +91,26 @@ export default async function ProofPage({ params }: { params: Promise<{ locale: 
 
   return (
     <div className="app-page studio-page">
-      <section className="page-heading compact-heading">
-        <span className="eyebrow">{c.studio.heading}</span>
-        <h1>{c.studio.title}</h1>
-        <p>{c.studio.body}</p>
-      </section>
+      {/* Heading and the two things you can do with this page sit on one line,
+          per the Evidence Studio concept. The actions are on the right because
+          they act on the whole record, not on any one card below. */}
+      <div className="studio-hero">
+        <section className="page-heading compact-heading">
+          <span className="eyebrow">{c.studio.heading}</span>
+          <h1>{c.studio.title}</h1>
+          <p>{c.studio.body}</p>
+        </section>
+        <div className="studio-actions">
+          <Link className="button primary" href="/app/build">{c.studio.actions.add}</Link>
+          <Link className="button outline" href="/app/profile">{c.studio.actions.preview}</Link>
+        </div>
+      </div>
 
+      {/* The passport and the résumé builder are one band: what the record
+          says, and what you can make from it. Reading the first then acting on
+          the second is the whole point of the page, and stacking them put a
+          screen of scrolling between the two halves of that thought. */}
+      <div className="studio-split">
       <ProofPassport
         locale={locale}
         alias={profile.alias}
@@ -117,6 +132,7 @@ export default async function ProofPage({ params }: { params: Promise<{ locale: 
         items={verified}
         labels={c.studio.resume}
       />
+      </div>
 
       <WorkGrid locale={locale} items={cases} labels={c.studio.work} />
     </div>

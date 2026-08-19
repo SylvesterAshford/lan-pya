@@ -203,7 +203,7 @@ These five hues never appear in chrome: not on a button, chip, border, backgroun
 - **Pages end honestly.** Never pad a short screen with filler cards to fill the viewport.
 - **Mobile shell:** Compact top brand row plus fixed four-item bottom navigation; content reserves safe-area space.
 - **Dashboard:** Two columns only when secondary content stays scannable; stack at 760px.
-- **Roadmap canvas:** 780px SVG canvas centered on desktop. **Mobile renders a narrower single-column geometry, not a scaled or scrolling copy of the desktop canvas.** Design Spec §3.3: "No pinch-zoom or free panning is ever required on mobile." Scaling the desktop viewBox down would render 13px node labels at roughly 6px, so the mobile canvas drops the left/right branches and shows stage nodes on the spine only; branch skills move into the detail panel. Vertical scroll only. The page body never scrolls horizontally at any width.
+- **Roadmap canvas:** 780px SVG canvas centered on desktop. **Mobile renders a narrower single-column geometry, not a scaled or scrolling copy of the desktop canvas.** Design Spec §3.3: "No pinch-zoom or free panning is ever required on mobile." Scaling the desktop viewBox down would render 13px node labels at roughly 6px, so the mobile canvas drops the left/right branches and shows stage nodes on the spine only, inside their phase bands; branch topics move into the step brief. The phase bands stay because they cost one line of vertical space and carry the most meaning per pixel on a phone. Vertical scroll only. The page body never scrolls horizontally at any width.
 - **Opportunities:** Single concise feed ordered by deadline. Filters scroll horizontally on mobile.
 
 ### Radius
@@ -227,23 +227,32 @@ The core screen. Specified in `Design Specification v1.1` §3.3 and implemented 
 
 ### Structure
 
-- A **dotted vertical spine** runs down the centre of the canvas.
-- **Stage nodes** sit on the spine in order: 272×54, saturated `--node-stage`, 2px `--node-border`, 6px radius. Label 14px/700, with a 10px/700 `STAGE n` line above it.
-- **Milestone nodes** branch off each stage, at most one level left and one level right: 200×36, `--node-milestone`, 1.5px border, `--t-node` label.
-- **Connectors** are curved dotted cubic-bezier paths, 1.5px, `--connector`, `stroke-dasharray: 2 5`. The spine uses `2 6` at 2px.
+- A **vertical spine** runs down the centre of the canvas. It is **solid `--node-done-border` at 3.5px up to the current stage and dotted `2 7` at 2px beyond it**: ground already covered is drawn differently from the road ahead, so distance travelled is stated rather than inferred by counting green boxes.
+- **Stage nodes** sit on the spine in order. **Width is measured from the title, not fixed** (min 206px, roughly `title.length × 7.6 + 54`); height 58, 7px radius. Label 14.5px/700, with a 10.5px/700 `STEP n` line above it. A fixed 272px box across every stage is what made the canvas read as a grid.
+- **Topic nodes** branch off each stage, at most one level left and one level right: height 32, width measured from the label, 1.5px border, `--t-node` label. **Counts vary from one to three per side** and are authored per stage in `career-tracks.ts` by real subject weight. A uniform two-per-side shape renders as a mirrored grid however it is drawn.
+- **Row height follows density**: `74 + max(left, right) × 42`. A light stage occupies less of the page than a heavy one.
+- **Phase bands** group consecutive stages that share a `Milestone.phase` into one rounded band with a 10.5px/700 label. The band containing the current stage is lit (`--phase-band-now`); the rest recede. Bands survive on the narrow geometry; topic nodes do not.
+- **Cluster headings** draw `leftLabel` / `rightLabel` above each topic column at 9.5px/700.
+- **Connectors** are curved cubic-bezier paths, 1.5px. Cleared stages use solid `--node-done-border`; everything else is dotted `2 5`.
 - Reading order is top-to-bottom, left-before-right within a stage. **DOM order must match** for screen readers.
 
 ### Node states
 
+**Progress runs on the saturation axis.** Cleared stages are muted teal, the current stage is the only fully saturated thing on the canvas, and everything ahead drains to parchment. That ordering is what makes position readable at a glance and in greyscale.
+
 | State | Fill | Border | Extra |
 |---|---|---|---|
-| Not started | `--node-milestone` | `--node-border` 1.5px | — |
-| Stage | `--node-stage` | `--node-border` 2px | Bold label, on spine |
-| In progress | `--node-stage` | `--node-border` 2px | `--amber-500` ring, 2px, offset 4px, 55% opacity |
-| Done | `--node-done-fill` | `--node-done-border` | Green check bubble, top-right corner |
+| Not started | `--node-future-fill` | `--node-future-line` 1.5px | Drained parchment, `--node-future-ink` label |
+| Next | `--node-next-fill` | `--node-next-line` 2px | Its own tint. The one stage to start next must not look like the eleven after it |
+| In progress | `--node-stage` | `--node-border` **3px** | Full saturation, drop shadow, a full-width row wash (`--row-now`), and a **"You are here" marker** centred above the node |
+| Done | `--node-done-fill` | `--node-done-border` 2px | Earned emblem, top-right corner |
 | Coming soon | `--node-soon-fill` | `--node-soon-border` dashed `5 4` | Label at 55% opacity, non-interactive, tooltip "New resources every Friday" |
 
-State must survive grayscale. Fill, border weight, dash pattern, and the check bubble each carry it independently.
+State must survive grayscale. Fill, border weight, dash pattern, and the emblem each carry it independently.
+
+**A ring is not a state.** The in-progress stage previously shared `--node-stage` with every untouched stage and was separated only by an `--amber-500` ring at 55% opacity. Two things were wrong with it: at equal fill and equal lightness the ring vanished in greyscale, and it asked one hairline to carry the single most important fact on the screen. Position is now carried by fill, border weight, elevation, row wash and an explicit marker together — remove any one and it still reads.
+
+**Every label ink is checked at 4.5:1** against the fill it sits on. Canvas labels run 9.5–14.5px, so none of them qualify for the large-text exemption. The muted greys that look right in a mockup routinely land near 2.5:1; check, do not eyeball.
 
 ### The fork
 
