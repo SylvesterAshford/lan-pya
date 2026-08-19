@@ -48,6 +48,44 @@
   --node-done-border: #1d9e75;
   --node-soon-fill: #fdfbf3;
   --node-soon-border: #c9c3ae;
+
+  /* Roadmap progress runs on the saturation axis: cleared is muted teal, the
+     current stage is the only fully saturated thing on the canvas, and the
+     road ahead drains to parchment. Every ink below is checked at 4.5:1 or
+     better against the fill it sits on — these labels are 9.5-14.5px, so none
+     of them get the large-text exemption. */
+  --node-future-fill: #faf8f1;
+  --node-future-line: #cdc7b4;
+  --node-future-ink: #6b6553;
+  --node-done-ink: #2f6d5c;
+  --node-next-fill: #fff6d6;
+  --node-next-line: #c2ad64;
+  --node-next-ink: #5f5637;
+  --node-now-arm: #bfae72;
+  --node-num-ink: #6e6857;
+  --node-num-now: #5c4f18;
+
+  --topic-future-fill: #fcfaf4;
+  --topic-future-line: #ddd8c8;
+  --topic-future-ink: #767059;
+  --topic-done-fill: #eef8f4;
+  --topic-done-line: #8fc9b6;
+  --topic-done-ink: #357a67;
+  --topic-now-line: #b9a55c;
+  --topic-next-fill: #fffaea;
+  --topic-next-line: #d3c48c;
+
+  --phase-band: #fbfaf6;
+  --phase-band-line: #eceadf;
+  --phase-band-now: #fffdf6;
+  --phase-band-now-line: #e8d391;
+  --phase-ink: #77725f;
+  --phase-ink-now: #6f5d18;
+  --row-now: #fdf1c8;
+  --here-ink: #ffd75e;
+  --cluster-ink: #7a7462;
+  --cluster-ink-done: #3d7d6b;
+  --cluster-ink-now: #6f6231;
   --connector: #b6c4c0;
 
   /* ---- Emblem palette: stage emblems and level insignia ONLY ----
@@ -7008,14 +7046,37 @@ html[lang="my"] .mission-focus h2{
   max-width: 100%;
 }
 
-/* ---- connectors ---- */
+/* ---- phase bands ----
+   Consecutive stages that share a phase sit inside one band, so the map says
+   which arc of the journey you are on and not only which numbered step. The
+   band you are in is the only one that is lit. */
+.rm-phase rect{
+  fill: var(--phase-band);
+  stroke: var(--phase-band-line);
+  stroke-width: 1;
+}
+.rm-phase text{
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.13em;
+  fill: var(--phase-ink);
+}
+.rm-phase.lit rect{ fill: var(--phase-band-now); stroke: var(--phase-band-now-line); stroke-width: 1.5; }
+.rm-phase.lit text{ fill: var(--phase-ink-now); }
+
+/* The current row is washed across the full canvas so the eye lands on the
+   row before it lands on the node. */
+.rm-row-now{ fill: var(--row-now); }
+
+/* ---- connectors ----
+   Ground already covered is drawn solid, the road ahead dotted. Distance
+   travelled is a fact the map states rather than one you infer by counting. */
 .rm-spine{
   fill: none;
-  stroke: var(--connector);
-  stroke-width: 2;
-  stroke-dasharray: 2 6;
   stroke-linecap: round;
 }
+.rm-spine.travelled{ stroke: var(--node-done-border); stroke-width: 3.5; }
+.rm-spine.ahead{ stroke: var(--connector); stroke-width: 2; stroke-dasharray: 2 7; }
 
 .rm-connector{
   fill: none;
@@ -7024,50 +7085,86 @@ html[lang="my"] .mission-focus h2{
   stroke-dasharray: 2 5;
   stroke-linecap: round;
 }
-
+.rm-connector.done{ stroke: var(--node-done-border); stroke-dasharray: none; }
+.rm-connector.active, .rm-connector.next{ stroke: var(--node-now-arm); }
+.rm-connector.todo, .rm-connector.soon{ stroke: var(--node-future-line); }
 .rm-connector.local{ stroke: var(--teal-700); stroke-width: 2; stroke-dasharray: 3 5; }
 .rm-connector.global{ stroke: var(--purple-500); stroke-width: 2; stroke-dasharray: 3 5; }
 
-/* ---- nodes ---- */
+/* ---- nodes ----
+   Progress runs on the saturation axis: cleared stages are muted teal, the
+   current stage is the only fully saturated thing on the page, and everything
+   ahead drains to parchment. The order survives greyscale. */
 .rm-node{ cursor: pointer; }
 .rm-node[aria-disabled="true"]{ cursor: default; }
 .rm-node .rm-body{ transition: filter 160ms ease-out; }
 .rm-node:hover .rm-body{ filter: brightness(0.97); }
 .rm-node:focus{ outline: none; }
-.rm-node:focus-visible .rm-body{
-  stroke: var(--teal-700);
+.rm-node:focus-visible .rm-body{ stroke: var(--teal-700); stroke-width: 3; }
+.rm-node.selected .rm-body{ stroke: var(--teal-700); stroke-width: 3; }
+
+.rm-stage .rm-body{ fill: var(--node-future-fill); stroke: var(--node-future-line); stroke-width: 1.5; }
+.rm-stage.done .rm-body{ fill: var(--node-done-fill); stroke: var(--node-done-border); stroke-width: 2; }
+.rm-stage.next .rm-body{ fill: var(--node-next-fill); stroke: var(--node-next-line); stroke-width: 2; }
+.rm-stage.soon .rm-body{ fill: var(--node-soon-fill); stroke: var(--node-soon-border); stroke-width: 1.5; stroke-dasharray: 5 4; }
+.rm-stage.active .rm-body{
+  fill: var(--node-stage);
+  stroke: var(--node-border);
   stroke-width: 3;
-}
-.rm-node.selected .rm-body{
-  stroke: var(--teal-700);
-  stroke-width: 3;
+  filter: drop-shadow(0 3px 6px rgba(138, 106, 18, 0.38));
 }
 
-.rm-ring{
-  fill: none;
-  stroke: var(--amber-500);
-  stroke-width: 2;
-  opacity: 0.55;
+.rm-topic .rm-body{ fill: var(--topic-future-fill); stroke: var(--topic-future-line); stroke-width: 1.5; stroke-dasharray: 4 3; }
+.rm-topic.done .rm-body{ fill: var(--topic-done-fill); stroke: var(--topic-done-line); stroke-dasharray: none; }
+.rm-topic.active .rm-body{ fill: var(--node-milestone); stroke: var(--topic-now-line); stroke-dasharray: none; }
+.rm-topic.next .rm-body{ fill: var(--topic-next-fill); stroke: var(--topic-next-line); stroke-dasharray: none; }
+.rm-topic.soon .rm-body{ fill: var(--node-soon-fill); stroke: var(--node-soon-border); stroke-dasharray: 5 4; }
+
+/* "You are here", centred above the current stage. */
+.rm-here rect, .rm-here path{ fill: var(--node-border); }
+.rm-here text{
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.07em;
+  fill: var(--here-ink);
 }
+
+/* Cluster headings: leftLabel / rightLabel, authored all along, finally drawn. */
+.rm-cluster{
+  font-size: 9.5px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  fill: var(--cluster-ink);
+}
+.rm-cluster.done{ fill: var(--cluster-ink-done); }
+.rm-cluster.active, .rm-cluster.next{ fill: var(--cluster-ink-now); }
 
 .rm-stage-num{
   font-size: var(--t-label);
   font-weight: 700;
   letter-spacing: 0.06em;
-  fill: #6b6551;
+  fill: var(--node-num-ink);
 }
+.rm-stage.done .rm-stage-num{ fill: var(--node-done-border); }
+.rm-stage.active .rm-stage-num{ fill: var(--node-num-now); }
 
 .rm-stage-label{
-  font-size: 14px;
+  font-size: 14.5px;
   font-weight: 700;
-  fill: var(--node-border);
+  fill: var(--node-future-ink);
 }
+.rm-stage.done .rm-stage-label{ fill: var(--node-done-ink); }
+.rm-stage.active .rm-stage-label{ fill: var(--node-border); }
+.rm-stage.next .rm-stage-label{ fill: var(--node-next-ink); }
 
 .rm-node-label{
   font-size: var(--t-node);
   font-weight: 600;
-  fill: var(--node-border);
+  fill: var(--topic-future-ink);
 }
+.rm-topic.done .rm-node-label{ fill: var(--topic-done-ink); }
+.rm-topic.active .rm-node-label{ fill: var(--node-border); }
+.rm-topic.next .rm-node-label{ fill: var(--node-next-ink); }
 
 .rm-node.soon .rm-stage-num, .rm-node.soon .rm-stage-label, .rm-node.soon .rm-node-label{ opacity: 0.55; }
 

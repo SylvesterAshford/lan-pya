@@ -86,6 +86,11 @@ export type Milestone = {
   rightLabel?: string;
   right?: string[];
   estimate?: string;
+  /** Which arc of the journey this stage belongs to. Consecutive stages
+   *  sharing a phase are drawn inside one band on the canvas, so a learner can
+   *  see which part of the road they are on and not only which step. Stages in
+   *  a track are authored in phase order; the canvas does not re-sort them. */
+  phase?: string;
   /** Published shape of the journey is visible, but this stage has no content
    *  yet. Renders dashed and non-interactive. Design Spec §3.3 node states. */
   comingSoon?: boolean;

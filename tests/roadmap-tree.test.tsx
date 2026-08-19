@@ -33,6 +33,64 @@ function openStage(name: RegExp | string) {
   return screen.getByRole("dialog");
 }
 
+// ─── where am I ───────────────────────────────────────────────────────────────
+
+// The canvas used to draw the in-progress stage with the same fill as the nine
+// stages after it, separated only by a ring at 55% opacity. These lock in the
+// replacement: position is carried by state classes and by the accessible
+// name, so it survives greyscale and reaches a screen reader.
+describe("RoadmapTree — current position", () => {
+  it("marks exactly one stage as active, and it is the active milestone", () => {
+    render(<RoadmapTree milestones={FRONTEND_MILESTONES} />);
+    const active = stageNodes().filter((n) => n.classList.contains("active"));
+    expect(active).toHaveLength(1);
+    const expected = FRONTEND_MILESTONES.find((m) => m.status === "active")!;
+    expect(active[0].getAttribute("aria-label")).toContain(expected.title);
+  });
+
+  it("says 'You are here' in the current stage's accessible name, and nowhere else", () => {
+    render(<RoadmapTree milestones={FRONTEND_MILESTONES} />);
+    const named = stageNodes().filter((n) => /You are here/i.test(n.getAttribute("aria-label") ?? ""));
+    expect(named).toHaveLength(1);
+    expect(named[0].classList.contains("active")).toBe(true);
+  });
+
+  it("gives the active, next and upcoming stages three distinct states", () => {
+    render(<RoadmapTree milestones={FRONTEND_MILESTONES} />);
+    // Read the attribute, not `.className`: on an SVG element that property is
+    // an SVGAnimatedString rather than a string, so `toContain` sees no match.
+    const classOf = (status: string) => {
+      const m = FRONTEND_MILESTONES.find((x) => x.status === status)!;
+      return stageNode(new RegExp(m.title.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"), "i")).getAttribute("class") ?? "";
+    };
+    // "next" used to collapse into "upcoming", leaving the one stage a learner
+    // should start next with no drawing of its own.
+    expect(classOf("active")).toContain("active");
+    expect(classOf("next")).toContain("next");
+    expect(classOf("upcoming")).toContain("todo");
+    expect(classOf("next")).not.toContain("todo");
+  });
+});
+
+// ─── phase grouping ───────────────────────────────────────────────────────────
+
+describe("RoadmapTree — phases", () => {
+  it("names the stage's phase in its accessible name", () => {
+    render(<RoadmapTree milestones={FRONTEND_MILESTONES} />);
+    const first = FRONTEND_MILESTONES[0];
+    expect(stageNode(new RegExp(first.title.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"), "i")).getAttribute("aria-label"))
+      .toContain(first.phase!);
+  });
+
+  it("draws one band per run of consecutive stages sharing a phase", () => {
+    const { container } = render(<RoadmapTree milestones={FRONTEND_MILESTONES} />);
+    const distinct = new Set(FRONTEND_MILESTONES.map((m) => m.phase));
+    expect(container.querySelectorAll(".rm-phase")).toHaveLength(distinct.size);
+    // Exactly one band is lit: the one holding the stage you are on.
+    expect(container.querySelectorAll(".rm-phase.lit")).toHaveLength(1);
+  });
+});
+
 // ─── the dialog contract ──────────────────────────────────────────────────────
 
 describe("RoadmapTree — step brief dialog", () => {
@@ -215,7 +273,8 @@ describe("RoadmapTree — AI & Data track", () => {
     render(<RoadmapTree milestones={milestones} />);
     const dialog = openStage(/Responsible applied AI/i);
     expect(within(dialog).getByText("LLM-assisted analysis")).toBeInTheDocument();
-    expect(within(dialog).getByText("Fairness, privacy & limits")).toBeInTheDocument();
+    expect(within(dialog).getByText("Fairness & privacy")).toBeInTheDocument();
+    expect(within(dialog).getByText("Model limits")).toBeInTheDocument();
   });
 
   it("shows Data workflows and reproducibility milestone", () => {
@@ -235,12 +294,15 @@ describe("RoadmapTree — Content Creator track", () => {
     expect(within(openStage(/Audience and problem research/i)).getByRole("heading", { name: "Audience and problem research" })).toBeInTheDocument();
   });
 
-  it("opens the creator mission from the active roadmap stage", () => {
+  // The CTA used to guess a mission page from the milestone key, so every
+  // stage on every track landed on one of two hardcoded missions. It now goes
+  // to the climb, which centres itself on the learner's current stop.
+  it("sends the learner to the climb, not to a guessed mission page", () => {
     render(<RoadmapTree milestones={milestones} />);
     const active = milestones.find((m) => m.status === "active")!;
     const dialog = openStage(new RegExp(active.title.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"), "i"));
     expect(within(dialog).getByRole("link", { name: /Continue current mission/i }))
-      .toHaveAttribute("href", "/app/missions/content-creator-awareness");
+      .toHaveAttribute("href", "/app/missions");
   });
 });
 
