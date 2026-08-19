@@ -56,6 +56,34 @@ export default async function LoginPage({
   return (
     <main className="auth-shell">
       <section className="auth-brand-panel">
+        {/* Elevation contours. The product is a map, so the ground behind the
+            promise is drawn the way ground is drawn on one: lines of equal
+            height sweeping across a slope, tightening where it steepens, with
+            a few closed rings where a peak sits under the light. Cheaper than
+            an image, themed by the same tokens, and it fills the panel without
+            competing with anything on top of it. */}
+        <div className="auth-terrain" aria-hidden="true">
+          <span className="auth-glow" />
+          <svg className="auth-contours" viewBox="0 0 720 900" preserveAspectRatio="none">
+            <g className="auth-contour-lines">
+              <path d="M-60 92 C 140 34, 330 118, 500 66 C 620 30, 700 58, 780 44" />
+              <path d="M-60 178 C 150 116, 340 204, 508 152 C 626 116, 704 146, 780 130" />
+              <path d="M-60 268 C 160 202, 352 294, 516 242 C 632 206, 708 238, 780 220" />
+              <path d="M-60 362 C 170 292, 364 388, 524 336 C 638 300, 712 334, 780 314" />
+              <path d="M-60 462 C 180 388, 376 486, 532 434 C 644 398, 716 434, 780 412" />
+              <path d="M-60 568 C 190 490, 388 588, 540 536 C 650 500, 720 538, 780 514" />
+              <path d="M-60 680 C 200 598, 400 696, 548 644 C 656 608, 724 648, 780 622" />
+              <path d="M-60 798 C 210 712, 412 810, 556 758 C 662 722, 728 764, 780 736" />
+            </g>
+            {/* A peak, where the light is. Closed rings are how a map says one. */}
+            <g className="auth-contour-peak">
+              {[1, 0.72, 0.48, 0.28].map((k) => (
+                <ellipse key={k} cx="566" cy="196" rx={124 * k} ry={70 * k} />
+              ))}
+            </g>
+          </svg>
+        </div>
+
         <div className="auth-scene" aria-hidden="true"><SummitTrail /></div>
 
         <Link href="/" className="brand-lockup static light">

@@ -6814,8 +6814,11 @@ html[lang="my"] .mission-focus h2{
 .roadmap-detail-dialog{
   display: flex;
   flex-direction: column;
-  width: min(460px, 100%);
-  max-height: min(760px, 88vh);
+  /* Wider and shorter. At 460px the topic list ran one item per line and the
+     card grew past the viewport, so it read as a column of text rather than a
+     brief and had to scroll to reach its own button. */
+  width: min(580px, 100%);
+  max-height: min(660px, 84vh);
   overflow: hidden;
   color: var(--ink);
   background: var(--surface);
@@ -12216,10 +12219,24 @@ html[lang="my"] .passport-count dd{
   align-items: stretch;
 }
 .studio-split .resume-block { margin-top: 0; }
+/* Matching the neighbour's height was right while the builder was short and
+   badly wrong once a draft was built: the builder grows past 1200px and the
+   passport stretched with it, leaving a screen-tall slab of empty navy.
+   Two rules fix it without giving up the matched edge.
+   
+   A ceiling, so the card can grow to meet a short builder but never past the
+   height its own contents deserve. And sticky, so when the builder is long the
+   passport travels down with it instead of scrolling away — which is what a
+   record you are assembling a resume from should do. */
 .studio-split .passport {
-  align-content: space-between;
-  padding: var(--s-xl);
+  align-content: center;
   row-gap: var(--s-xl);
+  padding: clamp(26px, 2.5vw, 38px);
+  /* Sized so the card still reaches a short builder's foot, but never opens a
+     band of empty navy taller than its own contents. */
+  max-height: 460px;
+  position: sticky;
+  top: var(--s-lg);
 }
 
 /* The ridge fills the band the stretched card opens up in its middle. It only
@@ -13556,12 +13573,13 @@ html[lang="my"] .hero-copy h1{
   margin: 0 auto;
 }
 
+/* No bottom rule here. With the links band gone, this section's underline and
+   the legal row's top border became two lines a few pixels apart, drawing a
+   stripe across the footer. One divider between two blocks is one divider. */
 .foot-partners{
   display: grid;
   gap: 16px;
   justify-items: start;
-  padding-bottom: 40px;
-  border-bottom: 1px solid rgb(255 255 255 / 0.09);
 }
 
 .foot-eyebrow{
@@ -13892,3 +13910,69 @@ html[lang="my"] .hero-copy h1{
 }
 .auth-card{ gap: 6px; }
 .demo-login-card{ gap: 5px; }
+
+/* ---- the ground behind the sign-in promise ----
+   The panel had a dead band between the last chip and the scenery. It carries
+   elevation contours now: one closed curve repeated at increasing scale, which
+   is how a map draws ground, and a single warm light where the summit sits. */
+
+.auth-terrain{
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.auth-glow{
+  position: absolute;
+  top: 2%;
+  left: 46%;
+  width: min(620px, 78%);
+  aspect-ratio: 1;
+  transform: translate(-32%, -32%);
+  background: radial-gradient(
+    circle,
+    rgba(239, 159, 39, 0.16),
+    rgba(239, 159, 39, 0.05) 38%,
+    transparent 62%
+  );
+}
+
+.auth-contours{
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.auth-contour-lines path{
+  fill: none;
+  stroke: rgb(255 255 255 / 0.085);
+  stroke-width: 1.2;
+  vector-effect: non-scaling-stroke;
+}
+
+.auth-contour-peak ellipse{
+  fill: none;
+  stroke: rgb(239 159 39 / 0.16);
+  stroke-width: 1.2;
+  vector-effect: non-scaling-stroke;
+}
+
+/* The scenery sits above the contours; both stay behind the copy. */
+.auth-scene{ z-index: 1; }
+.auth-brand-panel > *:not(.auth-terrain):not(.auth-scene){ position: relative; z-index: 2; }
+
+@media (max-width: 900px){
+  .auth-terrain{ display: none; }
+}
+
+/* The topics set in two columns at the wider size: six of them stacked was
+   most of the card's height, and they are short phrases, not sentences. The
+   list is a grid, so this is a track change — `columns` would be inert. */
+@media (min-width: 560px){
+  .roadmap-detail-section ul{
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
