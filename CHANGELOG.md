@@ -1,5 +1,17 @@
 # Changelog
 
+## [0.23.2.0] - 2026-08-19
+
+### Changed
+
+- The sign-in panel is drawn on ground now: contour lines, the way a map draws elevation, with a light where the summit sits. It had a dead band between the last promise and the scenery.
+- The passport on Portfolio no longer stretches to match the résumé builder once a draft is built. It keeps its own size and follows you down the page instead, and its contents sit centred with more room around them.
+- The step brief on the roadmap is wider and about half as tall. The topics it lists sit in two columns rather than one long stack, so the card no longer has to scroll to reach its own button.
+
+### Fixed
+
+- Two rules were being drawn across the foot of the landing page where one belongs.
+
 ## [0.23.1.0] - 2026-08-19
 
 ### Changed
