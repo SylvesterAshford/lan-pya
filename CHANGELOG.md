@@ -1,5 +1,21 @@
 # Changelog
 
+## [0.23.0.0] - 2026-08-19
+
+### Changed
+
+- The mountains on the landing page are redrawn. They were flat rows of identical peaks that stopped dead at the edge of the picture, with the trail floating above them. There are four ranges now, each paler than the one in front, the snow follows the shape of the summit down both ridges, the ridge facing the sunrise catches the light, and the trail starts on the valley floor and climbs.
+- The sign-in page is rebuilt as one screen: the climb and what stays private on the left, the form on the right. Signing in with Google now comes first, before the email fields.
+
+### Added
+
+- A footer, carrying the two verified program partners with the date their information was last checked.
+
+### Removed
+
+- The second "Let's start" button at the foot of the landing page. The top of the page already asks.
+- The roadmap diagram from the sign-in page. It asked somebody at a sign-in screen to read a chart.
+
 ## [0.22.0.0] - 2026-08-19
 
 ### Changed

@@ -2,6 +2,7 @@ import { getTranslations, setRequestLocale } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 import { RotatingWord } from "@/components/marketing/rotating-word";
 import { SummitTrail } from "@/components/marketing/summit-trail";
+import { SiteFooter } from "@/components/marketing/site-footer";
 
 /**
  * The landing page.
@@ -113,8 +114,9 @@ export default async function MarketingPage({
           ))}
         </ol>
         <p className="journey-foot">{t("journeyFoot")}</p>
-        <Link className="button gold" href="/login">{t("primary")} <span aria-hidden="true">→</span></Link>
       </section>
+
+      <SiteFooter locale={locale} />
     </main>
   );
 }
