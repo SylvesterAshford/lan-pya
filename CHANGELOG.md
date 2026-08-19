@@ -1,5 +1,17 @@
 # Changelog
 
+## [0.24.0.0] - 2026-08-19
+
+### Changed
+
+- The résumé draft opens in a window of its own. Pressing Build used to add a screen and a half to the page, which on a phone buried everything under it.
+- The passport keeps its own size now and never stretches to match the builder beside it. On a phone it also stops following you down the page, which was covering the work underneath it.
+- The passport is drawn on ground: contour lines across it and a ridge along its foot, so the empty space at its top and bottom is gone.
+
+### Fixed
+
+- "Research" on the evidence trail was breaking across two lines mid-word.
+
 ## [0.23.2.0] - 2026-08-19
 
 ### Changed

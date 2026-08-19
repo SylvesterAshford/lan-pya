@@ -3,6 +3,7 @@
 import { useMemo, useState } from "react";
 import { Check, FileText, Printer, RotateCcw } from "lucide-react";
 import { buildResumeDraft, type ResumeBullet } from "@/lib/domain/resume-draft";
+import { ResumeDraftDialog } from "@/components/proof/resume-draft-dialog";
 import { toMyanmarDigits } from "@/lib/domain/deadlines";
 import type { ProofItem } from "@/lib/domain/types";
 
@@ -54,6 +55,9 @@ export function ResumeBuilder({
     printNote: string;
     docxNote: string;
     noneSelected: string;
+    draftHeading: string;
+    openDraft: string;
+    close: string;
   };
 }) {
   const my = locale === "my";
@@ -62,6 +66,10 @@ export function ResumeBuilder({
   const [selected, setSelected] = useState<string[]>([]);
   const [bullets, setBullets] = useState<ResumeBullet[] | null>(null);
   const [skills, setSkills] = useState<string[]>([]);
+  // Separate from `bullets` on purpose: closing the dialog must not throw away
+  // a draft the learner has been editing. Closing hides it; "Open draft"
+  // brings the same edited text back.
+  const [open, setOpen] = useState(false);
 
   const draft = useMemo(() => buildResumeDraft(locale, items, selected), [locale, items, selected]);
 
@@ -72,6 +80,7 @@ export function ResumeBuilder({
   function build() {
     setBullets(draft.bullets);
     setSkills(draft.skills);
+    setOpen(true);
   }
 
   function editBullet(id: string, text: string) {
@@ -128,7 +137,14 @@ export function ResumeBuilder({
 
       {!selected.length && !bullets ? <p className="resume-hint">{labels.noneSelected}</p> : null}
 
-      {bullets ? (
+      {bullets && !open ? (
+        <button type="button" className="text-link resume-reopen" onClick={() => setOpen(true)}>
+          {labels.openDraft}
+        </button>
+      ) : null}
+
+      {bullets && open ? (
+        <ResumeDraftDialog title={labels.draftHeading} closeLabel={labels.close} onClose={() => setOpen(false)}>
         <div className="resume-draft">
           {/* The printed region. Everything outside it is a control. */}
           <article className="resume-sheet" id="resume-sheet">
@@ -174,6 +190,7 @@ export function ResumeBuilder({
             <small className="resume-docx">{labels.docxNote}</small>
           </div>
         </div>
+        </ResumeDraftDialog>
       ) : null}
     </section>
   );

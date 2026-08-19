@@ -97,9 +97,18 @@ export function ProofPassport({
           ornament: the passport is the record of that climb, so the two
           screens share one piece of visual language. Purely decorative, so it
           is hidden from assistive technology and sits behind the content. */}
-      <svg className="passport-ridge" viewBox="0 0 600 120" preserveAspectRatio="none" aria-hidden="true" focusable="false">
-        <path d="M0 92 L86 54 L142 78 L214 30 L268 66 L338 22 L402 62 L470 36 L536 74 L600 48 L600 120 L0 120 Z" className="ridge-far" />
-        <path d="M0 108 L74 82 L150 100 L228 66 L296 94 L372 58 L446 90 L520 70 L600 96 L600 120 L0 120 Z" className="ridge-near" />
+      <svg className="passport-ridge" viewBox="0 0 600 400" preserveAspectRatio="none" aria-hidden="true" focusable="false">
+        {/* Contours across the upper half and the ridge along the foot, so the
+            card is drawn on ground rather than on a slab of flat navy. Same
+            language as the mission map and the sign-in panel: this is the
+            record of a climb, so it sits on one. */}
+        <g className="ridge-contours">
+          <path d="M-20 96 C 120 62, 260 118, 400 84 C 500 60, 560 78, 620 66" />
+          <path d="M-20 156 C 130 120, 270 176, 410 142 C 508 118, 566 136, 620 124" />
+          <path d="M-20 220 C 140 182, 282 238, 420 204 C 516 180, 572 198, 620 186" />
+        </g>
+        <path d="M0 300 L86 250 L142 282 L214 218 L268 266 L338 208 L402 262 L470 228 L536 278 L600 244 L600 400 L0 400 Z" className="ridge-far" />
+        <path d="M0 340 L74 306 L150 330 L228 286 L296 322 L372 276 L446 318 L520 292 L600 326 L600 400 L0 400 Z" className="ridge-near" />
       </svg>
       <div className="passport-identity">
         <span className="passport-figure">
