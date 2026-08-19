@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.21.2.0] - 2026-08-19
+
+### Fixed
+
+- Selected work in the résumé builder now looks selected. The tick box was drawn with a colour that does not exist in the palette, so it never filled in, and the chosen row was tinted two steps off white. Selection now carries a teal ground, a teal edge, and a filled tick.
+- The row under the résumé picks lines up. "Select all" and "Clear" were arriving with the browser's own grey button chrome and sitting below the line everything else sat on.
+- The passport has room inside it, so its contents no longer sit against the edges of the card.
+
 ## [0.21.1.0] - 2026-08-19
 
 ### Changed
