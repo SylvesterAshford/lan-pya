@@ -1,5 +1,15 @@
 # Changelog
 
+## [0.21.3.0] - 2026-08-19
+
+### Fixed
+
+- The mission map fills its card again. When the map grew to show every stage, the frame around it was still described as the old fixed shape, so the scene shrank to a narrow strip down the middle with empty margins either side. Every track now sizes its frame from its own length, so a 5-stage and a 14-stage map are equally wide.
+
+### Added
+
+- The passport carries the ridge line from the mission map across its middle, so the record of the climb and the climb itself share one piece of visual language.
+
 ## [0.21.2.0] - 2026-08-19
 
 ### Fixed
