@@ -31,6 +31,15 @@ export const PARTNERS: Partner[] = [
   { name: "Strategy First International College", src: "/art/partner-strategy-first.webp", ground: "dark", width: 430, height: 120 },
 ];
 
+/**
+ * When these relationships were last confirmed.
+ *
+ * It lives here rather than at each call site for the same reason the list
+ * does: the opportunities board and the site footer both date the same claim,
+ * and two hardcoded dates is one of them going stale without anybody noticing.
+ */
+export const PARTNERS_CHECKED_AT = "2026-08-17";
+
 /** The partner behind an organisation name, or undefined when there is none.
  *  Matching is on the name the listing carries, so a listing is a partner
  *  listing or it is not — there is no per-surface override. */

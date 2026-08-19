@@ -13309,14 +13309,21 @@ html[lang="my"] .hero-copy h1{
   display: block;
   width: 100%;
   height: auto;
+  /* The ranges are drawn past the viewBox, but the element still clips them,
+     which put a hard vertical edge down each side. Fading the sides lets the
+     terrain leave the picture the way distance actually does. The bottom needs
+     no help: the nearest plane already ends on the page's own background. */
+  -webkit-mask-image: linear-gradient(to right, transparent 0, #000 15%, #000 85%, transparent 100%);
+  mask-image: linear-gradient(to right, transparent 0, #000 15%, #000 85%, transparent 100%);
 }
 
 /* The trail draws itself once on arrival. Once, not on a loop: the ambient
    allowance in DESIGN.md is spent on the headline. */
 .summit-trail-line{
-  stroke-dasharray: 1500;
-  stroke-dashoffset: 1500;
-  animation: trail-draw 2.2s ease-out 0.25s forwards;
+  /* Comfortably longer than the path, so the reveal always completes. */
+  stroke-dasharray: 2400;
+  stroke-dashoffset: 2400;
+  animation: trail-draw 2.4s ease-out 0.25s forwards;
 }
 
 @keyframes trail-draw{
@@ -13360,11 +13367,11 @@ html[lang="my"] .hero-copy h1{
   border-radius: 10px;
 }
 
-/* Anchored to the three stops on the trail, which sit at 27%/80%, 40%/52%
-   and 58%/28% of the drawing. Each card sits just to the right of its stop. */
-.hero-pin.mission{ left: 31%; top: 72%; }
-.hero-pin.proof{ left: 43%; top: 44%; }
-.hero-pin.door{ left: 55%; top: 19%; }
+/* Anchored to the three stops on the trail, which sit at 29%/87%, 39%/65% and
+   54%/44% of the drawing. Each card sits just to the right of its stop. */
+.hero-pin.mission{ left: 32%; top: 80%; }
+.hero-pin.proof{ left: 43%; top: 59%; }
+.hero-pin.door{ left: 57%; top: 38%; }
 
 .hero-pin-label{
   font-size: 10px;
@@ -13523,6 +13530,328 @@ html[lang="my"] .hero-copy h1{
 
 @media (prefers-reduced-motion: reduce){
   .summit-trail-line{ animation: none; stroke-dashoffset: 0; }
+  .site-foot{ scroll-behavior: auto; }
   /* The word never types, so there is nothing for a caret to sit after. */
   .rotator-caret{ display: none; }
+}
+
+/* ---- site footer ----
+   The page ends on light ground, so the footer returns to navy and bookends
+   the hero. It reuses .partner-mark from the opportunities board rather than
+   restyling the same two marks a second time. */
+
+.site-foot{
+  padding: 64px 28px 40px;
+  color: #c8d4e6;
+  background: var(--navy-900);
+  border-top: 1px solid rgb(255 255 255 / 0.08);
+}
+
+.foot-inner{
+  display: grid;
+  max-width: 1220px;
+  gap: 44px;
+  margin: 0 auto;
+}
+
+.foot-partners{
+  display: grid;
+  gap: 16px;
+  justify-items: start;
+  padding-bottom: 40px;
+  border-bottom: 1px solid rgb(255 255 255 / 0.09);
+}
+
+.foot-eyebrow{
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--teal-500);
+  font-size: var(--t-label);
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.foot-marks{
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.foot-checked{
+  margin: 0;
+  color: rgb(255 255 255 / 0.62);
+  font-size: var(--t-label);
+  font-variant-numeric: tabular-nums;
+}
+
+.foot-main{
+  display: grid;
+  grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr);
+  gap: 48px;
+  align-items: start;
+}
+
+.foot-brand p{
+  max-width: 42ch;
+  margin: 16px 0 0;
+  color: #a8b8cd;
+  font-size: var(--t-meta);
+  line-height: 1.6;
+}
+
+.foot-links{
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 32px;
+}
+
+.foot-links h2{
+  margin: 0 0 10px;
+  color: #fff;
+  font-size: var(--t-label);
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.foot-links a{
+  display: block;
+  /* A 44px vertical target, per DESIGN.md, without looking like a button. */
+  padding: 10px 0;
+  color: #bccadd;
+  font-size: var(--t-meta);
+}
+
+.foot-links a:hover{ color: #fff; }
+
+.foot-legal{
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 12px;
+  padding-top: 26px;
+  border-top: 1px solid rgb(255 255 255 / 0.09);
+}
+
+.foot-legal small{
+  color: rgb(255 255 255 / 0.62);
+  font-size: var(--t-label);
+  line-height: 1.5;
+}
+
+@media (max-width: 860px){
+  .site-foot{ padding: 48px 20px 32px; }
+  .foot-main{ grid-template-columns: minmax(0, 1fr); gap: 34px; }
+}
+
+/* ---- sign in ----
+   The left panel is the promise, the right is the door. It carries the same
+   summit the landing page does, so the two screens are one product. */
+
+.auth-brand-panel{
+  justify-content: flex-start;
+  gap: clamp(24px, 3.4vw, 40px);
+  padding-bottom: clamp(150px, 20vw, 250px);
+  background: var(--navy-900);
+}
+
+/* The scenery sits behind the copy and low in the panel, so the climb is the
+   ground the words stand on rather than a picture competing with them. */
+.auth-scene{
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 0;
+  width: 100%;
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+.auth-scene .summit{ width: 100%; height: auto; }
+
+.auth-brand-copy{ display: grid; gap: 14px; }
+
+.auth-brand-panel h1{
+  margin: 0;
+  font-size: clamp(28px, 2.9vw, 40px);
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  line-height: 1.14;
+}
+
+.auth-brand-panel h1 em{ color: var(--amber-500); font-style: normal; }
+
+.auth-brand-panel .auth-brand-copy p{
+  max-width: 38ch;
+  margin: 0;
+  color: #a8b8cd;
+  font-size: var(--t-body);
+  line-height: 1.6;
+}
+
+/* The climb reads upward: the destination is at the top of the list and the
+   stage you are on is at the bottom, matching the mission map. */
+.auth-climb{
+  display: grid;
+  gap: 0;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.auth-climb li{
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 44px;
+  padding-left: 2px;
+  color: #b6c4d8;
+  font-size: var(--t-meta);
+  font-weight: 600;
+}
+
+/* The line joining the stops, drawn behind the dots. */
+.auth-climb li:not(:last-child)::before{
+  position: absolute;
+  top: 50%;
+  left: 10px;
+  width: 1px;
+  height: 100%;
+  border-left: 1px dashed rgb(255 255 255 / 0.22);
+  content: "";
+}
+
+.auth-climb-dot{
+  position: relative;
+  z-index: 1;
+  display: grid;
+  width: 21px;
+  height: 21px;
+  flex: none;
+  place-items: center;
+  background: var(--navy-900);
+  border: 2px solid var(--teal-500);
+  border-radius: 50%;
+}
+
+.auth-climb .start{ color: #fff; font-weight: 700; }
+
+.auth-climb .start .auth-climb-dot{
+  border-color: var(--amber-500);
+  box-shadow: 0 0 0 4px rgb(239 159 39 / 0.18);
+}
+
+.auth-climb .start .auth-climb-dot::after{
+  width: 8px;
+  height: 8px;
+  background: var(--amber-500);
+  border-radius: 50%;
+  content: "";
+}
+
+.auth-climb em{
+  color: var(--amber-500);
+  font-size: var(--t-label);
+  font-style: normal;
+  font-weight: 700;
+}
+
+.auth-promises{
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.auth-promises li{
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 9px 12px;
+  color: #c2cfe0;
+  font-size: var(--t-label);
+  font-weight: 600;
+  background: rgb(255 255 255 / 0.05);
+  border: 1px solid rgb(255 255 255 / 0.12);
+  border-radius: 10px;
+}
+
+.auth-promises svg{ color: var(--teal-500); }
+
+/* ---- the form side ---- */
+
+.auth-form-panel{
+  align-content: start;
+  gap: 28px;
+  place-items: start center;
+}
+
+.auth-top{
+  display: flex;
+  width: min(100%, 460px);
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.auth-back{
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  min-height: 44px;
+  color: var(--teal-700);
+  font-size: var(--t-meta);
+  font-weight: 700;
+}
+
+.auth-lang{
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--muted-ink);
+  font-size: var(--t-meta);
+}
+
+.auth-lang a{
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  color: var(--muted-ink);
+  font-weight: 600;
+}
+
+.auth-lang a.on{ color: var(--navy-900); font-weight: 700; }
+
+.privacy-copy{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  margin-top: 4px;
+  text-align: center;
+}
+
+.privacy-copy svg{ flex: none; color: var(--muted-ink); }
+
+@media (max-width: 900px){
+  .auth-shell{ grid-template-columns: minmax(0, 1fr); }
+  .auth-brand-panel{
+    /* The climb and the promises are the argument; on a phone the scenery
+       would push the form itself off the first screen. */
+    gap: 20px;
+    padding: 28px 20px 34px;
+  }
+  .auth-scene{ display: none; }
+  .auth-climb{ display: none; }
+  .auth-form-panel{ padding: 28px 20px 44px; }
+  .auth-top{ width: 100%; }
 }

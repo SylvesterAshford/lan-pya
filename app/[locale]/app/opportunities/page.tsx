@@ -1,5 +1,6 @@
 import { OpportunityBoard } from "@/components/opportunities/opportunity-board";
 import { PartnerBand } from "@/components/opportunities/partner-band";
+import { PARTNERS_CHECKED_AT } from "@/lib/domain/partners";
 import { getOpportunities } from "@/lib/data/app-data";
 import { getAppCopy, localizeOpportunity } from "@/lib/i18n/app-copy";
 
@@ -29,7 +30,7 @@ export default async function OpportunitiesPage({ params }: { params: Promise<{ 
 
       {/* Named partners, dated. Both relationships are documented; if one
           lapses, remove its entry rather than leaving the mark on the page. */}
-      <PartnerBand locale={locale} checkedAt="2026-08-17" />
+      <PartnerBand locale={locale} checkedAt={PARTNERS_CHECKED_AT} />
 
       {opportunities.length ? (
         <OpportunityBoard
