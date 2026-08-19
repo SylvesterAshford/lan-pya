@@ -11344,7 +11344,10 @@ html[lang="my"] .oppsig-skills-head {
 
 .oppsig-item {
   display: flex;
-  align-items: flex-start;
+  /* The mark sits on the centre line of the listing it belongs to. Pinned to
+     the top it hung off the title while the skills and deadline ran on below,
+     which read as two stacked things rather than one row. */
+  align-items: center;
   gap: var(--s-md);
   min-width: 0;
 }
@@ -12606,12 +12609,13 @@ html[lang="my"] .passport-count dd{
   display: grid;
   grid-template-columns: minmax(0, 1.55fr) minmax(0, 1fr);
   gap: var(--s-lg);
-  /* Each card keeps its own height. Stretching them to match filled the
-     passport with a block of empty navy, which reads worse than two cards of
-     honest, different lengths. */
-  align-items: start;
+  /* The two cards are one band, so they end on the same line. Stretching alone
+     left a slab of empty navy under the passport's content, so the passport
+     also spreads its own rows to fill the height it is given. */
+  align-items: stretch;
 }
 .studio-split .resume-block { margin-top: 0; }
+.studio-split .passport { align-content: space-between; }
 
 @media (max-width: 1080px) {
   .studio-split { grid-template-columns: minmax(0, 1fr); }
