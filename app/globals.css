@@ -12575,10 +12575,68 @@ html[lang="my"] .passport-count dd{
 .work-filters button.on { color: var(--navy-900); background: var(--navy-100); border-color: var(--navy-100); }
 .work-filters button:focus-visible { outline: 2px solid var(--teal-700); outline-offset: 2px; }
 
+/* ---- Evidence Studio layout ----
+   The concept lays this page out in three bands: the heading with the actions
+   that operate on the whole record, then the passport beside the builder, then
+   the work itself. */
+
+.studio-hero {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--s-lg);
+  flex-wrap: wrap;
+}
+.studio-hero .page-heading { margin-bottom: var(--s-lg); }
+
+.studio-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  /* Optically aligns the buttons with the heading block rather than the
+     eyebrow sitting above it. */
+  padding-top: 26px;
+}
+
+/* What the record says, beside what you can build from it. Below 1080px the
+   two halves stack: side by side they would each be too narrow to read, and
+   the builder's checkbox rows are the first thing to break. */
+.studio-split {
+  display: grid;
+  grid-template-columns: minmax(0, 1.55fr) minmax(0, 1fr);
+  gap: var(--s-lg);
+  /* Each card keeps its own height. Stretching them to match filled the
+     passport with a block of empty navy, which reads worse than two cards of
+     honest, different lengths. */
+  align-items: start;
+}
+.studio-split .resume-block { margin-top: 0; }
+
+@media (max-width: 1080px) {
+  .studio-split { grid-template-columns: minmax(0, 1fr); }
+}
+
+@media (max-width: 640px) {
+  .studio-hero { flex-direction: column; }
+  .studio-actions { padding-top: 0; }
+  .studio-actions .button { flex: 1 1 auto; }
+}
+
 .work-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  /* Three up, as the concept lays it out. auto-fill gave four narrow columns
+     at full width, which broke the case-study card's two-line summary. */
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 12px;
+}
+
+@media (max-width: 1080px) {
+  .work-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+@media (max-width: 700px) {
+  .work-grid { grid-template-columns: minmax(0, 1fr); }
 }
 .work-empty { font-size: var(--t-meta); line-height: var(--l-meta); color: var(--muted-ink); }
 

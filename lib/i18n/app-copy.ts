@@ -89,6 +89,12 @@ const english = {
     heading: "Evidence Studio",
     title: "Your work tells your story.",
     body: "Verified work, the skills it evidenced, and a résumé you assemble from it.",
+    actions: {
+      add: "Add project",
+      // No public profile route exists yet, so this previews the profile the
+      // learner actually has rather than promising a page that is not built.
+      preview: "Preview profile",
+    },
     passport: {
       title: "Proof passport",
       learnerLine: "{level} learner · Level {n}",
@@ -319,6 +325,10 @@ const myanmar: typeof english = {
     heading: "သက်သေ စတူဒီယို",
     title: "သင့်လက်ရာက သင့်အကြောင်း ပြောသည်။",
     body: "အတည်ပြုထားသော လက်ရာ၊ ၎င်းက သက်သေပြသည့် ကျွမ်းကျင်မှုများနှင့် ၎င်းတို့မှ သင်တည်ဆောက်သော ကိုယ်ရေးရာဇဝင်။",
+    actions: {
+      add: "လက်ရာ ထည့်ရန်",
+      preview: "ပရိုဖိုင် ကြည့်ရန်",
+    },
     passport: {
       title: "သက်သေ ပတ်စ်ပို့",
       learnerLine: "{level} သင်ယူသူ · အဆင့် {n}",

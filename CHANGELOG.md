@@ -1,5 +1,21 @@
 # Changelog
 
+## [0.21.0.0] - 2026-08-19
+
+### Changed
+
+- The roadmap says where you are. The stage you are on is the only fully saturated thing on the map, carries a "You are here" marker and a lit row, and everything ahead fades back. Before this, the stage you were on was drawn the same as the nine you had not reached.
+- The track no longer looks machine-made. Stages carry between one and three topics a side depending on how heavy the subject is, boxes are as wide as their titles need, and rows are as tall as their contents. It was twelve identical mirrored rows.
+- Stages are grouped into named parts of the journey, so the map says whether you are in the foundations or on the way to hiring, not only which numbered step you are on. The part you are in is lit; the rest sit back.
+- The trail behind you is drawn solid and the road ahead dotted, so how far you have come is something the map states rather than something you count.
+- Each column of topics is now headed by what it is for, using labels the tracks already carried.
+- "Continue current mission" opens the climb at your position. It used to open one of two fixed mission pages, whichever track or stage you were on.
+- Portfolio is laid out as the Evidence Studio concept draws it: your passport sits beside the résumé builder instead of a screen above it, the page opens with the two things you can do with your record, and completed work runs three across.
+
+### Fixed
+
+- Every label on the roadmap now meets the contrast floor. Nine did not, some as low as 2.2 to 1 against a required 4.5.
+
 ## [0.20.0.0] - 2026-08-19
 
 ### Added
