@@ -41,7 +41,12 @@ type Stop = {
 };
 
 type Geometry = {
-  W: number; H: number;
+  W: number;
+  /** Vertical distance between two stops. Constant, so a 14-stage track is
+   *  drawn at the same pace as a 5-stage one — the map gets longer, not denser. */
+  gap: number;
+  /** Ground below the last stop, so the climb does not end flush at the edge. */
+  tail: number;
   /**
    * Width of the band the composition was authored in. The summit and the
    * climb are placed inside this band and centred; everything else spans the
@@ -51,7 +56,7 @@ type Geometry = {
   art: number;
   /** Fractions of `art`, bottom stop first. The climb narrows toward the peak. */
   xs: number[];
-  top: number; bottom: number;
+  top: number;
   r: number; rCurrent: number;
   mascot: number;
   card: number;
@@ -61,8 +66,8 @@ type Geometry = {
 // wider than the composition and a little shorter, so the map fills the column
 // it sits in rather than leaving ~220px of dead page on either side, and the
 // stops and traveller sit a shade smaller inside it.
-const WIDE: Geometry = { W: 1320, H: 1400, art: 923, xs: [0.43, 0.57, 0.41, 0.52, 0.50], top: 300, bottom: 1290, r: 28, rCurrent: 36, mascot: 176, card: 215 };
-const NARROW: Geometry = { W: 923, H: 1704, art: 923, xs: [0.40, 0.58, 0.38, 0.54, 0.50], top: 300, bottom: 1470, r: 31, rCurrent: 40, mascot: 196, card: 250 };
+const WIDE: Geometry = { W: 1320, gap: 247.5, tail: 110, art: 923, xs: [0.43, 0.57, 0.41, 0.52, 0.50], top: 300, r: 28, rCurrent: 36, mascot: 176, card: 215 };
+const NARROW: Geometry = { W: 923, gap: 292.5, tail: 234, art: 923, xs: [0.40, 0.58, 0.38, 0.54, 0.50], top: 300, r: 31, rCurrent: 40, mascot: 196, card: 250 };
 
 // The width at which the landscape canvas has enough column to be worth it.
 // `.mission-map` in globals.css caps and shapes the box at this same width;
@@ -81,15 +86,6 @@ function useWide() {
     () => (typeof window.matchMedia === "function" ? window.matchMedia(WIDE_QUERY).matches : false),
     () => false,
   );
-}
-
-/** Five stops around the learner: one behind for context, then the climb. */
-function windowStops(milestones: Milestone[]) {
-  const active = milestones.findIndex((m) => m.status === "active");
-  const next = milestones.findIndex((m) => m.status === "next");
-  const anchor = active >= 0 ? active : next >= 0 ? next : 0;
-  const start = Math.max(0, anchor - 1);
-  return { windowed: milestones.slice(start, start + 5) };
 }
 
 function stateOf(m: Milestone): Stop["state"] {
@@ -131,9 +127,11 @@ export function MissionMap({
   const g = wide ? WIDE : NARROW;
   const num = (v: number) => (my ? toMyanmarDigits(v) : String(v));
 
-  const { windowed } = windowStops(milestones);
-
-  const stops: Stop[] = windowed.map((m) => {
+  // The whole track, not a window around the learner. A five-stop window meant
+  // the climb opened at stage 2 and silently dropped stage 1, so the map and
+  // the roadmap disagreed about how long the journey is. The map grows instead:
+  // stop spacing is fixed, so a 14-stage track is simply a taller climb.
+  const stops: Stop[] = milestones.map((m) => {
     const state = stateOf(m);
     return {
       key: m.key, order: m.order, title: m.title, state,
@@ -144,7 +142,9 @@ export function MissionMap({
   // Bottom stop is index 0 and sits lowest: the climb reads upward, so the
   // first stop of the window is drawn last in screen terms.
   const n = stops.length;
-  const yAt = (i: number) => g.bottom - (i * (g.bottom - g.top)) / (n - 1 || 1);
+  const bottom = g.top + Math.max(1, n - 1) * g.gap;
+  const H = bottom + g.tail;
+  const yAt = (i: number) => bottom - (i * (bottom - g.top)) / (n - 1 || 1);
   // Shape-critical art is laid out in the centred `art` band; background that
   // should reach the edges keeps using g.W directly.
   const ax = (f: number) => (g.W - g.art) / 2 + f * g.art;
@@ -229,7 +229,7 @@ export function MissionMap({
           choice resolves after hydration, and driving the box height from it
           made the whole map jump on load. */}
       <div className="mission-map-stage" ref={stage}>
-        <svg viewBox={`0 0 ${g.W} ${g.H}`} className="mission-map-scene" aria-hidden="true">
+        <svg viewBox={`0 0 ${g.W} ${H}`} className="mission-map-scene" aria-hidden="true">
           {/* ---- sky: cool at altitude, warming toward the snowline ---- */}
           <defs>
             <linearGradient id="mapSky" x1="0" y1="0" x2="0" y2="1">
@@ -243,7 +243,7 @@ export function MissionMap({
               <stop offset="1" stopColor="var(--map-sun)" stopOpacity="0" />
             </radialGradient>
           </defs>
-          <rect width={g.W} height={g.H} fill="url(#mapSky)" />
+          <rect width={g.W} height={H} fill="url(#mapSky)" />
 
           {/* sun behind the summit, glow first so the peak occludes it */}
           <circle cx={g.W * 0.5} cy={330} r={230} fill="url(#mapSunGlow)" />
@@ -268,8 +268,8 @@ export function MissionMap({
           <path d={`M${g.W * 0.86} 356 L${g.W} 620 L${g.W * 0.58} 620 Z`} fill="var(--map-ridge-3)" />
 
           {/* ---- mid ridges, each paler as it recedes ---- */}
-          <path d={`M0 700 Q ${g.W * 0.2} 560, ${g.W * 0.42} 660 T ${g.W * 0.78} 610 T ${g.W} 690 L${g.W} ${g.H} L0 ${g.H} Z`} fill="var(--map-ridge-2)" />
-          <path d={`M0 880 Q ${g.W * 0.26} 745, ${g.W * 0.55} 845 T ${g.W} 800 L${g.W} ${g.H} L0 ${g.H} Z`} fill="var(--map-ridge-1)" />
+          <path d={`M0 700 Q ${g.W * 0.2} 560, ${g.W * 0.42} 660 T ${g.W * 0.78} 610 T ${g.W} 690 L${g.W} ${H} L0 ${H} Z`} fill="var(--map-ridge-2)" />
+          <path d={`M0 880 Q ${g.W * 0.26} 745, ${g.W * 0.55} 845 T ${g.W} 800 L${g.W} ${H} L0 ${H} Z`} fill="var(--map-ridge-1)" />
 
           {/* ---- conifer belt along the treeline ---- */}
           {Array.from({ length: Math.round((26 * g.W) / 923) }, (_, i) => {
@@ -289,9 +289,9 @@ export function MissionMap({
           })}
 
           {/* ---- snowfield: the foreground the climb starts from ---- */}
-          <path d={`M0 1010 Q ${g.W * 0.3} 900, ${g.W * 0.62} 1000 T ${g.W} 950 L${g.W} ${g.H} L0 ${g.H} Z`} fill="var(--map-snow)" />
+          <path d={`M0 1010 Q ${g.W * 0.3} 900, ${g.W * 0.62} 1000 T ${g.W} 950 L${g.W} ${H} L0 ${H} Z`} fill="var(--map-snow)" />
           {/* contour lines, the reference's drifting snow texture */}
-          {Array.from({ length: 5 }, (_, i) => 1010 + ((i + 1) * (g.H - 1010)) / 6).map((cy, i) => (
+          {Array.from({ length: 5 }, (_, i) => 1010 + ((i + 1) * (H - 1010)) / 6).map((cy, i) => (
             <path
               key={cy}
               d={`M${-40 + i * 18} ${cy} Q ${g.W * 0.3} ${cy - 46}, ${g.W * 0.58} ${cy - 6} T ${g.W + 40} ${cy - 30}`}
@@ -314,7 +314,7 @@ export function MissionMap({
             <ellipse
               key={`mound-${fx}`}
               cx={fx * g.W}
-              cy={g.H - up + 10 * k}
+              cy={H - up + 10 * k}
               rx={70 * k}
               ry={17 * k}
               fill="var(--map-snow)"
@@ -325,17 +325,17 @@ export function MissionMap({
           {/* Boulders in clusters: a big one with a smaller companion. */}
           {[[0.12, 104, 1], [0.86, 144, 0.85], [0.30, 54, 0.7], [0.68, 84, 0.9], [0.50, 150, 0.6]].map(([fx, up, k]) => (
             <g key={`rock-${fx}`}>
-              <ellipse cx={fx * g.W} cy={g.H - up} rx={26 * k} ry={15 * k} fill="var(--map-rock)" />
-              <ellipse cx={fx * g.W - 8 * k} cy={g.H - up - 5 * k} rx={16 * k} ry={9 * k} fill="var(--map-rock-lit)" />
-              <ellipse cx={fx * g.W + 30 * k} cy={g.H - up + 7 * k} rx={12 * k} ry={7 * k} fill="var(--map-rock)" />
-              <ellipse cx={fx * g.W + 27 * k} cy={g.H - up + 4 * k} rx={7 * k} ry={4 * k} fill="var(--map-rock-lit)" />
+              <ellipse cx={fx * g.W} cy={H - up} rx={26 * k} ry={15 * k} fill="var(--map-rock)" />
+              <ellipse cx={fx * g.W - 8 * k} cy={H - up - 5 * k} rx={16 * k} ry={9 * k} fill="var(--map-rock-lit)" />
+              <ellipse cx={fx * g.W + 30 * k} cy={H - up + 7 * k} rx={12 * k} ry={7 * k} fill="var(--map-rock)" />
+              <ellipse cx={fx * g.W + 27 * k} cy={H - up + 4 * k} rx={7 * k} ry={4 * k} fill="var(--map-rock-lit)" />
             </g>
           ))}
 
           {/* Grass in clumps, every blade rising from the same base. */}
           {[[0.20, 64], [0.78, 104], [0.42, 32], [0.60, 49], [0.08, 154], [0.33, 122], [0.71, 86], [0.94, 60]].map(([fx, up], i) => {
             const lean = i % 2 === 0 ? 1 : -1;
-            const base = g.H - up;
+            const base = H - up;
             return (
               <g key={`shoot-${fx}`} stroke="var(--map-shoot)" strokeWidth="3" strokeLinecap="round" fill="none">
                 <path d={`M${fx * g.W} ${base} q${-10 * lean} -14 ${-4 * lean} -26`} />
@@ -351,10 +351,10 @@ export function MissionMap({
               and the only object down here that reads as put there on purpose. */}
           {[[0.26, 138], [0.82, 190]].map(([fx, up]) => (
             <g key={`cairn-${fx}`}>
-              <ellipse cx={fx * g.W} cy={g.H - up} rx={13} ry={6} fill="var(--map-rock)" />
-              <ellipse cx={fx * g.W} cy={g.H - up - 9} rx={10} ry={5} fill="var(--map-rock-lit)" />
-              <ellipse cx={fx * g.W} cy={g.H - up - 17} rx={7} ry={4} fill="var(--map-rock)" />
-              <ellipse cx={fx * g.W} cy={g.H - up - 23} rx={4} ry={3} fill="var(--map-rock-lit)" />
+              <ellipse cx={fx * g.W} cy={H - up} rx={13} ry={6} fill="var(--map-rock)" />
+              <ellipse cx={fx * g.W} cy={H - up - 9} rx={10} ry={5} fill="var(--map-rock-lit)" />
+              <ellipse cx={fx * g.W} cy={H - up - 17} rx={7} ry={4} fill="var(--map-rock)" />
+              <ellipse cx={fx * g.W} cy={H - up - 23} rx={4} ry={3} fill="var(--map-rock-lit)" />
             </g>
           ))}
 
@@ -434,7 +434,7 @@ export function MissionMap({
           // off-screen at 360px, where they were clipped rather than wrapped.
           const leftSide = cardOnLeft(i);
           const style = {
-            top: `${(y / g.H) * 100}%`,
+            top: `${(y / H) * 100}%`,
             [leftSide ? "right" : "left"]: `${((leftSide ? g.W - x + g.r + 28 : x + g.r + 28) / g.W) * 100}%`,
             maxWidth: `${(g.card / g.W) * 100}%`,
           } as React.CSSProperties;

@@ -127,7 +127,6 @@ function AppShellContent({ children, profile, roles, locale }: { children: React
     ? (my ? "နမူနာအကောင့်" : "Demo account")
     : (my ? "သင့်အကောင့်" : "Your account");
   const brandLabel = my ? "လမ်းပြ" : "Lan Pya";
-  const updateLabel = my ? "သောကြာနေ့တိုင်း အပ်ဒိတ်" : "Updated every Friday";
   const navLabel = my ? "အဓိက လမ်းညွှန်" : "Primary navigation";
 
   const staffNav = [
@@ -213,7 +212,6 @@ function AppShellContent({ children, profile, roles, locale }: { children: React
         </SidebarContent>
 
         <SidebarFooter>
-          <span className="update-chip">{updateLabel}</span>
           <Link className="sidebar-account" href="/app/profile" title={`${accountLabel}: ${profile.alias}`}>
             <span className="app-avatar" aria-hidden="true">{profile.alias.slice(0, 2).toUpperCase()}</span>
             <span className="sidebar-account-copy">
@@ -235,7 +233,6 @@ function AppShellContent({ children, profile, roles, locale }: { children: React
             <span className="brand-mark" aria-hidden="true" />
             <strong>{brandLabel}</strong>
           </Link>
-          <span className="update-chip">{updateLabel}</span>
         </div>
         {children}
       </SidebarInset>

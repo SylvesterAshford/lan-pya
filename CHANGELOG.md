@@ -1,5 +1,18 @@
 # Changelog
 
+## [0.21.1.0] - 2026-08-19
+
+### Changed
+
+- The climb shows the whole track. It used to open at stage 2 and quietly leave stage 1 off the bottom, because it drew a window of five stops around you rather than the path. The map now grows with the track instead, so it agrees with the roadmap about how long the journey is.
+- Your passport and the résumé builder beside it now end on the same line.
+- The partner mark on an opportunity sits on the centre line of the listing rather than hanging off the title.
+
+### Removed
+
+- The bare "12 stages" line above the roadmap. The map's own header already reports progress as verified-of-total, which is the same number said usefully.
+- The "Updated every Friday" chip from the sidebar and the top bar.
+
 ## [0.21.0.0] - 2026-08-19
 
 ### Changed

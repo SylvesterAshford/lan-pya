@@ -2,7 +2,7 @@ import { RoadmapTree } from "@/components/app/roadmap-tree";
 import { getActivePathDashboard, getRoadmap } from "@/lib/data/app-data";
 import { getCareerTrack, getTrackFork } from "@/lib/domain/career-tracks";
 import type { Milestone } from "@/lib/domain/types";
-import { getAppCopy, localizeCareerTerm, localizeRoadmapMilestone, localizeTrackOutcome } from "@/lib/i18n/app-copy";
+import { localizeCareerTerm, localizeRoadmapMilestone, localizeTrackOutcome } from "@/lib/i18n/app-copy";
 
 export default async function RoadmapPage({
   params,
@@ -12,7 +12,6 @@ export default async function RoadmapPage({
   searchParams: Promise<{ track?: string }>;
 }) {
   const { locale } = await params;
-  const c = getAppCopy(locale);
   const { track: requestedTrack } = await searchParams;
 
   // No track asked for means "my roadmap". Defaulting to the catalog's first
@@ -25,7 +24,6 @@ export default async function RoadmapPage({
   const milestones = (milestonesRaw as Milestone[]).map((milestone) => localizeRoadmapMilestone(locale, milestone));
 
   const trackTitle = localizeCareerTerm(locale, track.key, track.title);
-  const stageCount = milestones.length;
 
   // No level strip here. The roadmap answers "what is the path and where am
   // I on it", which the canvas header already counts in verified milestones.
@@ -34,12 +32,14 @@ export default async function RoadmapPage({
   return (
     <div className="app-page roadmap-page">
       <section className="page-heading roadmap-page-heading">
+        {/* The stage count used to sit out here as a bare "12 stages". The
+            canvas header already reports progress as verified-of-total, which
+            is the same number said usefully, so this only repeated it. */}
         <div className="roadmap-title-row">
           <div>
             <h1>{trackTitle}</h1>
             <p>{localizeTrackOutcome(locale, track.key, track.outcome)}</p>
           </div>
-          <span>{stageCount} {c.roadmap.stages}</span>
         </div>
       </section>
 
