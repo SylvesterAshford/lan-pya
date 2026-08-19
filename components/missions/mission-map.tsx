@@ -451,7 +451,11 @@ export function MissionMap({
           const style = {
             top: `${(y / H) * 100}%`,
             [leftSide ? "right" : "left"]: `${((leftSide ? g.W - x + g.r + 28 : x + g.r + 28) / g.W) * 100}%`,
-            maxWidth: `${(g.card / g.W) * 100}%`,
+            // Handed to CSS as a variable rather than set directly, so a phone
+            // can widen it without an !important. 250 of a 923-unit canvas is
+            // 27%, which on a 390px screen is a 105px card — narrow enough that
+            // "Portfolio and hiring capstone" broke across four lines.
+            ["--map-card-max" as string]: `${(g.card / g.W) * 100}%`,
           } as React.CSSProperties;
 
           const status = stop.state === "current" ? labels.youAreHere
