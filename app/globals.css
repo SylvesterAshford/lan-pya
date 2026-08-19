@@ -4053,7 +4053,9 @@ a{ color: inherit; text-decoration: none; }
 .auth-shell{
   display: grid;
   min-height: 100svh;
-  grid-template-columns: minmax(340px, .78fr) minmax(480px, 1.22fr);
+  /* Equal halves. The panels carry equal weight — a promise and a door — so
+     giving one of them 60% of the screen made the split look accidental. */
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   background: var(--surface);
 }
 
@@ -4157,7 +4159,7 @@ a{ color: inherit; text-decoration: none; }
 .auth-form-panel{
   display: grid;
   min-width: 0;
-  padding: clamp(24px, 5vw, 64px) clamp(24px, 5vw, 80px);
+  padding: clamp(12px, 1.6vw, 22px) clamp(24px, 4vw, 60px);
   place-items: center;
   overflow-y: auto;
   background: var(--canvas);
@@ -4175,9 +4177,9 @@ a{ color: inherit; text-decoration: none; }
 .auth-card > h1{
   margin: 0 0 8px;
   color: var(--navy);
-  font-size: clamp(26px, 3.5vw, 38px);
-  letter-spacing: -.04em;
-  line-height: 1.1;
+  font-size: clamp(24px, 2.5vw, 30px);
+  letter-spacing: -.03em;
+  line-height: 1.15;
 }
 
 .auth-card > p{
@@ -4249,8 +4251,8 @@ a{ color: inherit; text-decoration: none; }
 /* Email auth block — tighter spacing */
 .email-auth-block{
   display: grid;
-  gap: 12px;
-  margin-top: 20px;
+  gap: 10px;
+  margin-top: 12px;
 }
 
 /* Mode switch — polished pill toggle */
@@ -4326,7 +4328,7 @@ a{ color: inherit; text-decoration: none; }
   display: flex;
   align-items: center;
   gap: 12px;
-  margin: 16px 0 0;
+  margin: 12px 0 0;
   color: var(--muted);
   font-size: var(--t-label);
   font-weight: 700;
@@ -4348,9 +4350,9 @@ a{ color: inherit; text-decoration: none; }
 /* Demo card — compact */
 .demo-login-card{
   display: grid;
-  gap: 10px;
-  padding: 14px;
-  margin-top: 4px;
+  gap: 8px;
+  padding: 12px;
+  margin-top: 2px;
   background: var(--surface);
   border: 1px solid var(--line);
   border-radius: 10px;
@@ -13589,45 +13591,6 @@ html[lang="my"] .hero-copy h1{
   font-variant-numeric: tabular-nums;
 }
 
-.foot-main{
-  display: grid;
-  grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr);
-  gap: 48px;
-  align-items: start;
-}
-
-.foot-brand p{
-  max-width: 42ch;
-  margin: 16px 0 0;
-  color: #a8b8cd;
-  font-size: var(--t-meta);
-  line-height: 1.6;
-}
-
-.foot-links{
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 32px;
-}
-
-.foot-links h2{
-  margin: 0 0 10px;
-  color: #fff;
-  font-size: var(--t-label);
-  font-weight: 800;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-}
-
-.foot-links a{
-  display: block;
-  /* A 44px vertical target, per DESIGN.md, without looking like a button. */
-  padding: 10px 0;
-  color: #bccadd;
-  font-size: var(--t-meta);
-}
-
-.foot-links a:hover{ color: #fff; }
 
 .foot-legal{
   display: flex;
@@ -13645,8 +13608,7 @@ html[lang="my"] .hero-copy h1{
 }
 
 @media (max-width: 860px){
-  .site-foot{ padding: 48px 20px 32px; }
-  .foot-main{ grid-template-columns: minmax(0, 1fr); gap: 34px; }
+  .site-foot{ padding: 44px 20px 30px; }
 }
 
 /* ---- sign in ----
@@ -13855,3 +13817,78 @@ html[lang="my"] .hero-copy h1{
   .auth-form-panel{ padding: 28px 20px 44px; }
   .auth-top{ width: 100%; }
 }
+
+.foot-lang{ display: inline-flex; align-items: center; gap: 14px; }
+.foot-lang a{ color: rgb(255 255 255 / 0.62); font-size: var(--t-label); font-weight: 600; }
+.foot-lang a.on{ color: #fff; }
+
+/* The sign-in screen has one job, and making somebody scroll to reach the
+   button that does it is the cheapest way to lose them. Everything below
+   trims space rather than content: the same fields, the same demo card, the
+   same copy, in a column that fits a laptop without moving. */
+.auth-card > p{ margin-bottom: 0; }
+.auth-card > .eyebrow{ margin-bottom: 6px; }
+.auth-card > h1{ margin: 0 0 6px; }
+.auth-card{ display: grid; gap: 10px; }
+.email-auth-form label{ margin-top: 0; }
+.demo-login-card p{ margin: 0; }
+.demo-login-card dl div{ padding: 6px 10px; }
+.privacy-copy{ margin-top: 0; }
+
+/* Second pass on the same principle: the sign-in column has to reach its
+   button inside one screen on a laptop. All of this is rhythm, not content —
+   every field, the demo card and its credentials are still here. Controls
+   keep a 44px target; only the space between them gives. */
+.auth-card{ gap: 8px; }
+.auth-card > h1{ font-size: clamp(22px, 2.1vw, 27px); }
+.auth-card > p{ line-height: 1.45; }
+.auth-divider{ margin-top: 8px; }
+.email-auth-block{ gap: 8px; margin-top: 8px; }
+.email-auth-form{ gap: 4px; }
+.auth-form-panel .text-input{ min-height: 44px; }
+.demo-login-card{ gap: 6px; padding: 10px 12px; }
+.demo-login-card p{ line-height: 1.4; }
+.demo-login-card dl{ gap: 5px; }
+.demo-login-card dl div{ padding: 5px 10px; }
+.privacy-copy{ font-size: var(--t-label); line-height: 1.45; }
+
+/* The left panel, not the form, was setting the page's height: it reserved up
+   to 250px of clear space under its content for a drawing 587px tall. The
+   scene is now a band cropped to its lower slopes, anchored to the foot of the
+   panel, and the panel's own rhythm tightens to match. The climb's rows are
+   list items rather than controls, so they do not owe a 44px target. */
+.auth-brand-panel{
+  gap: clamp(16px, 2vw, 26px);
+  padding-top: clamp(24px, 2.6vw, 40px);
+  padding-bottom: clamp(78px, 10.5vh, 128px);
+}
+
+.auth-scene{
+  height: clamp(150px, 20vh, 240px);
+  overflow: hidden;
+  /* Cropping the scene to a band left a hard line where the crop began, so
+     the band fades up into the panel instead of starting on an edge. */
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0, #000 45%);
+  mask-image: linear-gradient(to bottom, transparent 0, #000 45%);
+}
+
+.auth-scene .summit{
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: auto;
+}
+
+.auth-climb li{ min-height: 38px; }
+.auth-brand-panel h1{ font-size: clamp(24px, 2.4vw, 34px); }
+
+/* Final trim, with margin so the column still fits a shorter laptop rather
+   than only just clearing 900px. */
+.auth-form-panel{
+  padding-top: clamp(10px, 1.1vw, 16px);
+  padding-bottom: clamp(10px, 1.1vw, 16px);
+  gap: 10px;
+}
+.auth-card{ gap: 6px; }
+.demo-login-card{ gap: 5px; }
