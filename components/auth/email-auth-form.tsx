@@ -108,9 +108,8 @@ export function EmailAuthForm({ locale, demoRequested }: { locale: string; demoR
       {error && <p className="form-error" role="alert">{error}</p>}
 
       <section className="demo-login-card auth-demo-callout" aria-label={t("demoTitle")}>
-        <div><strong>{t("demoTitle")}</strong><p>{t("demoBody")}</p></div>
-        <dl><div><dt>{t("email")}</dt><dd>{DEMO_ACCOUNT.email}</dd></div><div><dt>{t("password")}</dt><dd>{DEMO_ACCOUNT.password}</dd></div></dl>
-        <Button className="h-11 w-full text-base" variant="outline" type="button" onClick={useDemoAccount}>{t("fillDemo")}</Button>
+        <div className="auth-demo-copy"><strong>{t("demoTitle")}</strong><p>{t("demoBody")}</p></div>
+        <Button className="h-11 text-base" variant="outline" type="button" onClick={useDemoAccount}>{t("fillDemo")}</Button>
       </section>
     </div>
   );

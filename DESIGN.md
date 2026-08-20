@@ -474,11 +474,12 @@ the palette does not change, contrast minimums do not change, controls keep
 their 44px target, and `prefers-reduced-motion` stops the cycle on its first
 word rather than reducing its speed.
 
-The sign-in page keeps its two-panel composition on desktop. At tablet widths,
-the form comes first and the supporting promise panel follows it. On phones,
-the promise panel is removed and a compact Lan Pya lockup stays with the form,
-so signing in remains the first task and the first viewport does not become a
-stacked marketing screen. The privacy helper stays left-aligned on narrow
+The sign-in page keeps its two-panel composition on desktop. The panels are
+equal viewport-height halves with matching centred content rails; utility
+controls do not participate in the form's vertical centring. At tablet and
+phone widths the supporting panel is removed rather than stacked below a full
+authentication screen. A compact Lan Pya lockup stays with the form, so signing
+in remains the only task. The privacy helper stays left-aligned on narrow
 screens, with its lock aligned to the first line of copy rather than the
 vertical centre of a wrapped paragraph.
 
@@ -493,10 +494,13 @@ preflight is deliberately excluded so introducing shadcn cannot reset or
 silently restyle the established application.
 
 Desktop is a balanced split: the task-focused form occupies the left panel and
-the promise, privacy, and product story occupy the right. At the tablet handoff
-the form leads and the promise panel follows; on phones the handoff becomes
-form-only, retaining the compact Lan Pya lockup, language control, and privacy
-helper while removing the supporting promise panel from the flow.
+the promise, privacy, and product story occupy the right. Each side uses the
+same 480px centred rail and stays exactly one viewport tall; if the form cannot
+fit, only its panel scrolls. The right panel uses one winding Map to Proof route
+from Choose through Build and Prove to Connect, with restrained terrain behind
+it. Repeated contour wallpaper, target rings, and detached feature pills do not
+belong on this surface. At the tablet handoff the page becomes form-only,
+retaining the compact Lan Pya lockup, language control, and privacy helper.
 
 Email authentication exposes sign-in and account creation as a two-state mode
 control, alongside Google sign-in when the provider is available. Both mode
@@ -633,3 +637,4 @@ not consent or the learner's route into the prepared account.
 | 2026-08-19 | **Roadmap step brief became a dialog** | The canvas and the brief shared one row, and neither fitted: a 780px graph and a 320px column of two-word lines. The brief is a response to a click, not ambient context. As a dialog it frees the full content width for the map, and the page cap drops from 1200px to 920px because there is no second column to reserve. Modal on desktop, bottom sheet on phones — the same component, since the brief is the only place a phone can read the branch skills the narrow canvas geometry omits. |
 | 2026-08-20 | **Sign-in leads with the form on narrow screens** | Stacking the desktop promise panel above the form turned a focused authentication page into a full marketing screen on mobile. Tablets now put the form first and retain the supporting panel afterward; phones hide the panel and keep a compact Lan Pya lockup beside the task. |
 | 2026-08-20 | **Official shadcn login-02 structure adopted without replacing Lan Pya's visual system** | The shadcn form, field, input, label, separator, and button primitives provide a coherent accessible authentication foundation. They are themed through the incumbent tokens, Tailwind preflight stays excluded, all interactive authentication controls keep a 44px minimum height, and localized status and recovery behavior remains product-owned. On phones, redundant demo credentials are hidden while the demo action and privacy guidance remain visible. |
+| 2026-08-20 | **Sign-in is a centred 50/50 desktop diptych and form-only below 920px** | The old grid was numerically equal but looked asymmetric because the form and promise used different rails, utility chrome shifted the form, and a tall form stretched the right panel into empty space. Both desktop panels now stay one viewport tall with centred 480px rails; the form panel alone may scroll. The supporting panel is removed at tablet sizes instead of becoming a second screen, and its generic contour wallpaper is replaced by one authored Map to Proof route. |
