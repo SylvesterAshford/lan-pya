@@ -3,7 +3,7 @@ import { createClient } from "@supabase/supabase-js";
 const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
 const serviceRoleKey = process.env.SUPABASE_SECRET_KEY ?? process.env.SUPABASE_SERVICE_ROLE_KEY;
 const email = "demo@lanpya.app";
-const password = "REDACTED";
+const password = "LanPya-Demo-2026!";
 
 if (!url || !serviceRoleKey) {
   throw new Error("NEXT_PUBLIC_SUPABASE_URL and SUPABASE_SECRET_KEY are required");
