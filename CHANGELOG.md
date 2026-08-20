@@ -1,5 +1,17 @@
 # Changelog
 
+## [0.25.0.3] - 2026-08-20
+
+### Changed
+
+- Sign-in now uses the official shadcn `login-02` structure while keeping Lan Pya's existing navy, teal, typography, spacing, and bilingual product voice.
+- Desktop gives the form and roadmap promise equal space; phones keep the full authentication task in the first viewport and remove the supporting promise panel.
+
+### Fixed
+
+- Authentication mode, loading, validation, and account-creation feedback are readable by assistive technology and localized in English and Burmese.
+- The compact phone demo keeps its fill action and privacy guidance visible without repeating the credentials already shown in the form fields.
+
 ## [0.25.0.2] - 2026-08-20
 
 ### Added
