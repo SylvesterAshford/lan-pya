@@ -127,6 +127,7 @@ Login page:
 - Real roadmap/promise panel beside the form on wide screens
 - Form first with the supporting panel below it on tablets
 - Form only with a compact Lan Pya lockup on phones; do not stack the full supporting panel above or below the task
+- Keep the privacy helper left-aligned on narrow screens and align its lock icon to the first line when the copy wraps
 - Specific recoverable errors for credentials, provider outage, confirmation email, and generic service failure
 
 Keep the page light, quiet, and fast. Use uploaded production assets where appropriate. Do not use stock photos or invent testimonials and metrics.
@@ -170,6 +171,7 @@ Build Home to answer one question: “What should I do next?”
 Place the active mission or next milestone first with one dominant CTA. Then include:
 - Current path and current stage
 - Resume point for interrupted work
+- A Continue mission action that opens the Missions climb centered on the learner's current position; the current stop then enters the runner
 - Weekly progress without punitive streak language
 - Full path-scoped level meter with XP and evidence gates
 - Nearby opportunity deadline

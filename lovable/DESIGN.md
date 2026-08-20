@@ -221,6 +221,7 @@ Required behavior:
 - Two-column composition on wide screens, with the roadmap/promise panel beside the form
 - Tablet puts the form first and retains the supporting panel below it
 - Phone shows the form with a compact Lan Pya lockup and omits the supporting panel
+- On narrow screens, keep the privacy helper left-aligned and align its lock to the first line when the copy wraps
 - Email/password and Google
 - Prepared demo-account affordance
 - Persistent labels and specific recovery messages
@@ -228,6 +229,7 @@ Required behavior:
 ### Home
 
 - Put today's next action first
+- “Continue mission” opens the Missions climb at the learner's current position; the current stop then enters the mission runner
 - Show current climb/mission, path level, opportunity signal, proof, and recent change
 - Avoid a mosaic of equally important cards
 - Use one primary action in the initial viewport

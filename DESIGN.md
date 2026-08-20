@@ -41,7 +41,9 @@ Where this file and those documents disagree, this file wins and the disagreemen
 
 ### Primary navigation
 
-1. **Home:** resume work, current progress, next milestones, nearby deadlines, and the tutor.
+1. **Home:** resume work, current progress, next milestones, nearby deadlines,
+   and the tutor. Its Continue mission action opens Missions at the learner's
+   current position; the current stop then owns entry into the mission runner.
 2. **Roadmaps:** active path first, browse all paths on demand, then the connected roadmap canvas.
 3. **Missions:** the work. Active mission tagged with the stage it belongs to, and completed missions with their verification date.
 4. **Opportunities:** deadline-led feed with compact provenance and readiness detail.
@@ -476,7 +478,9 @@ The sign-in page keeps its two-panel composition on desktop. At tablet widths,
 the form comes first and the supporting promise panel follows it. On phones,
 the promise panel is removed and a compact Lan Pya lockup stays with the form,
 so signing in remains the first task and the first viewport does not become a
-stacked marketing screen.
+stacked marketing screen. The privacy helper stays left-aligned on narrow
+screens, with its lock aligned to the first line of copy rather than the
+vertical centre of a wrapped paragraph.
 
 ## Accessibility
 

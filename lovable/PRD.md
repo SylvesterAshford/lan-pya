@@ -4,7 +4,7 @@ Status: Lovable rebuild handoff
 Prepared: 2026-08-20
 Product promise: **From Map to Proof**
 
-> Version note: this handoff reflects v0.25.0.1. Verify the deployed app before declaring visual or behavioral parity.
+> Version note: this handoff reflects v0.25.0.2. Verify the deployed app before declaring visual or behavioral parity.
 
 ## 1. Product summary
 
@@ -101,6 +101,7 @@ Show:
 - Active path and current stage
 - One dominant next action
 - Current mission or resume point
+- “Continue mission” opens Missions at the learner's current position before the current stop enters the runner
 - Weekly progress without punitive streak language
 - Path-scoped level and evidence gates
 - Nearby opportunity deadline
