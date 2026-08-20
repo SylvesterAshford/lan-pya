@@ -121,6 +121,10 @@ The Google OAuth path requires a manual staging check because browser automation
 - `supabase/functions/process-evaluations` — deterministic evidence checker
 - `supabase/seed.sql` — versioned curriculum and labeled example opportunities
 - `tests` and `supabase/tests` — unit, E2E, accessibility, and RLS coverage
+- `CHANGELOG.md` — learner-facing release history and known issues
 - `PRODUCT.md` — product purpose, constraints, principles, and brand commitments
+- `PRODUCT_PLAN.md` — product strategy, MVP scope, trust model, and rollout plan
 - `DESIGN.md` — learner information architecture, visual system, and accessibility rules
+- `TODOS.md` — prioritized product and design debt with completion history
+- `lovable/` — rebuild handoff with the PRD, design specification, and staged Lovable prompts
 - `docs/product/LAN_PYA_CAREER_QUEST_PLAN.md` — detailed personalization and career-path architecture

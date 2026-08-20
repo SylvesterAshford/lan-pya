@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useTranslations } from "next-intl";
 import { createClient } from "@/lib/supabase/client";
 import { isGoogleProviderEnabled } from "@/lib/supabase/auth-providers";
+import { Button } from "@/components/ui/button";
 
 export function GoogleSignIn({ locale }: { locale: string }) {
   const t = useTranslations("Auth");
@@ -39,10 +40,10 @@ export function GoogleSignIn({ locale }: { locale: string }) {
 
   return (
     <div className="auth-action-stack">
-      <button className="button primary full" type="button" onClick={signIn} disabled={busy}>
+      <Button className="h-11 w-full text-base" variant="outline" type="button" onClick={signIn} disabled={busy}>
         <span className="google-mark" aria-hidden>G</span>
-        {busy ? "…" : t("google")}
-      </button>
+        {busy ? t("working") : t("google")}
+      </Button>
       {notice && <p className="provider-note" role="status">{notice}</p>}
       {error && <p className="form-error" role="alert">{error}</p>}
     </div>

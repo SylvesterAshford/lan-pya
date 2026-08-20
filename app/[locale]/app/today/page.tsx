@@ -112,7 +112,7 @@ export default async function TodayPage({ params }: { params: Promise<{ locale: 
         missionBrief={currentStage ? currentStage.proof : null}
         stageIndex={currentStage ? currentStage.order : 0}
         stageTotal={roadmap.length}
-        missionHref="/app/build"
+        missionHref="/app/missions"
         pointsAward={100}
         levelRank={progress.level.rank}
         labels={{ ...c.home.climb, subtitle: c.home.subtitle }}

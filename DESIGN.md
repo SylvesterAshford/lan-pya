@@ -26,14 +26,14 @@ Where this file and those documents disagree, this file wins and the disagreemen
 
 ### Safe choices
 
-- Compact 60px top navigation on desktop, four-item bottom navigation on mobile.
+- Collapsible left sidebar on desktop and a single drawer opened from the compact top bar on phones.
 - Left-aligned content, persistent labels, concise lists, one dominant action per screen.
-- Teal for navigation, progress, links, and active learning states.
+- Navy for primary actions, links, navigation, and selection; teal for progress, verified work, and completed roadmap states.
 - Text labels for seeded, live, verified, pending, and preview states.
 
 ### Deliberate risks
 
-- **Five primary destinations:** Home, Roadmaps, Missions, Opportunities, Me. Missions were contextual under Roadmaps until 2026-08-17; learners could not find the work, so it earned a destination. Portfolio, privacy, language, and account controls still live under Me.
+- **Five primary destinations:** Home, Roadmaps, Missions, Portfolio, Opportunities. Missions were contextual under Roadmaps until 2026-08-17; learners could not find the work, so it earned a destination. Portfolio later took the slot previously held by Me; profile, careers, privacy, language, and account controls now open from the account row.
 - **A real node graph, not a card grid.** Connected SVG nodes with a dotted spine carry the core experience. No percentage bar substitutes for it.
 - **Two palettes that never touch.** Canvas amber is a node fill on the graph. Chrome amber is a small urgency pill. Mixing them destroys both meanings.
 
@@ -41,13 +41,19 @@ Where this file and those documents disagree, this file wins and the disagreemen
 
 ### Primary navigation
 
-1. **Home:** resume work, current progress, next milestones, nearby deadlines, and the tutor.
+1. **Home:** resume work, current progress, next milestones, nearby deadlines,
+   and the tutor. Its Continue mission action opens Missions at the learner's
+   current position; the current stop then owns entry into the mission runner.
 2. **Roadmaps:** active path first, browse all paths on demand, then the connected roadmap canvas.
 3. **Missions:** the work. Active mission tagged with the stage it belongs to, and completed missions with their verification date.
-4. **Opportunities:** deadline-led feed with compact provenance and readiness detail.
-5. **Me:** career profile, personalization, portfolio proof, language, privacy, account controls.
+4. **Portfolio:** verified work, provenance, résumé drafting, and proof sharing.
+5. **Opportunities:** deadline-led feed with compact provenance and readiness detail.
+
+Career profile, path switching, language, privacy, and account controls open from the account row rather than taking a primary navigation slot.
 
 ### Path tabs
+
+**Retired pattern.** The three-tab model below was removed after it still left Missions buried inside Roadmaps. Missions is now a primary destination, and the scripted tutor opens from its floating launcher. The table remains only as historical context for that decision.
 
 A path is not one page. Opening a path from the catalog lands on three tabs, matching the split roadmap.sh uses on every one of its path pages:
 
@@ -61,9 +67,9 @@ Missions previously lived inside Roadmaps at `/app/build`, which is why learners
 
 ### Contextual flows
 
-- A roadmap milestone opens its mission in the Missions tab.
+- A roadmap milestone opens its step brief in a dialog; its current-state action leads into the matching mission.
 - Mission brief, deliverables, proof requirements, submission, status, feedback, and revision form one linear workflow, presented as the mission runner below.
-- Verified missions become portfolio records automatically; sharing and revocation live under Me.
+- Verified missions become portfolio records automatically; sharing and revocation live in Portfolio, while account privacy controls live from the profile row.
 - Reviewer and administrator links appear as compact role-specific utilities, not learner destinations.
 
 ## Typography
@@ -124,10 +130,15 @@ Two palettes. They serve different surfaces and must not appear in the same comp
 | Token | Hex | Use |
 |---|---|---|
 | `--canvas` | `#F8FAFC` | Application background |
-| `--surface` | `#FFFFFF` | Cards, panels, top navigation |
+| `--surface` | `#FFFFFF` | Cards, panels, sidebar, mobile drawer |
 | `--surface-sunk` | `#F3F6F5` | Toolbars, inset rows, progress tracks |
+| `--navy-900` | `#080D18` | Strong primary text and action hover |
+| `--navy-700` | `#111827` | Primary action, links, active navigation |
+| `--navy-500` | `#1F2B45` | Secondary navy emphasis |
+| `--navy-100` | `#E3E7EF` | Selected and active-navigation tint |
+| `--navy-050` | `#F3F5F9` | Soft primary-action hover surface |
 | `--teal-900` | `#04342C` | Headline text on tinted panels |
-| `--teal-700` | `#0F6E56` | Primary action, links, active nav, current position |
+| `--teal-700` | `#0F6E56` | Focus rings, local track, active learning |
 | `--teal-500` | `#1D9E75` | Progress fills, verified states |
 | `--teal-100` | `#E1F5EE` | Tinted panels, active nav background, chips |
 | `--teal-050` | `#F3FAF7` | Card fills, Myanmar-note background |
@@ -175,7 +186,7 @@ These five hues never appear in chrome: not on a button, chip, border, backgroun
 
 ### Color rules — non-negotiable
 
-1. **Teal means us, direction, progress.** Primary actions, the local track, active learning, completion.
+1. **Navy leads; teal proves progress.** Navy carries primary actions, links, navigation, and selection. Teal carries the local track, focus, progress, verified work, and completion.
 2. **Amber means attention and honesty.** Deadlines closing within 7 days, `Growing` status, heavy-data warnings. Amber never means good.
 3. **Purple means the global track.** Reserved. It appears only where the fork's global branch appears.
 4. **One accent per surface.** A screen is teal-led or amber-led, never both competing. The only exception is the fork, which requires teal and purple side by side.
@@ -197,11 +208,11 @@ These five hues never appear in chrome: not on a button, chip, border, backgroun
 ## Layout
 
 - **Approach:** Grid-disciplined application workspace.
-- **Desktop shell:** Sticky 60px top navigation. **The header inner width uses the same token as the content column below it.** A header on a wider track than its content leaves the brand mark floating left of everything it labels; at 1440px the 1100px header put the logo 116px left of an 820px content column.
-- **Header layout is flex, not a fixed track:** brand at natural width, navigation `flex: 1`, account actions pushed right with `margin-left: auto`. Link spacing then holds as the window narrows instead of the whole bar drifting. Below 860px the links hand off to the bottom navigation and the top row keeps only brand and account.
+- **Desktop shell:** Collapsible left sidebar with learner navigation, a separate Opportunities group, role-gated staff links, and the account row at its foot. The collapsed rail keeps its icons and accessible labels.
+- **Phone shell:** The slim top bar carries the brand and one menu trigger. The same sidebar content opens as the only mobile navigation drawer, so destinations are not duplicated in the tab order or accessibility tree.
 - **Primary screen content column: fluid, `clamp(820px, 78vw, 1280px)`.** A fixed 820px cap reads well at 1440px but strands the content in the middle of a wide monitor. It resolves to 820 at 1024px, 1123 at 1440px, and 1280 from 1920px up. The header shares the token, so brand and content stay aligned at every width. Originally specified as a flat 820px maximum: Home, Opportunities, Paths, and Portfolio are short-content screens. A 1100px column holding three list rows reads as abandoned; an 820px column reads as composed and gives a better line length. Only the roadmap canvas and reviewer/admin tables may exceed it.
 - **Pages end honestly.** Never pad a short screen with filler cards to fill the viewport.
-- **Mobile shell:** Compact top brand row plus fixed four-item bottom navigation; content reserves safe-area space.
+- **Mobile shell:** Compact top brand row plus one navigation drawer; content reserves safe-area space for the floating tutor launcher.
 - **Dashboard:** Two columns only when secondary content stays scannable; stack at 760px.
 - **Roadmap canvas:** 780px SVG canvas centered on desktop. **Mobile renders a narrower single-column geometry, not a scaled or scrolling copy of the desktop canvas.** Design Spec §3.3: "No pinch-zoom or free panning is ever required on mobile." Scaling the desktop viewBox down would render 13px node labels at roughly 6px, so the mobile canvas drops the left/right branches and shows stage nodes on the spine only, inside their phase bands; branch topics move into the step brief. The phase bands stay because they cost one line of vertical space and carry the most meaning per pixel on a phone. Vertical scroll only. The page body never scrolls horizontally at any width.
 - **Opportunities:** Single concise feed ordered by deadline. Filters scroll horizontally on mobile.
@@ -219,7 +230,7 @@ The 6px node radius against 12px cards is deliberate and load-bearing. It is wha
 
 ### Elevation
 
-**Borders first. No shadows on the canvas or on cards.** A single small offset shadow is permitted only for overlays, bottom sheets, and the mobile bottom navigation.
+**Borders first. No shadows on the canvas or on cards.** A single small offset shadow is permitted only for overlays, bottom sheets, and the mobile navigation drawer.
 
 ## The Roadmap Canvas
 
@@ -393,7 +404,7 @@ Five marks, each with **its own silhouette** — a wide pentagon, a cut-corner b
 
 ## Components
 
-- **Primary action:** `--teal-700` background, white text, 8px radius. One per viewport.
+- **Primary action:** `--navy-700` background, white text, 8px radius. One per viewport.
 - **Secondary action:** `--surface` background, `--ink` text, `--hairline` border.
 - **Cards:** Only where grouping needs a boundary. Prefer rows, sections, and whitespace over grids of equal cards. Never begin a primary screen with an equal three-column card grid.
 - **Chips:** `--t-label`, tinted background with same-family dark text. Variants: category, status, cost, data weight, language, deadline.
@@ -424,7 +435,7 @@ now eight, and these five carry the structure:
 |---|---|---|
 | Phone | **480px** | One column. Cards give up their side-by-side arrangement. |
 | Wide phone / small tablet | **700px** | Content that needs two dimensions gets them. The roadmap draws topic nodes either side of the spine from here up, and the mission map's stop cards stop being sized for a tablet. |
-| App shell | **860px** | Chrome, not content: the sidebar hands off to the bottom bar and dialogs become bottom sheets. Load-bearing and long-standing; do not move it to tidy the list. |
+| App shell | **860px** | Chrome, not content: the persistent sidebar hands off to a top-bar drawer trigger and dialogs become bottom sheets. Load-bearing and long-standing; do not move it to tidy the list. |
 | Wide | **920px** | Panels that hold two columns of their own. |
 | Desktop | **1300px** | The mission map takes its landscape geometry. |
 
@@ -471,6 +482,52 @@ Every rule that is about honesty rather than density still holds on this page:
 the palette does not change, contrast minimums do not change, controls keep
 their 44px target, and `prefers-reduced-motion` stops the cycle on its first
 word rather than reducing its speed.
+
+The sign-in page keeps its two-panel composition on desktop. The panels are
+equal viewport-height halves with matching centred content rails; utility
+controls do not participate in the form's vertical centring. At tablet and
+phone widths the supporting panel is removed rather than stacked below a full
+authentication screen. A compact Lan Pya lockup stays with the form, so signing
+in remains the only task. The privacy helper stays left-aligned on narrow
+screens, with its lock aligned to the first line of copy rather than the
+vertical centre of a wrapped paragraph.
+
+### Sign-in — shadcn login-02 (2026-08-20)
+
+The sign-in surface adopts the official shadcn `login-02` composition and form
+primitives, not shadcn's default visual identity. `Button`, `Input`, `Label`,
+`Separator`, and `Field` provide the form structure and states; Lan Pya's
+incumbent navy, teal, canvas, surface, hairline, type, spacing, and radius tokens
+remain authoritative. Tailwind supplies its theme and utility layers, while
+preflight is deliberately excluded so introducing shadcn cannot reset or
+silently restyle the established application.
+
+Desktop is a balanced split: the task-focused form occupies the left panel and
+the promise, privacy, and product story occupy the right. Each side uses the
+same 480px centred rail and stays exactly one viewport tall; if the form cannot
+fit, only its panel scrolls. The right panel uses one winding Map to Proof route
+from Choose through Build and Prove to Connect, with restrained terrain behind
+it. Repeated contour wallpaper, target rings, and detached feature pills do not
+belong on this surface. At the tablet handoff the page becomes form-only,
+retaining the compact Lan Pya lockup, language control, and privacy helper.
+
+Email authentication exposes sign-in and account creation as a two-state mode
+control, alongside Google sign-in when the provider is available. Both mode
+buttons, provider action, inputs, submit action, demo action, language links,
+and back link keep a minimum 44px interactive height. Labels remain persistent,
+keyboard focus stays visible, and pressed, disabled, invalid, and busy states
+must remain perceivable without relying on colour alone.
+
+Errors, provider availability, progress labels, email-confirmation notices, and
+demo-ready feedback use the selected locale and the established `Auth` message
+catalog. Status and error copy is announced through the appropriate live role;
+raw provider errors never replace learner-facing localized recovery text.
+
+The phone demo is intentionally compact: its heading and fill action remain,
+but the explanatory body and credential preview are hidden because the same
+values are inserted into the visible fields. The demo action and the privacy
+helper never disappear; compacting this surface may remove redundant preview,
+not consent or the learner's route into the prepared account.
 
 ## Accessibility
 
@@ -587,3 +644,6 @@ word rather than reducing its speed.
 | 2026-08-18 | **Organisation and verification read without expanding a row** | Who is behind a listing and when it was last checked are the two facts that decide whether it is worth trusting, so neither should cost a click. |
 | 2026-08-18 | **Map furniture scaled to the terrain** | Badges, cards and the traveller were sized for a compressed scene and dominated the full-length one. The panel is capped to 660px, which scales the whole scene rather than stretching the terrain. |
 | 2026-08-19 | **Roadmap step brief became a dialog** | The canvas and the brief shared one row, and neither fitted: a 780px graph and a 320px column of two-word lines. The brief is a response to a click, not ambient context. As a dialog it frees the full content width for the map, and the page cap drops from 1200px to 920px because there is no second column to reserve. Modal on desktop, bottom sheet on phones — the same component, since the brief is the only place a phone can read the branch skills the narrow canvas geometry omits. |
+| 2026-08-20 | **Sign-in leads with the form on narrow screens** | Stacking the desktop promise panel above the form turned a focused authentication page into a full marketing screen on mobile. Tablets now put the form first and retain the supporting panel afterward; phones hide the panel and keep a compact Lan Pya lockup beside the task. |
+| 2026-08-20 | **Official shadcn login-02 structure adopted without replacing Lan Pya's visual system** | The shadcn form, field, input, label, separator, and button primitives provide a coherent accessible authentication foundation. They are themed through the incumbent tokens, Tailwind preflight stays excluded, all interactive authentication controls keep a 44px minimum height, and localized status and recovery behavior remains product-owned. On phones, redundant demo credentials are hidden while the demo action and privacy guidance remain visible. |
+| 2026-08-20 | **Sign-in is a centred 50/50 desktop diptych and form-only below 920px** | The old grid was numerically equal but looked asymmetric because the form and promise used different rails, utility chrome shifted the form, and a tall form stretched the right panel into empty space. Both desktop panels now stay one viewport tall with centred 480px rails; the form panel alone may scroll. The supporting panel is removed at tablet sizes instead of becoming a second screen, and its generic contour wallpaper is replaced by one authored Map to Proof route. |

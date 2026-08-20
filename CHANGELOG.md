@@ -1,5 +1,42 @@
 # Changelog
 
+## [0.25.0.4] - 2026-08-20
+
+### Changed
+
+- Sign-in now uses a true centred 50/50 desktop layout, while tablets and phones keep a focused form-only screen.
+- The dark panel now shows one authored Map to Proof route with sign-style stage labels, a clear summit flag, and quieter terrain instead of generic contour wallpaper.
+- The prepared demo account is a compact secondary action so the primary sign-in path stays centred and readable.
+
+### Fixed
+
+- English and Burmese route labels no longer collide with the road, nodes, or terrain, and Burmese privacy guidance gets a roomier localized layout.
+- Tall forms scroll only inside the form panel instead of stretching the full page and leaving empty space on the brand side.
+
+## [0.25.0.3] - 2026-08-20
+
+### Changed
+
+- Sign-in now uses the official shadcn `login-02` structure while keeping Lan Pya's existing navy, teal, typography, spacing, and bilingual product voice.
+- Desktop gives the form and roadmap promise equal space; phones keep the full authentication task in the first viewport and remove the supporting promise panel.
+
+### Fixed
+
+- Authentication mode, loading, validation, and account-creation feedback are readable by assistive technology and localized in English and Burmese.
+- The compact phone demo keeps its fill action and privacy guidance visible without repeating the credentials already shown in the form fields.
+
+## [0.25.0.2] - 2026-08-20
+
+### Added
+
+- A Lovable handoff pack with the product requirements, design specification, and staged build prompts for recreating Lan Pya without losing its product logic.
+
+### Fixed
+
+- Phones now open sign-in with the form and a compact Lan Pya identity instead of stacking the full promise panel above the task. Tablets put the form first and retain the supporting panel afterward; desktop keeps its two-panel composition.
+- The privacy lock now stays aligned with the first line of its explanatory copy on narrow sign-in screens.
+- “Continue mission” on Home now opens the mission map at the learner’s current position instead of bypassing it for the mission runner.
+
 ## [0.25.0.0] - 2026-08-20
 
 ### Changed
