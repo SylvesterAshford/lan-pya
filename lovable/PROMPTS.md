@@ -124,7 +124,9 @@ Login page:
 - Email/password sign in and account creation
 - Google sign in
 - Prepared demo-account helper
-- Real roadmap preview beside the form on wide screens and below it on phones
+- Real roadmap/promise panel beside the form on wide screens
+- Form first with the supporting panel below it on tablets
+- Form only with a compact Lan Pya lockup on phones; do not stack the full supporting panel above or below the task
 - Specific recoverable errors for credentials, provider outage, confirmation email, and generic service failure
 
 Keep the page light, quiet, and fast. Use uploaded production assets where appropriate. Do not use stock photos or invent testimonials and metrics.
@@ -397,7 +399,7 @@ Run and report:
 - production build
 - client-bundle secret scan
 
-Produce a table with Requirement, Evidence, Status, and Remaining risk. Mark anything mocked, seeded, preview, inconclusive, or unverified honestly. Do not invent parity with live v0.25: compare against the live app and resolve the repository version mismatch first.
+Produce a table with Requirement, Evidence, Status, and Remaining risk. Mark anything mocked, seeded, preview, inconclusive, or unverified honestly. Do not infer parity from screenshots: compare the implementation against the deployed app and the repository's current `VERSION` and `CHANGELOG.md`.
 ```
 
 ## Repair prompt — when Lovable over-designs a screen

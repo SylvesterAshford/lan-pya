@@ -1,7 +1,7 @@
 # Lan Pya Design Specification for Lovable
 
 Status: implementation brief
-Source of truth: the repository's root `DESIGN.md`, with the product owner's v0.25 responsive notes added as an explicit target
+Source of truth: the repository's root `DESIGN.md`, including the v0.25 responsive rules
 Core idea: **From Map to Proof**
 
 ## 1. Design intent
@@ -142,6 +142,7 @@ Rules:
 - Fixed five-item bottom navigation with safe-area padding
 - Content reserves room for bottom navigation and tutor launcher
 - No hidden desktop navigation in the accessibility tree
+- On sign-in, show the form first with a compact Lan Pya lockup and omit the supporting promise panel
 
 ### Tablet and roadmap exception
 
@@ -152,7 +153,7 @@ The owner-selected v0.25 approach uses two roadmap geometries, not a third table
 - On tablet, slight horizontal scrolling is accepted to preserve fixed, legible labels.
 - Do not shrink labels to eliminate that scroll unless the owner deliberately reverses the trade-off.
 
-The owner reports that layout breakpoints moved from 17 ad hoc values to 8 documented values. The retained exceptions are 560px, 640px, and 1080px. The checked-out stylesheet predates that report, so inspect the live v0.25 CSS before encoding the exact eight values in a rebuild.
+Layout breakpoints moved from 17 ad hoc values to 8 documented values. The retained exceptions are 560px, 640px, and 1080px. Use the root `DESIGN.md` as the source of truth before adding or changing a breakpoint.
 
 ## 7. Roadmap canvas
 
@@ -217,8 +218,9 @@ Required behavior:
 
 ### Login
 
-- Two-column composition on wide screens; stacked on phone
-- Authentication form plus a real roadmap preview
+- Two-column composition on wide screens, with the roadmap/promise panel beside the form
+- Tablet puts the form first and retains the supporting panel below it
+- Phone shows the form with a compact Lan Pya lockup and omits the supporting panel
 - Email/password and Google
 - Prepared demo-account affordance
 - Persistent labels and specific recovery messages

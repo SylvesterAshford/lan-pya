@@ -123,4 +123,5 @@ The Google OAuth path requires a manual staging check because browser automation
 - `tests` and `supabase/tests` — unit, E2E, accessibility, and RLS coverage
 - `PRODUCT.md` — product purpose, constraints, principles, and brand commitments
 - `DESIGN.md` — learner information architecture, visual system, and accessibility rules
+- `lovable/` — rebuild handoff with the PRD, design specification, and staged Lovable prompts
 - `docs/product/LAN_PYA_CAREER_QUEST_PLAN.md` — detailed personalization and career-path architecture

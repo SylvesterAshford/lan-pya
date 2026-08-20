@@ -472,6 +472,12 @@ the palette does not change, contrast minimums do not change, controls keep
 their 44px target, and `prefers-reduced-motion` stops the cycle on its first
 word rather than reducing its speed.
 
+The sign-in page keeps its two-panel composition on desktop. At tablet widths,
+the form comes first and the supporting promise panel follows it. On phones,
+the promise panel is removed and a compact Lan Pya lockup stays with the form,
+so signing in remains the first task and the first viewport does not become a
+stacked marketing screen.
+
 ## Accessibility
 
 - Target WCAG 2.2 AA across learner, reviewer, and proof-sharing flows.
@@ -587,3 +593,4 @@ word rather than reducing its speed.
 | 2026-08-18 | **Organisation and verification read without expanding a row** | Who is behind a listing and when it was last checked are the two facts that decide whether it is worth trusting, so neither should cost a click. |
 | 2026-08-18 | **Map furniture scaled to the terrain** | Badges, cards and the traveller were sized for a compressed scene and dominated the full-length one. The panel is capped to 660px, which scales the whole scene rather than stretching the terrain. |
 | 2026-08-19 | **Roadmap step brief became a dialog** | The canvas and the brief shared one row, and neither fitted: a 780px graph and a 320px column of two-word lines. The brief is a response to a click, not ambient context. As a dialog it frees the full content width for the map, and the page cap drops from 1200px to 920px because there is no second column to reserve. Modal on desktop, bottom sheet on phones — the same component, since the brief is the only place a phone can read the branch skills the narrow canvas geometry omits. |
+| 2026-08-20 | **Sign-in leads with the form on narrow screens** | Stacking the desktop promise panel above the form turned a focused authentication page into a full marketing screen on mobile. Tablets now put the form first and retain the supporting panel afterward; phones hide the panel and keep a compact Lan Pya lockup beside the task. |

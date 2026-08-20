@@ -4,7 +4,7 @@ Status: Lovable rebuild handoff
 Prepared: 2026-08-20
 Product promise: **From Map to Proof**
 
-> Version note: the product owner reports v0.25.0.0 as live. The checked-out repository currently reports v0.19.1.0 in `VERSION` and `CHANGELOG.md`. Treat the owner's v0.25.0.0 behavior notes in this document as the target and verify the live app before declaring parity.
+> Version note: this handoff reflects v0.25.0.1. Verify the deployed app before declaring visual or behavioral parity.
 
 ## 1. Product summary
 
