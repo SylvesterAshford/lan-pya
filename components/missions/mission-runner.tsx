@@ -194,8 +194,7 @@ export function MissionRunner({
               userId={userId}
               missionKey={brief.missionKey}
               title={brief.title}
-              repositoryLabel={brief.repositoryLabel}
-              deploymentLabel={brief.deploymentLabel}
+              fields={brief.fields}
               reflectionPlaceholder={brief.reflectionPlaceholder}
             />
           </>
