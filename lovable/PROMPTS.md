@@ -47,7 +47,7 @@ Experience rules:
 - One useful next action comes before secondary information.
 - English and Burmese have identical functional coverage.
 - Mobile and low-bandwidth use are first-class.
-- Desktop uses a collapsible sidebar; phones use five bottom destinations.
+- Desktop uses a collapsible sidebar; phones open the same five destinations from one top-bar drawer.
 - Tablet and desktop use the full branching roadmap. Slight horizontal scrolling inside the tablet map is accepted so labels stay legible. Do not shrink roadmap text to remove it.
 
 Before implementing a prompt, summarize which routes, components, tables, policies, and tests you will touch. After implementing, report what works, what remains mocked, and any requirement you could not verify.
@@ -124,9 +124,9 @@ Login page:
 - Email/password sign in and account creation
 - Google sign in
 - Prepared demo-account helper
-- Real roadmap/promise panel beside the form on wide screens
-- Form first with the supporting panel below it on tablets
-- Form only with a compact Lan Pya lockup on phones; do not stack the full supporting panel above or below the task
+- True centred 50/50 split on wide screens, with matching 480px content rails and the form panel on the left
+- One authored Choose → Build → Prove → Connect route on the dark panel, using restrained terrain, sign-style labels, and a summit flag
+- Form only with a compact Lan Pya lockup below 920px; do not stack the supporting panel above or below the task
 - Keep the privacy helper left-aligned on narrow screens and align its lock icon to the first line when the copy wraps
 - Specific recoverable errors for credentials, provider outage, confirmation email, and generic service failure
 
@@ -141,10 +141,10 @@ Test keyboard order, labels, error association, 320px wrapping, Burmese copy, an
 Build the authenticated shell and onboarding.
 
 Shell:
-- Desktop collapsible sidebar with Home, Roadmaps, Missions, Opportunities, Me
-- Phone slim top brand row plus fixed five-item bottom navigation
+- Desktop collapsible sidebar with Home, Roadmaps, Missions, Portfolio, and Opportunities
+- Phone slim top brand row with one trigger for the same five-destination navigation drawer
 - Role-gated Review and Admin utilities outside the learner destination group
-- Account, language, and sign-out controls
+- Account row leading to profile, Career Compass, path switching, language, privacy, and sign-out controls
 - Active navigation derived from the current route
 - Do not render a hidden duplicate navigation tree
 - Floating tutor launcher labelled Preview
@@ -366,7 +366,7 @@ Check every route for:
 - No gradients, glow, glass, stock app photography, emoji, or mixed icon families
 - Equivalent English/Burmese hierarchy
 - 44px controls, visible focus, reduced motion, and non-color status cues
-- Correct sidebar/bottom navigation handoff
+- Correct desktop-sidebar/mobile-drawer handoff
 - No duplicate hidden navigation
 - Correct phone, tablet, and desktop roadmap behavior
 

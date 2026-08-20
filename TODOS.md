@@ -17,22 +17,6 @@ Design debt deferred from the 2026-08-16 design review. Everything here was foun
 **Context:** `Milestone` in `lib/domain/types.ts` has no branch concept. Needs a `track_branches` table, a `learner_track_choice` record, RLS, and an API route.
 **Depends on:** Roadmap canvas rebuild landing first.
 
-### Opportunity filter chips
-
-**What:** Horizontal filter row — All / Scholarships / Fellowships / Hackathons / Events / Webinars / Jobs — per Design Spec §3.5.
-
-**Why:** The feed currently shows every opportunity with no way to narrow. Works at three listings; breaks at thirty.
-**Pros:** Specified, straightforward, fills Opportunities dead space with function.
-**Cons:** Pointless until the opportunity count grows.
-
-### Milestone detail as a bottom sheet
-
-**What:** Replace the persistent side panel with the bottom sheet Design Spec §3.4 specifies.
-
-**Why:** One pattern on mobile and desktop instead of two. The current desktop side panel and mobile stacked panel are different components solving the same problem.
-**Pros:** Removes a component. Matches the spec.
-**Cons:** Loses the always-visible detail that makes the desktop canvas feel like a workspace. Genuinely arguable — the current side panel may be better than the spec on desktop.
-
 ### XP weighting table is not implemented
 
 **What:** Award the founder plan's per-action XP values rather than a flat 100 for every verified mission.
@@ -106,3 +90,27 @@ Design debt deferred from the 2026-08-16 design review. Everything here was foun
 **Why:** Two checked-in files now disagree about the approved palette. DESIGN.md records the conflict, but the source should be reconciled so the next person does not have to rediscover it.
 **Pros:** Ten-minute fix.
 **Cons:** Requires the founder to confirm which values are actually approved.
+
+---
+
+## Completed
+
+### Opportunity filter chips
+
+**What:** Horizontal filter row — All / Scholarships / Fellowships / Hackathons / Events / Webinars / Jobs — per Design Spec §3.5.
+
+**Why:** The feed currently shows every opportunity with no way to narrow. Works at three listings; breaks at thirty.
+**Pros:** Specified, straightforward, fills Opportunities dead space with function.
+**Cons:** Pointless until the opportunity count grows.
+
+**Completed:** v0.12.0.0 (2026-08-17)
+
+### Milestone detail as a bottom sheet
+
+**What:** Replace the persistent side panel with the bottom sheet Design Spec §3.4 specifies.
+
+**Why:** One pattern on mobile and desktop instead of two. The current desktop side panel and mobile stacked panel are different components solving the same problem.
+**Pros:** Removes a component. Matches the spec.
+**Cons:** Loses the always-visible detail that makes the desktop canvas feel like a workspace. Genuinely arguable — the current side panel may be better than the spec on desktop.
+
+**Completed:** v0.20.0.0 (2026-08-19)

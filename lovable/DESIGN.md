@@ -73,8 +73,13 @@ English headings use slightly negative tracking; labels use `0.08em`. Burmese us
 | Canvas | `#F8FAFC` | App background |
 | Surface | `#FFFFFF` | Panels, cards, navigation |
 | Surface sunk | `#F3F6F5` | Toolbars and progress tracks |
+| Navy 900 | `#080D18` | Strong primary text and action hover |
+| Navy 700 | `#111827` | Primary action, links, active navigation |
+| Navy 500 | `#1F2B45` | Secondary navy emphasis |
+| Navy 100 | `#E3E7EF` | Selected and active-navigation tint |
+| Navy 050 | `#F3F5F9` | Soft primary-action hover surface |
 | Teal 900 | `#04342C` | Dark text on teal tints |
-| Teal 700 | `#0F6E56` | Primary action, links, active navigation |
+| Teal 700 | `#0F6E56` | Focus rings, local track, active learning |
 | Teal 500 | `#1D9E75` | Progress and verified states |
 | Teal 100 | `#E1F5EE` | Active/tinted panels |
 | Teal 050 | `#F3FAF7` | Soft local note and selected path fill |
@@ -105,7 +110,7 @@ English headings use slightly negative tracking; labels use `0.08em`. Burmese us
 
 Rules:
 
-- Teal means Lan Pya, direction, progress, and verified completion.
+- Navy carries primary actions, links, navigation, and selection; teal carries the local track, focus, progress, and verified completion.
 - Amber means urgency or attention. It never means success.
 - Purple is reserved for the global branch.
 - Canvas amber never becomes a button or status color.
@@ -131,17 +136,17 @@ Rules:
 ### Desktop
 
 - Collapsible left sidebar
-- Five learner destinations: Home, Roadmaps, Missions, Opportunities, Me
+- Five learner destinations: Home, Roadmaps, Missions, Portfolio, Opportunities
 - Role utilities below the learner navigation
-- Account and language controls at the bottom
+- Account row at the bottom opens profile, Career Compass, path switching, language, and privacy controls
 - Main content uses `clamp(820px, 78vw, 1280px)` where the screen benefits from width
 
 ### Phone
 
-- Slim top row with brand and account/update utility
-- Fixed five-item bottom navigation with safe-area padding
-- Content reserves room for bottom navigation and tutor launcher
-- No hidden desktop navigation in the accessibility tree
+- Slim top row with brand and one menu trigger
+- The desktop sidebar content opens as the only mobile navigation drawer
+- Content reserves room for the floating tutor launcher
+- Do not render a second hidden navigation tree or bottom tab bar
 - On sign-in, show the form first with a compact Lan Pya lockup and omit the supporting promise panel
 
 ### Tablet and roadmap exception
@@ -218,9 +223,9 @@ Required behavior:
 
 ### Login
 
-- Two-column composition on wide screens, with the roadmap/promise panel beside the form
-- Tablet puts the form first and retains the supporting panel below it
-- Phone shows the form with a compact Lan Pya lockup and omits the supporting panel
+- Wide screens use a true centred 50/50 split, with matching 480px content rails and the form panel on the left
+- The dark panel shows one authored Choose → Build → Prove → Connect route with restrained terrain, sign-style labels, and a summit flag
+- Below 920px, show only the form with a compact Lan Pya lockup and omit the supporting panel
 - On narrow screens, keep the privacy helper left-aligned and align its lock to the first line when the copy wraps
 - Email/password and Google
 - Prepared demo-account affordance
@@ -276,7 +281,7 @@ Required behavior:
 
 ## 9. Core components
 
-- Primary button: teal 700, white text, 8px radius, 44px minimum height
+- Primary button: navy 700, white text, 8px radius, 44px minimum height
 - Secondary button: white, ink, hairline border
 - Status pill: text plus semantic tint; never color alone
 - Deadline chip: amber only at seven days or fewer

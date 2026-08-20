@@ -4,7 +4,7 @@ Status: Lovable rebuild handoff
 Prepared: 2026-08-20
 Product promise: **From Map to Proof**
 
-> Version note: this handoff reflects v0.25.0.2. Verify the deployed app before declaring visual or behavioral parity.
+> Version note: this handoff reflects v0.25.0.4. Verify the deployed app before declaring visual or behavioral parity.
 
 ## 1. Product summary
 
@@ -236,11 +236,11 @@ Default ordering is nearest deadline first. Deadlines within seven days use expl
 - Home
 - Roadmaps
 - Missions
+- Portfolio/proof
 - Opportunities
-- Me
+- Account row
   - Profile and Career Compass answers
   - Careers and path switching
-  - Portfolio/proof
   - Privacy and deletion
 
 ### Staff utilities
@@ -251,7 +251,7 @@ Default ordering is nearest deadline first. Deadlines within seven days use expl
 ## 7. Navigation rules
 
 - Desktop uses a collapsible sidebar with five learner destinations.
-- Phone uses a five-item bottom navigation and a compact top brand row.
+- Phone uses a compact top brand row with one trigger for the same five-destination navigation drawer.
 - Reviewer/admin links are visually secondary and role-gated.
 - The active state must match the current destination. Profile, Careers, and Privacy do not falsely highlight Portfolio.
 - Do not render hidden duplicate navigation that enters the keyboard or screen-reader order.
@@ -297,7 +297,7 @@ Important boundaries:
 
 ### Responsive behavior
 
-- Phone: compact geometry and bottom navigation
+- Phone: compact geometry and a top-bar navigation drawer
 - Tablet: full branching roadmap; slight horizontal map scrolling is accepted to keep labels legible under the owner-selected two-layout approach
 - Desktop: full graph and collapsible sidebar
 - Do not shrink roadmap labels below their fixed legible size
