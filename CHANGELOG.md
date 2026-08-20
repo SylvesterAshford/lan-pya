@@ -1,5 +1,18 @@
 # Changelog
 
+## [0.25.0.4] - 2026-08-20
+
+### Changed
+
+- Sign-in now uses a true centred 50/50 desktop layout, while tablets and phones keep a focused form-only screen.
+- The dark panel now shows one authored Map to Proof route with sign-style stage labels, a clear summit flag, and quieter terrain instead of generic contour wallpaper.
+- The prepared demo account is a compact secondary action so the primary sign-in path stays centred and readable.
+
+### Fixed
+
+- English and Burmese route labels no longer collide with the road, nodes, or terrain, and Burmese privacy guidance gets a roomier localized layout.
+- Tall forms scroll only inside the form panel instead of stretching the full page and leaving empty space on the brand side.
+
 ## [0.25.0.3] - 2026-08-20
 
 ### Changed
