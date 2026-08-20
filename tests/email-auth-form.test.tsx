@@ -1,4 +1,4 @@
-import { render, screen } from "@testing-library/react";
+import { fireEvent, render, screen } from "@testing-library/react";
 import { NextIntlClientProvider } from "next-intl";
 import { describe, expect, it, vi } from "vitest";
 import { DEMO_ACCOUNT, EmailAuthForm } from "@/components/auth/email-auth-form";
@@ -22,6 +22,7 @@ const messages = {
     demoBody: "Prepared product data.",
     fillDemo: "Fill demo email and password",
     demoReady: "Demo credentials are ready.",
+    accountError: "Your account could not be created.",
   },
 };
 
@@ -32,5 +33,20 @@ describe("EmailAuthForm", () => {
     expect(screen.getByLabelText("Email")).toHaveValue(DEMO_ACCOUNT.email);
     expect(screen.getByLabelText("Password")).toHaveValue(DEMO_ACCOUNT.password);
     expect(screen.getAllByRole("button", { name: "Sign in" })[1]).toBeEnabled();
+  });
+
+  it("exposes and updates the selected authentication mode", () => {
+    render(<NextIntlClientProvider locale="en" messages={messages}><EmailAuthForm locale="en" demoRequested={false} /></NextIntlClientProvider>);
+
+    const signIn = screen.getAllByRole("button", { name: "Sign in" })[0];
+    const createAccount = screen.getAllByRole("button", { name: "Create account" })[0];
+
+    expect(signIn).toHaveAttribute("aria-pressed", "true");
+    expect(createAccount).toHaveAttribute("aria-pressed", "false");
+
+    fireEvent.click(createAccount);
+
+    expect(signIn).toHaveAttribute("aria-pressed", "false");
+    expect(createAccount).toHaveAttribute("aria-pressed", "true");
   });
 });

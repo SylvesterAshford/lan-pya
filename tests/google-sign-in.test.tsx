@@ -11,6 +11,7 @@ describe("GoogleSignIn", () => {
         messages={{
           Auth: {
             google: "Continue with Google",
+            working: "Please wait…",
             providerUnavailable: "Google sign-in is not enabled yet.",
             error: "Sign-in could not start.",
           },

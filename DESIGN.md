@@ -482,6 +482,40 @@ stacked marketing screen. The privacy helper stays left-aligned on narrow
 screens, with its lock aligned to the first line of copy rather than the
 vertical centre of a wrapped paragraph.
 
+### Sign-in — shadcn login-02 (2026-08-20)
+
+The sign-in surface adopts the official shadcn `login-02` composition and form
+primitives, not shadcn's default visual identity. `Button`, `Input`, `Label`,
+`Separator`, and `Field` provide the form structure and states; Lan Pya's
+incumbent navy, teal, canvas, surface, hairline, type, spacing, and radius tokens
+remain authoritative. Tailwind supplies its theme and utility layers, while
+preflight is deliberately excluded so introducing shadcn cannot reset or
+silently restyle the established application.
+
+Desktop is a balanced split: the task-focused form occupies the left panel and
+the promise, privacy, and product story occupy the right. At the tablet handoff
+the form leads and the promise panel follows; on phones the handoff becomes
+form-only, retaining the compact Lan Pya lockup, language control, and privacy
+helper while removing the supporting promise panel from the flow.
+
+Email authentication exposes sign-in and account creation as a two-state mode
+control, alongside Google sign-in when the provider is available. Both mode
+buttons, provider action, inputs, submit action, demo action, language links,
+and back link keep a minimum 44px interactive height. Labels remain persistent,
+keyboard focus stays visible, and pressed, disabled, invalid, and busy states
+must remain perceivable without relying on colour alone.
+
+Errors, provider availability, progress labels, email-confirmation notices, and
+demo-ready feedback use the selected locale and the established `Auth` message
+catalog. Status and error copy is announced through the appropriate live role;
+raw provider errors never replace learner-facing localized recovery text.
+
+The phone demo is intentionally compact: its heading and fill action remain,
+but the explanatory body and credential preview are hidden because the same
+values are inserted into the visible fields. The demo action and the privacy
+helper never disappear; compacting this surface may remove redundant preview,
+not consent or the learner's route into the prepared account.
+
 ## Accessibility
 
 - Target WCAG 2.2 AA across learner, reviewer, and proof-sharing flows.
@@ -598,3 +632,4 @@ vertical centre of a wrapped paragraph.
 | 2026-08-18 | **Map furniture scaled to the terrain** | Badges, cards and the traveller were sized for a compressed scene and dominated the full-length one. The panel is capped to 660px, which scales the whole scene rather than stretching the terrain. |
 | 2026-08-19 | **Roadmap step brief became a dialog** | The canvas and the brief shared one row, and neither fitted: a 780px graph and a 320px column of two-word lines. The brief is a response to a click, not ambient context. As a dialog it frees the full content width for the map, and the page cap drops from 1200px to 920px because there is no second column to reserve. Modal on desktop, bottom sheet on phones — the same component, since the brief is the only place a phone can read the branch skills the narrow canvas geometry omits. |
 | 2026-08-20 | **Sign-in leads with the form on narrow screens** | Stacking the desktop promise panel above the form turned a focused authentication page into a full marketing screen on mobile. Tablets now put the form first and retain the supporting panel afterward; phones hide the panel and keep a compact Lan Pya lockup beside the task. |
+| 2026-08-20 | **Official shadcn login-02 structure adopted without replacing Lan Pya's visual system** | The shadcn form, field, input, label, separator, and button primitives provide a coherent accessible authentication foundation. They are themed through the incumbent tokens, Tailwind preflight stays excluded, all interactive authentication controls keep a 44px minimum height, and localized status and recovery behavior remains product-owned. On phones, redundant demo credentials are hidden while the demo action and privacy guidance remain visible. |

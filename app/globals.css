@@ -1,3 +1,11 @@
+@layer theme, base, components, utilities;
+@import "tailwindcss/theme.css" layer(theme);
+@import "tailwindcss/utilities.css" layer(utilities);
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+
+@custom-variant dark (&:is(.dark *));
+
 /* ============================================================
    DESIGN TOKENS — governed by DESIGN.md. Do not add values here
    without a matching Decisions Log entry.
@@ -236,6 +244,39 @@
      authenticated app — see DESIGN.md "Light-first". */
   --navy: #0f172a;
   --navy-2: #0a2135;
+  /* shadcn primitives inherit Lan Pya's established palette rather than
+     introducing the registry's neutral theme beside the product tokens. */
+  --background: var(--surface);
+  --foreground: var(--ink);
+  --card: var(--surface);
+  --card-foreground: var(--ink);
+  --popover: var(--surface);
+  --popover-foreground: var(--ink);
+  --primary: var(--navy-700);
+  --primary-foreground: var(--on-solid);
+  --secondary: var(--surface-sunk);
+  --secondary-foreground: var(--ink);
+  --muted-foreground: var(--muted-ink);
+  --accent: var(--navy-050);
+  --accent-foreground: var(--navy-900);
+  --destructive: var(--error-500);
+  --border: var(--hairline);
+  --input: var(--hairline);
+  --ring: var(--teal-700);
+  --chart-1: oklch(0.87 0 0);
+  --chart-2: oklch(0.556 0 0);
+  --chart-3: oklch(0.439 0 0);
+  --chart-4: oklch(0.371 0 0);
+  --chart-5: oklch(0.269 0 0);
+  --radius: 0.5rem;
+  --sidebar: var(--surface);
+  --sidebar-foreground: var(--ink);
+  --sidebar-primary: var(--navy-700);
+  --sidebar-primary-foreground: var(--on-solid);
+  --sidebar-accent: var(--navy-050);
+  --sidebar-accent-foreground: var(--navy-900);
+  --sidebar-border: var(--hairline);
+  --sidebar-ring: var(--teal-700);
 }
 
 *{
@@ -9256,7 +9297,6 @@ html[lang="my"] .mission-trail text { font-family: var(--font-my), sans-serif; }
 }
 html[lang="my"] .mission-trail figcaption { text-transform: none; letter-spacing: 0; }
 
-
 /* Trail stops are real targets: pointer, focus ring, and a lift on hover. */
 .trail-stop.is-link { cursor: pointer; }
 .trail-stop.is-link:focus-visible { outline: none; }
@@ -12245,7 +12285,7 @@ html[lang="my"] .passport-count dd{
    badly wrong once a draft was built: the builder grows past 1200px and the
    passport stretched with it, leaving a screen-tall slab of empty navy.
    Two rules fix it without giving up the matched edge.
-   
+
    A ceiling, so the card can grow to meet a short builder but never past the
    height its own contents deserve. And sticky, so when the builder is long the
    passport travels down with it instead of scrolling away — which is what a
@@ -13631,7 +13671,6 @@ html[lang="my"] .hero-copy h1{
   font-variant-numeric: tabular-nums;
 }
 
-
 .foot-legal{
   display: flex;
   flex-wrap: wrap;
@@ -14220,4 +14259,223 @@ html[lang="my"] .hero-copy h1{
    last of the slack rather than the trail. */
 @media (max-width: 480px){
   .map-card{ max-width: 46%; padding: 7px 8px; }
+}
+
+@theme inline {
+  --font-heading: "Plus Jakarta Sans", "Avenir Next", "Segoe UI", sans-serif;
+  --font-sans: "Plus Jakarta Sans", "Avenir Next", "Segoe UI", sans-serif;
+  --color-sidebar-ring: var(--sidebar-ring);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar: var(--sidebar);
+  --color-chart-5: var(--chart-5);
+  --color-chart-4: var(--chart-4);
+  --color-chart-3: var(--chart-3);
+  --color-chart-2: var(--chart-2);
+  --color-chart-1: var(--chart-1);
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-border: var(--border);
+  --color-destructive: var(--destructive);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent: var(--accent);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-muted: var(--surface-sunk);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary: var(--secondary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary: var(--primary);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--popover);
+  --color-card-foreground: var(--card-foreground);
+  --color-card: var(--card);
+  --color-foreground: var(--foreground);
+  --color-background: var(--background);
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.4);
+  --radius-2xl: calc(var(--radius) * 1.8);
+  --radius-3xl: calc(var(--radius) * 2.2);
+  --radius-4xl: calc(var(--radius) * 2.6);
+}
+
+/* ---- shadcn login-02, translated into Lan Pya's existing auth world ---- */
+.auth-shell-login02{
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+}
+
+.auth-form-panel-login02{
+  display: flex;
+  min-height: 100svh;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 0;
+  padding: 32px clamp(28px, 4vw, 64px);
+  background: var(--canvas);
+}
+
+.auth-login-brand-row{
+  display: flex;
+  width: 100%;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.auth-desktop-brand{ display: flex; }
+
+.auth-login-form-wrap{
+  display: grid;
+  width: min(100%, 448px);
+  flex: 1;
+  align-content: center;
+  justify-self: center;
+  margin: 0 auto;
+  padding: 32px 0 24px;
+}
+
+.auth-login-form-wrap > .auth-back{
+  width: max-content;
+  margin-bottom: 20px;
+}
+
+.auth-card-shadcn{
+  display: block;
+  width: 100%;
+}
+
+.auth-form-heading h1{
+  margin: 0;
+  color: var(--navy-900);
+  font-size: var(--t-h1);
+  line-height: var(--l-h1);
+}
+
+.auth-form-heading p{
+  max-width: 42ch;
+  margin-right: auto;
+  margin-left: auto;
+  color: var(--muted-ink);
+}
+
+.auth-action-stack{
+  display: grid;
+  gap: 8px;
+  margin: 0;
+}
+
+.auth-action-stack [data-slot="button"]{
+  color: var(--navy-900);
+  background: var(--surface);
+  border-color: var(--hairline);
+}
+
+.auth-action-stack [data-slot="button"]:hover{
+  color: var(--navy-900);
+  background: var(--navy-050);
+}
+
+.google-mark{
+  color: var(--navy-700);
+  background: var(--navy-050);
+  border-color: var(--hairline);
+}
+
+.auth-shadcn-separator [data-slot="separator"]{ background: var(--hairline); }
+.auth-shadcn-separator [data-slot="field-separator-content"]{ background: var(--canvas); }
+
+.auth-mode-switch{
+  display: flex;
+  gap: 4px;
+  padding: 4px;
+  background: var(--navy-050);
+  border: 1px solid var(--hairline);
+  border-radius: var(--r-control);
+}
+
+.auth-mode-switch [data-slot="button"]{
+  min-height: 44px;
+  color: var(--muted-ink);
+  background: transparent;
+  border: 0;
+  box-shadow: none;
+}
+
+.auth-mode-switch [data-variant="default"]{
+  color: var(--navy-900);
+  background: var(--surface);
+  box-shadow: 0 1px 2px rgb(15 23 42 / 0.08);
+}
+
+.email-auth-block{ gap: 16px; margin-top: 0; }
+.email-auth-form{ display: block; margin: 0; }
+.email-auth-form [data-slot="field-label"]{ color: var(--navy-900); font-size: var(--t-meta); }
+.email-auth-form [data-slot="input"]{ color: var(--ink); border-color: var(--hairline); }
+.email-auth-form [data-slot="input"]:hover{ border-color: var(--navy-500); }
+.email-auth-form [data-slot="input"]:focus-visible{ border-color: var(--teal-700); }
+.email-auth-form [data-slot="button"]{ background: var(--navy-700); }
+.email-auth-form [data-slot="button"]:hover{ background: var(--navy-900); }
+
+.auth-demo-callout{
+  gap: 10px;
+  padding: 16px 0 0;
+  background: transparent;
+  border: 0;
+  border-top: 1px solid var(--hairline);
+  border-radius: 0;
+  box-shadow: none;
+}
+
+.auth-demo-callout:hover{ background: transparent; border-color: var(--hairline); box-shadow: none; transform: none; }
+.auth-demo-callout [data-slot="button"]{ color: var(--navy-900); background: var(--surface); border-color: var(--hairline); }
+.auth-demo-callout [data-slot="button"]:hover{ background: var(--navy-050); }
+
+.auth-card-shadcn .privacy-copy{
+  align-items: flex-start;
+  justify-content: flex-start;
+  gap: 8px;
+  padding-top: 16px;
+  margin: 0;
+  color: var(--muted-ink);
+  font-size: var(--t-meta);
+  line-height: 1.5;
+  text-align: left;
+  border-top: 1px solid var(--hairline);
+}
+
+.auth-card-shadcn .privacy-copy svg{ margin-top: 2px; }
+
+.auth-brand-panel-login02{
+  min-height: 100svh;
+  align-content: center;
+}
+
+@media (max-width: 920px){
+  .auth-shell-login02{ grid-template-columns: minmax(0, 1fr); }
+  .auth-form-panel-login02{
+    min-height: 100svh;
+    padding: max(24px, env(safe-area-inset-top)) 20px 44px;
+  }
+  .auth-desktop-brand{ display: none; }
+  .auth-login-brand-row .auth-mobile-brand{ width: auto; min-height: 44px; }
+  .auth-login-form-wrap{ padding-top: 24px; }
+  .auth-brand-panel-login02{ min-height: auto; }
+}
+
+@media (max-width: 640px){
+  .auth-form-panel-login02{ padding-right: 16px; padding-left: 16px; }
+  .auth-login-form-wrap{ width: 100%; padding-top: 10px; }
+  .auth-login-form-wrap > .auth-back{ margin-bottom: 12px; }
+  .auth-card-shadcn > [data-slot="field-group"]{ gap: 14px; }
+  .auth-form-heading p{ margin-top: 4px; line-height: 1.45; }
+  .email-auth-block{ gap: 12px; }
+  .auth-demo-callout{ gap: 8px; padding-top: 12px; }
+  .auth-demo-callout p,
+  .auth-demo-callout dl{ display: none; }
+  .auth-card-shadcn .privacy-copy{ padding-top: 12px; }
 }

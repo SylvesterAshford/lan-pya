@@ -4,6 +4,9 @@ import { useState } from "react";
 import { useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
+import { Button } from "@/components/ui/button";
+import { Field, FieldGroup, FieldLabel } from "@/components/ui/field";
+import { Input } from "@/components/ui/input";
 
 export const DEMO_ACCOUNT = {
   email: "demo@lanpya.app",
@@ -19,6 +22,12 @@ export function EmailAuthForm({ locale, demoRequested }: { locale: string; demoR
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
   const [notice, setNotice] = useState("");
+
+  function changeMode(nextMode: "sign-in" | "sign-up") {
+    setMode(nextMode);
+    setError("");
+    setNotice("");
+  }
 
   function useDemoAccount() {
     setMode("sign-in");
@@ -57,7 +66,7 @@ export function EmailAuthForm({ locale, demoRequested }: { locale: string; demoR
     });
 
     if (signUpError) {
-      setError(signUpError.message);
+      setError(t("accountError"));
       setBusy(false);
       return;
     }
@@ -75,25 +84,33 @@ export function EmailAuthForm({ locale, demoRequested }: { locale: string; demoR
   return (
     <div className="email-auth-block">
       <div className="auth-mode-switch" aria-label={t("modeLabel")}>
-        <button type="button" className={mode === "sign-in" ? "active" : ""} onClick={() => setMode("sign-in")}>{t("signIn")}</button>
-        <button type="button" className={mode === "sign-up" ? "active" : ""} onClick={() => setMode("sign-up")}>{t("createAccount")}</button>
+        <Button type="button" variant={mode === "sign-in" ? "default" : "ghost"} className="h-11 flex-1" aria-pressed={mode === "sign-in"} onClick={() => changeMode("sign-in")}>{t("signIn")}</Button>
+        <Button type="button" variant={mode === "sign-up" ? "default" : "ghost"} className="h-11 flex-1" aria-pressed={mode === "sign-up"} onClick={() => changeMode("sign-up")}>{t("createAccount")}</Button>
       </div>
 
       <form className="email-auth-form" onSubmit={submit}>
-        <label htmlFor="auth-email">{t("email")}</label>
-        <input id="auth-email" className="text-input" type="email" autoComplete="email" required value={email} onChange={(event) => setEmail(event.target.value)} placeholder="you@example.com" />
-        <label htmlFor="auth-password">{t("password")}</label>
-        <input id="auth-password" className="text-input" type="password" autoComplete={mode === "sign-in" ? "current-password" : "new-password"} minLength={8} required value={password} onChange={(event) => setPassword(event.target.value)} placeholder="At least 8 characters" />
-        <button className="button primary full" type="submit" disabled={busy}>{busy ? t("working") : mode === "sign-in" ? t("signIn") : t("createAccount")}</button>
+        <FieldGroup className="gap-4">
+          <Field>
+            <FieldLabel htmlFor="auth-email">{t("email")}</FieldLabel>
+            <Input id="auth-email" className="h-11 bg-background px-3 text-base md:text-base" type="email" autoComplete="email" required value={email} onChange={(event) => setEmail(event.target.value)} placeholder="you@example.com" aria-invalid={Boolean(error)} />
+          </Field>
+          <Field>
+            <FieldLabel htmlFor="auth-password">{t("password")}</FieldLabel>
+            <Input id="auth-password" className="h-11 bg-background px-3 text-base md:text-base" type="password" autoComplete={mode === "sign-in" ? "current-password" : "new-password"} minLength={8} required value={password} onChange={(event) => setPassword(event.target.value)} aria-invalid={Boolean(error)} />
+          </Field>
+          <Field>
+            <Button className="h-11 w-full text-base" type="submit" disabled={busy}>{busy ? t("working") : mode === "sign-in" ? t("signIn") : t("createAccount")}</Button>
+          </Field>
+        </FieldGroup>
       </form>
 
       {notice && <p className="provider-note" role="status">{notice}</p>}
       {error && <p className="form-error" role="alert">{error}</p>}
 
-      <section className="demo-login-card" aria-label={t("demoTitle")}>
-        <div><span className="eyebrow">{t("demoKicker")}</span><strong>{t("demoTitle")}</strong><p>{t("demoBody")}</p></div>
+      <section className="demo-login-card auth-demo-callout" aria-label={t("demoTitle")}>
+        <div><strong>{t("demoTitle")}</strong><p>{t("demoBody")}</p></div>
         <dl><div><dt>{t("email")}</dt><dd>{DEMO_ACCOUNT.email}</dd></div><div><dt>{t("password")}</dt><dd>{DEMO_ACCOUNT.password}</dd></div></dl>
-        <button className="button outline full" type="button" onClick={useDemoAccount}>{t("fillDemo")}</button>
+        <Button className="h-11 w-full text-base" variant="outline" type="button" onClick={useDemoAccount}>{t("fillDemo")}</Button>
       </section>
     </div>
   );

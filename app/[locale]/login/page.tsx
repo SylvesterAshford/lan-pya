@@ -3,6 +3,7 @@ import { redirect } from "next/navigation";
 import { ArrowLeft, Eye, Lock, ShieldCheck } from "lucide-react";
 import { GoogleSignIn } from "@/components/auth/google-sign-in";
 import { EmailAuthForm } from "@/components/auth/email-auth-form";
+import { LoginForm } from "@/components/login-form";
 import { SummitTrail } from "@/components/marketing/summit-trail";
 import { getUser } from "@/lib/auth";
 import { Link } from "@/i18n/navigation";
@@ -10,22 +11,6 @@ import { hasSupabaseEnv } from "@/lib/env";
 
 export const dynamic = "force-dynamic";
 
-/**
- * Sign in.
- *
- * The left panel is the promise, the right panel is the door. The panel used
- * to carry a diagram of the roadmap's node graph, which asked somebody at the
- * sign-in screen to read a chart; it carries the same summit the landing page
- * does now, so the two screens are recognisably one product.
- *
- * The climb on the left reads upward, bottom to top, the same direction as the
- * mission map and the roadmap: where you start is at the bottom, and the
- * destination is above it.
- *
- * Google sits above the email form because it is one tap against seven fields.
- * Both are real: the button checks the provider is actually enabled before it
- * offers itself, and the form is the same one that has always been here.
- */
 export default async function LoginPage({
   params,
   searchParams,
@@ -41,10 +26,6 @@ export default async function LoginPage({
   const t = await getTranslations("Auth");
   const my = locale === "my";
 
-  // The four stops, drawn the way the mission map draws them: the destination
-  // at the top, the starting point at the bottom. Deliberately no ticks and no
-  // "you are here" — nobody is signed in on this screen, so any claim about
-  // how far this reader has come would be decoration pretending to be data.
   const climb = my
     ? ["ချိတ်ဆက်", "သက်သေပြ", "တည်ဆောက်", "ရွေးချယ်"]
     : ["Connect", "Prove", "Build", "Choose"];
@@ -54,14 +35,45 @@ export default async function LoginPage({
     : [[Lock, "Private by default"], [ShieldCheck, "Supabase-secured access"], [Eye, "No public profile without consent"]] as const;
 
   return (
-    <main className="auth-shell">
-      <section className="auth-brand-panel">
-        {/* Elevation contours. The product is a map, so the ground behind the
-            promise is drawn the way ground is drawn on one: lines of equal
-            height sweeping across a slope, tightening where it steepens, with
-            a few closed rings where a peak sits under the light. Cheaper than
-            an image, themed by the same tokens, and it fills the panel without
-            competing with anything on top of it. */}
+    <main className="auth-shell auth-shell-login02">
+      <section className="auth-form-panel auth-form-panel-login02">
+        <header className="auth-login-brand-row">
+          <Link href="/" className="brand-lockup static auth-desktop-brand">
+            <span className="brand-mark">လ</span>
+            <span><strong>Lan Pya</strong><small>လမ်းပြ</small></span>
+          </Link>
+          <Link href="/" className="brand-lockup static auth-mobile-brand">
+            <span className="brand-mark">လ</span>
+            <span><strong>Lan Pya</strong><small>လမ်းပြ</small></span>
+          </Link>
+          <nav className="auth-lang" aria-label={my ? "ဘာသာစကား" : "Language"}>
+            <Link href="/login" locale="en" hrefLang="en" className={locale === "en" ? "on" : ""}>EN</Link>
+            <span aria-hidden="true">/</span>
+            <Link href="/login" locale="my" hrefLang="my" className={my ? "on" : ""}>မြန်မာ</Link>
+          </nav>
+        </header>
+
+        <div className="auth-login-form-wrap">
+          <Link href="/" className="auth-back"><ArrowLeft size={16} aria-hidden="true" />{my ? "ပင်မစာမျက်နှာသို့" : "Back to home"}</Link>
+          <LoginForm
+            title={t("title")}
+            description={t("body")}
+            provider={isSupabaseConfigured ? <GoogleSignIn locale={locale} /> : null}
+            separator={t("or")}
+            credentials={isSupabaseConfigured ? (
+              <EmailAuthForm locale={locale} demoRequested={query.demo === "1"} />
+            ) : (
+              <div className="configuration-note">
+                <strong>{my ? "အကောင့်ဝင်ရန် Supabase ချိတ်ဆက်ပါ။" : "Connect Supabase to enable sign-in."}</strong>
+                <p>{my ? "`.env.example` ကို `.env.local` အဖြစ်ကူးပြီး project URL နှင့် publishable key ထည့်ပါ။" : "Copy `.env.example` to `.env.local` and add the project URL and publishable key."}</p>
+              </div>
+            )}
+            privacy={t("privacy")}
+          />
+        </div>
+      </section>
+
+      <section className="auth-brand-panel auth-brand-panel-login02">
         <div className="auth-terrain" aria-hidden="true">
           <span className="auth-glow" />
           <svg className="auth-contours" viewBox="0 0 720 900" preserveAspectRatio="none">
@@ -75,7 +87,6 @@ export default async function LoginPage({
               <path d="M-60 680 C 200 598, 400 696, 548 644 C 656 608, 724 648, 780 622" />
               <path d="M-60 798 C 210 712, 412 810, 556 758 C 662 722, 728 764, 780 736" />
             </g>
-            {/* A peak, where the light is. Closed rings are how a map says one. */}
             <g className="auth-contour-peak">
               {[1, 0.72, 0.48, 0.28].map((k) => (
                 <ellipse key={k} cx="566" cy="196" rx={124 * k} ry={70 * k} />
@@ -86,13 +97,7 @@ export default async function LoginPage({
 
         <div className="auth-scene" aria-hidden="true"><SummitTrail /></div>
 
-        <Link href="/" className="brand-lockup static light">
-          <span className="brand-mark">လ</span>
-          <span><strong>Lan Pya</strong><small>လမ်းပြ</small></span>
-        </Link>
-
         <div className="auth-brand-copy">
-          <span className="hero-kicker">{my ? "သင့်လမ်းကြောင်းသည် သင့်ဟာသာ" : "YOUR PATH STAYS YOURS"}</span>
           <h1>
             {my
               ? <>သင့်အနာဂတ်နောက်ကွယ်မှ<br />လက်ရာဆီ <em>ပြန်လာပါ။</em></>
@@ -120,47 +125,6 @@ export default async function LoginPage({
             <li key={label}><Icon size={15} aria-hidden="true" />{label}</li>
           ))}
         </ul>
-      </section>
-
-      <section className="auth-form-panel">
-        <Link href="/" className="brand-lockup static auth-mobile-brand">
-          <span className="brand-mark">လ</span>
-          <span><strong>Lan Pya</strong><small>လမ်းပြ</small></span>
-        </Link>
-
-        <div className="auth-top">
-          <Link href="/" className="auth-back"><ArrowLeft size={16} aria-hidden="true" />{my ? "ပင်မစာမျက်နှာသို့" : "Back to home"}</Link>
-          <nav className="auth-lang" aria-label={my ? "ဘာသာစကား" : "Language"}>
-            <Link href="/login" locale="en" hrefLang="en" className={locale === "en" ? "on" : ""}>EN</Link>
-            <span aria-hidden="true">/</span>
-            <Link href="/login" locale="my" hrefLang="my" className={my ? "on" : ""}>မြန်မာ</Link>
-          </nav>
-        </div>
-
-        <div className="auth-card">
-          <span className="eyebrow">{my ? "ပြန်လည်ကြိုဆိုပါသည်" : "WELCOME BACK"}</span>
-          <h1>{t("title")}</h1>
-          <p>{t("body")}</p>
-
-          {isSupabaseConfigured ? (
-            <>
-              {/* One tap before seven fields. */}
-              <GoogleSignIn locale={locale} />
-              <div className="auth-divider"><span>{t("or")}</span></div>
-              <EmailAuthForm locale={locale} demoRequested={query.demo === "1"} />
-            </>
-          ) : (
-            <div className="configuration-note">
-              <strong>{my ? "အကောင့်ဝင်ရန် Supabase ချိတ်ဆက်ပါ။" : "Connect Supabase to enable sign-in."}</strong>
-              <p>{my ? "`.env.example` ကို `.env.local` အဖြစ်ကူးပြီး project URL နှင့် publishable key ထည့်ပါ။" : "Copy `.env.example` to `.env.local` and add the project URL and publishable key."}</p>
-            </div>
-          )}
-
-          <p className="privacy-copy">
-            <Lock size={14} aria-hidden="true" />
-            <span>{t("privacy")}</span>
-          </p>
-        </div>
       </section>
     </main>
   );

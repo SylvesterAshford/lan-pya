@@ -45,7 +45,8 @@
     "google": "Continue with Google",
     "providerUnavailable": "Google sign-in is temporarily unavailable. Use email and password instead.",
     "privacy": "Your email is used for account access and is never shown in shared proof by default.",
-    "error": "Sign-in could not start. Please try again."
+    "error": "Sign-in could not start. Please try again.",
+    "accountError": "Your account could not be created. Check the details and try again."
   },
   "Nav": {
     "today": "Today",
