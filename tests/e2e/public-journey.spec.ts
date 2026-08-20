@@ -35,6 +35,12 @@ test("@critical mobile login leads with the sign-in task", async ({ page }) => {
   await expect(page.locator(".auth-brand-panel")).toBeHidden();
   await expect(page.getByRole("heading", { level: 1 }).last()).toBeInViewport();
   await expect(page.locator(".auth-form-panel")).toHaveCSS("padding-top", "24px");
+  const privacyCopy = page.locator(".privacy-copy");
+  await expect(privacyCopy.locator("span")).toBeVisible();
+  await expect(privacyCopy).toHaveCSS("align-items", "flex-start");
+  await expect(privacyCopy).toHaveCSS("justify-content", "flex-start");
+  await expect(privacyCopy).toHaveCSS("text-align", "left");
+  await expect(privacyCopy.locator("svg")).toHaveCSS("margin-top", "2px");
   expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(390);
 });
 

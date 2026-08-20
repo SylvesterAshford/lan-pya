@@ -156,7 +156,10 @@ export default async function LoginPage({
             </div>
           )}
 
-          <p className="privacy-copy"><Lock size={14} aria-hidden="true" />{t("privacy")}</p>
+          <p className="privacy-copy">
+            <Lock size={14} aria-hidden="true" />
+            <span>{t("privacy")}</span>
+          </p>
         </div>
       </section>
     </main>
