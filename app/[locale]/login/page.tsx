@@ -123,6 +123,11 @@ export default async function LoginPage({
       </section>
 
       <section className="auth-form-panel">
+        <Link href="/" className="brand-lockup static auth-mobile-brand">
+          <span className="brand-mark">လ</span>
+          <span><strong>Lan Pya</strong><small>လမ်းပြ</small></span>
+        </Link>
+
         <div className="auth-top">
           <Link href="/" className="auth-back"><ArrowLeft size={16} aria-hidden="true" />{my ? "ပင်မစာမျက်နှာသို့" : "Back to home"}</Link>
           <nav className="auth-lang" aria-label={my ? "ဘာသာစကား" : "Language"}>
