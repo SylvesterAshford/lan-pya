@@ -1,5 +1,17 @@
 # Changelog
 
+## [0.25.0.2] - 2026-08-20
+
+### Added
+
+- A Lovable handoff pack with the product requirements, design specification, and staged build prompts for recreating Lan Pya without losing its product logic.
+
+### Fixed
+
+- Phones now open sign-in with the form and a compact Lan Pya identity instead of stacking the full promise panel above the task. Tablets put the form first and retain the supporting panel afterward; desktop keeps its two-panel composition.
+- The privacy lock now stays aligned with the first line of its explanatory copy on narrow sign-in screens.
+- “Continue mission” on Home now opens the mission map at the learner’s current position instead of bypassing it for the mission runner.
+
 ## [0.25.0.0] - 2026-08-20
 
 ### Changed
