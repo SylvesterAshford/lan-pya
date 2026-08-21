@@ -34,6 +34,28 @@ npm run dev
 
 Copy the local Supabase URL and publishable key printed by `supabase start` into `.env.local`. Open `http://localhost:3000/en`; `/en/demo` works without authentication.
 
+## Demo Account
+
+For testing and demonstration purposes, use the seeded demo account:
+
+- **Email:** `demo@lanpya.app`
+- **Password:** `LanPya-Demo-2026!`
+
+The demo account is pre-populated with:
+- Completed Frontend Developer pathway (stages 1-2 verified, stage 3 active)
+- One verified proof sample for the responsive-profile-card mission
+- Example opportunity readiness assessments
+- Access to all features without payment
+
+The demo data is marked with `data_origin: seeded_demo` and is excluded from live human-verification metrics for reporting and analytics purposes. When testing new features, use this account to see realistic data without creating test accounts.
+
+To provision the demo account in production, run:
+```bash
+npm run demo:provision
+```
+
+This script creates or updates the demo account in Supabase with the learner profile, missions, and proof items. It requires `NEXT_PUBLIC_SUPABASE_URL` and `SUPABASE_SECRET_KEY` environment variables.
+
 ## Google OAuth
 
 In Google Cloud, create a Web OAuth client and use this authorized redirect URI:
@@ -112,6 +134,38 @@ The Google OAuth path requires a manual staging check because browser automation
 - Public proof secrets live in URL fragments, which are not sent in request paths. They are exchanged once for a 15-minute HttpOnly cookie.
 - The service worker never caches authenticated pages, API responses, review/admin screens, or proof views.
 - Seeded demonstration records carry `data_origin = seeded_demo` and are excluded from live human-verification metrics.
+
+## Important Notes
+
+### Responsive Design (v0.25.0.0+)
+
+The application is fully responsive across mobile, tablet, and desktop devices:
+
+- **Mobile breakpoint (480–640px):** Single-column layout, optimized touch targets
+- **Tablet breakpoint (700–920px):** Two-column layout with adjusted spacing
+- **Desktop (1080px+):** Full-width layout with maximum content width
+
+Key responsive components:
+- Mission maps and roadmaps scale dynamically based on viewport width
+- Mission submit step card is centered with improved spacing
+- Login page split-screen adapts to single-column on mobile
+- All form inputs and buttons meet accessibility standards (44px minimum touch target)
+
+### Dynamic Submission Fields (v0.25.0.0+)
+
+Mission submission fields are now dynamic based on career path:
+
+- **Frontend Developer / Full-Stack / AI & Data:** GitHub repository URL + Live deployment URL
+- **Content Creator:** Google Drive link (for content pieces) + Campaign/preview URL
+
+Fields are defined in `lib/domain/mission-briefs.ts` and rendered by `components/missions/submission-form.tsx`. New career paths can add field configurations without code changes.
+
+### Supported Mission Paths
+
+1. **Frontend Developer** (12 stages) — HTML, CSS, JavaScript, React, deployment
+2. **Full-Stack Developer** (14 stages) — Frontend + backend, databases, APIs, cloud
+3. **AI & Data Analyst** (13 stages) — SQL, Python, statistics, visualization, dashboards
+4. **Content Creator** (Controlled pilot) — Audience research, content creation, accessibility
 
 ## Key paths
 
