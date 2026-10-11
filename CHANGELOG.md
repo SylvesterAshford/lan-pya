@@ -1,5 +1,18 @@
 # Changelog
 
+## [0.26.0.0] - 2026-10-12
+
+### Added
+
+- The landing page is now one climb. Scrolling walks two travellers up a night trail that draws itself under them, past Choose, Build and Prove, and the sun rises when they reach the summit, where "Let's start" waits.
+- Each stop lights its flag and brings in one short, plain explanation of that step, in English and Burmese.
+- A small altimeter on desktop shows where you are on the climb and jumps to any stop.
+
+### Changed
+
+- Readers who ask for reduced motion get a finished still of the summit at dawn and every stop as a simple list, with no pinned scrolling.
+- The old summit hero, its pinned cards and the four-step strip are retired; their content now lives at the stops.
+
 ## [0.25.0.4] - 2026-08-20
 
 ### Changed

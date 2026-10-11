@@ -46,3 +46,6 @@ yarn-error.log*
 .gstack/
 /.codex/hooks.json
 /.cursor/hooks.json
+
+# scroll-craft verification screenshots
+scrollcraft/builds/*/lab/
