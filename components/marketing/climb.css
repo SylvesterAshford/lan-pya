@@ -1,0 +1,490 @@
+/* ============================================================
+   THE CLIMB — the landing page as one scroll-driven ascent.
+   A marketing surface, governed by DESIGN.md "Marketing surfaces".
+   Nothing here is used behind /app.
+
+   Motion is scroll-linked, never time-driven: if the reader stops,
+   everything stops. Every moving element moves by transform only.
+   ============================================================ */
+
+.ascent{
+  position: relative;
+  /* Seven viewports of travel. The summit (sunrise and hold) owns the
+     last fifth, the largest single share, because it is the peak. */
+  height: 800svh;
+  color: var(--on-solid);
+  background: var(--navy-900);
+}
+
+.ascent-stage{
+  --walk: 0;
+  --dawn: 0;
+  /* The world is drawn 1000 units wide. It is scaled to fill the width on a
+     landscape screen and the height on a portrait one, then cropped. */
+  --ww: max(100vw, 133.34svh);
+  --cx: 0.5;
+  position: sticky;
+  top: 0;
+  height: 100svh;
+  overflow: hidden;
+  isolation: isolate;
+}
+
+.ascent-scene{
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+
+/* ---- sky: night, with dawn laid over it at --dawn opacity ---- */
+
+.ascent-sky{
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, #04070f 0%, #0a1326 46%, #17254a 100%);
+}
+
+.sky-dawn{
+  position: absolute;
+  inset: 0;
+  opacity: var(--dawn);
+  background:
+    radial-gradient(60% 46% at 64% 30%, rgba(255, 226, 168, 0.55), rgba(255, 226, 168, 0) 70%),
+    linear-gradient(180deg, #1d3564 0%, #43649a 30%, #c98d72 58%, #f2bb82 76%, #ffdfab 100%);
+}
+
+.ascent-stars{
+  position: absolute;
+  inset: 0 0 auto;
+  width: 100%;
+  height: 60%;
+  fill: #e8effc;
+  opacity: calc(0.75 * (1 - var(--dawn)));
+}
+
+.ascent-sun{
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: calc(var(--ww) * 0.15);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: radial-gradient(circle, #fff6df 0 40%, #ffd88f 62%, #f7b860 100%);
+  box-shadow: 0 0 calc(var(--ww) * 0.06) calc(var(--ww) * 0.02) rgba(255, 205, 128, 0.45);
+  opacity: var(--dawn);
+  will-change: transform;
+}
+
+/* ---- planes ---- */
+
+.ascent-plane{
+  position: absolute;
+  top: 0;
+  left: calc(50% - var(--ww) * var(--cx));
+  display: block;
+  width: var(--ww);
+  will-change: transform;
+}
+
+.ascent-far,
+.ascent-mid{ height: var(--ww); }
+.ascent-massif,
+.ascent-trail{ height: calc(var(--ww) * 2.4); }
+.ascent-near{ height: calc(var(--ww) * 0.6); }
+
+.far-fill{ fill: #34476f; }
+.far-snow{ fill: #9fb2d4; opacity: 0.55; }
+.mid-fill{ fill: #1b2a4d; }
+.mid-forest{ fill: #111c36; }
+
+/* Dawn reaches the distant planes as warm haze, not a recolour. */
+.dawn-haze{ opacity: calc(var(--dawn) * 0.34); }
+
+.lit-face{ opacity: var(--dawn); }
+
+.ribs path{
+  fill: none;
+  stroke: #0e1730;
+  stroke-width: 7;
+  stroke-linecap: round;
+  opacity: 0.5;
+}
+
+.snow{ fill: #dbe6f7; }
+
+.contours path{
+  fill: none;
+  stroke: #9fb6dc;
+  stroke-width: 2;
+  stroke-linecap: round;
+  opacity: 0.12;
+}
+
+.ridge-light{
+  fill: none;
+  stroke: #ffd59a;
+  stroke-width: 3;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  opacity: calc(0.15 + var(--dawn) * 0.75);
+}
+
+.massif-forest{ fill: #0a1428; }
+
+/* ---- stops: flag, ring, label ---- */
+
+.stop{
+  opacity: 0;
+  transition: opacity 420ms ease-out;
+}
+
+.stop.is-near{ opacity: 1; }
+
+.stop-pole{
+  stroke: #c9d4e6;
+  stroke-width: 2.5;
+  stroke-linecap: round;
+}
+
+.stop-flag{
+  fill: var(--amber-500);
+  transition: fill 240ms ease-out;
+}
+
+.stop-ring{
+  fill: #0b1324;
+  stroke: var(--amber-500);
+  stroke-width: 3;
+  transition: fill 240ms ease-out, stroke 240ms ease-out;
+}
+
+.stop-check{
+  fill: none;
+  stroke: #fff;
+  stroke-width: 3;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  opacity: 0;
+  transition: opacity 240ms ease-out;
+}
+
+.stop-label{
+  fill: #e6edf8;
+  font-size: 17px;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  paint-order: stroke;
+  stroke: rgba(8, 13, 24, 0.7);
+  stroke-width: 3px;
+  stroke-linejoin: round;
+}
+
+/* Reached: the flag turns from "ahead" amber to "done" teal and the ring
+   carries a check, so the state survives without colour. */
+.stop.is-reached .stop-flag{ fill: var(--teal-500); }
+.stop.is-reached .stop-ring{ fill: var(--teal-500); stroke: #e6fff6; }
+.stop.is-reached .stop-check{ opacity: 1; }
+
+/* ---- trail ---- */
+
+.trail-ahead,
+.trail-walked{
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.trail-ahead{
+  stroke: #8fa3c4;
+  stroke-width: 3;
+  stroke-dasharray: 2 12;
+  opacity: 0.55;
+}
+
+.trail-walked{
+  stroke: var(--teal-500);
+  stroke-width: 7;
+  stroke-dasharray: 1;
+  stroke-dashoffset: calc(1 - var(--walk));
+}
+
+/* ---- the travellers ---- */
+
+.ascent-walker{
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: auto;
+  height: calc(var(--ww) * 0.075);
+  will-change: transform;
+  filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.35));
+}
+
+/* ---- the near ground ---- */
+
+.near-fill{ fill: #050a15; }
+.near-rock{ fill: #121c33; }
+.near-grass{ fill: none; stroke: #1f3b3a; stroke-width: 4; stroke-linecap: round; }
+
+/* ---- copy ---- */
+
+/* A scrim only where text sits: the lead third on wide screens, the top
+   band on phones. Never a full-frame wash. */
+.ascent-scrim{
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background: linear-gradient(90deg, rgba(4, 8, 18, 0.78) 0%, rgba(4, 8, 18, 0.5) 34%, rgba(4, 8, 18, 0) 58%);
+}
+
+.ascent-copy{
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+}
+
+.ascent-block{
+  position: absolute;
+  top: 50%;
+  left: max(28px, calc(50% - 610px));
+  width: min(520px, 42vw);
+  /* Opacity only, never visibility: a block off its stretch of the climb is
+     still in the accessibility tree, so a screen reader reads every stop in
+     order. Focusing a link inside one scrolls the climb to it. */
+  opacity: 0;
+  transform: translate3d(0, calc(-50% + 18px), 0);
+  transition:
+    opacity 420ms ease-out,
+    transform 420ms ease-out;
+}
+
+.ascent-block.is-on{
+  opacity: 1;
+  pointer-events: auto;
+  transform: translate3d(0, -50%, 0);
+}
+
+/* The hero sits a little higher: it is the first thing read. */
+.ascent-block-hero{ top: 47%; }
+
+.ascent-block h2{
+  margin: 0 0 16px;
+  color: var(--on-solid);
+  font-size: clamp(30px, 4vw, 48px);
+  font-weight: 800;
+  letter-spacing: -0.025em;
+  line-height: 1.06;
+}
+
+html[lang="my"] .ascent-block h2{ letter-spacing: 0; line-height: 1.45; }
+
+.ascent-block p{
+  max-width: 42ch;
+  margin: 0;
+  color: #c3cfe0;
+  font-size: var(--t-hero-sub);
+  line-height: 1.55;
+}
+
+/* The close sits on dawn sky, so it carries its own dark plate rather than
+   relying on the scrim. */
+.ascent-block-summit{
+  padding: 28px 30px 30px;
+  border-radius: 16px;
+  background: rgba(8, 13, 24, 0.82);
+  box-shadow: 0 18px 40px rgba(8, 13, 24, 0.28);
+}
+
+.ascent-block-summit .hero-actions{ margin-top: 26px; }
+
+/* ---- the altimeter: where you are, and a way to jump ---- */
+
+.ascent-nav{
+  position: absolute;
+  top: 50%;
+  right: max(20px, calc(50% - 640px));
+  z-index: 3;
+  transform: translateY(-50%);
+}
+
+.ascent-nav ol{
+  position: relative;
+  display: grid;
+  gap: 2px;
+  margin: 0;
+  padding: 6px 2px;
+  border-radius: 22px;
+  /* A dark plate, because the labels cross a dawn sky by the end. */
+  background: rgba(8, 13, 24, 0.62);
+  list-style: none;
+}
+
+.ascent-nav ol::before{
+  position: absolute;
+  top: 28px;
+  bottom: 28px;
+  right: 23px;
+  width: 2px;
+  background: repeating-linear-gradient(180deg, rgba(201, 212, 230, 0.5) 0 3px, transparent 3px 9px);
+  content: "";
+}
+
+.ascent-nav button{
+  display: flex;
+  align-items: center;
+  flex-direction: row-reverse;
+  gap: 12px;
+  min-height: 44px;
+  padding: 0 14px 0 10px;
+  border: 0;
+  border-radius: 999px;
+  color: #9fb0c8;
+  background: transparent;
+  font: inherit;
+  font-size: var(--t-meta);
+  font-weight: 700;
+  cursor: pointer;
+  transition: color 160ms ease-out, background 160ms ease-out;
+}
+
+.ascent-nav button:hover{ color: #fff; background: rgba(255, 255, 255, 0.06); }
+
+.ascent-nav button:focus-visible{
+  outline: 2px solid var(--amber-500);
+  outline-offset: 2px;
+}
+
+.ascent-nav-dot{
+  position: relative;
+  z-index: 1;
+  width: 14px;
+  height: 14px;
+  border: 2px solid #9fb0c8;
+  border-radius: 50%;
+  background: var(--navy-900);
+  transition: background 160ms ease-out, border-color 160ms ease-out, transform 160ms ease-out;
+}
+
+.ascent-nav button[aria-current]{ color: #fff; }
+.ascent-nav button[aria-current] .ascent-nav-dot{
+  border-color: var(--teal-500);
+  background: var(--teal-500);
+  transform: scale(1.25);
+}
+
+/* The header floats over the stage rather than pushing it down. */
+.welcome-shell > .welcome-nav{
+  position: absolute;
+  inset: 0 0 auto;
+  z-index: 5;
+}
+
+/* ---- phones and portrait tablets ---- */
+
+@media (max-width: 759px){
+  .ascent-stage{ --cx: 0.6; }
+
+  .ascent-scrim{
+    background: linear-gradient(180deg, rgba(4, 8, 18, 0.8) 0%, rgba(4, 8, 18, 0.55) 38%, rgba(4, 8, 18, 0) 60%);
+  }
+
+  .ascent-block{
+    top: 84px;
+    left: 20px;
+    right: 20px;
+    width: auto;
+    transform: translate3d(0, 18px, 0);
+  }
+
+  .ascent-block.is-on{ transform: none; }
+  .ascent-block-hero{ top: 76px; }
+
+  .ascent-block h2{ font-size: clamp(28px, 8vw, 34px); }
+
+  /* The summit is the top of the frame on a phone; the close sits at the
+     foot of the mountain so the sunrise stays in view above it. */
+  .ascent-block-summit{
+    top: auto;
+    bottom: max(20px, env(safe-area-inset-bottom));
+    padding: 22px 20px 22px;
+  }
+
+  /* The altimeter needs room it does not have on a phone. The scroll itself
+     is the position readout here. */
+  .ascent-nav{ display: none; }
+}
+
+/* ---- reduced motion: a still of the finished climb ---- */
+
+.ascent.is-still{ height: auto; }
+
+.ascent.is-still .ascent-stage{
+  position: relative;
+  height: auto;
+  overflow: visible;
+}
+
+.ascent.is-still .ascent-scene{
+  position: relative;
+  height: 100svh;
+  overflow: hidden;
+}
+
+.ascent.is-still .ascent-nav{ display: none; }
+
+.ascent.is-still .stop{ opacity: 1; transition: none; }
+
+/* The still is the summit at dawn, the brightest frame on the page, so the
+   hero needs a deeper scrim than it does at night. */
+.ascent.is-still .ascent-scrim{
+  height: 100svh;
+  background: linear-gradient(90deg, rgba(4, 8, 18, 0.9) 0%, rgba(4, 8, 18, 0.74) 40%, rgba(4, 8, 18, 0) 66%);
+}
+
+@media (max-width: 759px){
+  .ascent.is-still .ascent-scrim{
+    background: linear-gradient(180deg, rgba(4, 8, 18, 0.9) 0%, rgba(4, 8, 18, 0.78) 52%, rgba(4, 8, 18, 0) 80%);
+  }
+}
+
+.ascent.is-still .ascent-copy{
+  position: static;
+  display: grid;
+  gap: 56px;
+  max-width: 760px;
+  padding: 56px 24px 80px;
+  margin: 0 auto;
+  pointer-events: auto;
+}
+
+/* Static would drop the blocks under the scene, which is positioned. */
+.ascent.is-still .ascent-block{
+  position: relative;
+  z-index: 2;
+  width: auto;
+  opacity: 1;
+  transform: none;
+  transition: none;
+}
+
+/* The hero keeps its place over the scene. */
+.ascent.is-still .ascent-block-hero{
+  position: absolute;
+  top: 47svh;
+  left: max(24px, calc(50% - 610px));
+  width: min(520px, calc(100% - 48px));
+  transform: translateY(-50%);
+}
+
+@media (max-width: 759px){
+  .ascent.is-still .ascent-block-hero{ top: 76px; transform: none; }
+}
+
+@media (prefers-reduced-motion: reduce){
+  .ascent-block,
+  .stop-flag,
+  .stop-ring,
+  .stop-check{ transition: none; }
+}

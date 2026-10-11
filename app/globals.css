@@ -13188,64 +13188,15 @@ html[lang="my"] .resume-sheet h4 { text-transform: none; letter-spacing: 0; }
 .welcome-shell{
   position: relative;
   min-height: 100vh;
-  /* clip, not hidden: the glow and arcs bleed past the viewport on purpose,
-     and `hidden` would create a scroll container that traps the page. */
+  /* clip, not hidden: the climb's scenery is wider than the viewport on
+     purpose, and `hidden` would create a scroll container that breaks the
+     climb's sticky stage. */
   overflow: clip;
   color: var(--on-solid);
   background: var(--navy-900);
 }
 
-/* ---- hero ---- */
-
-.welcome-hero{
-  position: relative;
-  z-index: 1;
-  display: grid;
-  max-width: 1220px;
-  grid-template-columns: minmax(0, 1.02fr) minmax(0, 0.98fr);
-  align-items: center;
-  gap: 48px;
-  padding: 64px 28px 116px;
-  margin: 0 auto;
-}
-
-/* Atmosphere. A dawn bleeding in from the top right and two long arcs that
-   imply a curve bigger than the screen. Light and distance, not ornament —
-   DESIGN.md forbids decorative blobs and this is neither. */
-.hero-sky{
-  position: absolute;
-  inset: 0;
-  z-index: 0;
-  overflow: hidden;
-  pointer-events: none;
-}
-
-.hero-glow{
-  position: absolute;
-  top: -34%;
-  right: -12%;
-  width: min(1120px, 92vw);
-  aspect-ratio: 1;
-  background: radial-gradient(
-    circle,
-    rgba(239, 159, 39, 0.20),
-    rgba(239, 159, 39, 0.065) 38%,
-    transparent 62%
-  );
-}
-
-.hero-arcs{
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-}
-
-.hero-arcs path{
-  fill: none;
-  stroke: rgba(255, 255, 255, 0.07);
-  stroke-width: 1;
-}
+/* ---- hero copy (sits inside the climb, components/marketing/climb.css) ---- */
 
 .hero-copy{
   position: relative;
@@ -13339,238 +13290,17 @@ html[lang="my"] .hero-copy h1{
   50.01%, 100% { opacity: 0; }
 }
 
-/* ---- the summit and the cards pinned to it ---- */
-
-.hero-scene{
-  position: relative;
-  z-index: 1;
-}
-
-.summit{
-  display: block;
-  width: 100%;
-  height: auto;
-  /* The ranges are drawn past the viewBox, but the element still clips them,
-     which put a hard vertical edge down each side. Fading the sides lets the
-     terrain leave the picture the way distance actually does. The bottom needs
-     no help: the nearest plane already ends on the page's own background. */
-  -webkit-mask-image: linear-gradient(to right, transparent 0, #000 15%, #000 85%, transparent 100%);
-  mask-image: linear-gradient(to right, transparent 0, #000 15%, #000 85%, transparent 100%);
-}
-
-/* The trail draws itself once on arrival. Once, not on a loop: the ambient
-   allowance in DESIGN.md is spent on the headline. */
-.summit-trail-line{
-  /* Comfortably longer than the path, so the reveal always completes. */
-  stroke-dasharray: 2400;
-  stroke-dashoffset: 2400;
-  animation: trail-draw 2.4s ease-out 0.25s forwards;
-}
-
-@keyframes trail-draw{
-  to { stroke-dashoffset: 0; }
-}
-
-.summit-stop circle:first-child{
-  fill: var(--navy-900);
-  stroke: var(--teal-500);
-  stroke-width: 3;
-}
-
-.summit-stop path{
-  stroke: var(--teal-500);
-}
-
-.summit-stop.ahead circle:first-child{
-  stroke: var(--amber-500);
-}
-
-.summit-stop.ahead circle:last-child{
-  fill: var(--amber-500);
-}
-
-.hero-pins{
-  position: absolute;
-  inset: 0;
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-
-.hero-pin{
-  position: absolute;
-  display: grid;
-  gap: 3px;
-  width: min(238px, 44%);
-  padding: 11px 13px;
-  background: rgba(11, 18, 35, 0.86);
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  border-radius: 10px;
-}
-
-/* Anchored to the three stops on the trail, which sit at 29%/87%, 39%/65% and
-   54%/44% of the drawing. Each card sits just to the right of its stop. */
-.hero-pin.mission{ left: 32%; top: 80%; }
-.hero-pin.proof{ left: 43%; top: 59%; }
-.hero-pin.door{ left: 57%; top: 38%; }
-
-.hero-pin-label{
-  font-size: 10px;
-  font-weight: 800;
-  letter-spacing: 0.12em;
-  color: var(--teal-500);
-}
-
-.hero-pin.door .hero-pin-label{ color: var(--amber-500); }
-
-.hero-pin strong{
-  color: #fff;
-  font-size: var(--t-meta);
-  font-weight: 700;
-  line-height: 1.3;
-}
-
-.hero-pin small{
-  color: #9fb0c6;
-  font-size: var(--t-label);
-  line-height: 1.4;
-}
-
-/* ---- the climb, said plainly, on light ground ---- */
-
-.journey{
-  position: relative;
-  z-index: 1;
-  padding: 40px 28px 88px;
-  background: var(--navy-050);
-  color: var(--ink);
-  text-align: center;
-}
-
-/* The same ridge the hero ends on, so the page reads as one landscape
-   rather than two stacked sections. */
-.journey-crest{
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 88px;
-  transform: translateY(-100%);
-}
-
-.journey-crest path{ fill: var(--navy-050); }
-
-.journey h2{
-  max-width: 20ch;
-  margin: 0 auto;
-  color: var(--navy-900);
-  font-size: clamp(26px, 3.2vw, 38px);
-  font-weight: 800;
-  letter-spacing: -0.03em;
-  line-height: 1.1;
-}
-
-.journey-steps{
-  display: grid;
-  max-width: 980px;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 18px;
-  margin: 40px auto 0;
-  padding: 0;
-  list-style: none;
-}
-
-.journey-steps li{
-  position: relative;
-  display: grid;
-  gap: 5px;
-  justify-items: center;
-  padding: 0 10px;
-}
-
-/* The dashes carry the fact that these are one sequence, not four features. */
-.journey-steps li + li::before{
-  position: absolute;
-  top: 19px;
-  left: -13px;
-  width: 26px;
-  border-top: 1px dashed #c3cddd;
-  content: "";
-}
-
-.journey-num{
-  display: grid;
-  width: 38px;
-  height: 38px;
-  place-items: center;
-  color: var(--teal-700);
-  font-size: var(--t-label);
-  font-weight: 800;
-  background: var(--surface);
-  border: 1px solid #cfd8e6;
-  border-radius: 50%;
-}
-
-.journey-steps strong{
-  margin-top: 4px;
-  color: var(--navy-900);
-  font-size: var(--t-title);
-  font-weight: 700;
-}
-
-.journey-steps small{
-  max-width: 20ch;
-  color: var(--muted-ink);
-  font-size: var(--t-meta);
-  line-height: 1.45;
-}
-
-.journey-foot{
-  margin: 34px 0 24px;
-  color: var(--muted-ink);
-  font-size: var(--t-meta);
-}
-
 /* ---- narrower ---- */
 
-@media (max-width: 1000px){
-  .welcome-hero{
-    grid-template-columns: minmax(0, 1fr);
-    gap: 40px;
-    padding-bottom: 84px;
-  }
-  .hero-copy h1{ max-width: none; }
-  .hero-scene{ max-width: 640px; }
-  .journey-steps{ grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 30px 18px; }
-  .journey-steps li:nth-child(3)::before{ display: none; }
-}
-
 @media (max-width: 640px){
-  .welcome-hero{ padding: 40px 20px 68px; }
   .hero-copy h1{
     /* The headline stops trying to hold one line once there is no line to
        hold; the rotating word wraps with the rest. */
     text-wrap: balance;
   }
-  /* The pinned cards stop being pins and become a list under the drawing:
-     overlaid on a 360px screen they cover the trail they are describing. */
-  .hero-pins{
-    position: static;
-    display: grid;
-    gap: 8px;
-    margin-top: 16px;
-  }
-  .hero-pin{
-    position: static;
-    width: auto;
-  }
-  .journey{ padding: 28px 20px 64px; }
-  .journey-steps{ grid-template-columns: minmax(0, 1fr); gap: 22px; }
-  .journey-steps li + li::before{ display: none; }
 }
 
 @media (prefers-reduced-motion: reduce){
-  .summit-trail-line{ animation: none; stroke-dashoffset: 0; }
   .site-foot{ scroll-behavior: auto; }
   /* The word never types, so there is nothing for a caret to sit after. */
   .rotator-caret{ display: none; }

@@ -478,6 +478,25 @@ because it carries meaning rather than decorating: a reader who watches it
 learns the product's argument. It is not permitted to spread. A second looping
 thing on this page, or any looping thing inside the app, is a defect.
 
+**Scroll-linked motion is allowed on the landing page, and only there.** The
+landing page is one climb (`components/marketing/the-climb.tsx`): scrolling
+walks two travellers up the trail past Choose, Build and Prove, and the sky
+turns from night to dawn as they reach the summit, where the call to action
+sits. This is not ambient motion. Nothing moves unless the reader scrolls, and
+everything stops when they stop, so it does not count against the one-loop
+rule above. The constraints that make it acceptable on budget phones are part
+of the rule:
+
+- Vector scenery and the two mascot cut-outs only. No video, no image
+  sequences, no third-party animation library.
+- Every moving element is a whole layer moved by `transform` or `opacity`.
+  The only per-frame repaint is the walked trail's dash offset.
+- Copy is real HTML, one block per stop, never baked into the drawing.
+- `prefers-reduced-motion` gets a finished still (the summit at dawn, every
+  stop reached) and the stop copy as a plain list, with no pinned scroll.
+- The flags change from amber (ahead) to teal (reached) and gain a check, so
+  their state survives without colour, as on the roadmap canvas.
+
 Every rule that is about honesty rather than density still holds on this page:
 the palette does not change, contrast minimums do not change, controls keep
 their 44px target, and `prefers-reduced-motion` stops the cycle on its first
@@ -647,3 +666,4 @@ not consent or the learner's route into the prepared account.
 | 2026-08-20 | **Sign-in leads with the form on narrow screens** | Stacking the desktop promise panel above the form turned a focused authentication page into a full marketing screen on mobile. Tablets now put the form first and retain the supporting panel afterward; phones hide the panel and keep a compact Lan Pya lockup beside the task. |
 | 2026-08-20 | **Official shadcn login-02 structure adopted without replacing Lan Pya's visual system** | The shadcn form, field, input, label, separator, and button primitives provide a coherent accessible authentication foundation. They are themed through the incumbent tokens, Tailwind preflight stays excluded, all interactive authentication controls keep a 44px minimum height, and localized status and recovery behavior remains product-owned. On phones, redundant demo credentials are hidden while the demo action and privacy guidance remain visible. |
 | 2026-08-20 | **Sign-in is a centred 50/50 desktop diptych and form-only below 920px** | The old grid was numerically equal but looked asymmetric because the form and promise used different rails, utility chrome shifted the form, and a tall form stretched the right panel into empty space. Both desktop panels now stay one viewport tall with centred 480px rails; the form panel alone may scroll. The supporting panel is removed at tablet sizes instead of becoming a second screen, and its generic contour wallpaper is replaced by one authored Map to Proof route. |
+| 2026-10-12 | **Landing page becomes one scroll-driven climb** | The founder asked for a landing page that is more fun to scroll and more graphic. The product's own metaphor is a map and a climb, so the page climbs: the trail draws itself under two travellers, stops light up as they pass, and the sunrise at the summit is the single peak the page builds to. Scroll-linked rather than ambient, so the one-loop rule stands; SVG and transforms rather than video, because the audience pays for data. Replaces the static summit hero, its pinned cards and the four-step journey strip, whose content now lives at the stops. Brief: `scrollcraft/builds/lan-pya-climb/BRIEF.md`. |
