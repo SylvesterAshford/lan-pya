@@ -80,13 +80,14 @@ function forest(seed: number, count: number, xMin: number, xMax: number, yMin: n
   return out.join(" ");
 }
 
-// Keep trees off the trail corridor, which lives roughly between x 450 and 790.
-const offTrail = (x: number) => x > 440 && x < 790;
 
 // The silhouette, as two flanks from the summit down. Kept narrower than the
 // frame so the trailhead view still has night sky on either side of it.
-const LEFT_FLANK: [number, number][] = [[600, 246], [578, 252], [570, 330], [540, 430], [505, 540], [470, 640], [420, 770], [380, 860], [340, 960], [300, 1100], [270, 1300], [240, 1600], [220, 1900], [190, 2200], [150, 2400]];
-const RIGHT_FLANK: [number, number][] = [[600, 246], [628, 252], [638, 300], [650, 360], [700, 450], [730, 520], [770, 600], [820, 700], [860, 800], [880, 1000], [900, 1300], [915, 1700], [935, 2100], [970, 2400]];
+// A broad crown, not a needle: a summit plateau wide enough for two people,
+// shoulders that fall away at a walkable angle, and a body that keeps
+// widening all the way down so the mountain has mass.
+const LEFT_FLANK: [number, number][] = [[600, 244], [574, 250], [552, 282], [528, 318], [496, 368], [462, 424], [420, 500], [372, 600], [318, 720], [262, 860], [206, 1020], [150, 1200], [96, 1400], [40, 1640], [-20, 1900], [-80, 2400]];
+const RIGHT_FLANK: [number, number][] = [[600, 244], [630, 252], [656, 286], [690, 330], [730, 392], [772, 462], [820, 548], [872, 650], [926, 770], [980, 900], [1040, 1050], [1100, 1250], [1100, 2400]];
 
 const MASSIF_D = `M ${LEFT_FLANK.map(([x, y]) => `${x} ${y}`).reverse().join(" L ")} L ${RIGHT_FLANK.slice(1).map(([x, y]) => `${x} ${y}`).join(" L ")} Z`;
 
@@ -101,10 +102,14 @@ function flankX(flank: [number, number][], y: number) {
 
 // The face the dawn lands on: the right flank, down to a soft line mid-slope.
 const LIT_FACE_D =
-  "M 628 252 L 638 300 L 650 360 L 700 450 L 730 520 L 770 600 L 820 700 L 860 800 L 880 1000 L 900 1300 L 820 1180 L 700 860 L 640 560 L 610 360 Z";
+  "M 630 252 L 656 286 L 690 330 L 730 392 L 772 462 L 820 548 L 872 650 L 926 770 L 980 900 L 1040 1050 L 1100 1250 L 1100 1520 L 900 1260 L 780 900 L 700 600 L 652 400 Z";
 
 const SNOW_D =
-  "M 578 252 L 600 246 L 628 252 L 638 296 L 624 292 L 646 354 L 624 346 L 604 396 L 588 346 L 566 358 L 574 306 L 562 312 Z";
+  "M 574 250 L 600 244 L 630 252 L 656 286 L 690 330 L 708 358 L 686 352 L 694 384 L 668 368 L 656 404 L 636 376 L 618 418 L 600 382 L 582 412 L 566 376 L 546 396 L 544 360 L 520 372 L 528 318 L 552 282 Z";
+
+// The left half of the cap, in shadow: dawn comes from the right.
+const SNOW_SHADE_D =
+  "M 574 250 L 600 244 L 604 300 L 596 340 L 600 382 L 582 412 L 566 376 L 546 396 L 544 360 L 520 372 L 528 318 L 552 282 Z";
 
 // Contour lines across the face, each one clipped to the flanks at its height,
 // with a gentle sag so they read as terrain rather than ruled lines.
@@ -116,8 +121,6 @@ const CONTOURS = [520, 700, 880, 1060, 1240, 1420, 1600, 1780, 1960, 2140].map((
   return `M ${l} ${y} C ${l + (m - l) * 0.5} ${y + sag}, ${m} ${y + sag * 0.4}, ${m} ${y + sag * 0.6} S ${r - (r - m) * 0.4} ${y - sag * 0.2}, ${r} ${y + 6}`;
 });
 
-const MASSIF_FOREST = forest(7, 46, 150, 970, 1300, 2380, 26, 66, (x, y) =>
-  offTrail(x) || x < flankX(LEFT_FLANK, y) + 24 || x > flankX(RIGHT_FLANK, y) - 24);
 
 export function SkyStars() {
   const stars: [number, number, number][] = [
@@ -187,10 +190,10 @@ export function Massif({ stopLabels }: { stopLabels: Record<StopKey, string> }) 
 
       {/* Rock ribs, so the face reads as stone rather than a flat cut-out. */}
       <g className="ribs">
-        <path d="M 560 420 C 520 560, 470 700, 430 820" />
-        <path d="M 650 420 C 690 560, 760 680, 820 760" />
-        <path d="M 470 760 C 430 900, 380 1040, 330 1160" />
-        <path d="M 800 820 C 830 940, 860 1060, 880 1180" />
+        <path d="M 540 470 C 500 590, 440 720, 380 840" />
+        <path d="M 690 470 C 740 590, 810 700, 890 800" />
+        <path d="M 420 820 C 370 960, 310 1090, 240 1210" />
+        <path d="M 850 860 C 900 980, 950 1100, 1000 1220" />
       </g>
 
       <g className="contours">
@@ -198,9 +201,9 @@ export function Massif({ stopLabels }: { stopLabels: Record<StopKey, string> }) 
       </g>
 
       <path className="snow" d={SNOW_D} />
-      <path className="ridge-light" d="M 628 252 L 638 300 L 650 360 L 700 450 L 730 520 L 770 600" />
+      <path className="snow-shade" d={SNOW_SHADE_D} />
+      <path className="ridge-light" d="M 630 252 L 656 286 L 690 330 L 730 392 L 772 462 L 820 548" />
 
-      <path className="massif-forest" d={MASSIF_FOREST} />
 
       {/* Stops. The flag and ring live with the mountain; the trail itself is
           its own plane so drawing it does not repaint the whole massif. */}

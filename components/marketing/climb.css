@@ -125,6 +125,8 @@
 }
 
 .ascent .snow{ fill: #dbe6f7; }
+/* The shaded half of the cap, away from the dawn, so it reads as form. */
+.ascent .snow-shade{ fill: #a9bad6; opacity: 0.55; }
 
 .ascent .contours path{
   fill: none;
@@ -143,7 +145,6 @@
   opacity: calc(0.15 + var(--dawn) * 0.75);
 }
 
-.ascent .massif-forest{ fill: #0a1428; }
 
 /* ---- stops: flag, ring, label ---- */
 
@@ -316,76 +317,102 @@ html[lang="my"] .ascent-block h2{ letter-spacing: 0; line-height: 1.45; }
 /* ---- the altimeter: where you are, and a way to jump ---- */
 
 .ascent-nav{
+  --nav-fill: 0;
   position: absolute;
   top: 50%;
-  right: max(20px, calc(50% - 640px));
+  right: max(16px, calc(50% - 650px));
   z-index: 3;
   transform: translateY(-50%);
 }
 
+/* A trail marker, not a widget: one thin line, every dot on the same axis,
+   and the line fills teal from the bottom as the climb rises. No plate. */
 .ascent-nav ol{
   position: relative;
   display: grid;
-  gap: 2px;
   margin: 0;
-  padding: 6px 2px;
-  border-radius: 22px;
-  /* A dark plate, because the labels cross a dawn sky by the end. */
-  background: rgba(8, 13, 24, 0.62);
+  padding: 0;
   list-style: none;
 }
 
-.ascent-nav ol::before{
+.ascent-nav ol::before,
+.ascent-nav ol::after{
   position: absolute;
-  top: 28px;
-  bottom: 28px;
-  right: 23px;
+  top: 22px;
+  bottom: 22px;
+  right: 15px;
   width: 2px;
-  background: repeating-linear-gradient(180deg, rgba(201, 212, 230, 0.5) 0 3px, transparent 3px 9px);
+  border-radius: 1px;
   content: "";
 }
 
+.ascent-nav ol::before{ background: rgba(230, 237, 248, 0.22); }
+
+.ascent-nav ol::after{
+  background: var(--teal-500);
+  transform: scaleY(var(--nav-fill));
+  transform-origin: bottom;
+  transition: transform 240ms ease-in-out;
+}
+
 .ascent-nav button{
-  display: flex;
+  display: grid;
+  grid-template-columns: auto 32px;
   align-items: center;
-  flex-direction: row-reverse;
-  gap: 12px;
+  justify-items: end;
+  width: 100%;
   min-height: 44px;
-  padding: 0 14px 0 10px;
+  padding: 0 0 0 12px;
   border: 0;
-  border-radius: 999px;
-  color: #9fb0c8;
+  color: rgba(230, 237, 248, 0.7);
   background: transparent;
   font: inherit;
   font-size: var(--t-meta);
-  font-weight: 700;
+  font-weight: 600;
+  text-shadow: 0 1px 2px rgba(4, 8, 18, 0.65);
   cursor: pointer;
-  transition: color 160ms ease-out, background 160ms ease-out;
+  transition: color 160ms ease-out;
 }
 
-.ascent-nav button:hover{ color: #fff; background: rgba(255, 255, 255, 0.06); }
+.ascent-nav button:hover{ color: #fff; }
 
 .ascent-nav button:focus-visible{
   outline: 2px solid var(--amber-500);
   outline-offset: 2px;
+  border-radius: 8px;
 }
+
+/* Label left, dot right, whatever the source order. */
+.ascent-nav button > span:last-child{ grid-column: 1; grid-row: 1; padding-right: 4px; }
 
 .ascent-nav-dot{
   position: relative;
   z-index: 1;
-  width: 14px;
-  height: 14px;
-  border: 2px solid #9fb0c8;
+  grid-column: 2;
+  grid-row: 1;
+  justify-self: center;
+  width: 10px;
+  height: 10px;
+  border: 2px solid rgba(230, 237, 248, 0.7);
   border-radius: 50%;
-  background: var(--navy-900);
+  background: #0b1324;
   transition: background 160ms ease-out, border-color 160ms ease-out, transform 160ms ease-out;
 }
 
-.ascent-nav button[aria-current]{ color: #fff; }
-.ascent-nav button[aria-current] .ascent-nav-dot{
+/* Passed stops are filled; the current one is larger and ringed. */
+.ascent-nav button[data-passed] .ascent-nav-dot{
   border-color: var(--teal-500);
   background: var(--teal-500);
-  transform: scale(1.25);
+}
+
+.ascent-nav button[aria-current]{ color: #fff; font-weight: 700; }
+
+.ascent-nav button[aria-current] .ascent-nav-dot{
+  border-color: #e6fff6;
+  background: var(--teal-500);
+  outline: 2px solid rgba(29, 158, 117, 0.55);
+  outline-offset: 2px;
+  transform: scale(1.2);
 }
 
 /* The header floats over the stage rather than pushing it down. */
