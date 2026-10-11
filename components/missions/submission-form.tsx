@@ -1,14 +1,16 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { clearDraft, loadDraft, saveDraft } from "@/lib/offline/draft-store";
+import { clearDraft, loadDraft, saveDraft, type MissionDraft } from "@/lib/offline/draft-store";
 import { getAppCopy } from "@/lib/i18n/app-copy";
 import type { SubmissionField } from "@/lib/domain/mission-briefs";
 
-const EMPTY: Record<string, string> = {};
+// Field keys come from the mission brief, so the form is a map of whatever
+// that brief asks for, not a fixed record.
+type FormValues = Record<string, string>;
 
-function getInitialForm(fields: SubmissionField[]) {
-  return fields.reduce((acc, field) => ({ ...acc, [field.key]: "" }), { screenshotUrl: "", reflection: "" });
+function getInitialForm(fields: SubmissionField[]): FormValues {
+  return fields.reduce<FormValues>((acc, field) => ({ ...acc, [field.key]: "" }), { screenshotUrl: "", reflection: "" });
 }
 
 export function SubmissionForm({
@@ -28,16 +30,16 @@ export function SubmissionForm({
 }) {
   const c = getAppCopy(locale).mission;
   const initialForm = getInitialForm(fields);
-  const [form, setForm] = useState(initialForm);
+  const [form, setForm] = useState<FormValues>(initialForm);
   const [status, setStatus] = useState("");
   const [busy, setBusy] = useState(false);
 
   useEffect(() => {
-    loadDraft(userId, missionKey).then((draft) => draft && setForm({ ...initialForm, ...draft }));
+    loadDraft(userId, missionKey).then((draft) => draft && setForm({ ...initialForm, ...(draft as unknown as FormValues) }));
   }, [missionKey, userId, JSON.stringify(initialForm)]);
 
   useEffect(() => {
-    const timer = window.setTimeout(() => saveDraft(userId, missionKey, form).then(() => setStatus(c.draftSaved)), 600);
+    const timer = window.setTimeout(() => saveDraft(userId, missionKey, form as unknown as Omit<MissionDraft, "savedAt">).then(() => setStatus(c.draftSaved)), 600);
     return () => window.clearTimeout(timer);
   }, [c.draftSaved, form, missionKey, userId]);
 
