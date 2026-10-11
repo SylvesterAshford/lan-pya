@@ -40,11 +40,18 @@ export const STOPS: { key: StopKey; x: number; y: number; side: "left" | "right"
   { key: "summit", x: 600, y: 250, side: "left" },
 ];
 
+// One decimal is sub-pixel at every size this is drawn; full float precision
+// would roughly quadruple the forest's share of the HTML.
+const r1 = (v: number) => Math.round(v * 10) / 10;
+
 /** A pine as one path: three stacked tiers on a short trunk. */
-function pine(x: number, y: number, h: number) {
+function pine(x0: number, y0: number, h0: number) {
+  const x = r1(x0);
+  const y = r1(y0);
+  const h = r1(h0);
   const w = h * 0.42;
   const t = h / 3;
-  return [
+  return ([
     `M ${x} ${y - h}`,
     `L ${x + w * 0.55} ${y - h + t * 1.1} L ${x + w * 0.3} ${y - h + t * 1.05}`,
     `L ${x + w * 0.8} ${y - h + t * 2.1} L ${x + w * 0.45} ${y - h + t * 2.05}`,
@@ -53,7 +60,7 @@ function pine(x: number, y: number, h: number) {
     `L ${x - w} ${y - h * 0.08} L ${x - w * 0.45} ${y - h + t * 2.05}`,
     `L ${x - w * 0.8} ${y - h + t * 2.1} L ${x - w * 0.3} ${y - h + t * 1.05}`,
     `L ${x - w * 0.55} ${y - h + t * 1.1} Z`,
-  ].join(" ");
+  ].join(" ")).replace(/-?\d+\.\d{2,}/g, (n) => String(r1(Number(n))));
 }
 
 // Deterministic, so server and client render the same forest.
@@ -198,7 +205,7 @@ export function Massif({ stopLabels }: { stopLabels: Record<StopKey, string> }) 
       {/* Stops. The flag and ring live with the mountain; the trail itself is
           its own plane so drawing it does not repaint the whole massif. */}
       {STOPS.map((stop) => (
-        <g key={stop.key} className={`stop stop-${stop.key}`} data-stop={stop.key} transform={`translate(${stop.x} ${stop.y})`}>
+        <g key={stop.key} className={`ascent-stop stop-${stop.key}`} data-stop={stop.key} transform={`translate(${stop.x} ${stop.y})`}>
           <line className="stop-pole" x1="0" y1="-6" x2="0" y2="-62" />
           <path className="stop-flag" d="M 1 -62 L 34 -52 L 1 -42 Z" />
           <circle className="stop-ring" r="13" />

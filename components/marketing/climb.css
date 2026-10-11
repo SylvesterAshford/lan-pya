@@ -11,9 +11,12 @@
   position: relative;
   /* Seven viewports of travel. The summit (sunrise and hold) owns the
      last fifth, the largest single share, because it is the peak. */
+  height: 800vh;
   height: 800svh;
   color: var(--on-solid);
-  background: var(--navy-900);
+  /* The near ground's colour, so the band an address bar uncovers under the
+     stage reads as more ground rather than a seam. */
+  background: #050a15;
 }
 
 .ascent-stage{
@@ -21,10 +24,12 @@
   --dawn: 0;
   /* The world is drawn 1000 units wide. It is scaled to fill the width on a
      landscape screen and the height on a portrait one, then cropped. */
+  --ww: max(100vw, 133.34vh);
   --ww: max(100vw, 133.34svh);
   --cx: 0.5;
   position: sticky;
   top: 0;
+  height: 100vh;
   height: 100svh;
   overflow: hidden;
   isolation: isolate;
@@ -44,7 +49,7 @@
   background: linear-gradient(180deg, #04070f 0%, #0a1326 46%, #17254a 100%);
 }
 
-.sky-dawn{
+.ascent .sky-dawn{
   position: absolute;
   inset: 0;
   opacity: var(--dawn);
@@ -75,6 +80,15 @@
   will-change: transform;
 }
 
+/* Scenery is placed by script. Until the first frame is set it is hidden,
+   so a slow phone never paints pines and travellers stacked at the top. */
+.ascent:not(.is-ready) .ascent-plane,
+.ascent:not(.is-ready) .ascent-walker,
+.ascent:not(.is-ready) .ascent-sun{ opacity: 0; }
+
+.ascent-plane,
+.ascent-walker{ transition: opacity 360ms ease-out; }
+
 /* ---- planes ---- */
 
 .ascent-plane{
@@ -92,17 +106,17 @@
 .ascent-trail{ height: calc(var(--ww) * 2.4); }
 .ascent-near{ height: calc(var(--ww) * 0.6); }
 
-.far-fill{ fill: #34476f; }
-.far-snow{ fill: #9fb2d4; opacity: 0.55; }
-.mid-fill{ fill: #1b2a4d; }
-.mid-forest{ fill: #111c36; }
+.ascent .far-fill{ fill: #34476f; }
+.ascent .far-snow{ fill: #9fb2d4; opacity: 0.55; }
+.ascent .mid-fill{ fill: #1b2a4d; }
+.ascent .mid-forest{ fill: #111c36; }
 
 /* Dawn reaches the distant planes as warm haze, not a recolour. */
-.dawn-haze{ opacity: calc(var(--dawn) * 0.34); }
+.ascent .dawn-haze{ opacity: calc(var(--dawn) * 0.34); }
 
-.lit-face{ opacity: var(--dawn); }
+.ascent .lit-face{ opacity: var(--dawn); }
 
-.ribs path{
+.ascent .ribs path{
   fill: none;
   stroke: #0e1730;
   stroke-width: 7;
@@ -110,9 +124,9 @@
   opacity: 0.5;
 }
 
-.snow{ fill: #dbe6f7; }
+.ascent .snow{ fill: #dbe6f7; }
 
-.contours path{
+.ascent .contours path{
   fill: none;
   stroke: #9fb6dc;
   stroke-width: 2;
@@ -120,7 +134,7 @@
   opacity: 0.12;
 }
 
-.ridge-light{
+.ascent .ridge-light{
   fill: none;
   stroke: #ffd59a;
   stroke-width: 3;
@@ -129,36 +143,36 @@
   opacity: calc(0.15 + var(--dawn) * 0.75);
 }
 
-.massif-forest{ fill: #0a1428; }
+.ascent .massif-forest{ fill: #0a1428; }
 
 /* ---- stops: flag, ring, label ---- */
 
-.stop{
+.ascent-stop{
   opacity: 0;
   transition: opacity 420ms ease-out;
 }
 
-.stop.is-near{ opacity: 1; }
+.ascent-stop.is-near{ opacity: 1; }
 
-.stop-pole{
+.ascent .stop-pole{
   stroke: #c9d4e6;
   stroke-width: 2.5;
   stroke-linecap: round;
 }
 
-.stop-flag{
+.ascent .stop-flag{
   fill: var(--amber-500);
   transition: fill 240ms ease-out;
 }
 
-.stop-ring{
+.ascent .stop-ring{
   fill: #0b1324;
   stroke: var(--amber-500);
   stroke-width: 3;
   transition: fill 240ms ease-out, stroke 240ms ease-out;
 }
 
-.stop-check{
+.ascent .stop-check{
   fill: none;
   stroke: #fff;
   stroke-width: 3;
@@ -168,7 +182,7 @@
   transition: opacity 240ms ease-out;
 }
 
-.stop-label{
+.ascent .stop-label{
   fill: #e6edf8;
   font-size: 17px;
   font-weight: 700;
@@ -181,31 +195,31 @@
 
 /* Reached: the flag turns from "ahead" amber to "done" teal and the ring
    carries a check, so the state survives without colour. */
-.stop.is-reached .stop-flag{ fill: var(--teal-500); }
-.stop.is-reached .stop-ring{ fill: var(--teal-500); stroke: #e6fff6; }
-.stop.is-reached .stop-check{ opacity: 1; }
+.ascent-stop.is-reached .stop-flag{ fill: var(--teal-500); }
+.ascent-stop.is-reached .stop-ring{ fill: var(--teal-500); stroke: #e6fff6; }
+.ascent-stop.is-reached .stop-check{ opacity: 1; }
 
 /* ---- trail ---- */
 
-.trail-ahead,
-.trail-walked{
+.ascent .trail-ahead,
+.ascent .trail-walked{
   fill: none;
   stroke-linecap: round;
   stroke-linejoin: round;
 }
 
-.trail-ahead{
+.ascent .trail-ahead{
   stroke: #8fa3c4;
   stroke-width: 3;
   stroke-dasharray: 2 12;
   opacity: 0.55;
 }
 
-.trail-walked{
+.ascent .trail-walked{
   stroke: var(--teal-500);
   stroke-width: 7;
   stroke-dasharray: 1;
-  stroke-dashoffset: calc(1 - var(--walk));
+  stroke-dashoffset: 1;
 }
 
 /* ---- the travellers ---- */
@@ -222,9 +236,9 @@
 
 /* ---- the near ground ---- */
 
-.near-fill{ fill: #050a15; }
-.near-rock{ fill: #121c33; }
-.near-grass{ fill: none; stroke: #1f3b3a; stroke-width: 4; stroke-linecap: round; }
+.ascent .near-fill{ fill: #050a15; }
+.ascent .near-rock{ fill: #121c33; }
+.ascent .near-grass{ fill: none; stroke: #1f3b3a; stroke-width: 4; stroke-linecap: round; }
 
 /* ---- copy ---- */
 
@@ -416,6 +430,27 @@ html[lang="my"] .ascent-block h2{ letter-spacing: 0; line-height: 1.45; }
   .ascent-nav{ display: none; }
 }
 
+/* ---- short screens: landscape phones and short laptop windows ---- */
+
+@media (min-width: 760px) and (max-height: 760px){
+  /* Centre the hero in the space under the header, not the whole screen. */
+  .ascent-block-hero{ top: calc(50% + 34px); }
+  .ascent-block-hero .hero-kicker{ margin-bottom: 10px; }
+  .ascent-block-hero .hero-copy h1{ margin-bottom: 14px; font-size: clamp(30px, 8vh, 56px); }
+  .ascent-block-hero .hero-copy > p{ margin-bottom: 18px; }
+  .ascent-block h2{ font-size: clamp(26px, 6.5vh, 44px); }
+  .ascent-block-summit{ padding: 20px 24px; }
+}
+
+@media (min-width: 760px) and (max-height: 640px){
+  .ascent-block-hero .hero-trust{ display: none; }
+  .ascent-nav{ display: none; }
+}
+
+@media (min-width: 760px) and (max-height: 440px){
+  .ascent-block-hero .hero-copy > p{ display: none; }
+}
+
 /* ---- reduced motion: a still of the finished climb ---- */
 
 .ascent.is-still{ height: auto; }
@@ -434,7 +469,7 @@ html[lang="my"] .ascent-block h2{ letter-spacing: 0; line-height: 1.45; }
 
 .ascent.is-still .ascent-nav{ display: none; }
 
-.ascent.is-still .stop{ opacity: 1; transition: none; }
+.ascent.is-still .ascent-stop{ opacity: 1; transition: none; }
 
 /* The still is the summit at dawn, the brightest frame on the page, so the
    hero needs a deeper scrim than it does at night. */
@@ -484,7 +519,7 @@ html[lang="my"] .ascent-block h2{ letter-spacing: 0; line-height: 1.45; }
 
 @media (prefers-reduced-motion: reduce){
   .ascent-block,
-  .stop-flag,
-  .stop-ring,
-  .stop-check{ transition: none; }
+  .ascent .stop-flag,
+  .ascent .stop-ring,
+  .ascent .stop-check{ transition: none; }
 }

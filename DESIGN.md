@@ -490,7 +490,11 @@ of the rule:
 - Vector scenery and the two mascot cut-outs only. No video, no image
   sequences, no third-party animation library.
 - Every moving element is a whole layer moved by `transform` or `opacity`.
-  The only per-frame repaint is the walked trail's dash offset.
+  The walked trail's dash offset repaints its own plane each frame; the dawn
+  layers repaint only during the sunrise stretch. Layout is never read inside
+  the frame loop.
+- Without JavaScript the stops render as a plain stacked page, and the scenery
+  stays hidden until the script has placed its first frame.
 - Copy is real HTML, one block per stop, never baked into the drawing.
 - `prefers-reduced-motion` gets a finished still (the summit at dawn, every
   stop reached) and the stop copy as a plain list, with no pinned scroll.

@@ -19,8 +19,9 @@ import "./climb.css";
  * Cost model, because the audience is on budget phones and mobile data:
  *  - No video, no images except the two 17KB mascot cut-outs.
  *  - Every moving thing is a whole element moved by `transform`, so the
- *    compositor does the work. The only per-frame repaint is the trail's
- *    dash offset, on a plane that holds nothing else.
+ *    compositor does the work. Per frame, only the trail's own plane
+ *    repaints; the dawn layers repaint during the sunrise stretch alone, and
+ *    layout is never read inside the loop.
  *  - One scroll listener that only records a target, one rAF loop that eases
  *    toward it and stops itself when it arrives.
  *
@@ -105,6 +106,7 @@ export function TheClimb({ blocks, stopLabels, navLabel, navStops, travellerAlt 
     const blockEls = Array.from(root.querySelectorAll<HTMLElement>("[data-ascent-block]"));
     const stopEls = Array.from(root.querySelectorAll<SVGGElement>("[data-stop]"));
     const navEls = Array.from(root.querySelectorAll<HTMLElement>("[data-ascent-jump]"));
+    const walked = q<SVGPathElement>(".trail-walked")!;
 
     // Measure the route once. A path element is needed for geometry; one that
     // is never attached to the document is enough.
@@ -138,6 +140,7 @@ export function TheClimb({ blocks, stopLabels, navLabel, navStops, travellerAlt 
 
     // Layout, refreshed on resize.
     let W = 0, Hs = 0, scale = 1, worldLeft = 0, worldH = 0, anchor = 0.62, walkerH = 0, nearH = 0;
+    let walkerW: number[] = [];
     const measure = () => {
       const r = stage.getBoundingClientRect();
       W = r.width;
@@ -149,16 +152,22 @@ export function TheClimb({ blocks, stopLabels, navLabel, navStops, travellerAlt 
       anchor = W < 760 ? 0.74 : 0.62;
       walkerH = walkers[0]?.getBoundingClientRect().height || 104 * scale;
       nearH = near.getBoundingClientRect().height;
+      // Read once here, never inside render: reading layout after the frame's
+      // style writes would force a synchronous layout every frame.
+      walkerW = walkers.map((el) => el.getBoundingClientRect().width);
     };
 
     let target = 0;
     let current = -1;
     let raf = 0;
     let lastActive = "";
+    let lastDawn = "";
 
     const progress = () => {
       const r = root.getBoundingClientRect();
-      const travel = r.height - window.innerHeight;
+      // The stage's own height, not innerHeight: on phones the stage is sized
+      // in svh while innerHeight tracks the address bar.
+      const travel = r.height - Hs;
       return travel > 0 ? clamp01(-r.top / travel) : 0;
     };
 
@@ -188,8 +197,15 @@ export function TheClimb({ blocks, stopLabels, navLabel, navStops, travellerAlt 
       const sunY = 190 * scale + camTy + (1 - dawn) * 170 * scale;
       sun.style.transform = `translate3d(${sunX}px, ${sunY}px, 0) translate(-50%, -50%)`;
 
-      stage.style.setProperty("--walk", w.toFixed(4));
-      stage.style.setProperty("--dawn", dawn.toFixed(3));
+      // The walked trail is written directly, so only its own plane repaints.
+      // Dawn is written only when it changes: it is zero for most of the
+      // climb, and every write restyles the whole scene.
+      walked.style.strokeDashoffset = (1 - w).toFixed(4);
+      const dawnValue = dawn.toFixed(3);
+      if (dawnValue !== lastDawn) {
+        lastDawn = dawnValue;
+        stage.style.setProperty("--dawn", dawnValue);
+      }
 
       // Two travellers, the second a few steps behind. A small step bob tied
       // to distance walked, not to time, so it stops when the reader does.
@@ -198,7 +214,7 @@ export function TheClimb({ blocks, stopLabels, navLabel, navStops, travellerAlt 
         const pt = at(wi);
         const bob = Math.abs(Math.sin(wi * total / 9)) * 2.4 * scale;
         const spread = lerp(i ? 16 : -6, i ? 13 : -13, dawn);
-        const x = worldLeft + (pt.x + spread) * scale - el.offsetWidth / 2;
+        const x = worldLeft + (pt.x + spread) * scale - (walkerW[i] ?? 0) / 2;
         const y = pt.y * scale + camTy - walkerH - bob + (i ? 4 * scale * (1 - dawn) : 0);
         el.style.transform = `translate3d(${x}px, ${y}px, 0)`;
       });
@@ -222,7 +238,11 @@ export function TheClimb({ blocks, stopLabels, navLabel, navStops, travellerAlt 
       if (active !== lastActive) {
         lastActive = active;
         const navKey = active === "hero" ? "start" : active;
-        navEls.forEach((el) => el.toggleAttribute("aria-current", el.dataset.ascentJump === navKey));
+        navEls.forEach((el) => {
+          // "step", not an empty value: aria-current="" reads as false.
+          if (el.dataset.ascentJump === navKey) el.setAttribute("aria-current", "step");
+          else el.removeAttribute("aria-current");
+        });
       }
     };
 
@@ -243,6 +263,9 @@ export function TheClimb({ blocks, stopLabels, navLabel, navStops, travellerAlt 
       root.classList.toggle("is-still", still.matches);
       root.classList.toggle("is-live", !still.matches);
       measure();
+      // Until the first frame is placed, the scenery is hidden: its planes
+      // have no position without this script.
+      requestAnimationFrame(() => root.classList.add("is-ready"));
       if (still.matches) {
         // A finished climb: summit, dawn, every stop reached.
         cancelAnimationFrame(raf);
@@ -254,7 +277,14 @@ export function TheClimb({ blocks, stopLabels, navLabel, navStops, travellerAlt 
       }
     };
 
-    const onResize = () => { measure(); current = -1; wake(); };
+    const onResize = () => {
+      measure();
+      // Reduced motion is a still: re-lay it out, never replace it with the
+      // frame for the current scroll position.
+      if (still.matches) { render(1); return; }
+      current = -1;
+      wake();
+    };
     const onScroll = () => { if (!still.matches) wake(); };
 
     setStill();
@@ -337,6 +367,11 @@ export function TheClimb({ blocks, stopLabels, navLabel, navStops, travellerAlt 
         </div>
       </div>
       <p className="sr-only">{travellerAlt}</p>
+      {/* Without the script there is no climb to drive, so the stops read as
+          a plain page rather than seven screens of empty sky. */}
+      <noscript>
+        <style>{".ascent{height:auto}.ascent-stage{position:relative;height:auto;overflow:visible}.ascent-scene,.ascent-scrim,.ascent-nav{display:none}.ascent-copy{position:static;display:grid;gap:56px;max-width:760px;margin:0 auto;padding:120px 24px 80px}.ascent-block{position:static;width:auto;opacity:1;transform:none}"}</style>
+      </noscript>
     </section>
   );
 }
