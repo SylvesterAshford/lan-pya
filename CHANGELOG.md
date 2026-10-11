@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.26.1.0] - 2026-10-12
+
+### Changed
+
+- The mountain on the landing page is broad and solid, with a wide summit both travellers stand on and a snowcap lit on one side and shaded on the other. The trees that sat on its face are gone; the pines stay in the foreground.
+- The climb's position rail is now a single trail line: every stop sits on it, passed stops fill in, and the line fills teal behind you as you climb. The dark panel behind it is gone.
+
 ## [0.26.0.0] - 2026-10-12
 
 ### Added

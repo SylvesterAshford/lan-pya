@@ -107,6 +107,7 @@ export function TheClimb({ blocks, stopLabels, navLabel, navStops, travellerAlt 
     const stopEls = Array.from(root.querySelectorAll<SVGGElement>("[data-stop]"));
     const navEls = Array.from(root.querySelectorAll<HTMLElement>("[data-ascent-jump]"));
     const walked = q<SVGPathElement>(".trail-walked")!;
+    const nav = q<HTMLElement>(".ascent-nav")!;
 
     // Measure the route once. A path element is needed for geometry; one that
     // is never attached to the document is enough.
@@ -238,11 +239,19 @@ export function TheClimb({ blocks, stopLabels, navLabel, navStops, travellerAlt 
       if (active !== lastActive) {
         lastActive = active;
         const navKey = active === "hero" ? "start" : active;
-        navEls.forEach((el) => {
-          // "step", not an empty value: aria-current="" reads as false.
-          if (el.dataset.ascentJump === navKey) el.setAttribute("aria-current", "step");
-          else el.removeAttribute("aria-current");
-        });
+        // Between stops (the quiet stretch) the rail keeps the last stop reached.
+        if (navKey) {
+          const order = ["start", "choose", "build", "prove", "summit"];
+          const step = order.indexOf(navKey);
+          nav.style.setProperty("--nav-fill", String(step / (order.length - 1)));
+          navEls.forEach((el) => {
+            const at = order.indexOf(el.dataset.ascentJump ?? "");
+            // "step", not an empty value: aria-current="" reads as false.
+            if (at === step) el.setAttribute("aria-current", "step");
+            else el.removeAttribute("aria-current");
+            el.toggleAttribute("data-passed", at < step);
+          });
+        }
       }
     };
 
