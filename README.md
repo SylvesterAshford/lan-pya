@@ -77,6 +77,11 @@ Google sign-in uses Google Identity Services (Google's own button). It returns a
 
 ### Email confirmation setup
 
+The default confirmation email links to `*.supabase.co`, which cannot be opened in Myanmar without a VPN. On Supabase's built-in email sender the template cannot be edited, so choose one:
+
+- **No confirmation email (the current pilot setting).** Turn off *Confirm email* in Supabase → Authentication → Sign In / Providers → Email. `/api/auth/signup` then signs the new account straight in. Email addresses are not proven, but Google sign-in still gives verified identities.
+- **Your own sender (custom SMTP).** Set it up in Supabase → Authentication → Emails (Gmail with an app password works without a domain), then use the template below.
+
 1. **Supabase → Authentication → URL Configuration.** Set *Site URL* to the production URL (`https://lan-pya-rust.vercel.app`). Add `https://lan-pya-rust.vercel.app/**` and `http://localhost:3000/**` to *Redirect URLs*.
 2. **Supabase → Authentication → Email Templates → Confirm signup.** Point the link at this site rather than Supabase:
 
