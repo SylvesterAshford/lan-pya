@@ -1,6 +1,6 @@
-import { fireEvent, render, screen } from "@testing-library/react";
+import { cleanup, fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { NextIntlClientProvider } from "next-intl";
-import { describe, expect, it, vi } from "vitest";
+import { afterEach, describe, expect, it, vi } from "vitest";
 import { DEMO_ACCOUNT, EmailAuthForm } from "@/components/auth/email-auth-form";
 
 vi.mock("next/navigation", () => ({
@@ -27,6 +27,11 @@ const messages = {
 };
 
 describe("EmailAuthForm", () => {
+  afterEach(() => {
+    cleanup();
+    vi.unstubAllGlobals();
+  });
+
   it("prefills the signed-in demo account instead of rendering a public demo page", () => {
     render(<NextIntlClientProvider locale="en" messages={messages}><EmailAuthForm locale="en" demoRequested /></NextIntlClientProvider>);
 
@@ -48,5 +53,30 @@ describe("EmailAuthForm", () => {
 
     expect(signIn).toHaveAttribute("aria-pressed", "false");
     expect(createAccount).toHaveAttribute("aria-pressed", "true");
+  });
+
+
+
+  it("signs in through this site's server, never by calling Supabase from the browser", async () => {
+    const request = vi.fn().mockResolvedValue(new Response(JSON.stringify({ data: { signedIn: true } }), { status: 200 }));
+    vi.stubGlobal("fetch", request);
+    render(<NextIntlClientProvider locale="en" messages={messages}><EmailAuthForm locale="en" demoRequested /></NextIntlClientProvider>);
+
+    fireEvent.click(screen.getAllByRole("button", { name: "Sign in" })[1]);
+
+    await waitFor(() => expect(request).toHaveBeenCalledTimes(1));
+    const [url, init] = request.mock.calls[0];
+    expect(url).toBe("/api/auth/login");
+    expect(JSON.parse(init.body)).toEqual({ email: DEMO_ACCOUNT.email, password: DEMO_ACCOUNT.password });
+    expect(String(url)).not.toContain("supabase");
+  });
+
+  it("shows the credential error when the server rejects the sign-in", async () => {
+    vi.stubGlobal("fetch", vi.fn().mockResolvedValue(new Response("{}", { status: 401 })));
+    render(<NextIntlClientProvider locale="en" messages={messages}><EmailAuthForm locale="en" demoRequested /></NextIntlClientProvider>);
+
+    fireEvent.click(screen.getAllByRole("button", { name: "Sign in" })[1]);
+
+    expect(await screen.findByRole("alert")).toHaveTextContent("Invalid credentials");
   });
 });

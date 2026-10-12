@@ -4236,6 +4236,16 @@ a{ color: inherit; text-decoration: none; }
   margin-top: 24px;
 }
 
+/* Google's own button (Google Identity Services), rendered into this slot.
+   The slot reserves the button's height so the form does not jump while the
+   script loads, and centres it the way the old full-width button sat. */
+.google-gis-slot{
+  display: flex;
+  min-height: 44px;
+  align-items: center;
+  justify-content: center;
+}
+
 /* Google sign-in mark */
 .google-mark{
   display: grid;

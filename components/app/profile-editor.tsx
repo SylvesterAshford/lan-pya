@@ -4,7 +4,6 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Check, Pencil, X } from "lucide-react";
 import { Mascot, MASCOT_VARIANTS } from "@/components/app/mascot";
-import { createClient } from "@/lib/supabase/client";
 
 /**
  * Profile editor.
@@ -18,8 +17,10 @@ import { createClient } from "@/lib/supabase/client";
  * pick between; see MASCOT_VARIANTS. Rendering a chooser whose options are the
  * same drawing would be a control that does nothing.
  *
- * Writes go through `update_learner_profile`, the same definer-function route
- * every other write in this schema takes. The form states what failed rather
+ * Writes go through /api/profile/update, which calls `update_learner_profile`,
+ * the same definer-function route every other write in this schema takes. The
+ * browser never contacts Supabase directly (it is unreachable from Myanmar
+ * without a VPN). The form states what failed rather
  * than swallowing it, because a rename that silently did not save is worse
  * than one that visibly did not.
  */
@@ -49,15 +50,15 @@ export function ProfileEditor({
     event.preventDefault();
     setBusy(true);
     setError("");
-    const supabase = createClient();
-    const { error: rpcError } = await supabase.rpc("update_learner_profile", {
-      p_alias: name.trim(),
-      p_headline: line.trim(),
-      p_avatar: pick,
-    });
+    const response = await fetch("/api/profile/update", {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({ alias: name.trim(), headline: line.trim(), avatar: pick }),
+    }).catch(() => null);
+    const body = await response?.json().catch(() => null);
     setBusy(false);
-    if (rpcError) {
-      setError(rpcError.message || labels.failed);
+    if (!response?.ok) {
+      setError(body?.detail || labels.failed);
       return;
     }
     setOpen(false);

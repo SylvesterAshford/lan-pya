@@ -56,18 +56,40 @@ npm run demo:provision
 
 This script creates or updates the demo account in Supabase with the learner profile, missions, and proof items. It requires `NEXT_PUBLIC_SUPABASE_URL` and `SUPABASE_SECRET_KEY` environment variables.
 
-## Google OAuth
+## Sign-in works without a VPN in Myanmar
 
-In Google Cloud, create a Web OAuth client and use this authorized redirect URI:
+`*.supabase.co` is not reachable from Myanmar without a VPN, so **the browser never contacts Supabase**. Every auth step and every database call runs on the server (Vercel → Supabase). The browser only talks to this site and to `accounts.google.com`. `tests/e2e/no-supabase-in-browser.spec.ts` blocks Supabase in the browser and checks that sign-in, the workspace and profile editing still work. Keep it passing: never add a browser-side Supabase client back.
 
-```text
-https://<project-ref>.supabase.co/auth/v1/callback
+| Flow | Browser talks to | Server route |
+|---|---|---|
+| Email sign-in / sign-up | this site | `POST /api/auth/login`, `POST /api/auth/signup` |
+| Confirmation email link | this site | `GET /auth/confirm` |
+| Google sign-in | `accounts.google.com`, this site | `POST /api/auth/google` (ID token, `signInWithIdToken`) |
+| Profile editor | this site | `POST /api/profile/update` |
+
+### Google sign-in setup
+
+Google sign-in uses Google Identity Services (Google's own button). It returns an ID token, which the server exchanges with Supabase. There is no redirect through Supabase.
+
+1. **Google Cloud → APIs & Services → Credentials → your Web OAuth client.** Add every origin the app is served from under *Authorized JavaScript origins*, for example `https://lan-pya-rust.vercel.app` and `http://localhost:3000`. Google only shows its button on listed origins, so random preview URLs will show an error there.
+2. **Supabase → Authentication → Providers → Google.** Enable it, and make sure the same Web client ID is in *Client IDs*. Leave *Skip nonce checks* off.
+3. **Vercel → Settings → Environment Variables.** Set `NEXT_PUBLIC_GOOGLE_CLIENT_ID` to that Web client ID, then redeploy. Until it is set, the Google button explains that Google sign-in is not available yet.
+
+### Email confirmation setup
+
+The default confirmation email links to `*.supabase.co`, which cannot be opened in Myanmar without a VPN. On Supabase's built-in email sender the template cannot be edited, so choose one:
+
+- **No confirmation email (the current pilot setting).** Turn off *Confirm email* in Supabase → Authentication → Sign In / Providers → Email. `/api/auth/signup` then signs the new account straight in. Email addresses are not proven, but Google sign-in still gives verified identities.
+- **Your own sender (custom SMTP).** Set it up in Supabase → Authentication → Emails (Gmail with an app password works without a domain), then use the template below.
+
+1. **Supabase → Authentication → URL Configuration.** Set *Site URL* to the production URL (`https://lan-pya-rust.vercel.app`). Add `https://lan-pya-rust.vercel.app/**` and `http://localhost:3000/**` to *Redirect URLs*.
+2. **Supabase → Authentication → Email Templates → Confirm signup.** Point the link at this site rather than Supabase:
+
+```html
+<a href="{{ .SiteURL }}/auth/confirm?token_hash={{ .TokenHash }}&type=email&next={{ .RedirectTo }}">Confirm your email</a>
 ```
 
-In Supabase Dashboard → Authentication → Providers, enable Google and add the client ID/secret. Under URL Configuration set:
-
-- Site URL: the production Vercel URL
-- Redirect URLs: `http://localhost:3000/auth/callback` and `https://<vercel-domain>/auth/callback`
+The old `/auth/callback` route still works, so links sent before this change keep working.
 
 ## Supabase production setup
 
@@ -107,6 +129,7 @@ Import the repository into Vercel and set these environment variables for Produc
 - `NEXT_PUBLIC_SITE_URL`
 - `NEXT_PUBLIC_SUPABASE_URL`
 - `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`
+- `NEXT_PUBLIC_GOOGLE_CLIENT_ID` (Google sign-in; see above)
 - `SUPABASE_SECRET_KEY` (server only; legacy `SUPABASE_SERVICE_ROLE_KEY` also works)
 - `CRON_SECRET` (server only)
 - `AI_FEEDBACK_ENABLED=false`
