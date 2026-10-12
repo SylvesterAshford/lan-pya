@@ -1,5 +1,17 @@
 # Changelog
 
+## [0.27.0.0] - 2026-10-12
+
+### Fixed
+
+- Signing in, creating an account, confirming an email and editing your profile now work in Myanmar without a VPN. The browser no longer contacts Supabase at all: every step runs on Lan Pya's own server, and the browser only talks to Lan Pya and Google.
+- The Google button no longer reports "not enabled" before Google is even contacted. That check now happens on the server.
+
+### Changed
+
+- "Continue with Google" is now Google's own sign-in button. It returns an ID token that the server exchanges, instead of redirecting through Supabase.
+- Confirmation emails link to Lan Pya (`/auth/confirm`) instead of Supabase. Links sent before this release keep working.
+
 ## [0.26.1.0] - 2026-10-12
 
 ### Changed

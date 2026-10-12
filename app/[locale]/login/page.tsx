@@ -7,6 +7,7 @@ import { LoginForm } from "@/components/login-form";
 import { getUser } from "@/lib/auth";
 import { Link } from "@/i18n/navigation";
 import { hasSupabaseEnv } from "@/lib/env";
+import { isGoogleProviderEnabled } from "@/lib/supabase/auth-providers";
 
 export const dynamic = "force-dynamic";
 
@@ -24,6 +25,10 @@ export default async function LoginPage({
   if (isSupabaseConfigured && (await getUser())) redirect(`/${locale}/app/today`);
   const t = await getTranslations("Auth");
   const my = locale === "my";
+  // Decided here, server-to-server: the browser must never ask *.supabase.co
+  // anything, because it is unreachable from Myanmar without a VPN.
+  const googleClientId = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID || process.env.GOOGLE_CLIENT_ID || null;
+  const googleEnabled = isSupabaseConfigured && Boolean(googleClientId) && (await isGoogleProviderEnabled());
 
   const climb = my
     ? ["ချိတ်ဆက်", "သက်သေပြ", "တည်ဆောက်", "ရွေးချယ်"]
@@ -57,7 +62,7 @@ export default async function LoginPage({
           <LoginForm
             title={t("title")}
             description={t("body")}
-            provider={isSupabaseConfigured ? <GoogleSignIn locale={locale} /> : null}
+            provider={isSupabaseConfigured ? <GoogleSignIn locale={locale} clientId={googleClientId} enabled={googleEnabled} /> : null}
             separator={t("or")}
             credentials={isSupabaseConfigured ? (
               <EmailAuthForm locale={locale} demoRequested={query.demo === "1"} />

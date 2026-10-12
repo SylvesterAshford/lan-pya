@@ -3,7 +3,6 @@
 import { useState } from "react";
 import { useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
-import { createClient } from "@/lib/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Field, FieldGroup, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
@@ -43,36 +42,24 @@ export function EmailAuthForm({ locale, demoRequested }: { locale: string; demoR
     setError("");
     setNotice("");
 
-    const supabase = createClient();
+    // Both modes finish on the server (/api/auth/*), which sets the session
+    // cookie. The browser never contacts Supabase directly, because
+    // *.supabase.co is not reachable from Myanmar without a VPN.
+    const response = await fetch(mode === "sign-in" ? "/api/auth/login" : "/api/auth/signup", {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify(mode === "sign-in" ? { email, password } : { email, password, locale }),
+    }).catch(() => null);
+    const body = await response?.json().catch(() => null);
 
-    if (mode === "sign-in") {
-      const { error: signInError } = await supabase.auth.signInWithPassword({ email, password });
-      if (signInError) {
-        setError(t("invalidCredentials"));
-        setBusy(false);
-        return;
-      }
-      router.replace(`/${locale}/app/today`);
-      router.refresh();
-      return;
-    }
-
-    const { data, error: signUpError } = await supabase.auth.signUp({
-      email,
-      password,
-      options: {
-        emailRedirectTo: `${window.location.origin}/auth/callback?next=/${locale}/onboarding`,
-      },
-    });
-
-    if (signUpError) {
-      setError(t("accountError"));
+    if (!response?.ok) {
+      setError(mode === "sign-in" ? t("invalidCredentials") : t("accountError"));
       setBusy(false);
       return;
     }
 
-    if (data.session) {
-      router.replace(`/${locale}/onboarding`);
+    if (mode === "sign-in" || body?.data?.signedIn) {
+      router.replace(`/${locale}/${mode === "sign-in" ? "app/today" : "onboarding"}`);
       router.refresh();
       return;
     }
