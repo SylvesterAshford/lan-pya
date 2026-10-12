@@ -1,5 +1,15 @@
 # Changelog
 
+## [0.27.1.0] - 2026-10-12
+
+### Changed
+
+- The sign-in page's right panel now shows the landing page's summit at dawn: the trail already climbed, the two travellers on top, the sun rising behind them. It replaces the route diagram, its label chips and the feature pills.
+
+### Fixed
+
+- The sign-in form no longer shows a scrollbar on laptop screens. It fits without scrolling from 1920×1080 down to 1280×720, in English and Burmese.
+
 ## [0.27.0.0] - 2026-10-12
 
 ### Fixed

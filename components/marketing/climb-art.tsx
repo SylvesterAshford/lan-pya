@@ -89,7 +89,7 @@ function forest(seed: number, count: number, xMin: number, xMax: number, yMin: n
 const LEFT_FLANK: [number, number][] = [[600, 244], [574, 250], [552, 282], [528, 318], [496, 368], [462, 424], [420, 500], [372, 600], [318, 720], [262, 860], [206, 1020], [150, 1200], [96, 1400], [40, 1640], [-20, 1900], [-80, 2400]];
 const RIGHT_FLANK: [number, number][] = [[600, 244], [630, 252], [656, 286], [690, 330], [730, 392], [772, 462], [820, 548], [872, 650], [926, 770], [980, 900], [1040, 1050], [1100, 1250], [1100, 2400]];
 
-const MASSIF_D = `M ${LEFT_FLANK.map(([x, y]) => `${x} ${y}`).reverse().join(" L ")} L ${RIGHT_FLANK.slice(1).map(([x, y]) => `${x} ${y}`).join(" L ")} Z`;
+export const MASSIF_D = `M ${LEFT_FLANK.map(([x, y]) => `${x} ${y}`).reverse().join(" L ")} L ${RIGHT_FLANK.slice(1).map(([x, y]) => `${x} ${y}`).join(" L ")} Z`;
 
 function flankX(flank: [number, number][], y: number) {
   for (let i = 1; i < flank.length; i++) {
@@ -101,14 +101,14 @@ function flankX(flank: [number, number][], y: number) {
 }
 
 // The face the dawn lands on: the right flank, down to a soft line mid-slope.
-const LIT_FACE_D =
+export const LIT_FACE_D =
   "M 630 252 L 656 286 L 690 330 L 730 392 L 772 462 L 820 548 L 872 650 L 926 770 L 980 900 L 1040 1050 L 1100 1250 L 1100 1520 L 900 1260 L 780 900 L 700 600 L 652 400 Z";
 
-const SNOW_D =
+export const SNOW_D =
   "M 574 250 L 600 244 L 630 252 L 656 286 L 690 330 L 708 358 L 686 352 L 694 384 L 668 368 L 656 404 L 636 376 L 618 418 L 600 382 L 582 412 L 566 376 L 546 396 L 544 360 L 520 372 L 528 318 L 552 282 Z";
 
 // The left half of the cap, in shadow: dawn comes from the right.
-const SNOW_SHADE_D =
+export const SNOW_SHADE_D =
   "M 574 250 L 600 244 L 604 300 L 596 340 L 600 382 L 582 412 L 566 376 L 546 396 L 544 360 L 520 372 L 528 318 L 552 282 Z";
 
 // Contour lines across the face, each one clipped to the flanks at its height,
