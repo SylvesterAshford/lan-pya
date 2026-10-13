@@ -1,27 +1,30 @@
 import { ChevronRight, Compass, Route, Sparkles } from "lucide-react";
+import type { ReactNode } from "react";
 import { Link } from "@/i18n/navigation";
 import { MeNav } from "@/components/app/me-nav";
 import { ArenaMark } from "@/components/paths/arena-mark";
 import { PathSwitchButton } from "@/components/paths/path-switch-button";
-import { PreviewPathsDisclosure } from "@/components/paths/preview-paths-disclosure";
+import { ReadinessSteps } from "@/components/paths/readiness-steps";
 import { requireUser } from "@/lib/auth";
 import { getActivePathDashboard, getCareerPreferences, getPathHistory } from "@/lib/data/app-data";
-import { CAREER_PATH_CATALOG, getAvailabilityLabel, getCareerRecommendations, type CareerPathCatalogItem } from "@/lib/domain/career-recommendations";
+import { CAREER_PATH_CATALOG, getAvailabilityLabel, getCareerRecommendations, type CareerPathCatalogItem, type PathAvailabilityLabel } from "@/lib/domain/career-recommendations";
 import { toMyanmarDigits } from "@/lib/domain/deadlines";
 import type { CareerPreferences } from "@/lib/domain/types";
-import { formatAppDate, getAppCopy, localizeArena, localizeCareerTerm, localizePathDescription, localizeRecommendationReason } from "@/lib/i18n/app-copy";
+import { formatAppDate, getAppCopy, localizeCareerTerm, localizePathDescription } from "@/lib/i18n/app-copy";
 
 /** The Compass may never have been answered; recommendations still resolve to
  *  something, so an unanswered Compass reads as no signal rather than no list. */
 const EMPTY_PREFERENCES: CareerPreferences = { interests: [], preferredWork: "not_sure", immediateGoal: "not_sure", deviceAccess: "not_sure", connectivity: "not_sure", priorExperience: [] };
 
 /**
- * The full career catalog.
+ * The full career catalog, sorted by one question: how ready is each path?
  *
- * It used to sit under Roadmaps, below the learner's own path and their
- * recommendations. Three sections of browsing on the screen a learner opens to
- * find their next step is noise: Roadmaps answers "where am I", this answers
- * "what else is there". Different questions, different places.
+ * It used to sort the same seven paths three ways at once (by arena heading,
+ * by a status pill, and by hiding previews behind a toggle), and repeated two
+ * of them in an "Alternatives" box. Now there are three readiness groups:
+ * ready to start, roadmap ready with missions coming, and early stage. Each
+ * row carries a Roadmap -> Missions -> Open marker, so how far a path has been
+ * built reads at a glance and never by colour alone.
  */
 export default async function CareersPage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
@@ -36,11 +39,14 @@ export default async function CareersPage({ params }: { params: Promise<{ locale
   const my = locale === "my";
   const digits = (value: number) => (my ? toMyanmarDigits(value) : String(value));
 
-  // Nothing a learner cannot start, never the path already active, two at most
-  // so this stays a decision rather than a second catalog.
-  const alternatives = getCareerRecommendations(preferences ?? EMPTY_PREFERENCES)
-    .filter((path) => path.availability !== "preview" && path.key !== dashboard.activePath?.key)
-    .slice(0, 2);
+  // Compass recommendations are a tag on the rows they match, not a second
+  // list: two at most, never the active path, never one that cannot start.
+  const recommended = new Set(
+    getCareerRecommendations(preferences ?? EMPTY_PREFERENCES)
+      .filter((path) => path.availability !== "preview" && path.key !== dashboard.activePath?.key)
+      .slice(0, 2)
+      .map((path) => path.key),
+  );
 
   const previousPaths = history.filter((path) => path.state === "previous");
 
@@ -54,70 +60,69 @@ export default async function CareersPage({ params }: { params: Promise<{ locale
   const activeKey = dashboard.activePath?.key;
   const num = (value: number) => (locale === "my" ? toMyanmarDigits(value) : String(value));
 
-  const startable = CAREER_PATH_CATALOG.filter((path) => getAvailabilityLabel(path) !== "preview");
-  const previews = CAREER_PATH_CATALOG.filter((path) => getAvailabilityLabel(path) === "preview");
+  const byReadiness = (states: PathAvailabilityLabel[]) => CAREER_PATH_CATALOG.filter((path) => states.includes(getAvailabilityLabel(path)));
+  // The active path leads its group, then what fits the Compass, then the rest.
+  const rank = (path: CareerPathCatalogItem) => (path.key === activeKey ? 0 : recommended.has(path.key) ? 1 : 2);
+  const ready = byReadiness(["operational", "controlled_pilot"]).sort((a, b) => rank(a) - rank(b));
+  const mapped = byReadiness(["no_missions_yet"]);
+  const early = byReadiness(["preview"]);
 
-  const groupByArena = (items: CareerPathCatalogItem[]) =>
-    Object.entries(
-      items.reduce<Record<string, CareerPathCatalogItem[]>>((groups, path) => {
-        (groups[path.arena] ??= []).push(path);
-        return groups;
-      }, {}),
-    );
-
-  const label = (path: CareerPathCatalogItem) => {
-    switch (getAvailabilityLabel(path)) {
-      case "operational": return { text: c.paths.available, tone: "op" };
-      case "controlled_pilot": return { text: c.paths.pilot, tone: "pilot" };
-      case "no_missions_yet": return { text: c.paths.noMissionsYet, tone: "prev" };
-      default: return { text: c.paths.preview, tone: "prev" };
-    }
+  const readinessLabels = {
+    readiness: c.careers.readiness, roadmap: c.careers.stepRoadmap, missions: c.careers.stepMissions,
+    open: c.careers.stepOpen, pilot: c.careers.stepPilot, done: c.careers.stepDone,
+    partial: c.careers.stepPartial, notYet: c.careers.stepNotYet,
   };
 
-  // One shape on every row: how long the path is, then where it starts when
-  // that is known. It used to return stages, or stages plus first mission, or
-  // a description, depending on state — so the same line meant three things
-  // down one column.
+  // One line of substance per row, phrased for the group it sits in.
   const substance = (path: CareerPathCatalogItem) => {
     const state = getAvailabilityLabel(path);
     const stages = `${num(path.stageCount)} ${c.careers.stages}`;
-    if (state === "operational" || state === "controlled_pilot") {
-      return `${stages} · ${c.paths.firstMission}: ${path.firstMission}`;
-    }
-    return stages;
+    if (state === "operational") return `${stages} · ${c.paths.firstMission}: ${path.firstMission}`;
+    if (state === "controlled_pilot") return `${stages} · ${c.careers.pilotNote}`;
+    if (state === "no_missions_yet") return `${stages} · ${c.careers.missionInDesign}`;
+    return `${c.careers.plannedMission}: ${path.firstMission}`;
   };
 
-  const renderArenas = (items: CareerPathCatalogItem[]) => groupByArena(items).map(([arena, paths]) => (
-    <section className="arena-group" key={arena}>
-      <header className="arena-head">
-        <h3>{localizeArena(locale, arena)}</h3>
-        <span className="arena-count">· {num(paths.length)}</span>
-      </header>
-      {paths.map((path) => {
-        const state = label(path);
-        const isActive = path.key === activeKey;
-        return (
-          <Link className={`path-row${isActive ? " is-active" : ""}`} href={`/app/roadmap?track=${path.key}`} key={path.key}>
-            <span className="path-row-mark" aria-hidden="true">
-              <ArenaMark arena={path.arena} />
-            </span>
-            <span className="path-row-copy">
-              <span className="path-row-title">
-                <strong>{localizeCareerTerm(locale, path.key, path.title)}</strong>
-                {/* Where you are is a fact about you; the pill on the right is a
-                    fact about the path. They shared one slot, so an active path
-                    stopped reporting whether it could be started at all. */}
-                {isActive ? <span className="path-row-here">{c.careers.yourPathHere}</span> : null}
-              </span>
-              <small>{substance(path)}</small>
-            </span>
-            <span className={`avail ${state.tone}`}>{state.text}</span>
-            <ChevronRight className="path-row-chevron" size={16} aria-hidden="true" />
+  const renderRow = (path: CareerPathCatalogItem) => {
+    const state = getAvailabilityLabel(path);
+    const isActive = path.key === activeKey;
+    const canSwitch = (state === "operational" || state === "controlled_pilot") && !isActive;
+    const title = localizeCareerTerm(locale, path.key, path.title);
+    return (
+      <li className={`career-row${isActive ? " is-active" : ""}`} key={path.key}>
+        <span className="path-row-mark" aria-hidden="true">
+          <ArenaMark arena={path.arena} />
+        </span>
+        <div className="career-row-copy">
+          <span className="path-row-title">
+            <strong>{title}</strong>
+            {isActive ? <span className="path-row-here">{c.careers.yourPathHere}</span> : null}
+            {recommended.has(path.key) ? <span className="career-fit"><Compass size={12} aria-hidden="true" />{c.careers.fitsCompass}</span> : null}
+          </span>
+          <small>{substance(path)}</small>
+          <ReadinessSteps state={state} labels={readinessLabels} />
+        </div>
+        <div className="career-row-actions">
+          {canSwitch ? <PathSwitchButton locale={locale} trackKey={path.key} className="button outline compact">{c.careers.switchTo}</PathSwitchButton> : null}
+          <Link className="career-row-roadmap" href={`/app/roadmap?track=${path.key}`} aria-label={`${c.careers.viewRoadmap}: ${title}`}>
+            {c.careers.viewRoadmap}<ChevronRight size={15} aria-hidden="true" />
           </Link>
-        );
-      })}
-    </section>
-  ));
+        </div>
+      </li>
+    );
+  };
+
+  const group = (id: string, heading: string, body: string, paths: CareerPathCatalogItem[], footer?: ReactNode) =>
+    paths.length ? (
+      <section className="career-group" aria-labelledby={id}>
+        <header className="career-group-head">
+          <h2 id={id}>{heading} <span className="arena-count">· {num(paths.length)}</span></h2>
+          <p>{body}</p>
+        </header>
+        <ul className="career-list">{paths.map(renderRow)}</ul>
+        {footer}
+      </section>
+    ) : null;
 
   return (
     <div className="app-page me-page">
@@ -165,35 +170,13 @@ export default async function CareersPage({ params }: { params: Promise<{ locale
         </section>
       ) : null}
 
-      {/* Switching path is the other half of "current track", so it sits with
-          it rather than three screens away. */}
-      {alternatives.length ? (
-        <section className="switch-block" aria-labelledby="switch-title">
-          <header>
-            <span className="switch-icon" aria-hidden="true"><Sparkles size={16} /></span>
-            <h2 id="switch-title">{c.paths.alternatives}</h2>
-          </header>
-          <ul className="switch-list">
-            {alternatives.map((path) => (
-              <li className="switch-row" key={path.key}>
-                <span className="switch-row-mark" aria-hidden="true">
-                  <ArenaMark arena={path.arena} />
-                </span>
-                <span className="switch-row-copy">
-                  <strong>{localizeCareerTerm(locale, path.key, path.title)}</strong>
-                  <small>{localizeRecommendationReason(locale, path.reason)}</small>
-                </span>
-                <PathSwitchButton locale={locale} trackKey={path.key}>{c.paths.choosePath}</PathSwitchButton>
-              </li>
-            ))}
-          </ul>
-          <Link className="text-link" href="/onboarding">
-            <Compass size={15} aria-hidden="true" /> {c.profile.editCompass}
-          </Link>
-        </section>
-      ) : null}
-
-      {renderArenas(startable)}
+      {group("careers-ready", c.careers.readyTitle, c.careers.readyBody, ready, (
+        <Link className="text-link career-compass-link" href="/onboarding">
+          <Compass size={15} aria-hidden="true" /> {c.profile.editCompass}
+        </Link>
+      ))}
+      {group("careers-mapped", c.careers.mappedTitle, c.careers.mappedBody, mapped)}
+      {group("careers-early", c.careers.earlyTitle, c.careers.earlyBody, early)}
 
       {previousPaths.length || dashboard.pausedWork.length ? (
         <section className="arena-group" aria-labelledby="paused-title">
@@ -208,7 +191,8 @@ export default async function CareersPage({ params }: { params: Promise<{ locale
                 <strong>{localizeCareerTerm(locale, path.key, path.title)}</strong>
                 <small>{c.profile.pausedPath} · {c.profile.lastActive} {path.lastActivatedAt ? formatAppDate(locale, path.lastActivatedAt) : c.profile.recently}</small>
               </span>
-              <PathSwitchButton locale={locale} trackKey={path.key}>{c.paths.choosePath}</PathSwitchButton>
+              {/* Same action, same words and size as the switch on the list above. */}
+              <PathSwitchButton locale={locale} trackKey={path.key} className="button outline compact">{c.careers.switchTo}</PathSwitchButton>
             </div>
           ))}
           {dashboard.pausedWork.map((work) => (
@@ -224,14 +208,6 @@ export default async function CareersPage({ params }: { params: Promise<{ locale
         </section>
       ) : null}
 
-      {previews.length ? (
-        <PreviewPathsDisclosure
-          showLabel={c.paths.showPreviews.replace("{n}", num(previews.length))}
-          hideLabel={c.paths.hidePreviews}
-        >
-          {renderArenas(previews)}
-        </PreviewPathsDisclosure>
-      ) : null}
     </div>
   );
 }

@@ -1,5 +1,16 @@
 # Changelog
 
+## [0.27.2.0] - 2026-10-13
+
+### Changed
+
+- Careers now sorts every path by how ready it is: **Ready to start**, **Roadmap ready, missions coming**, and **Early stage**. Each path shows a Roadmap → Missions → Open marker, so you can tell at a glance which ones you can start today.
+- Paths that fit your Career Compass carry a "Fits your Compass" tag in the list, instead of being repeated in a separate box.
+
+### Fixed
+
+- Choosing a new path now opens your Missions trail map, instead of an old mission page that no longer matched it.
+
 ## [0.27.1.0] - 2026-10-12
 
 ### Changed

@@ -83,7 +83,7 @@ export default async function ProofPage({ params }: { params: Promise<{ locale: 
         competencies: [],
         state: (dashboard.nextMission.submissionState === "draft" ? "draft" : "in_review") as CaseStudyState,
         dateLabel: c.studio.work.inReview,
-        href: "/app/build",
+        href: "/app/missions",
         isDemo: false,
       }]
       : []),
@@ -101,7 +101,7 @@ export default async function ProofPage({ params }: { params: Promise<{ locale: 
           <p>{c.studio.body}</p>
         </section>
         <div className="studio-actions">
-          <Link className="button primary" href="/app/build">{c.studio.actions.add}</Link>
+          <Link className="button primary" href="/app/missions">{c.studio.actions.add}</Link>
           <Link className="button outline" href="/app/profile">{c.studio.actions.preview}</Link>
         </div>
       </div>

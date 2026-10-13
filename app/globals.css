@@ -11756,36 +11756,170 @@ html[lang="my"] .track-card-eyebrow { text-transform: none; letter-spacing: 0; }
 .track-card-actions { display: grid; gap: 8px; justify-items: stretch; }
 .track-card-actions .button { justify-content: center; white-space: nowrap; }
 
-/* ---- switcher ---- */
+/* ---- careers by readiness ----
+   Three groups (ready / roadmap ready / early stage) replace arena headings,
+   status pills and the hidden previews toggle. Each row carries the
+   Roadmap -> Missions -> Open marker. */
 
-.switch-block { margin-top: var(--s-xl); display: grid; gap: 10px; justify-items: start; }
-.switch-block > header { display: flex; align-items: center; gap: 8px; }
-.switch-icon { display: grid; place-items: center; width: 26px; height: 26px; border-radius: 8px; background: var(--amber-100); color: var(--amber-800); }
-.switch-block h2 {
-  font-size: var(--t-label);
-  letter-spacing: 0.09em;
-  font-weight: 700;
-  text-transform: uppercase;
-  color: var(--muted-ink);
+.career-group { margin-top: var(--s-xl); }
+
+.career-group-head { display: grid; gap: 2px; margin-bottom: var(--s-sm); }
+
+.career-group-head h2 {
   margin: 0;
+  color: var(--ink);
+  font-size: var(--t-h2);
+  letter-spacing: var(--k-h2);
+  line-height: var(--l-h2);
 }
-html[lang="my"] .switch-block h2 { text-transform: none; letter-spacing: 0; }
 
-.switch-list { list-style: none; margin: 0; padding: 0; width: 100%; display: grid; gap: 8px; }
-.switch-row {
-  display: grid;
-  grid-template-columns: auto minmax(0, 1fr) auto;
-  gap: 12px;
-  align-items: center;
-  padding: 12px 14px;
-  background: var(--surface);
-  border: 1px solid var(--hairline);
-  border-radius: var(--r-card);
+html[lang="my"] .career-group-head h2 { letter-spacing: 0; }
+
+.career-group-head p {
+  max-width: 62ch;
+  margin: 0;
+  color: var(--muted-ink);
+  font-size: var(--t-meta);
+  line-height: var(--l-meta);
 }
-.switch-row-mark { display: grid; place-items: center; width: 34px; height: 34px; border-radius: 9px; background: var(--surface-sunk); color: var(--teal-700); }
-.switch-row-copy { min-width: 0; display: grid; gap: 1px; }
-.switch-row-copy strong { font-size: var(--t-meta); font-weight: 700; color: var(--ink); }
-.switch-row-copy small { font-size: var(--t-label); line-height: var(--l-meta); color: var(--muted-ink); }
+
+.career-list {
+  display: grid;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border-top: 1px solid var(--hairline);
+}
+
+.career-row {
+  display: grid;
+  /* mark | copy | actions */
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  gap: var(--s-md);
+  align-items: center;
+  padding: 14px var(--s-sm);
+  margin: 0 calc(var(--s-sm) * -1);
+  border-bottom: 1px solid var(--hairline);
+  border-radius: var(--r-control);
+}
+
+.career-row.is-active { background: var(--teal-050); }
+.career-row.is-active .path-row-mark { background: var(--teal-100); }
+
+.career-row-copy { display: grid; min-width: 0; gap: 4px; }
+
+.career-row-copy strong {
+  color: var(--ink);
+  font-size: var(--t-title);
+  font-weight: 600;
+  letter-spacing: var(--k-title);
+  line-height: var(--l-title);
+}
+
+.career-row-copy small {
+  color: var(--muted-ink);
+  font-size: var(--t-meta);
+  line-height: var(--l-meta);
+}
+
+.career-fit {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 1px 8px;
+  border: 1px solid var(--hairline);
+  border-radius: 99px;
+  color: var(--teal-700);
+  background: var(--surface);
+  font-size: var(--t-label);
+  font-weight: 700;
+  line-height: 1.5;
+  white-space: nowrap;
+}
+
+.career-row-actions {
+  display: flex;
+  align-items: center;
+  gap: var(--s-md);
+}
+
+.career-row-actions .path-switch-action { display: grid; gap: 6px; }
+
+.career-row-roadmap {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  min-height: 44px;
+  color: var(--teal-700);
+  font-size: var(--t-meta);
+  font-weight: 700;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.career-row-roadmap:hover { text-decoration: underline; }
+.career-row-roadmap:focus-visible { outline: 2px solid var(--teal-700); outline-offset: 2px; border-radius: 4px; }
+
+.career-compass-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 44px;
+  margin-top: 4px;
+  font-size: var(--t-meta);
+  font-weight: 600;
+}
+
+/* Roadmap -> Missions -> Open. Each step states itself in words for screen
+   readers; the dot carries a check (done), a half fill (pilot) or nothing. */
+.readiness {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 0;
+  margin: 2px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.readiness-step {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--muted-ink);
+  font-size: var(--t-label);
+  font-weight: 600;
+  line-height: 1.4;
+}
+
+.readiness-step + .readiness-step::before {
+  width: 18px;
+  height: 1px;
+  margin: 0 8px;
+  background: var(--hairline);
+  content: "";
+}
+
+.readiness-dot {
+  display: grid;
+  width: 14px;
+  height: 14px;
+  place-items: center;
+  border: 1.5px solid var(--node-soon-border);
+  border-radius: 50%;
+  color: #fff;
+  background: var(--surface);
+}
+
+.readiness-step.is-done { color: var(--ink); }
+.readiness-step.is-done .readiness-dot { border-color: var(--teal-500); background: var(--teal-500); }
+.readiness-step.is-done + .readiness-step::before { background: var(--teal-500); }
+
+.readiness-step.is-partial { color: var(--ink); }
+.readiness-step.is-partial .readiness-dot {
+  border-color: var(--teal-500);
+  background: linear-gradient(90deg, var(--teal-500) 50%, var(--surface) 50%);
+}
 
 /* ---- paused and previous ---- */
 
@@ -11811,8 +11945,10 @@ a.paused-row:hover { background: var(--surface-sunk); }
 @media (max-width: 700px) {
   .track-card { grid-template-columns: auto minmax(0, 1fr); }
   .track-card-actions { grid-column: 1 / -1; grid-auto-flow: column; grid-auto-columns: 1fr; }
-  .switch-row, .paused-row { grid-template-columns: auto minmax(0, 1fr); }
-  .switch-row > :last-child, .paused-row > :last-child { grid-column: 1 / -1; justify-self: start; }
+  .paused-row { grid-template-columns: auto minmax(0, 1fr); }
+  .paused-row > :last-child { grid-column: 1 / -1; justify-self: start; }
+  .career-row { grid-template-columns: auto minmax(0, 1fr); align-items: start; }
+  .career-row-actions { grid-column: 2; flex-wrap: wrap; gap: var(--s-sm) var(--s-md); }
 }
 
 /* The active sub-tab is a filled pill; the 2px bar underneath it was a second
