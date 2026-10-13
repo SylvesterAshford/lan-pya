@@ -21,7 +21,8 @@ export function PathSwitchButton({ locale, trackKey, children, className = "butt
       setBusy(false);
       return;
     }
-    router.push("/app/build");
+    // The trail map is where a path is worked; the new path opens there.
+    router.push("/app/missions");
     router.refresh();
   }
 

@@ -40,7 +40,7 @@ export default async function MissionsPage({ params }: { params: Promise<{ local
           <CircleDashed size={22} aria-hidden="true" />
           <h2>{c.missions.noPath}</h2>
           <p>{c.missions.noPathBody}</p>
-          <Link className="button primary" href="/app/paths">{c.missions.choosePath}</Link>
+          <Link className="button primary" href="/app/careers">{c.missions.choosePath}</Link>
         </section>
       </div>
     );
