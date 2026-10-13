@@ -26,7 +26,10 @@ export type MissionBrief = {
   guardrail: string;
   /** Field labels for the Submit step. */
   repositoryLabel: string;
+  /** One line under the label saying which link belongs here. */
+  repositoryHint: string;
   deploymentLabel: string;
+  deploymentHint: string;
   reflectionPlaceholder: string;
   localNote?: string;
 };
@@ -48,7 +51,9 @@ const BRIEFS: Record<string, { en: MissionBrief; my: MissionBrief }> = {
       guardrailTitle: "Ground-truth rule",
       guardrail: "A passing automated scan is never enough. A reviewer checks the rendered result and your explanation.",
       repositoryLabel: "GitHub repository URL",
+      repositoryHint: "The repository with your HTML and CSS.",
       deploymentLabel: "Live deployment URL",
+      deploymentHint: "Where the card runs, for example on Vercel or GitHub Pages.",
       reflectionPlaceholder: "What trade-off did you make, what broke, and how did you fix it?",
     },
     my: {
@@ -66,7 +71,9 @@ const BRIEFS: Record<string, { en: MissionBrief; my: MissionBrief }> = {
       guardrailTitle: "Ground-truth စည်းမျဉ်း",
       guardrail: "Automated scan အောင်မြင်ရုံဖြင့် မလုံလောက်ပါ။ Reviewer က render လုပ်ထားသော ရလဒ်နှင့် သင့်ရှင်းလင်းချက်ကို စစ်ဆေးမည်။",
       repositoryLabel: "GitHub repository URL",
+      repositoryHint: "သင့် HTML နှင့် CSS ပါသော repository။",
       deploymentLabel: "Live deployment URL",
+      deploymentHint: "Card ကို run ထားသောနေရာ၊ ဥပမာ Vercel သို့မဟုတ် GitHub Pages။",
       reflectionPlaceholder: "ဘာကို အလျှော့အတင်းလုပ်ခဲ့သလဲ၊ ဘာပျက်ခဲ့သလဲ၊ ဘယ်လိုပြင်ခဲ့သလဲ?",
     },
   },
@@ -86,7 +93,9 @@ const BRIEFS: Record<string, { en: MissionBrief; my: MissionBrief }> = {
       guardrailTitle: "Controlled-pilot note",
       guardrail: "This mission uses the same trusted-link submission and reviewer workflow as the technical path. The path is still a controlled pilot, so the curriculum stays intentionally small.",
       repositoryLabel: "Primary content or source URL",
+      repositoryHint: "A folder or post holding your three pieces, such as Google Drive or Canva.",
       deploymentLabel: "Public preview or campaign URL",
+      deploymentHint: "Where your audience sees it, such as a Facebook page or post.",
       reflectionPlaceholder: "What did you learn about your audience, message, and publishing choices?",
       localNote: "Local employers usually ask for a Facebook page link rather than a portfolio site. Include both: the page proves reach, the site proves craft.",
     },
@@ -105,7 +114,9 @@ const BRIEFS: Record<string, { en: MissionBrief; my: MissionBrief }> = {
       guardrailTitle: "Pilot မှတ်ချက်",
       guardrail: "ဤလုပ်ငန်းသည် technical path နည်းတူ trusted-link submission နှင့် reviewer workflow ကို သုံးသည်။ Path သည် controlled pilot ဖြစ်နေဆဲဖြစ်သောကြောင့် curriculum ကို ရည်ရွယ်ချက်ရှိရှိ တိုတောင်းစွာထားထားသည်။",
       repositoryLabel: "အဓိက content သို့မဟုတ် source URL",
+      repositoryHint: "Content သုံးပိုင်းပါသော folder သို့မဟုတ် post၊ ဥပမာ Google Drive သို့မဟုတ် Canva။",
       deploymentLabel: "Public preview သို့မဟုတ် campaign URL",
+      deploymentHint: "Audience မြင်ရသောနေရာ၊ ဥပမာ Facebook page သို့မဟုတ် post။",
       reflectionPlaceholder: "သင့် audience၊ message နှင့် publishing ရွေးချယ်မှုများအကြောင်း ဘာသင်ယူခဲ့သလဲ?",
       localNote: "ပြည်တွင်းအလုပ်ရှင်များသည် portfolio site ထက် Facebook page link ကို ပိုမေးလေ့ရှိသည်။ နှစ်ခုစလုံး ထည့်ပါ — page က ရောက်ရှိမှုကို၊ site က အရည်အသွေးကို သက်သေပြသည်။",
     },
@@ -116,4 +127,12 @@ export function getMissionBrief(missionKey: string, locale: string): MissionBrie
   const entry = BRIEFS[missionKey];
   if (!entry) return null;
   return locale === "my" ? entry.my : entry.en;
+}
+
+/**
+ * The rubric a reviewer scores is the deliverables list the learner ticked in
+ * step 2. One list, so the two can never drift apart again.
+ */
+export function getRubricIds(missionKey: string): string[] {
+  return BRIEFS[missionKey]?.en.deliverables.map((item) => item.id) ?? [];
 }

@@ -1,12 +1,16 @@
 "use client";
 
 import { ArrowLeft, ArrowRight, Check, MapPin } from "lucide-react";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { Link } from "@/i18n/navigation";
+import { CheckList } from "@/components/missions/check-list";
 import { SubmissionForm } from "@/components/missions/submission-form";
 import { loadDraft, saveDraft } from "@/lib/offline/draft-store";
+import type { MissionFeedback } from "@/lib/data/app-data";
 import type { MissionBrief } from "@/lib/domain/mission-briefs";
-import type { SubmissionState } from "@/lib/domain/types";
+import { toMyanmarDigits } from "@/lib/domain/deadlines";
+import { learnerStatus } from "@/lib/domain/mission-status";
+import type { getAppCopy } from "@/lib/i18n/app-copy";
 
 /**
  * Mission runner — five steps with a progress rail.
@@ -20,57 +24,35 @@ import type { SubmissionState } from "@/lib/domain/types";
  * works on meaningful progress rather than attendance, and that unclear rules
  * are a recurring failure mode. A ticked deliverable is something a learner can
  * defend in an interview. See DESIGN.md "The Mission Runner".
+ *
+ * Where a submission stands comes from learnerStatus() alone, so this page,
+ * Today and Portfolio agree. Step 4 is Completed (the link check passed and the
+ * trail map moved on); step 5 is Verified (a person applied the rubric).
  */
 
 type Step = 1 | 2 | 3 | 4 | 5;
 
-export type RunnerLabels = {
-  steps: [string, string, string, string, string];
-  stepOf: string;
-  back: string;
-  next: string;
-  toSubmit: string;
-  savedLocally: string;
-  doneCount: string;
-  premise: string;
-  deliverables: string;
-  localNote: string;
-  reviewWaiting: string;
-  reviewWaitingBody: string;
-  changesRequested: string;
-  changesRequestedBody: string;
-  verified: string;
-  verifiedBody: string;
-  notSubmitted: string;
-  notSubmittedBody: string;
-  viewProof: string;
-  weightNote: string;
-};
-
-/** Which step the submission state forces, if any. */
-function stepFromSubmission(state: SubmissionState | null): Step | null {
-  if (!state) return null;
-  if (state === "verified") return 5;
-  if (state === "changes_requested") return 3;
-  if (state === "draft") return null;
-  return 4;
-}
+export type RunnerLabels = ReturnType<typeof getAppCopy>["runner"];
 
 export function MissionRunner({
   locale,
   userId,
   brief,
-  submissionState,
+  feedback,
+  slowCheck = false,
   labels,
 }: {
   locale: string;
   userId: string;
   brief: MissionBrief;
-  submissionState: SubmissionState | null;
+  feedback: MissionFeedback | null;
+  /** The link check has run for longer than it usually takes. */
+  slowCheck?: boolean;
   labels: RunnerLabels;
 }) {
-  const forced = useMemo(() => stepFromSubmission(submissionState), [submissionState]);
-  const [step, setStep] = useState<Step>(forced ?? 1);
+  const status = learnerStatus(feedback?.state);
+  const num = (value: number) => (locale === "my" ? toMyanmarDigits(value) : String(value));
+  const [step, setStep] = useState<Step>(status.step ?? 1);
   const [checked, setChecked] = useState<string[]>([]);
   const [loaded, setLoaded] = useState(false);
 
@@ -108,9 +90,17 @@ export function MissionRunner({
   const total = brief.deliverables.length;
   const done = brief.deliverables.filter((item) => checked.includes(item.id)).length;
 
-  // Steps 4 and 5 are owned by the submission, not the learner: you cannot click
-  // your way into "reviewed" or "verified".
-  const reachable = (target: Step) => target <= 3 || (forced !== null && target <= forced);
+  // The brief and the checklist are always open. Submit is open unless the
+  // work is already in. Review and Proof belong to the submission: you cannot
+  // click your way into "completed" or "verified".
+  const reachable = (target: Step) => {
+    if (target <= 2) return true;
+    if (target === 3) return status.step === null || status.step === 3;
+    return status.step !== null && status.step >= target;
+  };
+  const forward = step === 2 && !reachable(3) ? (status.step as Step) : ((step + 1) as Step);
+  const eyebrow = (value: Step) => `${labels.stepOf.replace("{a}", num(value)).replace("{b}", num(5))} · ${labels.steps[value - 1]}`;
+  const linkName = (check: string) => (check === "repository" ? brief.repositoryLabel : check === "deployment" ? brief.deploymentLabel : check);
 
   return (
     <section className="runner" aria-label={brief.title}>
@@ -124,7 +114,7 @@ export function MissionRunner({
                 type="button"
                 className="runner-dot"
                 aria-current={value === step ? "step" : undefined}
-                aria-label={`${labels.stepOf.replace("{a}", String(value)).replace("{b}", "5")}: ${label}`}
+                aria-label={`${labels.stepOf.replace("{a}", num(value)).replace("{b}", num(5))}: ${label}`}
                 disabled={!reachable(value)}
                 onClick={() => reachable(value) && setStep(value)}
               >
@@ -137,9 +127,10 @@ export function MissionRunner({
       </ol>
 
       <div className="runner-panel">
+        <span className="eyebrow">{eyebrow(step)}</span>
+
         {step === 1 ? (
           <>
-            <span className="eyebrow">{labels.stepOf.replace("{a}", "1").replace("{b}", "5")} · {labels.steps[0]}</span>
             <h2>{brief.title}</h2>
             <p className="runner-intro">{brief.intro}</p>
             <p className="runner-premise">{brief.premise}</p>
@@ -152,7 +143,6 @@ export function MissionRunner({
 
         {step === 2 ? (
           <>
-            <span className="eyebrow">{labels.stepOf.replace("{a}", "2").replace("{b}", "5")} · {labels.steps[1]}</span>
             <h2>{brief.title}</h2>
             <p className="runner-weight-note">{labels.weightNote}</p>
             <ul className="runner-checklist">
@@ -182,66 +172,115 @@ export function MissionRunner({
 
         {step === 3 ? (
           <>
-            <span className="eyebrow">{labels.stepOf.replace("{a}", "3").replace("{b}", "5")} · {labels.steps[2]}</span>
-            {submissionState === "changes_requested" ? (
-              <div className="runner-state warning">
-                <strong>{labels.changesRequested}</strong>
-                <p>{labels.changesRequestedBody}</p>
+            {status.kind === "fix_links" ? (
+              <div className="runner-state warning" role="status">
+                <strong>{labels.fixTitle}</strong>
+                <p>{labels.fixBody}</p>
+                <CheckList observations={(feedback?.check?.observations ?? []).filter((item) => item.status === "fail")} labels={labels} linkName={linkName} />
+              </div>
+            ) : null}
+            {status.kind === "changes" || status.kind === "rejected" ? (
+              <div className="runner-state warning" role="status">
+                <strong>{status.kind === "changes" ? labels.changesRequested : labels.rejectedTitle}</strong>
+                <p>{status.kind === "changes" ? `${labels.changesRequestedBody} ${labels.changesKeep}` : labels.rejectedBody}</p>
+                {feedback?.review ? <ReviewerNotes review={feedback.review} brief={brief} labels={labels} num={num} /> : null}
               </div>
             ) : null}
             <SubmissionForm
               locale={locale}
               userId={userId}
               missionKey={brief.missionKey}
-              title={brief.title}
               repositoryLabel={brief.repositoryLabel}
+              repositoryHint={brief.repositoryHint}
               deploymentLabel={brief.deploymentLabel}
+              deploymentHint={brief.deploymentHint}
               reflectionPlaceholder={brief.reflectionPlaceholder}
+              criteriaCount={total}
+              initial={status.kind === "none" ? null : feedback?.version}
+              backLabel={labels.back}
+              onBack={() => setStep(2)}
             />
           </>
         ) : null}
 
-        {step === 4 ? (
+        {step === 4 && status.kind === "checking" ? (
+          <div className="runner-state" role="status">
+            <strong>{labels.checkingTitle}</strong>
+            <p>{slowCheck ? labels.checkingSlow : labels.checkingBody}</p>
+          </div>
+        ) : null}
+
+        {step === 4 && status.kind === "completed" ? (
           <>
-            <span className="eyebrow">{labels.stepOf.replace("{a}", "4").replace("{b}", "5")} · {labels.steps[3]}</span>
-            <div className="runner-state">
-              <strong>{labels.reviewWaiting}</strong>
-              <p>{labels.reviewWaitingBody}</p>
+            <div className="runner-state completed" role="status">
+              <strong><Check size={16} aria-hidden="true" /> {labels.completedTitle}</strong>
+              <p>{labels.completedBody.replace("{n}", num(total))}</p>
+              {feedback?.check?.observations.length ? (
+                <>
+                  <span className="runner-checks-title">{labels.checksTitle}</span>
+                  <CheckList observations={feedback.check.observations} labels={labels} linkName={linkName} />
+                </>
+              ) : null}
             </div>
+            <Link className="button primary compact runner-cta" href="/app/missions">{labels.backToTrail} <ArrowRight size={15} aria-hidden="true" /></Link>
           </>
         ) : null}
 
         {step === 5 ? (
           <>
-            <span className="eyebrow">{labels.stepOf.replace("{a}", "5").replace("{b}", "5")} · {labels.steps[4]}</span>
             <div className="runner-state success">
               <strong>{labels.verified}</strong>
               <p>{labels.verifiedBody}</p>
             </div>
-            <Link className="button primary" href="/app/proof">{labels.viewProof}</Link>
+            <Link className="button primary compact runner-cta" href="/app/proof">{labels.viewProof}</Link>
           </>
         ) : null}
 
-        <footer className="runner-foot">
-          <span className="runner-saved">
-            {step === 2 && loaded
-              ? `${labels.doneCount.replace("{a}", String(done)).replace("{b}", String(total))} · ${labels.savedLocally}`
-              : ""}
-          </span>
-          <span className="runner-nav">
-            {step > 1 ? (
-              <button type="button" className="button outline compact" onClick={() => setStep((s) => (s - 1) as Step)}>
-                <ArrowLeft size={15} aria-hidden="true" /> {labels.back}
-              </button>
-            ) : null}
-            {step < 3 ? (
-              <button type="button" className="button primary compact" onClick={() => setStep((s) => (s + 1) as Step)}>
-                {step === 2 ? labels.toSubmit : labels.next} <ArrowRight size={15} aria-hidden="true" />
-              </button>
-            ) : null}
-          </span>
-        </footer>
+        {/* Steps 1 and 2 share this footer. Step 3 carries its own, with Submit
+            beside Back; steps 4 and 5 end on their own call to action. */}
+        {step <= 2 ? (
+          <footer className="runner-foot">
+            <span className="runner-saved">
+              {step === 2 && loaded
+                ? `${labels.doneCount.replace("{a}", num(done)).replace("{b}", num(total))} · ${labels.savedLocally}`
+                : ""}
+            </span>
+            <span className="runner-nav">
+              {step === 2 ? (
+                <button type="button" className="button outline compact" onClick={() => setStep(1)}>
+                  <ArrowLeft size={15} aria-hidden="true" /> {labels.back}
+                </button>
+              ) : null}
+              {step < 3 ? (
+                <button type="button" className="button primary compact" onClick={() => setStep(forward)}>
+                  {step === 2 && reachable(3) ? labels.toSubmit : labels.next} <ArrowRight size={15} aria-hidden="true" />
+                </button>
+              ) : null}
+            </span>
+          </footer>
+        ) : null}
       </div>
     </section>
+  );
+}
+
+/** The reviewer's words first, then the score for each step-2 criterion. */
+function ReviewerNotes({ review, brief, labels, num }: { review: NonNullable<MissionFeedback["review"]>; brief: MissionBrief; labels: RunnerLabels; num: (value: number) => string }) {
+  const scored = brief.deliverables.filter((item) => typeof review.scores[item.id] === "number");
+  return (
+    <div className="runner-review">
+      <span className="runner-checks-title">{labels.reviewerNotes}</span>
+      <p className="runner-review-notes">{review.notes}</p>
+      {scored.length ? (
+        <dl className="runner-scores" aria-label={labels.scoresTitle}>
+          {scored.map((item) => (
+            <div key={item.id}>
+              <dt>{item.title}</dt>
+              <dd>{labels.scoreOf.replace("{a}", num(review.scores[item.id])).replace("{max}", num(4))}</dd>
+            </div>
+          ))}
+        </dl>
+      ) : null}
+    </div>
   );
 }

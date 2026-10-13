@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { createClient } from "@/lib/supabase/server";
+import { getRubricIds } from "@/lib/domain/mission-briefs";
 import { ok, problem } from "@/lib/http";
 
 const schema = z.object({ action: z.enum(["verify", "request_changes", "reject"]), notes: z.string().trim().min(20).max(3000), rubricScores: z.record(z.string(), z.number().int().min(0).max(4)) });
@@ -9,6 +10,14 @@ export async function POST(request: Request, { params }: { params: Promise<{ sub
   if (!parsed.success) return problem(400, "invalid-review", "Add evidence-linked notes and valid rubric scores.");
   const supabase = await createClient(); const { data: auth } = await supabase.auth.getUser();
   if (!auth.user) return problem(401, "authentication-required", "Reviewer sign-in is required.");
+
+  // The scores must cover exactly the criteria the learner saw in step 2, so a
+  // review record can never hold a criterion that was not on the brief.
+  const { data: submission } = await supabase.rpc("get_review_submission", { p_submission_id: submissionId });
+  const expected = getRubricIds(String((submission as Record<string, unknown> | null)?.mission_key ?? "")).sort();
+  const sent = Object.keys(parsed.data.rubricScores).sort();
+  if (!expected.length || expected.join() !== sent.join()) return problem(400, "invalid-rubric", "Score every criterion on this mission's rubric.");
+
   const { data, error } = await supabase.rpc("record_review_decision", { p_submission_id: submissionId, p_action: parsed.data.action, p_notes: parsed.data.notes, p_rubric_scores: parsed.data.rubricScores });
   if (error) return problem(error.message.includes("permission") ? 403 : 409, "review-not-recorded", "The submission may be unclaimed, already decided, or unavailable to this reviewer.");
   return ok(data);

@@ -7,17 +7,21 @@ import { emblemForStage, resolveProgress } from "@/lib/domain/progress";
 import { requireUser } from "@/lib/auth";
 import { getActivePathDashboard, getProfile, getProofItems, getRoadmap } from "@/lib/data/app-data";
 import { getAppCopy, formatAppDate, localizeCareerTerm, localizeRoadmapMilestone } from "@/lib/i18n/app-copy";
-import type { Milestone } from "@/lib/domain/types";
+import { learnerStatus } from "@/lib/domain/mission-status";
+import type { Milestone, SubmissionState } from "@/lib/domain/types";
 
 const missionHref: Record<string, string> = {
   "responsive-profile-card": "/app/missions/responsive-profile-card",
   "content-creator-awareness": "/app/missions/content-creator-awareness",
 };
 
-function stateLabel(c: ReturnType<typeof getAppCopy>, workState: string, submissionState: string | null) {
-  if (submissionState === "changes_requested") return { text: c.build.needsChanges, tone: "pilot" };
-  if (submissionState === "verified") return { text: c.runner.verified, tone: "op" };
-  if (submissionState?.includes("review") || submissionState?.includes("deterministic")) return { text: c.build.inReview, tone: "pilot" };
+// The same reading of a submission as the mission runner and Portfolio.
+function stateLabel(c: ReturnType<typeof getAppCopy>, workState: string, submissionState: SubmissionState | null) {
+  const kind = learnerStatus(submissionState).kind;
+  if (kind === "verified") return { text: c.runner.verified, tone: "op" };
+  if (kind === "completed") return { text: c.runner.completedTitle, tone: "pilot" };
+  if (kind === "checking") return { text: c.runner.checkingTitle, tone: "pilot" };
+  if (kind === "fix_links" || kind === "changes" || kind === "rejected") return { text: c.build.needsChanges, tone: "pilot" };
   if (workState === "active") return { text: c.build.inProgress, tone: "pilot" };
   if (workState === "paused") return { text: c.build.paused, tone: "prev" };
   return { text: c.build.available, tone: "op" };

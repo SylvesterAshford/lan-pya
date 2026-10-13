@@ -53,6 +53,28 @@ Design debt deferred from the 2026-08-16 design review. Everything here was foun
 
 ---
 
+### Email the learner when a review is decided
+
+**What:** Send a short email when a reviewer verifies, requests changes on, or rejects a submission.
+
+**Why:** Since v0.28 a learner sees "Completed · awaiting review" and is told they can close the page. Nothing brings them back when the decision lands, so verified proof and change requests sit unseen until the next visit.
+
+**Pros:** Closes the loop the two-tier review opened. One template, three variants.
+**Cons:** Blocked on custom SMTP. Supabase's built-in sender cannot use custom templates, and its links point at `supabase.co`, which is unreachable from Myanmar without a VPN.
+**Context:** Hook the send into `record_review_decision` through a queued job (the same pgmq pattern as `evaluation_jobs`), not inline in the RPC. Links must go to Lan Pya's own domain.
+**Depends on:** Custom SMTP, and ideally a custom domain.
+
+### Reviewer calibration set
+
+**What:** Fail, revise, and pass example submissions for each mission rubric, which reviewers score before their first real review.
+
+**Why:** The Career Quest plan requires "named reviewers trained on calibration examples". The rubric now drives real scores (v0.28), but there is nothing to calibrate against, so two reviewers could score the same work differently.
+
+**Pros:** Makes "Trained human reviewer" on a proof record literally true. Gives a second reviewer an onboarding path.
+**Cons:** Content work: three examples times two missions, plus a small "calibration" mode on the review page.
+**Context:** Rubric criteria live in `lib/domain/mission-briefs.ts` (`deliverables`). Store the examples as seeded `data_origin = 'seeded_demo'` submissions that never enter the live queue.
+**Depends on:** Nothing.
+
 ## P3 — worth doing, no urgency
 
 ### Logo as SVG
@@ -92,6 +114,28 @@ Design debt deferred from the 2026-08-16 design review. Everything here was foun
 **Cons:** Requires the founder to confirm which values are actually approved.
 
 ---
+
+### Reviewer demo mode for pitches
+
+**What:** Let a pitch audience see the reviewer side (queue, rubric, decision) without granting real reviewer access.
+
+**Why:** The shared demo account must never be a reviewer, because it could then verify anyone's work. That leaves half the product invisible in a demo.
+
+**Pros:** Shows the human-review promise instead of describing it.
+**Cons:** Needs a read-only or sandboxed review over seeded submissions that cannot write `human_reviews` for live data.
+**Context:** Simplest shape: a `/app/review/demo` page rendering the real review components over a seeded submission, with the decision buttons replaced by an explanation.
+**Depends on:** The v0.28 rubric form.
+
+### Appeals flow
+
+**What:** Let a learner appeal a rejection or change request, and let a reviewer lead resolve it.
+
+**Why:** `appeal_requested` exists in `submission_state`, and an `appeals` table with RLS exists, but no screen or route uses either.
+
+**Pros:** A fairness valve that the plan's reviewer-lead role assumes.
+**Cons:** A new learner action, a lead queue, and decision rules for what an upheld appeal does to proof and XP.
+**Context:** See the `appeals` table in `supabase/migrations/20260811160000_lan_pya_alpha.sql` and the reviewer lead row in the Career Quest plan's roles table.
+**Depends on:** More than one reviewer existing.
 
 ## Completed
 

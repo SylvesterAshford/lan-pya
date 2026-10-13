@@ -156,6 +156,70 @@ export async function getOpportunities(): Promise<OpportunityCard[]> {
     .sort(byDeadlineAscending);
 }
 
+export type CheckObservation = { check: string; status: "pass" | "fail" | "inconclusive"; detail: string };
+
+export type MissionFeedback = {
+  state: SubmissionState;
+  updatedAt: string;
+  /** The last version sent, so a fix starts from what was submitted. */
+  version: { repositoryUrl: string; deploymentUrl: string; screenshotUrl: string; reflection: string } | null;
+  check: { outcome: string; observations: CheckObservation[] } | null;
+  review: { decision: string; notes: string; scores: Record<string, number> } | null;
+};
+
+/**
+ * The learner's latest submission for one mission, with its link check and
+ * the latest human review. RLS already lets a learner read all three for their
+ * own work; filtering by user keeps a reviewer's own page about themselves.
+ */
+export async function getMissionFeedback(userId: string, missionKey: string): Promise<MissionFeedback | null> {
+  const supabase = await createClient();
+  const { data: missions } = await supabase.from("mission_definitions").select("id").eq("key", missionKey);
+  const missionIds = (missions ?? []).map((row) => String(row.id));
+  if (!missionIds.length) return null;
+
+  const { data: submission } = await supabase
+    .from("submissions")
+    .select("id,state,updated_at,current_version")
+    .eq("user_id", userId)
+    .in("mission_id", missionIds)
+    .order("updated_at", { ascending: false })
+    .limit(1)
+    .maybeSingle();
+  if (!submission) return null;
+
+  const [version, check, review] = await Promise.all([
+    supabase.from("submission_versions").select("repository_url,deployment_url,screenshot_url,reflection").eq("submission_id", submission.id).eq("version", submission.current_version).maybeSingle(),
+    supabase.from("automated_evaluations").select("outcome,observations").eq("submission_id", submission.id).order("created_at", { ascending: false }).limit(1).maybeSingle(),
+    supabase.from("human_reviews").select("decision,notes,rubric_scores").eq("submission_id", submission.id).order("created_at", { ascending: false }).limit(1).maybeSingle(),
+  ]);
+
+  const scores = asRecord(review.data?.rubric_scores);
+  return {
+    state: String(submission.state) as SubmissionState,
+    updatedAt: String(submission.updated_at),
+    version: version.data ? {
+      repositoryUrl: String(version.data.repository_url ?? ""),
+      deploymentUrl: String(version.data.deployment_url ?? ""),
+      screenshotUrl: String(version.data.screenshot_url ?? ""),
+      reflection: String(version.data.reflection ?? ""),
+    } : null,
+    check: check.data ? {
+      outcome: String(check.data.outcome),
+      observations: (Array.isArray(check.data.observations) ? check.data.observations : []).map((item) => {
+        const row = asRecord(item);
+        const status = row.status === "pass" || row.status === "fail" ? row.status : "inconclusive";
+        return { check: String(row.check ?? ""), status, detail: String(row.detail ?? "") };
+      }),
+    } : null,
+    review: review.data ? {
+      decision: String(review.data.decision),
+      notes: String(review.data.notes ?? ""),
+      scores: Object.fromEntries(Object.entries(scores).map(([key, value]) => [key, asNumber(value)])),
+    } : null,
+  };
+}
+
 export async function getReviewQueue() {
   const supabase = await createClient();
   const { data } = await supabase.rpc("get_reviewer_queue");
