@@ -4,7 +4,6 @@ import { Link } from "@/i18n/navigation";
 import { MeNav } from "@/components/app/me-nav";
 import { ArenaMark } from "@/components/paths/arena-mark";
 import { PathSwitchButton } from "@/components/paths/path-switch-button";
-import { ReadinessSteps } from "@/components/paths/readiness-steps";
 import { requireUser } from "@/lib/auth";
 import { getActivePathDashboard, getCareerPreferences, getPathHistory } from "@/lib/data/app-data";
 import { CAREER_PATH_CATALOG, getAvailabilityLabel, getCareerRecommendations, type CareerPathCatalogItem, type PathAvailabilityLabel } from "@/lib/domain/career-recommendations";
@@ -22,9 +21,9 @@ const EMPTY_PREFERENCES: CareerPreferences = { interests: [], preferredWork: "no
  * It used to sort the same seven paths three ways at once (by arena heading,
  * by a status pill, and by hiding previews behind a toggle), and repeated two
  * of them in an "Alternatives" box. Now there are three readiness groups:
- * ready to start, roadmap ready with missions coming, and early stage. Each
- * row carries a Roadmap -> Missions -> Open marker, so how far a path has been
- * built reads at a glance and never by colour alone.
+ * ready to start, roadmap ready with missions coming, and early stage. The
+ * group heading carries the readiness, so each row stays to a name, one quiet
+ * line and its actions.
  */
 export default async function CareersPage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
@@ -67,20 +66,14 @@ export default async function CareersPage({ params }: { params: Promise<{ locale
   const mapped = byReadiness(["no_missions_yet"]);
   const early = byReadiness(["preview"]);
 
-  const readinessLabels = {
-    readiness: c.careers.readiness, roadmap: c.careers.stepRoadmap, missions: c.careers.stepMissions,
-    open: c.careers.stepOpen, pilot: c.careers.stepPilot, done: c.careers.stepDone,
-    partial: c.careers.stepPartial, notYet: c.careers.stepNotYet,
-  };
-
-  // One line of substance per row, phrased for the group it sits in.
-  const substance = (path: CareerPathCatalogItem) => {
-    const state = getAvailabilityLabel(path);
-    const stages = `${num(path.stageCount)} ${c.careers.stages}`;
-    if (state === "operational") return `${stages} · ${c.paths.firstMission}: ${path.firstMission}`;
-    if (state === "controlled_pilot") return `${stages} · ${c.careers.pilotNote}`;
-    if (state === "no_missions_yet") return `${stages} · ${c.careers.missionInDesign}`;
-    return `${c.careers.plannedMission}: ${path.firstMission}`;
+  // One quiet line under each name. The group heading already says how ready
+  // the path is, so the row adds only its size, a pilot note, and whether it
+  // fits the Compass. Early-stage paths have no stages yet and show none.
+  const meta = (path: CareerPathCatalogItem) => {
+    const parts: string[] = [];
+    if (path.stageCount) parts.push(`${num(path.stageCount)} ${c.careers.stages}`);
+    if (getAvailabilityLabel(path) === "controlled_pilot") parts.push(c.careers.pilot);
+    return parts.join(" · ");
   };
 
   const renderRow = (path: CareerPathCatalogItem) => {
@@ -97,15 +90,19 @@ export default async function CareersPage({ params }: { params: Promise<{ locale
           <span className="path-row-title">
             <strong>{title}</strong>
             {isActive ? <span className="path-row-here">{c.careers.yourPathHere}</span> : null}
-            {recommended.has(path.key) ? <span className="career-fit"><Compass size={12} aria-hidden="true" />{c.careers.fitsCompass}</span> : null}
           </span>
-          <small>{substance(path)}</small>
-          <ReadinessSteps state={state} labels={readinessLabels} />
+          {meta(path) || recommended.has(path.key) ? (
+            <small>
+              {meta(path)}
+              {meta(path) && recommended.has(path.key) ? " · " : null}
+              {recommended.has(path.key) ? <span className="career-fit"><Compass size={12} aria-hidden="true" />{c.careers.fitsCompass}</span> : null}
+            </small>
+          ) : null}
         </div>
         <div className="career-row-actions">
           {canSwitch ? <PathSwitchButton locale={locale} trackKey={path.key} className="button outline compact">{c.careers.switchTo}</PathSwitchButton> : null}
           <Link className="career-row-roadmap" href={`/app/roadmap?track=${path.key}`} aria-label={`${c.careers.viewRoadmap}: ${title}`}>
-            {c.careers.viewRoadmap}<ChevronRight size={15} aria-hidden="true" />
+            <span className="career-row-roadmap-label">{c.careers.viewRoadmap}</span><ChevronRight size={15} aria-hidden="true" />
           </Link>
         </div>
       </li>
