@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.27.3.0] - 2026-10-13
+
+### Changed
+
+- Careers rows are simpler. Each path shows its name and one short line (how many stages, whether it is a pilot, whether it fits your Compass). The Roadmap → Missions → Open marker is gone, because the group heading already says how ready each path is.
+- On phones, "View roadmap" is an arrow at the end of each row, so rows no longer wrap onto a second line.
+
 ## [0.27.2.0] - 2026-10-13
 
 ### Changed

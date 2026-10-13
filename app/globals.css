@@ -11758,8 +11758,8 @@ html[lang="my"] .track-card-eyebrow { text-transform: none; letter-spacing: 0; }
 
 /* ---- careers by readiness ----
    Three groups (ready / roadmap ready / early stage) replace arena headings,
-   status pills and the hidden previews toggle. Each row carries the
-   Roadmap -> Missions -> Open marker. */
+   status pills and the hidden previews toggle. The heading carries the
+   readiness; each row is a name, one quiet line, and its actions. */
 
 .career-group { margin-top: var(--s-xl); }
 
@@ -11822,19 +11822,15 @@ html[lang="my"] .career-group-head h2 { letter-spacing: 0; }
   line-height: var(--l-meta);
 }
 
+/* A word in the meta line, not a second pill beside the name. */
 .career-fit {
   display: inline-flex;
   align-items: center;
   gap: 4px;
-  padding: 1px 8px;
-  border: 1px solid var(--hairline);
-  border-radius: 99px;
   color: var(--teal-700);
-  background: var(--surface);
-  font-size: var(--t-label);
-  font-weight: 700;
-  line-height: 1.5;
+  font-weight: 600;
   white-space: nowrap;
+  vertical-align: bottom;
 }
 
 .career-row-actions {
@@ -11870,57 +11866,6 @@ html[lang="my"] .career-group-head h2 { letter-spacing: 0; }
   font-weight: 600;
 }
 
-/* Roadmap -> Missions -> Open. Each step states itself in words for screen
-   readers; the dot carries a check (done), a half fill (pilot) or nothing. */
-.readiness {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 4px 0;
-  margin: 2px 0 0;
-  padding: 0;
-  list-style: none;
-}
-
-.readiness-step {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  color: var(--muted-ink);
-  font-size: var(--t-label);
-  font-weight: 600;
-  line-height: 1.4;
-}
-
-.readiness-step + .readiness-step::before {
-  width: 18px;
-  height: 1px;
-  margin: 0 8px;
-  background: var(--hairline);
-  content: "";
-}
-
-.readiness-dot {
-  display: grid;
-  width: 14px;
-  height: 14px;
-  place-items: center;
-  border: 1.5px solid var(--node-soon-border);
-  border-radius: 50%;
-  color: #fff;
-  background: var(--surface);
-}
-
-.readiness-step.is-done { color: var(--ink); }
-.readiness-step.is-done .readiness-dot { border-color: var(--teal-500); background: var(--teal-500); }
-.readiness-step.is-done + .readiness-step::before { background: var(--teal-500); }
-
-.readiness-step.is-partial { color: var(--ink); }
-.readiness-step.is-partial .readiness-dot {
-  border-color: var(--teal-500);
-  background: linear-gradient(90deg, var(--teal-500) 50%, var(--surface) 50%);
-}
-
 /* ---- paused and previous ---- */
 
 .paused-row {
@@ -11947,8 +11892,14 @@ a.paused-row:hover { background: var(--surface-sunk); }
   .track-card-actions { grid-column: 1 / -1; grid-auto-flow: column; grid-auto-columns: 1fr; }
   .paused-row { grid-template-columns: auto minmax(0, 1fr); }
   .paused-row > :last-child { grid-column: 1 / -1; justify-self: start; }
-  .career-row { grid-template-columns: auto minmax(0, 1fr); align-items: start; }
-  .career-row-actions { grid-column: 2; flex-wrap: wrap; gap: var(--s-sm) var(--s-md); }
+  /* On a phone the roadmap link is a chevron at the row's end (its aria-label
+     keeps the words), and a switch button, when there is one, sits under the
+     name rather than pushing every row onto a second line. */
+  .career-row { grid-template-columns: auto minmax(0, 1fr) auto; gap: var(--s-sm) var(--s-md); }
+  .career-row-actions { display: contents; }
+  .career-row-roadmap { grid-column: 3; grid-row: 1; justify-content: center; min-width: 44px; }
+  .career-row-roadmap-label { display: none; }
+  .career-row .path-switch-action { grid-column: 2 / -1; grid-row: 2; justify-self: start; }
 }
 
 /* The active sub-tab is a filled pill; the 2px bar underneath it was a second
