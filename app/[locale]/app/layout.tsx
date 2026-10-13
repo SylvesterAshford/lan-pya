@@ -2,7 +2,7 @@ import { redirect } from "next/navigation";
 import { AppShell } from "@/components/app/app-shell";
 import { TutorLauncher } from "@/components/app/tutor-launcher";
 import { requireUser } from "@/lib/auth";
-import { getActivePathDashboard, getProfile, getRoles } from "@/lib/data/app-data";
+import { getActivePathDashboard, getProfile, getReviewQueue, getRoles } from "@/lib/data/app-data";
 import { getTutorScript } from "@/lib/domain/tutor-script";
 import { getAppCopy, localizeCareerTerm } from "@/lib/i18n/app-copy";
 
@@ -13,11 +13,13 @@ export default async function ProtectedLayout({ children, params }: { children: 
   const user = await requireUser(locale);
   const [profile, roles, dashboard] = await Promise.all([getProfile(user.id), getRoles(user.id), getActivePathDashboard()]);
   if (!profile?.onboardingComplete) redirect(`/${locale}/onboarding`);
+  // Reviewers see how much is waiting without opening the queue.
+  const reviewCount = roles.has("reviewer") || roles.has("reviewer_lead") ? (await getReviewQueue()).filter((item) => !item.claimed_by_me).length : 0;
   const c = getAppCopy(locale);
   const path = dashboard.activePath;
 
   return (
-    <AppShell profile={{ ...profile, goal: path?.title ?? profile.goal }} roles={roles} locale={locale}>
+    <AppShell profile={{ ...profile, goal: path?.title ?? profile.goal }} roles={roles} locale={locale} reviewCount={reviewCount}>
       {children}
       {/* Tutor rides the shell so it is reachable from every screen. */}
       {path ? (

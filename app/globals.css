@@ -4467,7 +4467,7 @@ a{ color: inherit; text-decoration: none; }
 .metric-grid strong{ display:block; margin:8px 0 6px; color:var(--navy); font-size: var(--t-display);
  letter-spacing: var(--k-display); letter-spacing:-.04em; }
 .dashboard-grid{ display:grid; grid-template-columns:1.15fr .85fr; gap:18px; }
-.dashboard-grid .panel, .trust-panel, .roadmap-aside, .mission-brief, .submission-form, .queue-panel, .privacy-grid .panel, .danger-zone, .admin-grid .panel{ padding:24px; }
+.dashboard-grid .panel, .trust-panel, .roadmap-aside, .mission-brief, .queue-panel, .privacy-grid .panel, .danger-zone, .admin-grid .panel{ padding:24px; }
 .next-mission h2, .trust-panel h2{ margin:7px 0; color:var(--navy); font-size: var(--t-h1);
  letter-spacing: var(--k-h1); }
 .next-mission > p, .trust-panel p, .roadmap-aside p{ color:var(--muted); line-height:1.65; }
@@ -4507,19 +4507,16 @@ a{ color: inherit; text-decoration: none; }
 .mission-layout, .review-layout{ display:grid; grid-template-columns:minmax(0,.9fr) minmax(380px,1.1fr); gap:18px; align-items:start; }
 .brief-tag, .origin-label{ display:inline-flex; padding:5px 8px; color:#8c5500; font-size:var(--t-label); font-weight:800; letter-spacing:.07em; background:var(--yellow-soft); border-radius:4px; text-transform:uppercase; }
 .mission-brief h2{ margin:14px 0 7px; color:var(--navy); }
-.mission-brief > p, .submission-note span{ color:var(--muted); line-height:1.6; }
+.mission-brief > p{ color:var(--muted); line-height:1.6; }
 .rubric-list{ padding:0; margin:17px 0; list-style:none; }
 .rubric-list li{ display:flex; gap:14px; padding:13px 0; border-top:1px solid var(--line); }
 .rubric-list b{ width:42px; color:var(--teal); }
 .rubric-list span, .rubric-list small{ display:block; }
 .rubric-list small{ margin-top:3px; color:var(--muted); }
-.mission-guardrail, .submission-note{ padding:14px; color:var(--navy); background:var(--teal-soft); border:1px solid #c6e5e1; border-radius:7px; }
+.mission-guardrail{ padding:14px; color:var(--navy); background:var(--teal-soft); border:1px solid #c6e5e1; border-radius:7px; }
 .mission-guardrail p{ margin:4px 0 0; color:var(--muted); font-size:var(--t-meta); line-height:1.55; }
-.submission-form{ display:grid; gap:16px; }
-.submission-form label, .review-actions label, .stack-form label{ display:grid; gap:7px; color:var(--navy); font-size:var(--t-meta); font-weight:700; }
-.submission-form input, .submission-form textarea, .review-actions textarea, .stack-form input, .stack-form select{ width:100%; padding:12px 13px; color:var(--slate); background:var(--surface); border:1px solid var(--line-strong); border-radius:7px; }
-.submission-form textarea, .review-actions textarea{ min-height:120px; resize:vertical; }
-.draft-state{ color:var(--teal); font-size:var(--t-label); }
+.stack-form label{ display:grid; gap:7px; color:var(--navy); font-size:var(--t-meta); font-weight:700; }
+.stack-form input, .stack-form select{ width:100%; padding:12px 13px; color:var(--slate); background:var(--surface); border:1px solid var(--line-strong); border-radius:7px; }
 .proof-grid{ display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:18px; }
 .proof-card{ padding:24px; }
 .proof-card-top{ display:flex; align-items:center; gap:13px; }
@@ -4568,16 +4565,33 @@ dt{ color:var(--muted); font-size:var(--t-label); font-weight:800; text-transfor
 .danger-zone p{ margin:0; color:var(--muted); }
 .button.danger{ color:var(--surface); background:var(--error); border-color:var(--error); }
 .text-link{ display:inline-block; margin-top:20px; color:var(--teal); font-weight:800; }
-.queue-list{ margin-top:18px; border-top:1px solid var(--line); }
-.queue-list a{ display:flex; align-items:center; justify-content:space-between; padding:15px 5px; border-bottom:1px solid var(--line); }
-.queue-list span, .queue-list small{ display:block; }
+.queue-list{ margin:18px 0 0; padding:0; list-style:none; border-top:1px solid var(--line); }
+.queue-list a{ display:flex; align-items:center; justify-content:space-between; gap:12px; min-height:44px; padding:15px 5px; border-bottom:1px solid var(--line); color:inherit; text-decoration:none; }
+.queue-list a > span:first-child, .queue-list small{ display:block; }
 .queue-list small{ margin-top:4px; color:var(--muted); }
+.queue-action{ display:inline-flex; flex:none; align-items:center; gap:8px; color:var(--teal-700); font-weight:700; }
 .review-layout .panel{ padding:24px; }
 .detail-list div{ padding:13px 0; border-top:1px solid var(--line); }
 .detail-list a{ color:var(--teal); overflow-wrap:anywhere; }
-.review-actions{ display:grid; gap:13px; margin-top:18px; }
-.review-actions > div{ display:flex; flex-wrap:wrap; gap:8px; }
-.review-actions p{ color:var(--teal); font-size:var(--t-meta); }
+.review-version{ margin-left:6px; font-size:var(--t-label); font-weight:600; color:var(--muted-ink); }
+.review-reflection{ white-space:pre-line; }
+/* The reviewer's rubric: one fieldset per step-2 criterion, scored 0 to 4. */
+.review-form{ display:grid; gap:var(--s-md); margin-top:var(--s-sm); }
+.review-legend{ margin:calc(var(--s-sm) * -1) 0 0; font-size:var(--t-label); color:var(--muted-ink); }
+.review-criterion{ margin:0; padding:var(--s-sm) 0 0; border:0; border-top:1px solid var(--hairline); }
+.review-criterion legend{ padding:0; font-size:var(--t-meta); color:var(--ink); }
+.review-weight{ font-size:var(--t-label); font-weight:600; color:var(--muted-ink); }
+.review-scale{ display:flex; gap:6px; margin-top:6px; }
+.review-scale label{ position:relative; display:grid; width:44px; height:44px; place-items:center; border:1px solid var(--line-strong); border-radius:var(--r-control); font-weight:700; font-variant-numeric:tabular-nums; color:var(--ink); background:var(--surface); cursor:pointer; }
+.review-scale input{ position:absolute; inset:0; opacity:0; cursor:pointer; }
+.review-scale label.is-on{ color:var(--surface); background:var(--navy-500); border-color:var(--navy-500); }
+.review-scale label:has(input:focus-visible){ outline:2px solid var(--navy-500); outline-offset:2px; }
+.review-criterion.has-error .review-scale label{ border-color:var(--error-500); }
+.review-decisions{ display:flex; flex-wrap:wrap; gap:8px; }
+.review-start{ display:grid; gap:8px; justify-items:start; margin-top:var(--s-sm); }
+
+/* Waiting count beside the Review link, for reviewers. */
+.sidebar-count{ margin-left:auto; min-width:20px; padding:0 6px; border-radius:99px; font-size:var(--t-label); font-weight:700; line-height:20px; text-align:center; color:var(--navy-500); background:var(--amber-100); }
 .stack-form{ display:grid; gap:14px; }
 .profile-layout{ display:grid; grid-template-columns:minmax(0,1fr) 330px; gap:18px; align-items:start; }
 .profile-details{ padding:24px; }
@@ -5054,21 +5068,6 @@ dt{ color:var(--muted); font-size:var(--t-label); font-weight:800; text-transfor
   border: 0;
 }
 
-.sidebar-rail::after{
-  position: absolute;
-  top: 16px;
-  right: 21px;
-  bottom: 16px;
-  width: 1px;
-  background: transparent;
-  content: "";
-  transition: background-color 160ms ease;
-}
-
-.sidebar-rail:hover::after, .sidebar-rail:focus-visible::after{
-  background: #5eead4;
-}
-
 .sidebar-inset{
   min-width: 0;
   min-height: 100svh;
@@ -5301,11 +5300,11 @@ dt{ color:var(--muted); font-size:var(--t-label); font-weight:800; text-transfor
   line-height: 1.45;
 }
 
-.sidebar-inset .submission-form label, .sidebar-inset .review-actions label, .sidebar-inset .stack-form label{
+.sidebar-inset .stack-form label{
   font-size: var(--t-body);
 }
 
-.sidebar-inset .submission-form input, .sidebar-inset .submission-form textarea, .sidebar-inset .review-actions textarea, .sidebar-inset .stack-form input, .sidebar-inset .stack-form select{
+.sidebar-inset .stack-form input, .sidebar-inset .stack-form select{
   min-height: 46px;
   font-size: var(--t-title);
   letter-spacing: var(--k-title);
@@ -5313,11 +5312,7 @@ dt{ color:var(--muted); font-size:var(--t-label); font-weight:800; text-transfor
   border-radius: 8px;
 }
 
-.sidebar-inset .draft-state{
-  font-size: var(--t-meta);
-}
-
-.sidebar-inset .mission-guardrail, .sidebar-inset .submission-note{
+.sidebar-inset .mission-guardrail{
   display: grid;
   gap: 4px;
   padding: 16px;
@@ -5325,7 +5320,7 @@ dt{ color:var(--muted); font-size:var(--t-label); font-weight:800; text-transfor
   border-radius: 8px;
 }
 
-.sidebar-inset .submission-note span, .sidebar-inset .mission-guardrail p{
+.sidebar-inset .mission-guardrail p{
   font-size: var(--t-body);
   line-height: 1.55;
 }
@@ -5394,7 +5389,7 @@ dt{ color:var(--muted); font-size:var(--t-label); font-weight:800; text-transfor
     font-size: clamp(30px, 8vw, 36px);
   }
 
-  .sidebar-inset .build-hero, .sidebar-inset .path-preview, .sidebar-inset .pilot-brief, .sidebar-inset .pilot-note, .sidebar-inset .pilot-form, .sidebar-inset .submission-form{
+  .sidebar-inset .build-hero, .sidebar-inset .path-preview, .sidebar-inset .pilot-brief, .sidebar-inset .pilot-note, .sidebar-inset .pilot-form{
     padding: 20px;
   }
 }
@@ -7851,12 +7846,12 @@ html[lang="my"] .app-page .mission-title h1 {
   border-radius: var(--r-control);
 }
 
-.runner-state strong { display: block; margin-bottom: 3px; font-size: var(--t-title); font-weight: 600; }
+.runner-state > strong { display: block; margin-bottom: 3px; font-size: var(--t-title); font-weight: 600; }
 .runner-state p { margin: 0; font-size: var(--t-meta); line-height: var(--l-meta); color: var(--muted-ink); }
 .runner-state.warning { background: var(--amber-100); border-color: #ebd9b4; }
-.runner-state.warning strong, .runner-state.warning p { color: var(--amber-800); }
+.runner-state.warning > strong, .runner-state.warning p, .runner-state.warning .runner-checks li { color: var(--amber-800); }
 .runner-state.success { background: var(--teal-050); border-color: var(--teal-100); }
-.runner-state.success strong { color: var(--teal-700); }
+.runner-state.success > strong { color: var(--teal-700); }
 
 .runner-foot {
   display: flex;
@@ -7894,8 +7889,88 @@ html[lang="my"] .app-page .mission-title h1 {
   color: var(--teal-700);
 }
 
-/* The runner hosts the submission form; drop its duplicate chrome. */
-.runner .submission-form { padding: 0; background: none; border: 0; box-shadow: none; }
+/* ---- Submit step (step 3) ----
+   One heading, a hint under each label, errors inline. Labels lead at meta
+   size; what a learner types sits at body size and regular weight, so the
+   placeholder never outshouts the label. */
+.submit-form { display: grid; gap: var(--s-md); }
+.submit-form > h2 {
+  margin: var(--s-xs) 0 0;
+  font-size: var(--t-h2);
+  line-height: var(--l-h2);
+  letter-spacing: var(--k-h2);
+  font-weight: 700;
+  color: var(--ink);
+}
+html[lang="my"] .submit-form > h2 { letter-spacing: 0; }
+.submit-help { margin: calc(var(--s-sm) * -1) 0 0; font-size: var(--t-meta); line-height: var(--l-meta); color: var(--muted-ink); }
+
+.submit-field { display: grid; gap: 4px; }
+.submit-label-row { display: flex; align-items: baseline; justify-content: space-between; gap: var(--s-sm); }
+.submit-label-row label { font-size: var(--t-meta); line-height: var(--l-meta); font-weight: 600; color: var(--ink); }
+.submit-optional, .submit-counter { flex: none; font-size: var(--t-label); line-height: var(--l-label); color: var(--muted-ink); }
+.submit-counter.is-met { color: var(--teal-700); }
+.submit-hint { margin: 0 0 4px; font-size: var(--t-label); line-height: var(--l-label); color: var(--muted-ink); }
+
+.submit-field input, .submit-field textarea {
+  width: 100%;
+  min-height: 44px;
+  padding: 10px 12px;
+  font: inherit;
+  font-size: var(--t-body);
+  line-height: var(--l-body);
+  font-weight: 400;
+  color: var(--ink);
+  background: var(--surface);
+  border: 1px solid var(--line-strong);
+  border-radius: var(--r-control);
+}
+.submit-field textarea { min-height: 120px; resize: vertical; }
+.submit-field input::placeholder, .submit-field textarea::placeholder { color: var(--muted-ink); opacity: 0.8; font-weight: 400; }
+.submit-field input:focus-visible, .submit-field textarea:focus-visible { outline: 2px solid var(--navy-500); outline-offset: 1px; border-color: var(--navy-500); }
+.submit-field.has-error input, .submit-field.has-error textarea { border-color: var(--error-500); }
+.submit-error-text { margin: 2px 0 0; font-size: var(--t-label); line-height: var(--l-label); font-weight: 600; color: var(--error-500); }
+
+.submit-foot-note { margin: 0; font-size: var(--t-meta); line-height: var(--l-meta); color: var(--muted-ink); }
+.submit-server-error {
+  margin: 0;
+  padding: 10px 12px;
+  font-size: var(--t-meta);
+  color: var(--error-500);
+  background: var(--error-050);
+  border: 1px solid rgba(180, 35, 24, 0.2);
+  border-radius: var(--r-control);
+}
+.submit-form .runner-foot { margin-top: 0; }
+
+/* Completed: the work is in and the map moved on. Not teal; teal is for
+   verified work, and this is not verified yet. */
+.runner-state.completed { background: var(--surface-sunk); }
+.runner-state.completed > strong { display: inline-flex; align-items: center; gap: 6px; }
+.runner-checks-title {
+  display: block;
+  margin-top: var(--s-sm);
+  font-size: var(--t-label);
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--muted-ink);
+}
+html[lang="my"] .runner-checks-title { letter-spacing: 0; text-transform: none; }
+.runner-checks { display: grid; gap: 4px; margin: 6px 0 0; padding: 0; list-style: none; }
+.runner-checks li { display: flex; align-items: center; gap: 8px; font-size: var(--t-meta); line-height: var(--l-meta); color: var(--ink); }
+.runner-checks li strong { font-weight: 600; }
+.runner-check-icon { display: grid; flex: none; width: 20px; height: 20px; place-items: center; border-radius: 50%; color: var(--muted-ink); background: var(--surface); border: 1px solid var(--hairline); }
+.runner-checks .is-pass .runner-check-icon { color: var(--teal-700); border-color: var(--teal-100); }
+.runner-checks .is-fail .runner-check-icon { color: var(--error-500); border-color: rgba(180, 35, 24, 0.25); }
+.runner-cta { margin-top: var(--s-md); }
+
+.runner-review { margin-top: var(--s-sm); }
+.runner-review-notes { margin: 4px 0 0; white-space: pre-line; }
+.runner-scores { display: grid; gap: 2px; margin: var(--s-sm) 0 0; }
+.runner-scores > div { display: flex; justify-content: space-between; gap: var(--s-sm); font-size: var(--t-meta); }
+.runner-scores dt { margin: 0; font-size: var(--t-meta); font-weight: 400; letter-spacing: 0; text-transform: none; color: inherit; }
+.runner-scores dd { margin: 0; font-weight: 700; font-variant-numeric: tabular-nums; }
 
 @media (max-width: 640px) {
   .runner-step > span { display: none; }

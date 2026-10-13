@@ -3,6 +3,8 @@ import { ProofPassport } from "@/components/proof/proof-passport";
 import { ResumeBuilder } from "@/components/proof/resume-builder";
 import { WorkGrid } from "@/components/proof/work-grid";
 import type { CaseStudyItem, CaseStudyState } from "@/components/proof/case-study-card";
+import { learnerStatus } from "@/lib/domain/mission-status";
+import type { SubmissionState } from "@/lib/domain/types";
 import { eligibleForResume } from "@/lib/domain/resume-draft";
 import { requireUser } from "@/lib/auth";
 import { getActivePathDashboard, getProfile, getProofItems, getRoadmap } from "@/lib/data/app-data";
@@ -59,6 +61,14 @@ export default async function ProofPage({ params }: { params: Promise<{ locale: 
     { key: "publish" as const, label: c.studio.passport.publish, done: verified.length >= 3 },
   ];
 
+  const submissionLabel = (state: SubmissionState) => {
+    const kind = learnerStatus(state).kind;
+    if (kind === "completed") return c.runner.completedTitle;
+    if (kind === "checking") return c.runner.checkingTitle;
+    if (kind === "fix_links" || kind === "changes" || kind === "rejected") return c.build.needsChanges;
+    return c.studio.work.inReview;
+  };
+
   const cases: CaseStudyItem[] = [
     ...verified.map((item) => ({
       id: item.id,
@@ -82,7 +92,8 @@ export default async function ProofPage({ params }: { params: Promise<{ locale: 
         summary: null,
         competencies: [],
         state: (dashboard.nextMission.submissionState === "draft" ? "draft" : "in_review") as CaseStudyState,
-        dateLabel: c.studio.work.inReview,
+        // Same words as the mission runner: Completed is not Verified.
+        dateLabel: submissionLabel(dashboard.nextMission.submissionState),
         href: "/app/missions",
         isDemo: false,
       }]

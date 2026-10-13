@@ -111,15 +111,15 @@ const APPLY_NAV: NavItem[] = [
   },
 ];
 
-export function AppShell({ children, profile, roles, locale }: { children: React.ReactNode; profile: Profile; roles: Set<string>; locale: string }) {
+export function AppShell({ children, profile, roles, locale, reviewCount = 0 }: { children: React.ReactNode; profile: Profile; roles: Set<string>; locale: string; reviewCount?: number }) {
   return (
     <SidebarProvider>
-      <AppShellContent profile={profile} roles={roles} locale={locale}>{children}</AppShellContent>
+      <AppShellContent profile={profile} roles={roles} locale={locale} reviewCount={reviewCount}>{children}</AppShellContent>
     </SidebarProvider>
   );
 }
 
-function AppShellContent({ children, profile, roles, locale }: { children: React.ReactNode; profile: Profile; roles: Set<string>; locale: string }) {
+function AppShellContent({ children, profile, roles, locale, reviewCount }: { children: React.ReactNode; profile: Profile; roles: Set<string>; locale: string; reviewCount: number }) {
   const pathname = usePathname();
   const my = locale === "my";
   const labelFor = (item: NavItem) => (my ? item.my : item.en);
@@ -131,10 +131,10 @@ function AppShellContent({ children, profile, roles, locale }: { children: React
 
   const staffNav = [
     ...(roles.has("reviewer") || roles.has("reviewer_lead")
-      ? [{ href: "/app/review", label: my ? "သုံးသပ်ရန်" : "Review", icon: SlidersHorizontal }]
+      ? [{ href: "/app/review", label: my ? "သုံးသပ်ရန်" : "Review", icon: SlidersHorizontal, count: reviewCount }]
       : []),
     ...(roles.has("admin")
-      ? [{ href: "/app/admin", label: my ? "စီမံခန့်ခွဲမှု" : "Admin", icon: ShieldCheck }]
+      ? [{ href: "/app/admin", label: my ? "စီမံခန့်ခွဲမှု" : "Admin", icon: ShieldCheck, count: 0 }]
       : []),
   ];
 
@@ -193,7 +193,7 @@ function AppShellContent({ children, profile, roles, locale }: { children: React
             <SidebarGroup>
               <SidebarGroupLabel>{my ? "အဖွဲ့" : "Staff"}</SidebarGroupLabel>
               <SidebarMenu>
-                {staffNav.map(({ href, label, icon: Icon }) => {
+                {staffNav.map(({ href, label, icon: Icon, count }) => {
                   const active = pathname.includes(href);
                   return (
                     <SidebarMenuItem key={href}>
@@ -201,6 +201,7 @@ function AppShellContent({ children, profile, roles, locale }: { children: React
                         <Link href={href} aria-current={active ? "page" : undefined}>
                           <Icon aria-hidden="true" />
                           <span>{label}</span>
+                          {count ? <><span className="sidebar-count" aria-hidden="true">{count}</span><span className="sr-only">{my ? `, ${count} စောင့်နေသည်` : `, ${count} waiting`}</span></> : null}
                         </Link>
                       </SidebarMenuButton>
                     </SidebarMenuItem>

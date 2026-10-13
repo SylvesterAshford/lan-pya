@@ -1,5 +1,23 @@
 # Changelog
 
+## [0.28.0.0] - 2026-10-13
+
+### Added
+
+- Missions now finish. When your links open, the mission is **Completed · awaiting review** and your trail map moves on straight away. A trained reviewer still scores the work, and XP and Proof arrive when it is verified.
+- If a link is broken, the mission sends you back to Submit and names the link that failed, so you can fix it without waiting for a reviewer.
+- Reviewer notes and rubric scores now show on the mission when a reviewer asks for changes or does not accept the work. A change request keeps your place on the map.
+- Reviewers get a working rubric: they score each criterion from the mission's step-2 checklist from 0 to 4, start a review with a button, and see how many submissions are waiting next to the Review link.
+
+### Changed
+
+- The Submit step is simpler: one heading, a hint under each field, errors written next to the field instead of browser pop-ups, a live count for the reflection, and Back and Submit side by side.
+
+### Fixed
+
+- A rejected mission no longer shows "With a reviewer" forever.
+- A vertical line no longer appears inside the sidebar when you hover its edge.
+
 ## [0.27.3.0] - 2026-10-13
 
 ### Changed
