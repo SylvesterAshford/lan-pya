@@ -89,10 +89,11 @@ describe("TodayPage minimal layout", () => {
     expect(screen.getByText("Stage 3 of 1 · Frontend Developer · 200 points · Starter", { exact: false })).toBeInTheDocument();
   });
 
-  it("shows an empty Up next and a card about the learner rather than filler", async () => {
+  it("shows the current stage and a card about the learner, not an empty list", async () => {
     render(await TodayPage({ params: Promise.resolve({ locale: "en" }) }));
-    expect(screen.getByRole("heading", { name: "Up next" })).toBeInTheDocument();
-    expect(screen.getByText("Nothing is waiting on you. Your stage is above.")).toBeInTheDocument();
+    // Nothing waits, so there is no empty "Up next"; the stage fills the column.
+    expect(screen.queryByRole("heading", { name: "Up next" })).toBeNull();
+    expect(screen.getByRole("heading", { name: "CSS and responsive layout" })).toBeInTheDocument();
     // The card beside it is about this learner: their name, path and position.
     expect(screen.getByRole("heading", { name: "Learner" })).toBeInTheDocument();
     expect(screen.getByText("Now · Stage 3 of 1")).toBeInTheDocument();

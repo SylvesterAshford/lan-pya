@@ -27,6 +27,10 @@ const english = {
       closes: "Closes {date}",
       matches: "matches {n} of your skills",
     },
+    stage: {
+      title: "Your stage", stageOf: "Stage {a} of {b}",
+      proof: "Proof", pace: "Pace", next: "Coming up", open: "Open on the roadmap",
+    },
     you: {
       learning: "Learning {path}", noPath: "No path chosen yet",
       paths: "Paths", now: "Now", paused: "Paused", stageOf: "Stage {a} of {b}",
@@ -327,6 +331,10 @@ const myanmar: typeof english = {
       paused: "ခေတ္တရပ်ထား · {path}",
       closes: "{date} တွင် ပိတ်မည်",
       matches: "သင့်ကျွမ်းကျင်မှု {n} ခုနှင့် ကိုက်ညီ",
+    },
+    stage: {
+      title: "သင့်အဆင့်", stageOf: "အဆင့် {a} / {b}",
+      proof: "သက်သေ", pace: "အချိန်", next: "နောက်လာမည့်အဆင့်များ", open: "မြေပုံတွင် ဖွင့်မည်",
     },
     you: {
       learning: "{path} ကို လေ့လာနေသည်", noPath: "လမ်းကြောင်း မရွေးရသေးပါ",

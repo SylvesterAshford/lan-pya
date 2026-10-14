@@ -30,7 +30,9 @@ export function LevelMeter({
   const my = locale === "my";
   const num = (value: number) => (my ? toMyanmarDigits(value) : String(value));
   const name = localizeLevel(locale, progress.level);
-  const percent = Math.round(progress.fraction * 100);
+  const stripPercent = progress.isMax || !progress.next
+    ? 100
+    : Math.min(100, Math.round((progress.xp / progress.next.minXp) * 100));
 
   if (variant === "compact") {
     return (
@@ -47,8 +49,19 @@ export function LevelMeter({
           mark
         />
         <strong>{name}</strong>
-        <span className="level-strip-track" aria-hidden="true">
-          <span style={{ width: `${percent}%` }} />
+        {/* The fill matches the words beside it: "100 / 300 points" is a third
+            of the way. It used to fill by progress inside the current level
+            band, which reads 0% at the moment a level is reached, so the bar
+            looked empty next to a label saying a third was done. */}
+        <span
+          className="level-strip-track"
+          role="progressbar"
+          aria-valuemin={0}
+          aria-valuemax={progress.isMax ? progress.xp : progress.next!.minXp}
+          aria-valuenow={progress.xp}
+          aria-label={name}
+        >
+          <span style={{ width: `${stripPercent}%` }} />
         </span>
         <span className="level-strip-xp">
           {progress.isMax
