@@ -1,5 +1,15 @@
 # Changelog
 
+## [0.29.2.0] - 2026-10-14
+
+### Changed
+
+- **Home now opens up the stage you're on**, beside the card about you: what it covers, its topics, the proof it asks for, how long it usually takes, and the two stages after it. "Up next" appears above it only when something is waiting.
+
+### Fixed
+
+- **The level bar** fills to match its label: at 100 / 300 points it's a third full instead of empty.
+
 ## [0.29.1.0] - 2026-10-14
 
 ### Changed

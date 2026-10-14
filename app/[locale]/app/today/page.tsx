@@ -5,6 +5,7 @@ import { LevelUpMoment } from "@/components/app/level-up-moment";
 import { TodaysClimb } from "@/components/home/todays-climb";
 import { UpNext } from "@/components/home/up-next";
 import { YouCard, type YouPath } from "@/components/home/you-card";
+import { StagePanel } from "@/components/home/stage-panel";
 import { buildUpNext } from "@/lib/domain/home-feed";
 import { getStageMission, VERIFIED_MISSION_POINTS } from "@/lib/domain/mission-briefs";
 import { localizeLevel, resolveProgress } from "@/lib/domain/progress";
@@ -169,7 +170,20 @@ export default async function TodayPage({ params }: { params: Promise<{ locale: 
       />
 
       <div className="home-columns">
-        <UpNext items={upNext} locale={locale} labels={c.home.feed} runner={c.runner} />
+        {/* Up next only when something waits; the stage you are on always. */}
+        <div className="home-main">
+          {upNext.length ? <UpNext items={upNext} locale={locale} labels={c.home.feed} runner={c.runner} /> : null}
+          {currentStage ? (
+            <StagePanel
+              locale={locale}
+              stage={currentStage}
+              total={roadmap.length}
+              upcoming={roadmap.filter((stage) => stage.order > currentStage.order).slice(0, 2)}
+              trackKey={path.key}
+              labels={c.home.stage}
+            />
+          ) : null}
+        </div>
         <YouCard
           locale={locale}
           alias={alias}
