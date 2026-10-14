@@ -73,7 +73,7 @@ export default async function MissionsPage({ params }: { params: Promise<{ local
   const verified = proof.filter((item) => item.state === "active");
 
   const progress = resolveProgress(dashboard.xp, {
-    completedMissions: dashboard.completedMilestones,
+    completedMissions: dashboard.completedMissions,
     verifiedCount: dashboard.verifiedCount,
     stagesTouched: roadmap.filter((stage) => stage.status === "complete").length,
   });
@@ -94,10 +94,12 @@ export default async function MissionsPage({ params }: { params: Promise<{ local
       <section className="mission-section">
         <header className="arena-head">
           <h3>{c.missions.active}</h3>
-          <span className="arena-count">· {mission ? 1 : 0}</span>
+          <span className="arena-count">· {mission && mission.submissionState !== "verified" ? 1 : 0}</span>
         </header>
 
-        {mission ? (
+        {/* A verified mission is finished, not in progress. When the stage the
+            learner stands on has no mission yet, this says so. */}
+        {mission && mission.submissionState !== "verified" ? (
           <Link className="mission-row current" href={missionHref[mission.key] ?? "/app/paths"}>
             <Emblem kind={activeEmblem} size={40} className="mission-emblem" />
             <span className="mission-row-copy">
@@ -177,7 +179,9 @@ export default async function MissionsPage({ params }: { params: Promise<{ local
           stageOf: locale === "my" ? "အဆင့် {a} / {b}" : "Stage {a} of {b}",
           steps: locale === "my" ? "အမှတ်" : "points",
           youAreHere: locale === "my" ? "သင် ဤနေရာတွင်" : "You are here",
-          complete: locale === "my" ? "ပြီးစီးပြီး" : "Complete",
+          complete: locale === "my" ? "အတည်ပြုပြီး" : "Verified",
+          placed: locale === "my" ? "ကျွမ်းကျင်မှုစစ်ဆေးချက်ဖြင့် ကျော်ခဲ့" : "Placed by skills check",
+          awaiting: locale === "my" ? "သုံးသပ်ရန် စောင့်နေသည်" : "Awaiting review",
           locked: locale === "my" ? "မဖွင့်ရသေးပါ" : "Locked",
           nextMission: locale === "my" ? "နောက်တစ်ခု" : "Next mission",
           continueMission: locale === "my" ? "ဆက်လုပ်မည်" : "Continue mission",

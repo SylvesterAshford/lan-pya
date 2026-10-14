@@ -7931,6 +7931,7 @@ html[lang="my"] .submit-form > h2 { letter-spacing: 0; }
 .submit-field.has-error input, .submit-field.has-error textarea { border-color: var(--error-500); }
 .submit-error-text { margin: 2px 0 0; font-size: var(--t-label); line-height: var(--l-label); font-weight: 600; color: var(--error-500); }
 
+.submit-demo-note { margin: 0; padding: 10px 12px; font-size: var(--t-meta); line-height: var(--l-meta); color: var(--navy-500); background: var(--surface-sunk); border: 1px solid var(--hairline); border-radius: var(--r-control); }
 .submit-foot-note { margin: 0; font-size: var(--t-meta); line-height: var(--l-meta); color: var(--muted-ink); }
 .submit-server-error {
   margin: 0;
@@ -9603,6 +9604,9 @@ a.map-card:focus-visible { outline: 2px solid var(--navy-700); outline-offset: 2
 .map-card.locked .map-card-copy strong { color: var(--muted-ink); }
 .map-card-status { font-size: var(--t-label); font-weight: 600; color: var(--muted-ink); }
 .map-card-status.done { color: var(--teal-700); }
+/* Placed by the skills check: done, but no mission was submitted for it. */
+.map-card-status.is-placed { color: var(--muted-ink); }
+.map-card-status.is-awaiting { color: var(--amber-800); }
 .map-card-status.current { color: var(--navy-700); }
 .map-card-status.next { color: var(--amber-800); }
 .map-card-lock, .map-card-check { flex: none; color: var(--muted-ink); }
@@ -14453,4 +14457,57 @@ html[lang="my"] .hero-copy h1{
 
 @media (max-height: 720px) and (max-width: 920px){
   .auth-login-form-wrap{ align-content: start; }
+}
+
+/* ---- Home: one climb card, then two quiet lists ----
+   Up next and Your proof are rows on hairlines, not cards: title, one muted
+   line of why, and the action. Nothing here is copy that reads the same for
+   every learner. */
+.home-block { margin-top: var(--s-xl); }
+.home-block > h2 {
+  margin: 0 0 var(--s-xs);
+  font-size: var(--t-title);
+  line-height: var(--l-title);
+  letter-spacing: var(--k-title);
+  font-weight: 700;
+  color: var(--ink);
+}
+.home-list { margin: 0; padding: 0; list-style: none; border-top: 1px solid var(--hairline); }
+.home-list > li { border-bottom: 1px solid var(--hairline); }
+.home-row {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  gap: var(--s-md);
+  align-items: center;
+  min-height: 56px;
+  padding: 12px var(--s-sm);
+  margin: 0 calc(var(--s-sm) * -1);
+  border-radius: var(--r-control);
+  color: inherit;
+  text-decoration: none;
+}
+.home-row:not(:has(.home-row-icon)) { grid-template-columns: minmax(0, 1fr) auto; }
+.home-row:hover { background: var(--surface-sunk); }
+.home-row:focus-visible { outline: 2px solid var(--navy-500); outline-offset: 2px; }
+.home-row-icon {
+  display: grid;
+  width: 36px;
+  height: 36px;
+  place-items: center;
+  border-radius: 50%;
+  color: var(--muted-ink);
+  background: var(--surface-sunk);
+}
+.home-row-icon.is-attention { color: var(--amber-800); background: var(--amber-100); }
+.home-row-icon.is-waiting { color: var(--teal-700); background: var(--teal-050); }
+.home-row-copy { display: grid; min-width: 0; gap: 2px; }
+.home-row-copy strong { font-size: var(--t-body); line-height: var(--l-body); font-weight: 600; color: var(--ink); }
+.home-row-copy small { font-size: var(--t-meta); line-height: var(--l-meta); color: var(--muted-ink); }
+.home-row-action { display: inline-flex; align-items: center; gap: 4px; font-size: var(--t-meta); font-weight: 700; color: var(--teal-700); white-space: nowrap; }
+.home-empty { margin: 0; padding: 14px 0; border-top: 1px solid var(--hairline); border-bottom: 1px solid var(--hairline); font-size: var(--t-meta); color: var(--muted-ink); }
+
+@media (max-width: 640px) {
+  .home-row { gap: var(--s-sm); }
+  .home-row-action { font-size: 0; gap: 0; }
+  .home-row-action svg { width: 18px; height: 18px; }
 }

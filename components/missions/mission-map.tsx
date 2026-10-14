@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useRef, useSyncExternalStore } from "react";
 import { Link } from "@/i18n/navigation";
-import { Lock, Check, ChevronRight } from "lucide-react";
+import { Lock, Check, ChevronRight, Clock3 } from "lucide-react";
 import { mascotArt } from "@/components/app/mascot";
 import { toMyanmarDigits } from "@/lib/domain/deadlines";
 import type { Milestone } from "@/lib/domain/types";
@@ -37,6 +37,10 @@ type Stop = {
   order: number;
   title: string;
   state: "done" | "current" | "next" | "locked";
+  /** For a done stop: placed past by the skills check, mission Completed and
+   *  awaiting review, or verified. Only verified gets the solid teal stop and
+   *  check, the mark DESIGN.md keeps for verified work. */
+  done?: "placed" | "awaiting" | "verified";
   href?: string;
 };
 
@@ -117,6 +121,7 @@ export function MissionMap({
   proofHref?: string;
   labels: {
     stageOf: string; steps: string; youAreHere: string; complete: string;
+    placed: string; awaiting: string;
     locked: string; nextMission: string; continueMission: string;
   };
 }) {
@@ -133,8 +138,12 @@ export function MissionMap({
   // stop spacing is fixed, so a 14-stage track is simply a taller climb.
   const stops: Stop[] = milestones.map((m) => {
     const state = stateOf(m);
+    const done = state !== "done" ? undefined
+      : m.source === "placement" ? "placed" as const
+      : m.source === "checked" ? "awaiting" as const
+      : "verified" as const;
     return {
-      key: m.key, order: m.order, title: m.title, state,
+      key: m.key, order: m.order, title: m.title, state, done,
       href: state === "current" ? missionHref : state === "done" ? proofHref : undefined,
     };
   });
@@ -383,7 +392,8 @@ export function MissionMap({
             const x = xAt(i) + (wide ? 54 : 38);
             const y = yAt(i) - (wide ? 8 : 6);
             const h = wide ? 46 : 32;
-            const fill = stop.state === "done" ? "var(--teal-500)"
+            const fill = stop.done === "verified" ? "var(--teal-500)"
+              : stop.state === "done" ? "var(--node-done-border)"
               : stop.state === "current" ? "var(--amber-500)"
               : "var(--map-flag-muted)";
             return (
@@ -398,23 +408,27 @@ export function MissionMap({
           {stops.map((stop, i) => {
             const x = xAt(i), y = yAt(i);
             const R = stop.state === "current" ? g.rCurrent : g.r;
-            const fill = stop.state === "done" ? "var(--teal-500)"
+            const solid = stop.done === "verified" || stop.state === "current";
+            const fill = stop.done === "verified" ? "var(--teal-500)"
+              : stop.state === "done" ? "var(--node-done-fill)"
               : stop.state === "current" ? "var(--teal-900)"
               : "var(--surface)";
-            const ink = stop.state === "done" || stop.state === "current" ? "#fff" : "var(--muted-ink)";
+            const ink = solid ? "#fff" : stop.state === "done" ? "var(--teal-700)" : "var(--muted-ink)";
             return (
               <g key={`badge-${stop.key}`}>
                 {stop.state === "current" ? <circle cx={x} cy={y} r={R + 12} fill="var(--map-halo)" /> : null}
                 <circle cx={x} cy={y} r={R + 4} fill="var(--surface)" />
                 <circle
                   cx={x} cy={y} r={R} fill={fill}
-                  stroke={stop.state === "next" ? "var(--amber-500)" : stop.state === "locked" ? "var(--hairline)" : "none"}
+                  stroke={stop.state === "next" ? "var(--amber-500)" : stop.state === "locked" ? "var(--hairline)" : stop.state === "done" && !solid ? "var(--node-done-border)" : "none"}
                   strokeWidth="3"
                 />
                 <text x={x} y={y + R * 0.32} textAnchor="middle" fontSize={R * 0.86} fontWeight="800" fill={ink}>
                   {num(stop.order)}
                 </text>
-                {stop.state === "done" || stop.state === "current" ? (
+                {/* The check means verified. A placed stage, a Completed one
+                    awaiting review and the stop you are on carry none. */}
+                {stop.done === "verified" ? (
                   <g transform={`translate(${x + R * 0.62},${y + R * 0.62})`}>
                     <circle r="10" fill="var(--teal-500)" stroke="var(--surface)" strokeWidth="2.5" />
                     <path d="M-4 0.5 L-1.4 3 L4 -2.6" fill="none" stroke="#fff" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" />
@@ -459,6 +473,8 @@ export function MissionMap({
           } as React.CSSProperties;
 
           const status = stop.state === "current" ? labels.youAreHere
+            : stop.done === "placed" ? labels.placed
+            : stop.done === "awaiting" ? labels.awaiting
             : stop.state === "done" ? labels.complete
             : stop.state === "next" ? labels.nextMission
             : labels.locked;
@@ -467,10 +483,11 @@ export function MissionMap({
             <>
               <span className="map-card-copy">
                 <strong>{stop.title}</strong>
-                <small className={`map-card-status ${stop.state}`}>{status}</small>
+                <small className={`map-card-status ${stop.state}${stop.done ? ` is-${stop.done}` : ""}`}>{status}</small>
               </span>
               {stop.state === "locked" ? <Lock size={15} aria-hidden="true" className="map-card-lock" />
-                : stop.state === "done" ? <Check size={15} aria-hidden="true" className="map-card-check" />
+                : stop.done === "verified" ? <Check size={15} aria-hidden="true" className="map-card-check" />
+                : stop.done === "awaiting" ? <Clock3 size={15} aria-hidden="true" className="map-card-check" />
                 : stop.state === "current" ? <ChevronRight size={16} aria-hidden="true" className="map-card-go" />
                 : null}
             </>

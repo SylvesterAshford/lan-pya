@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { createClient } from "@/lib/supabase/server";
-import { ok, problem } from "@/lib/http";
+import { demoReadOnly, ok, problem } from "@/lib/http";
 
 /**
  * Profile name, headline and character, written through
@@ -27,6 +27,7 @@ export async function POST(request: Request) {
     p_headline: parsed.data.headline,
     p_avatar: parsed.data.avatar,
   });
+  const demo = demoReadOnly(error); if (demo) return demo;
   if (error) return problem(400, "profile-not-saved", error.message);
   return ok(data);
 }

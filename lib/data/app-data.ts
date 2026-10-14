@@ -69,6 +69,7 @@ export async function getActivePathDashboard(): Promise<ActivePathDashboard> {
     } : null,
     progressPercent: asNumber(record.progress_percent),
     completedMilestones: asNumber(record.completed_milestones),
+    completedMissions: asNumber(record.completed_missions),
     totalMilestones: asNumber(record.total_milestones),
     verifiedCount: asNumber(record.verified_count),
     streakDays: asNumber(record.streak_days),

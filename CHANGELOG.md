@@ -1,5 +1,24 @@
 # Changelog
 
+## [0.29.0.0] - 2026-10-14
+
+### Added
+
+- **Two new career roadmaps:** Video Editor & Motion Content and Brand & Visual Content Designer, five stages each, listed under "Roadmap ready, missions coming".
+
+### Changed
+
+- **Home is simpler.** Under your greeting, one line says where you stand ("Stage 4 of 12 · Frontend Developer · 100 points · Starter"). Below today's climb there are two short lists, both built from your own account: **Up next** (your mission's review status, paused work, open opportunities) and **Your proof**. The momentum strip, the separate cards and the release notes are gone.
+- **The trail map says how each stage was finished:** "Placed by skills check" for stages your sign-up check skipped, "Awaiting review" for a mission waiting on a reviewer, and "Verified" (the only one with a check) for reviewed work.
+- **The shared demo account tells one story:** Frontend Developer up to stage 4, with stage 3 verified, and Content Creator as a previous path with stage 1 verified. It can't be changed any more, so it stays the same for every pitch.
+
+### Fixed
+
+- **Paused work on switching back:** coming back to a path no longer leaves its mission marked as paused, so it isn't listed twice.
+- **Levels:** they count missions you actually did, not stages the skills check placed you past, and they count only proof from the path you're on.
+- **Verified missions:** they can't be submitted again, so a stage can't be verified and awaiting review at the same time.
+- **Closed opportunities:** Home no longer shows them.
+
 ## [0.28.1.0] - 2026-10-14
 
 ### Fixed

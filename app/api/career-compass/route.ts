@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { ok, problem } from "@/lib/http";
+import { demoReadOnly, ok, problem } from "@/lib/http";
 import { createClient } from "@/lib/supabase/server";
 
 const schema = z.object({
@@ -42,6 +42,8 @@ export async function POST(request: Request) {
     p_confirm: parsed.data.confirm,
     p_consent_version: parsed.data.confirm ? "privacy-career-compass-v1" : null,
   });
+
+  const demo = demoReadOnly(error); if (demo) return demo;
 
   if (error) {
     const unavailable = error.message.includes("path is not available") || error.message.includes("no available mission");

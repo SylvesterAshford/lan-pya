@@ -64,6 +64,7 @@ export function SubmissionForm({
   initial,
   backLabel,
   onBack,
+  readOnly = false,
 }: {
   locale?: string;
   userId: string;
@@ -78,6 +79,8 @@ export function SubmissionForm({
   initial?: Fields | null;
   backLabel: string;
   onBack: () => void;
+  /** The shared demo account: the form can be shown but not sent. */
+  readOnly?: boolean;
 }) {
   const c = getAppCopy(locale).mission;
   const num = (value: number) => (locale === "my" ? toMyanmarDigits(value) : String(value));
@@ -183,6 +186,7 @@ export function SubmissionForm({
     <form className="submit-form" noValidate onSubmit={submit} aria-labelledby="submit-title">
       <h2 id="submit-title">{c.formTitle}</h2>
       <p className="submit-help">{c.formHelp.replace("{n}", num(criteriaCount))}</p>
+      {readOnly ? <p className="submit-demo-note" role="note">{c.demoReadOnly}</p> : null}
 
       {linkField("repositoryUrl", repositoryLabel, repositoryHint)}
       {linkField("deploymentUrl", deploymentLabel, deploymentHint)}
@@ -216,7 +220,7 @@ export function SubmissionForm({
           <button type="button" className="button outline compact" onClick={onBack}>
             <ArrowLeft size={15} aria-hidden="true" /> {backLabel}
           </button>
-          <button type="submit" className="button primary compact" disabled={busy}>
+          <button type="submit" className="button primary compact" disabled={busy || readOnly}>
             {busy ? c.submitting : c.submitReview} <ArrowRight size={15} aria-hidden="true" />
           </button>
         </span>

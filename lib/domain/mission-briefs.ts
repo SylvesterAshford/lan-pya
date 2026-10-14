@@ -147,6 +147,14 @@ export function getMissionStage(missionKey: string | null | undefined) {
   return missionKey ? MISSION_STAGES[missionKey] ?? null : null;
 }
 
+/** The mission authored for a stage, if there is one yet. */
+export function getStageMission(pathKey: string, stageKey: string) {
+  return Object.entries(MISSION_STAGES).find(([, place]) => place.pathKey === pathKey && place.stageKey === stageKey)?.[0] ?? null;
+}
+
+/** What a verified core mission awards (record_review_decision). */
+export const VERIFIED_MISSION_POINTS = 100;
+
 export function getRubricIds(missionKey: string): string[] {
   return BRIEFS[missionKey]?.en.deliverables.map((item) => item.id) ?? [];
 }

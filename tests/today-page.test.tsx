@@ -1,5 +1,7 @@
-import { render, screen } from "@testing-library/react";
-import { describe, expect, it, vi } from "vitest";
+import { cleanup, render, screen } from "@testing-library/react";
+import { afterEach, describe, expect, it, vi } from "vitest";
+
+afterEach(() => cleanup());
 import TodayPage from "@/app/[locale]/app/today/page";
 
 vi.mock("@/i18n/navigation", () => ({
@@ -22,6 +24,7 @@ vi.mock("@/lib/data/app-data", () => ({
     },
     progressPercent: 25,
     completedMilestones: 2,
+    completedMissions: 1,
     totalMilestones: 12,
     verifiedCount: 1,
     streakDays: 0,
@@ -67,12 +70,6 @@ vi.mock("@/components/home/todays-climb", () => ({
 }));
 
 vi.mock("@/components/app/level-up-moment", () => ({ LevelUpMoment: () => null }));
-vi.mock("@/components/app/changelog-rail", () => ({ ChangelogRail: () => null }));
-vi.mock("@/components/home/momentum-track", () => ({ MomentumTrack: () => null }));
-vi.mock("@/components/home/this-week", () => ({ ThisWeek: () => null }));
-vi.mock("@/components/home/proof-panel", () => ({ ProofPanel: () => null }));
-vi.mock("@/components/home/opportunity-signal", () => ({ OpportunitySignal: () => null }));
-vi.mock("@/lib/domain/changelog", () => ({ getReleases: () => [] }));
 
 describe("TodayPage mission navigation", () => {
   it("opens the mission climb at the learner's current position", async () => {
@@ -83,3 +80,19 @@ describe("TodayPage mission navigation", () => {
       .toHaveAttribute("href", "/app/missions");
   });
 });
+
+describe("TodayPage minimal layout", () => {
+  // Every line under the greeting is read from the learner's records.
+  it("states where the learner stands from their own data", async () => {
+    render(await TodayPage({ params: Promise.resolve({ locale: "en" }) }));
+    expect(screen.getByText("Stage 3 of 1 · Frontend Developer · 200 points · Starter", { exact: false })).toBeInTheDocument();
+  });
+
+  it("shows an empty Up next and proof row rather than filler", async () => {
+    render(await TodayPage({ params: Promise.resolve({ locale: "en" }) }));
+    expect(screen.getByRole("heading", { name: "Up next" })).toBeInTheDocument();
+    expect(screen.getByText("Nothing is waiting on you. Your stage is above.")).toBeInTheDocument();
+    expect(screen.getByText("Nothing verified yet")).toBeInTheDocument();
+  });
+});
+

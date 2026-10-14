@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { createClient } from "@/lib/supabase/server";
-import { ok, problem } from "@/lib/http";
+import { demoReadOnly, ok, problem } from "@/lib/http";
 
 const schema = z.object({
   alias: z.string().trim().min(1).max(60), locale: z.enum(["en", "my"]),
@@ -20,6 +20,7 @@ export async function POST(request: Request) {
     p_skills: parsed.data.skills, p_knowledge_score: parsed.data.knowledgeScore,
     p_micro_task_score: parsed.data.microTaskScore, p_consent_version: "privacy-alpha-v1",
   });
+  const demo = demoReadOnly(error); if (demo) return demo;
   if (error) return problem(409, "profile-save-failed", "Your profile was not saved. Nothing was lost; retry this step.", true);
   return ok(data, 201);
 }

@@ -37,7 +37,7 @@ export default async function ProofPage({ params }: { params: Promise<{ locale: 
 
   const roadmap = dashboard.activePath ? await getRoadmap(dashboard.activePath.key) : [];
   const progress = resolveProgress(dashboard.xp, {
-    completedMissions: dashboard.completedMilestones,
+    completedMissions: dashboard.completedMissions,
     verifiedCount: dashboard.verifiedCount,
     stagesTouched: roadmap.filter((stage) => stage.status === "complete").length,
   });

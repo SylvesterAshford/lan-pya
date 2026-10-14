@@ -58,6 +58,8 @@ export type ActivePathDashboard = {
   activePath: ActivePath | null;
   progressPercent: number;
   completedMilestones: number;
+  /** This path's stages finished through a mission (link check or review), not placement. */
+  completedMissions: number;
   totalMilestones: number;
   verifiedCount: number;
   streakDays: number;
@@ -81,6 +83,9 @@ export type Milestone = {
   description: string;
   proof: string;
   status: "complete" | "active" | "next" | "upcoming";
+  /** How a complete stage got there: skipped by the onboarding skills check,
+   *  its mission passed the link check, or a reviewer verified it. */
+  source?: "placement" | "checked" | "proof" | "admin" | null;
   leftLabel?: string;
   left?: string[];
   rightLabel?: string;

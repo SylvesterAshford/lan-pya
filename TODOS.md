@@ -75,6 +75,17 @@ Design debt deferred from the 2026-08-16 design review. Everything here was foun
 **Context:** Rubric criteria live in `lib/domain/mission-briefs.ts` (`deliverables`). Store the examples as seeded `data_origin = 'seeded_demo'` submissions that never enter the live queue.
 **Depends on:** Nothing.
 
+### Learning resources on roadmap topics
+
+**What:** Attach YouTube videos and blog posts to each roadmap topic (the chips beside a stage, such as "Flexbox & Grid"), shown when a learner opens a stage.
+
+**Why:** The founder asked for it on 2026-10-14. Learners can see what to learn, but not where to learn it.
+
+**Pros:** Turns the roadmap from a map into a study plan, using free material that already exists.
+**Cons:** Content curation for six tracks, plus link rot. Every link needs a title, source, language (English/Burmese), and a "last checked" date, so stale links can be found.
+**Context:** Topics live in `lib/domain/career-tracks.ts` (`left` and `right` arrays per stage). A `learning_resources` table keyed by track key, stage key and topic, with RLS read for authenticated users and admin-only writes, keeps it out of code. Render it in `components/app/roadmap-detail-dialog.tsx`.
+**Depends on:** Nothing.
+
 ## P3 — worth doing, no urgency
 
 ### Logo as SVG
