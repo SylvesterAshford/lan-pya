@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.29.3.0] - 2026-10-14
+
+### Changed
+
+- **The demo account can edit its profile:** name, line and character. It goes back to Thura and the default character at the nightly reset. Submitting work and rewriting the Career Compass stay blocked.
+
 ## [0.29.2.0] - 2026-10-14
 
 ### Changed
