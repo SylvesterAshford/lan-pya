@@ -52,7 +52,9 @@ describe("MissionMap current-position landing", () => {
           stageOf: "Stage {a} of {b}",
           steps: "points",
           youAreHere: "You are here",
-          complete: "Complete",
+          complete: "Verified",
+          placed: "Placed by skills check",
+          awaiting: "Awaiting review",
           locked: "Locked",
           nextMission: "Next mission",
           continueMission: "Continue mission",
@@ -66,3 +68,31 @@ describe("MissionMap current-position landing", () => {
     expect(scrollTo).toHaveBeenCalledWith({ top: expectedTop, behavior: "auto" });
   });
 });
+
+describe("MissionMap done stops", () => {
+  beforeEach(() => {
+    vi.stubGlobal("matchMedia", () => ({ matches: false, addEventListener() {}, removeEventListener() {} }));
+    vi.stubGlobal("scrollTo", vi.fn());
+  });
+
+  // The map drew every finished stage with the same check, so two stages the
+  // skills check placed a learner past read like two more completed missions.
+  it("tells placed, awaiting-review and verified stages apart", () => {
+    const stops: Milestone[] = [
+      { key: "a", order: 1, title: "Web foundations", description: "", proof: "", status: "complete", source: "placement" },
+      { key: "b", order: 2, title: "Semantic HTML", description: "", proof: "", status: "complete", source: "checked" },
+      { key: "c", order: 3, title: "CSS layout", description: "", proof: "", status: "complete", source: "proof" },
+      { key: "d", order: 4, title: "JavaScript", description: "", proof: "", status: "active" },
+    ];
+    const { container } = render(
+      <MissionMap
+        milestones={stops} locale="en" pathTitle="Frontend Developer" steps={0}
+        labels={{ stageOf: "Stage {a} of {b}", steps: "points", youAreHere: "You are here", complete: "Verified", placed: "Placed by skills check", awaiting: "Awaiting review", locked: "Locked", nextMission: "Next mission", continueMission: "Continue mission" }}
+      />,
+    );
+    const statuses = [...container.querySelectorAll(".map-card-status")].map((node) => node.textContent);
+    expect(statuses).toEqual(["Placed by skills check", "Awaiting review", "Verified", "You are here"]);
+    expect(container.querySelectorAll(".map-card-check").length).toBe(2);
+  });
+});
+

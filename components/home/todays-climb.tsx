@@ -43,6 +43,7 @@ export function TodaysClimb({
   stageTotal,
   missionHref,
   pointsAward,
+  stageHref,
   levelRank,
   labels,
 }: {
@@ -57,7 +58,11 @@ export function TodaysClimb({
   stageIndex: number;
   stageTotal: number;
   missionHref: string;
-  pointsAward: number;
+  /** Points the current stage's mission awards when verified, or null when
+   *  the stage has no mission yet: then there is nothing to promise. */
+  pointsAward: number | null;
+  /** Where the button goes and what it says when the stage has no mission. */
+  stageHref?: string;
   /** The learner's current level on this path, 1–5. The emblem beside the
    *  award is the learner's own insignia, the same one the profile shows; it
    *  reports where they stand today and says nothing about what this mission
@@ -70,6 +75,7 @@ export function TodaysClimb({
     points: string;
     noMission: string;
     subtitle: string;
+    openStage?: string;
   };
 }) {
   const my = locale === "my";
@@ -94,7 +100,7 @@ export function TodaysClimb({
 
         {missionBrief ? <p className="climb-brief">{missionBrief}</p> : null}
 
-        {hasMission ? (
+        {hasMission && pointsAward !== null ? (
           <p className="climb-meta">
             <span className="climb-points">
               {/* The same collectible the profile shows, emblem only: at this
@@ -115,8 +121,8 @@ export function TodaysClimb({
         ) : null}
 
         {hasMission ? (
-          <Link className="climb-cta" href={missionHref}>
-            {labels.continueMission}
+          <Link className="climb-cta" href={pointsAward !== null || !stageHref ? missionHref : stageHref}>
+            {pointsAward !== null || !labels.openStage ? labels.continueMission : labels.openStage}
             <ArrowRight size={18} aria-hidden="true" />
           </Link>
         ) : null}

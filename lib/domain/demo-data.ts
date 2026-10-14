@@ -13,7 +13,12 @@ export const DEMO_PROFILE: Profile = {
   dataOrigin: "seeded_demo",
 };
 
-export const FRONTEND_MILESTONES: Milestone[] = CAREER_TRACKS[0].milestones;
+/** A learner mid-way through Frontend, for component tests: stages 1-2
+ *  complete, 3 active, 4 next. The catalog itself carries no progress. */
+export const FRONTEND_MILESTONES: Milestone[] = CAREER_TRACKS[0].milestones.map((stage, index) => ({
+  ...stage,
+  status: index < 2 ? "complete" : index === 2 ? "active" : index === 3 ? "next" : "upcoming",
+}));
 
 export const DEMO_PROOF: ProofItem = {
   id: "seed-proof-responsive-card",

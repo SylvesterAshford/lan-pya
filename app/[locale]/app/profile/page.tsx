@@ -20,7 +20,7 @@ export default async function ProfilePage({ params }: { params: Promise<{ locale
   const roadmap = dashboard.activePath ? await getRoadmap(dashboard.activePath.key) : [];
   const progress = dashboard.activePath
     ? resolveProgress(dashboard.xp, {
-      completedMissions: dashboard.completedMilestones,
+      completedMissions: dashboard.completedMissions,
       verifiedCount: dashboard.verifiedCount,
       stagesTouched: roadmap.filter((stage) => stage.status === "complete").length,
     })

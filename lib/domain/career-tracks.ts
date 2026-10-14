@@ -62,19 +62,36 @@ const CONTENT_CREATOR: Milestone[] = [
   stage({ key: "content-case-study", order: 5, phase: "Prove", title: "Campaign case study", description: "Package the campaign, audience evidence, decisions, results, and lessons into portfolio-ready proof.", proof: "Partner-reviewed campaign case study", leftLabel: "Measure", left: ["Useful signals", "Audience response"], rightLabel: "Explain", right: ["Decision rationale", "Portfolio narrative"], estimate: "2–3 weeks" }),
 ];
 
-FRONTEND[0].status = "complete";
-FRONTEND[1].status = "complete";
-FRONTEND[2].status = "active";
-FRONTEND[3].status = "next";
-FULL_STACK[0].status = "next";
-AI_DATA[0].status = "next";
-CONTENT_CREATOR[0].status = "active";
+const VIDEO_EDITOR: Milestone[] = [
+  stage({ key: "video-editing-workflow", order: 1, phase: "Foundations", title: "Editing workflow", description: "Set up footage, formats and a project structure that keep an edit fast and recoverable.", proof: "Organised edit project", leftLabel: "Understand", left: ["Footage and formats", "Frame rate and resolution", "Aspect ratios"], rightLabel: "Organise", right: ["Phone and desktop editors", "Project and file structure"], estimate: "1–2 weeks" }),
+  stage({ key: "video-cuts-pacing", order: 2, phase: "Craft", title: "Cuts and pacing", description: "Shape raw footage into a story with a clear hook, rhythm and continuity.", proof: "Two-minute story cut", leftLabel: "Cut", left: ["Story structure", "Continuity", "J and L cuts"], rightLabel: "Pace", right: ["Rhythm and timing", "Hooks for short video"], estimate: "2–3 weeks" }),
+  stage({ key: "video-sound-colour", order: 3, phase: "Craft", title: "Sound and colour", description: "Clean dialogue, set levels, use licensed music, and correct then grade colour so shots match.", proof: "Mixed and graded sequence", leftLabel: "Sound", left: ["Dialogue cleanup", "Levels and loudness", "Licensed music"], rightLabel: "Colour", right: ["Exposure and white balance", "Matching shots", "Grading for mood"], estimate: "2–3 weeks" }),
+  stage({ key: "video-captions-motion", order: 4, phase: "Polish", title: "Captions and motion", description: "Add accurate captions, readable titles and restrained motion for vertical platforms.", proof: "Thirty-second vertical story edit", leftLabel: "Text", left: ["Accurate captions", "Readable titles"], rightLabel: "Motion", right: ["Keyframes and easing", "Lower thirds"], estimate: "1–2 weeks" }),
+  stage({ key: "video-client-delivery", order: 5, phase: "Deliver", title: "Client-ready delivery", description: "Deliver platform versions from a brief, handle feedback rounds, and clear rights.", proof: "Client-ready edit and case study", leftLabel: "Deliver", left: ["Export settings per platform", "Versions and cutdowns"], rightLabel: "Work", right: ["Briefs and feedback rounds", "Rights and releases"], estimate: "2–3 weeks" }),
+];
+
+const BRAND_VISUAL: Milestone[] = [
+  stage({ key: "visual-problem-framing", order: 1, phase: "Frame", title: "Visual problem framing", description: "Turn a brief into a clear communication problem, audience and set of constraints.", proof: "Visual brief and moodboard", leftLabel: "Discover", left: ["Brief and audience", "Message and constraints"], rightLabel: "Explore", right: ["Reference research", "Sketching options"], estimate: "1–2 weeks" }),
+  stage({ key: "visual-type-hierarchy", order: 2, phase: "Craft", title: "Type and hierarchy", description: "Choose and set type so the most important message reads first, on any screen.", proof: "Typographic poster", leftLabel: "Type", left: ["Typeface choice", "Scale and rhythm", "Burmese and Latin pairing"], rightLabel: "Arrange", right: ["Grids and alignment", "Reading order"], estimate: "2–3 weeks" }),
+  stage({ key: "visual-colour-composition", order: 3, phase: "Craft", title: "Colour and composition", description: "Use accessible colour, balance and cropping to direct attention.", proof: "Social post series", leftLabel: "Colour", left: ["Palettes and contrast", "Accessible colour"], rightLabel: "Compose", right: ["Balance and focus", "Image and crop"], estimate: "2–3 weeks" }),
+  stage({ key: "visual-campaign-systems", order: 4, phase: "System", title: "Campaign systems", description: "Build reusable rules and components that hold together across formats.", proof: "Mini campaign identity kit", leftLabel: "System", left: ["Reusable components", "Brand rules"], rightLabel: "Adapt", right: ["Five responsive formats", "Templates for others"], estimate: "2–3 weeks" }),
+  stage({ key: "visual-case-study", order: 5, phase: "Prove", title: "Client-ready case study", description: "Explain the process and decisions, and hand off files others can use.", proof: "Client-ready design case study", leftLabel: "Present", left: ["Process story", "Design rationale"], rightLabel: "Deliver", right: ["File handoff", "Feedback and revision"], estimate: "1–2 weeks" }),
+];
+
+// No learner's progress lives in the catalog. It used to hardcode the demo
+// account's position (Frontend stages 1-2 complete, 3 active; Content Creator
+// 1 active), which any learner without database rows silently inherited.
+// Progress comes from milestone_progress only; the catalog says where a new
+// learner starts.
+for (const track of [FRONTEND, FULL_STACK, AI_DATA, CONTENT_CREATOR, VIDEO_EDITOR, BRAND_VISUAL]) track[0].status = "next";
 
 export const CAREER_TRACKS: CareerTrack[] = [
   { key: "frontend-developer", title: "Frontend Developer", shortTitle: "Frontend", description: "Build accessible, responsive, production-quality web interfaces.", outcome: "From web foundations to a partner-reviewed frontend product.", milestones: FRONTEND },
   { key: "full-stack-developer", title: "Full-Stack Developer", shortTitle: "Full-Stack", description: "Build and operate complete products across browser, server, data, and cloud.", outcome: "From client-server foundations to a production full-stack system.", milestones: FULL_STACK },
   { key: "ai-data-analyst", title: "AI & Data Analyst", shortTitle: "AI & Data", description: "Turn data into responsible analysis, decisions, dashboards, and evaluated AI workflows.", outcome: "From data literacy to a partner-reviewed analytics case study.", milestones: AI_DATA },
   { key: "content-creator", title: "Content Creator & Social Media Storyteller", shortTitle: "Content Creator", description: "Explain useful ideas through clear, ethical, platform-native content.", outcome: "From audience research to a partner-reviewed campaign case study.", milestones: CONTENT_CREATOR },
+  { key: "video-editor", title: "Video Editor & Motion Content", shortTitle: "Video Editor", description: "Turn raw footage into clear, accessible stories for modern platforms.", outcome: "From an organised edit project to a client-ready edit and case study.", milestones: VIDEO_EDITOR },
+  { key: "brand-visual-designer", title: "Brand & Visual Content Designer", shortTitle: "Visual Designer", description: "Solve communication problems with accessible visual systems, not isolated decoration.", outcome: "From a visual brief to a client-ready campaign identity case study.", milestones: BRAND_VISUAL },
 ];
 
 export const DIGITAL_PATH_PREVIEWS: CareerPathPreview[] = [
@@ -140,10 +157,11 @@ export function mergeTrackMilestones(trackKey: string, rows: Milestone[]) {
   const catalog = getCareerTrack(trackKey).milestones;
   if (!rows.length) return catalog;
   const statusByKey = new Map(rows.map((row) => [row.key, row.status]));
+  const sourceByKey = new Map(rows.map((row) => [row.key, row.source ?? null]));
   const merged = catalog.map((item) => {
     const storedStatus = statusByKey.get(item.key);
-    const keepCreatorPilotActive = trackKey === "content-creator" && item.status === "active" && storedStatus !== "complete";
-    return { ...item, status: keepCreatorPilotActive ? "active" as const : storedStatus ?? item.status };
+    const status = storedStatus ?? item.status;
+    return { ...item, status, source: status === "complete" ? sourceByKey.get(item.key) ?? null : null };
   });
   let activeIndex = merged.findIndex((item) => item.status === "active");
   // Finishing a stage marks it complete but never moves "active" on to the

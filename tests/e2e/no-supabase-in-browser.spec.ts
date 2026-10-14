@@ -42,11 +42,13 @@ test("@critical signing in and using the workspace never contacts Supabase from 
   await page.waitForURL(/\/en\/app\/today/, { timeout: 90_000 });
   await page.goto("/en/app/profile");
 
-  // Saving the profile goes through this site's /api/profile/update. The values
-  // are left as they are, so the shared demo account is not changed.
+  // Saving the profile goes through this site's /api/profile/update. The demo
+  // account is read-only, so the server refuses with its own message; either
+  // way the request never leaves for Supabase from the browser.
   await page.locator(".profile-edit-open").click();
+  const saved = page.waitForResponse((response) => response.url().includes("/api/profile/update"));
   await page.locator("form.profile-editor").getByRole("button", { name: /save/i }).click();
-  await expect(page.locator("form.profile-editor")).toHaveCount(0, { timeout: 30_000 });
+  expect((await saved).status()).toBe(403);
   await page.waitForLoadState("networkidle");
 
   expect(hits).toEqual([]);

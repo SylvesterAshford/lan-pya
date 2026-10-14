@@ -286,7 +286,8 @@ describe("RoadmapTree — AI & Data track", () => {
 });
 
 describe("RoadmapTree — Content Creator track", () => {
-  const milestones = trackMilestones("content-creator");
+  // A learner on stage 1; the catalog itself carries no progress.
+  const milestones = trackMilestones("content-creator").map((m, i) => ({ ...m, status: i === 0 ? "active" as const : m.status }));
 
   it("renders the complete five-stage creator journey", () => {
     render(<RoadmapTree milestones={milestones} />);

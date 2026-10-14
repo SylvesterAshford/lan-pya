@@ -2,15 +2,13 @@ import { Link } from "@/i18n/navigation";
 import { Compass } from "lucide-react";
 import { requireUser } from "@/lib/auth";
 import { LevelUpMoment } from "@/components/app/level-up-moment";
-import { ChangelogRail } from "@/components/app/changelog-rail";
 import { TodaysClimb } from "@/components/home/todays-climb";
-import { MomentumTrack } from "@/components/home/momentum-track";
-import { ThisWeek } from "@/components/home/this-week";
-import { ProofPanel } from "@/components/home/proof-panel";
-import { OpportunitySignal } from "@/components/home/opportunity-signal";
-import { getReleases } from "@/lib/domain/changelog";
+import { UpNext } from "@/components/home/up-next";
+import { ProofRow } from "@/components/home/proof-row";
+import { buildUpNext } from "@/lib/domain/home-feed";
+import { getStageMission, VERIFIED_MISSION_POINTS } from "@/lib/domain/mission-briefs";
 import { localizeLevel, resolveProgress } from "@/lib/domain/progress";
-import { byDeadlineAscending, getDeadlineStatus, toMyanmarDigits } from "@/lib/domain/deadlines";
+import { toMyanmarDigits } from "@/lib/domain/deadlines";
 import { getActivePathDashboard, getOpportunities, getProfile, getProofItems, getRoadmap } from "@/lib/data/app-data";
 import { getAppCopy, localizeCareerTerm, localizeOpportunity, localizeRoadmapMilestone } from "@/lib/i18n/app-copy";
 export default async function TodayPage({ params }: { params: Promise<{ locale: string }> }) {
@@ -67,41 +65,40 @@ export default async function TodayPage({ params }: { params: Promise<{ locale: 
   const currentStage = nextStages.find((stage) => stage.status === "active") ?? nextStages[0];
 
   const progress = resolveProgress(dashboard.xp, {
-    completedMissions: dashboard.completedMilestones,
+    completedMissions: dashboard.completedMissions,
     verifiedCount: dashboard.verifiedCount,
     stagesTouched: roadmap.filter((stage) => stage.status === "complete").length,
   });
 
   const localizedOpportunities = opportunities.map((item) => localizeOpportunity(locale, item));
-  // Seven days is the window the panel claims, so the filter has to enforce it
-  // rather than trusting the ordering to be close enough.
-  const closingThisWeek = localizedOpportunities
-    .filter((item) => {
-      const { urgency } = getDeadlineStatus(item.deadline);
-      return urgency === "today" || urgency === "tomorrow" || urgency === "soon";
-    })
-    .sort(byDeadlineAscending)
-    .map((item) => ({ id: item.id, title: item.title, organization: item.organization, deadline: item.deadline }));
+  const upNext = buildUpNext({
+    mission: { key: mission.key, title: localizeCareerTerm(locale, mission.key, mission.title), submissionState: mission.submissionState },
+    paused: dashboard.pausedWork.map((work) => ({
+      missionKey: work.missionKey,
+      missionTitle: localizeCareerTerm(locale, work.missionKey, work.missionTitle),
+      pathTitle: localizeCareerTerm(locale, work.pathKey, work.pathTitle),
+    })),
+    opportunities: localizedOpportunities,
+  });
 
-  const paused = dashboard.pausedWork.map((work) => ({
-    missionKey: work.missionKey,
-    missionTitle: localizeCareerTerm(locale, work.missionKey, work.missionTitle),
-    pathTitle: localizeCareerTerm(locale, work.pathKey, work.pathTitle),
-  }));
+  // Skills come from proof that is still standing. An invalidated record is
+  // not evidence, so it does not get to add one.
+  const standing = proofItems.filter((item) => item.state === "active");
+  const skills = [...new Set(standing.flatMap((item) => item.competencies))];
 
-  // Competencies come from proof that is actually still standing. An
-  // invalidated record is not evidence, so it does not get to add a chip.
-  const competencies = [...new Set(proofItems.filter((item) => item.state === "active").flatMap((item) => item.competencies))];
-
-  // One submission, not yet verified, is one proof in progress. Anything more
-  // specific than that is not recorded.
-  const inProgressCount = mission.submissionState && mission.submissionState !== "verified" ? 1 : 0;
+  // One line of where the learner stands, all of it read from their records.
+  const meta = c.home.meta
+    .replace("{a}", num(currentStage ? currentStage.order : 0))
+    .replace("{b}", num(roadmap.length))
+    .replace("{path}", pathTitle)
+    .replace("{points}", num(progress.xp))
+    .replace("{level}", localizeLevel(locale, progress.level));
 
   return (
     <div className="app-page home-page">
       <header className="home-greeting">
         <h1>{greeting}</h1>
-        <p>{c.home.subtitle}</p>
+        <p>{meta}</p>
       </header>
 
       <TodaysClimb
@@ -113,7 +110,9 @@ export default async function TodayPage({ params }: { params: Promise<{ locale: 
         stageIndex={currentStage ? currentStage.order : 0}
         stageTotal={roadmap.length}
         missionHref="/app/missions"
-        pointsAward={100}
+        // Points are promised only for a stage that has a mission to verify.
+        pointsAward={currentStage && getStageMission(path.key, currentStage.key) ? VERIFIED_MISSION_POINTS : null}
+        stageHref={`/app/roadmap?track=${path.key}`}
         levelRank={progress.level.rank}
         labels={{ ...c.home.climb, subtitle: c.home.subtitle }}
       />
@@ -131,12 +130,12 @@ export default async function TodayPage({ params }: { params: Promise<{ locale: 
         satisfied={
           my
             ? [`အမှတ် ${toMyanmarDigits(progress.level.minXp)} ကျော်လွန်ပြီး`, progress.level.gate({
-              completedMissions: dashboard.completedMilestones,
+              completedMissions: dashboard.completedMissions,
               verifiedCount: dashboard.verifiedCount,
               stagesTouched: roadmap.filter((stage) => stage.status === "complete").length,
             }).my]
             : [`Passed ${progress.level.minXp} points`, progress.level.gate({
-              completedMissions: dashboard.completedMilestones,
+              completedMissions: dashboard.completedMissions,
               verifiedCount: dashboard.verifiedCount,
               stagesTouched: roadmap.filter((stage) => stage.status === "complete").length,
             }).en]
@@ -158,45 +157,8 @@ export default async function TodayPage({ params }: { params: Promise<{ locale: 
         }}
       />
 
-      <MomentumTrack
-        locale={locale}
-        completedMilestones={dashboard.completedMilestones}
-        verifiedCount={dashboard.verifiedCount}
-        inProgressCount={inProgressCount}
-        labels={{
-          ...c.home.momentum,
-          summary: c.home.momentum.summary
-            .replace("{a}", num(dashboard.completedMilestones))
-            .replace("{b}", num(inProgressCount)),
-        }}
-      />
-
-      <div className="home-grid">
-        <ThisWeek locale={locale} closing={closingThisWeek} paused={paused} labels={c.home.week} />
-
-        <div className="home-side">
-          <ProofPanel
-            locale={locale}
-            competencies={competencies}
-            points={progress.xp}
-            levelName={localizeLevel(locale, progress.level)}
-            mascotVariant={mascotVariant}
-            labels={c.home.proof}
-          />
-          <OpportunitySignal
-            locale={locale}
-            item={localizedOpportunities[0] ?? null}
-            labels={c.home.signal}
-          />
-        </div>
-      </div>
-
-      <ChangelogRail releases={getReleases()} locale={locale} />
-
-      <aside className="home-note">
-        <Compass size={16} aria-hidden="true" />
-        <p>{c.home.note}</p>
-      </aside>
+      <UpNext items={upNext} locale={locale} labels={c.home.feed} runner={c.runner} />
+      <ProofRow verifiedCount={standing.length} skills={skills} locale={locale} labels={c.home.proofRow} />
     </div>
   );
 }

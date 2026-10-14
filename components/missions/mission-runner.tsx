@@ -40,6 +40,7 @@ export function MissionRunner({
   brief,
   feedback,
   slowCheck = false,
+  readOnly = false,
   labels,
 }: {
   locale: string;
@@ -48,6 +49,8 @@ export function MissionRunner({
   feedback: MissionFeedback | null;
   /** The link check has run for longer than it usually takes. */
   slowCheck?: boolean;
+  /** The shared demo account. */
+  readOnly?: boolean;
   labels: RunnerLabels;
 }) {
   const status = learnerStatus(feedback?.state);
@@ -199,6 +202,7 @@ export function MissionRunner({
               initial={status.kind === "none" ? null : feedback?.version}
               backLabel={labels.back}
               onBack={() => setStep(2)}
+              readOnly={readOnly}
             />
           </>
         ) : null}

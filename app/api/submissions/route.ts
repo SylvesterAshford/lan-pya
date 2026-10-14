@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { createClient } from "@/lib/supabase/server";
-import { ok, problem } from "@/lib/http";
+import { demoReadOnly, ok, problem } from "@/lib/http";
 
 const schema = z.object({
   missionKey: z.enum(["responsive-profile-card", "content-creator-awareness"]),
@@ -23,7 +23,8 @@ export async function POST(request: Request) {
     p_screenshot_url: parsed.data.screenshotUrl || null,
     p_reflection: parsed.data.reflection,
   });
-  if (error) return problem(409, "submission-not-accepted", error.message.includes("active submission") ? "You already have an active review for this mission." : "The submission was not accepted. Your local draft is unchanged.", true);
+  const demo = demoReadOnly(error); if (demo) return demo;
+  if (error) return problem(409, "submission-not-accepted", error.message.includes("active submission") ? "You already have an active review for this mission." : error.message.includes("already verified") ? "This mission is already verified. It stays in your portfolio as it is." : "The submission was not accepted. Your local draft is unchanged.", true);
   const functionUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
   const cronSecret = process.env.CRON_SECRET;
   if (functionUrl && cronSecret) {
