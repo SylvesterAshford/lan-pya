@@ -48,7 +48,14 @@ set local role authenticated;
 select set_config('request.jwt.claims','{"sub":"40000000-0000-0000-0000-000000000002","role":"authenticated"}',true);
 select ok(public.is_demo_session(), 'the demo session is recognised');
 select lives_ok($$select public.get_active_path_dashboard()$$, 'the demo can read');
-select throws_ok($$select public.switch_active_path('content-creator')$$, 'P0001', 'demo account is read-only', 'the demo cannot switch paths');
+-- Switching paths is part of every pitch, so the demo may do it.
+reset role;
+insert into public.learner_path_history(user_id, track_id, state, source)
+select '40000000-0000-0000-0000-000000000002', id, 'active', 'career_compass' from public.career_tracks where key = 'frontend-developer';
+set local role authenticated;
+select set_config('request.jwt.claims','{"sub":"40000000-0000-0000-0000-000000000002","role":"authenticated"}',true);
+select lives_ok($$select public.switch_active_path('content-creator')$$, 'the demo can switch paths');
+select throws_ok($$select public.save_career_compass('X','en','4–6 hours',array['Technology'],'make','portfolio','laptop','reliable',array['HTML'],'frontend-developer',true,'t')$$, 'P0001', 'demo account is read-only', 'the demo cannot rewrite its Career Compass');
 select throws_ok($$select public.update_learner_profile('Changed', null, 'traveller')$$, 'P0001', 'demo account is read-only', 'the demo cannot edit its profile');
 select lives_ok($$select public.bootstrap_user()$$, 'signing in as the demo still works');
 

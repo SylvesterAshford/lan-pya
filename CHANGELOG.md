@@ -1,5 +1,18 @@
 # Changelog
 
+## [0.29.1.0] - 2026-10-14
+
+### Changed
+
+- Home's lower half is now **Up next** beside a short card about you: your character and name, your level and points toward the next one, every path you've taken with your stage on each, your verified missions, and the skills they prove, with links to Profile and Portfolio.
+- **The demo account can switch career paths again**, so a pitch can show moving between Frontend Developer and Content Creator. Submitting work and editing the profile stay blocked, and the demo returns to its starting story every night at 3:00 Yangon time.
+- **The demo shows progress on the newer roadmaps:** Video Editor at stage 2 and Brand & Visual Designer at stage 1.
+
+### Fixed
+
+- **Paused work:** a verified mission is no longer offered as paused work to "Resume" after switching paths.
+- **Roadmap stage labels:** the roadmap no longer calls every finished stage "verified". Its count reads "milestones complete", and a stage says whether it was placed, is awaiting review, or was verified.
+
 ## [0.29.0.0] - 2026-10-14
 
 ### Added

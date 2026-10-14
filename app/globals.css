@@ -14511,3 +14511,40 @@ html[lang="my"] .hero-copy h1{
   .home-row-action { font-size: 0; gap: 0; }
   .home-row-action svg { width: 18px; height: 18px; }
 }
+
+/* ---- Home: Up next beside a short card about the learner ----
+   The card is the one bordered surface on Home after the climb: who you are,
+   your level, your paths and your proven skills, read from your records. */
+.home-columns { display: grid; grid-template-columns: minmax(0, 1.55fr) minmax(280px, 1fr); gap: var(--s-xl); align-items: start; margin-top: var(--s-xl); }
+.home-columns > .home-block { margin-top: 0; }
+.you-card { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--s-md); padding: var(--s-md) var(--s-lg); background: var(--surface); border: 1px solid var(--hairline); border-radius: var(--r-card); }
+.you-card .level-strip { display: flex; width: 100%; margin: 0; box-sizing: border-box; }
+.you-card .level-strip-track { flex: 1; min-width: 0; }
+.you-head { display: flex; align-items: center; gap: var(--s-sm); }
+.you-avatar { display: grid; flex: none; width: 56px; height: 56px; place-items: end center; overflow: hidden; border-radius: 50%; background: var(--teal-050); }
+.you-avatar img { width: auto; height: 64px; transform: translateY(6px); }
+.you-id { display: grid; min-width: 0; gap: 2px; }
+.you-id h2 { margin: 0; font-size: var(--t-title); line-height: var(--l-title); letter-spacing: var(--k-title); font-weight: 700; color: var(--ink); }
+.you-id small { font-size: var(--t-meta); line-height: var(--l-meta); color: var(--muted-ink); }
+.you-facts { display: grid; gap: var(--s-sm); margin: 0; }
+.you-facts > div { display: grid; gap: 6px; padding-top: var(--s-sm); border-top: 1px solid var(--hairline); }
+.you-facts dt { font-size: var(--t-label); font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; color: var(--muted-ink); }
+html[lang="my"] .you-facts dt { letter-spacing: 0; text-transform: none; }
+.you-facts dd { margin: 0; font-size: var(--t-meta); line-height: var(--l-meta); color: var(--ink); }
+.you-paths, .you-skills { margin: 0; padding: 0; list-style: none; }
+.you-paths { display: grid; gap: 8px; }
+.you-paths li { display: flex; align-items: flex-start; gap: 8px; }
+.you-path-dot { flex: none; width: 8px; height: 8px; margin-top: 7px; border-radius: 50%; background: var(--line-strong); }
+.you-path-dot.is-current { background: var(--teal-500); }
+.you-path-copy { display: grid; gap: 1px; min-width: 0; }
+.you-path-copy strong { font-weight: 600; }
+.you-path-copy small { font-size: var(--t-label); color: var(--muted-ink); }
+.you-skills { display: flex; flex-wrap: wrap; gap: 6px; }
+.you-skills li { padding: 2px 8px; font-size: var(--t-label); line-height: 1.6; color: var(--teal-700); background: var(--teal-050); border-radius: var(--r-chip); }
+.you-skills li.is-more { color: var(--muted-ink); background: var(--surface-sunk); }
+.you-links { display: flex; gap: var(--s-md); padding-top: var(--s-sm); border-top: 1px solid var(--hairline); }
+.you-links a { display: inline-flex; align-items: center; gap: 4px; min-height: 44px; font-size: var(--t-meta); font-weight: 700; color: var(--teal-700); text-decoration: none; }
+.you-links a:hover { text-decoration: underline; }
+@media (max-width: 900px) {
+  .home-columns { grid-template-columns: minmax(0, 1fr); gap: var(--s-lg); }
+}

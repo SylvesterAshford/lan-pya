@@ -29,6 +29,13 @@ export function RoadmapTree({
     next: c.next,
     upcoming: c.upcoming,
   };
+  // A finished stage says how it was finished, the same words as the trail
+  // map: placed by the skills check, awaiting review, or verified.
+  const statusOf = (item: Milestone) =>
+    item.status !== "complete" ? statusLabels[item.status]
+      : item.source === "placement" ? c.placed
+      : item.source === "checked" ? c.awaiting
+      : c.verified;
   const current =
     milestones.find((item) => item.status === "active") ??
     milestones.find((item) => item.status === "next") ??
@@ -88,7 +95,7 @@ export function RoadmapTree({
         <header className="roadmap-toolbar">
           <div className="roadmap-progress-copy">
             <span>
-              {completedCount}/{milestones.length} {c.milestones} {c.verified.toLowerCase()}
+              {completedCount}/{milestones.length} {c.milestones} {c.complete}
             </span>
             <strong>{progress}%</strong>
           </div>
@@ -123,6 +130,8 @@ export function RoadmapTree({
             labels={{
               stage: c.step,
               verified: c.verified,
+              placed: c.placed,
+              awaiting: c.awaiting,
               inProgress: c.inProgress,
               upcoming: c.upcoming,
               comingSoon: c.comingSoon ?? c.upcoming,
@@ -140,7 +149,7 @@ export function RoadmapTree({
           locale={locale}
           copy={c}
           milestone={selected}
-          statusLabel={statusLabels[selected.status]}
+          statusLabel={statusOf(selected)}
           totalSteps={milestones.length}
           missionHref={missionsHref}
           onClose={closeDetail}

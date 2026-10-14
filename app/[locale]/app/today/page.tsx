@@ -4,21 +4,22 @@ import { requireUser } from "@/lib/auth";
 import { LevelUpMoment } from "@/components/app/level-up-moment";
 import { TodaysClimb } from "@/components/home/todays-climb";
 import { UpNext } from "@/components/home/up-next";
-import { ProofRow } from "@/components/home/proof-row";
+import { YouCard, type YouPath } from "@/components/home/you-card";
 import { buildUpNext } from "@/lib/domain/home-feed";
 import { getStageMission, VERIFIED_MISSION_POINTS } from "@/lib/domain/mission-briefs";
 import { localizeLevel, resolveProgress } from "@/lib/domain/progress";
 import { toMyanmarDigits } from "@/lib/domain/deadlines";
-import { getActivePathDashboard, getOpportunities, getProfile, getProofItems, getRoadmap } from "@/lib/data/app-data";
+import { getActivePathDashboard, getOpportunities, getPathHistory, getProfile, getProofItems, getRoadmap } from "@/lib/data/app-data";
 import { getAppCopy, localizeCareerTerm, localizeOpportunity, localizeRoadmapMilestone } from "@/lib/i18n/app-copy";
 export default async function TodayPage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
   const user = await requireUser(locale);
-  const [dashboard, opportunities, profile, proofItems] = await Promise.all([
+  const [dashboard, opportunities, profile, proofItems, history] = await Promise.all([
     getActivePathDashboard(),
     getOpportunities(),
     getProfile(user.id),
     getProofItems(),
+    getPathHistory(user.id),
   ]);
   const c = getAppCopy(locale);
   const path = dashboard.activePath;
@@ -85,6 +86,16 @@ export default async function TodayPage({ params }: { params: Promise<{ locale: 
   // not evidence, so it does not get to add one.
   const standing = proofItems.filter((item) => item.state === "active");
   const skills = [...new Set(standing.flatMap((item) => item.competencies))];
+
+  // Every path the learner has walked, with where they stand on it. The
+  // active path uses the roadmap already loaded; a previous path reads its own.
+  const youPaths: YouPath[] = await Promise.all(
+    [...history].sort((a, b) => (a.state === "active" ? -1 : b.state === "active" ? 1 : 0)).map(async (item) => {
+      const stages = item.key === path.key ? roadmap : await getRoadmap(item.key);
+      const here = stages.find((stage) => stage.status === "active") ?? stages.find((stage) => stage.status !== "complete");
+      return { key: item.key, title: localizeCareerTerm(locale, item.key, item.title), stage: here?.order ?? stages.length, total: stages.length, current: item.state === "active" };
+    }),
+  );
 
   // One line of where the learner stands, all of it read from their records.
   const meta = c.home.meta
@@ -157,8 +168,20 @@ export default async function TodayPage({ params }: { params: Promise<{ locale: 
         }}
       />
 
-      <UpNext items={upNext} locale={locale} labels={c.home.feed} runner={c.runner} />
-      <ProofRow verifiedCount={standing.length} skills={skills} locale={locale} labels={c.home.proofRow} />
+      <div className="home-columns">
+        <UpNext items={upNext} locale={locale} labels={c.home.feed} runner={c.runner} />
+        <YouCard
+          locale={locale}
+          alias={alias}
+          headline={profile?.headline ?? null}
+          mascotVariant={mascotVariant}
+          progress={progress}
+          paths={youPaths}
+          verifiedCount={standing.length}
+          skills={skills}
+          labels={c.home.you}
+        />
+      </div>
     </div>
   );
 }

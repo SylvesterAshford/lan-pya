@@ -41,6 +41,7 @@ vi.mock("@/lib/data/app-data", () => ({
     pausedWork: [],
   }),
   getOpportunities: async () => [],
+  getPathHistory: async () => [{ state: "active", lastActivatedAt: "", deactivatedAt: null, key: "frontend-developer", title: "Frontend Developer", availability: "operational" }],
   getProfile: async () => ({
     id: "learner-1",
     alias: "Learner",
@@ -88,11 +89,14 @@ describe("TodayPage minimal layout", () => {
     expect(screen.getByText("Stage 3 of 1 · Frontend Developer · 200 points · Starter", { exact: false })).toBeInTheDocument();
   });
 
-  it("shows an empty Up next and proof row rather than filler", async () => {
+  it("shows an empty Up next and a card about the learner rather than filler", async () => {
     render(await TodayPage({ params: Promise.resolve({ locale: "en" }) }));
     expect(screen.getByRole("heading", { name: "Up next" })).toBeInTheDocument();
     expect(screen.getByText("Nothing is waiting on you. Your stage is above.")).toBeInTheDocument();
-    expect(screen.getByText("Nothing verified yet")).toBeInTheDocument();
+    // The card beside it is about this learner: their name, path and position.
+    expect(screen.getByRole("heading", { name: "Learner" })).toBeInTheDocument();
+    expect(screen.getByText("Now · Stage 3 of 1")).toBeInTheDocument();
+    expect(screen.getByText("None yet")).toBeInTheDocument();
   });
 });
 
