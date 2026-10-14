@@ -8,6 +8,8 @@ insert into public.career_tracks(id,key,title,description,version,data_origin) v
 ('10000000-0000-0000-0000-000000000002','full-stack-developer',  'Full-Stack Developer',  'Build and operate complete products across browser, server, data, and cloud.',              1,'seeded_demo'),
 ('10000000-0000-0000-0000-000000000003','ai-data-analyst',       'AI & Data Analyst',     'Turn data into responsible analysis, decisions, dashboards, and evaluated AI workflows.',   1,'seeded_demo')
 on conflict (key) do update set title=excluded.title, description=excluded.description, version=excluded.version;
+-- Frontend is the operational path, as in production (migration 20261014064430).
+update public.career_tracks set availability = 'operational' where key = 'frontend-developer';
 
 -- ─── Frontend Developer — 12 milestones ─────────────────────────────────────
 

@@ -68,7 +68,7 @@ for (const operation of operations) {
 
 // Everything the demo shows (paths, positions on both maps, the two verified
 // missions, points) is defined once, in the database: reset_demo_account() in
-// migration 20261014100000_consistent_progress_and_demo. This script used to
+// migrations 20261014064328 to 20261014064430. This script used to
 // seed its own version, which drifted from production (a different name, no
 // active path, no Frontend points). Calling the function keeps them identical,
 // and re-running it puts back anything people changed through the account.

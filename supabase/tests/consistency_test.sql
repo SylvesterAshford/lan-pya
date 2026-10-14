@@ -1,4 +1,4 @@
--- One story across screens (migration 20261014100000): honest counts, paths
+-- One story across screens (migrations 20261014064328-20261014064430): honest counts, paths
 -- that resume, verified missions that stay verified, a demo that cannot change.
 begin;
 create extension if not exists pgtap with schema extensions;
