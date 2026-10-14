@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.29.4.0] - 2026-10-14
+
+### Fixed
+
+- **The Submit step no longer looks skipped** after a mission is submitted. You can open it again to see what you sent (your links and reflection), read-only.
+- **The step bar** now shows how far the mission has really got, even while you look back at an earlier step.
+
 ## [0.29.3.0] - 2026-10-14
 
 ### Changed

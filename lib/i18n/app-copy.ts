@@ -199,6 +199,7 @@ const english = {
     rejectedTitle: "Not accepted",
     rejectedBody: "A reviewer did not accept this attempt, so its step on your trail map was returned. Read the notes, then start a new attempt.",
     reviewerNotes: "Reviewer notes", scoresTitle: "Rubric scores", scoreOf: "{a} / {max}",
+    submittedTitle: "What you submitted", submittedVerified: "This is the version a reviewer verified. It stays as it is in your portfolio.", submittedWaiting: "This is the version waiting for review.", screenshotLabel: "Screenshot or preview", reflectionLabel: "Reflection",
   },
   missions: {
     heading: "Your work", title: "One mission at a time.",
@@ -480,6 +481,7 @@ const myanmar: typeof english = {
     rejectedTitle: "လက်မခံပါ",
     rejectedBody: "သုံးသပ်သူက ဤကြိုးစားမှုကို လက်မခံသဖြင့် လမ်းကြောင်းမြေပုံပေါ်ရှိ ၎င်း၏အဆင့်ကို ပြန်ယူထားသည်။ မှတ်ချက်ကိုဖတ်ပြီး အသစ်ပြန်စပါ။",
     reviewerNotes: "သုံးသပ်သူ၏ မှတ်ချက်", scoresTitle: "Rubric အမှတ်များ", scoreOf: "{a} / {max}",
+    submittedTitle: "သင်တင်ပြခဲ့သည်", submittedVerified: "သုံးသပ်သူ အတည်ပြုခဲ့သော ဗားရှင်းဖြစ်သည်။ သင့် portfolio တွင် ဤအတိုင်း ရှိနေမည်။", submittedWaiting: "သုံးသပ်ရန် စောင့်နေသော ဗားရှင်းဖြစ်သည်။", screenshotLabel: "Screenshot သို့မဟုတ် preview", reflectionLabel: "ပြန်လည်သုံးသပ်ချက်",
   },
   missions: {
     heading: "သင့်လက်ရာ", title: "တစ်ကြိမ်လျှင် လုပ်ငန်းတစ်ခု။",
