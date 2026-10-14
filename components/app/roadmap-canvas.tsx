@@ -192,6 +192,8 @@ export function RoadmapCanvas({
   labels: {
     stage: string;
     verified: string;
+    placed?: string;
+    awaiting?: string;
     inProgress: string;
     upcoming: string;
     comingSoon: string;
@@ -359,7 +361,7 @@ export function RoadmapCanvas({
         aria-disabled={st === "soon" || undefined}
         aria-label={
           `${m.phase ? `${labels.phase} ${m.phase}. ` : ""}` +
-          `${labels.stage} ${m.order}: ${m.title}. ${statusLabel(st)}` +
+          `${labels.stage} ${m.order}: ${m.title}. ${st === "done" && m.source === "placement" && labels.placed ? labels.placed : st === "done" && m.source === "checked" && labels.awaiting ? labels.awaiting : statusLabel(st)}` +
           `${st === "active" ? `. ${labels.youAreHere}` : ""}`
         }
         onClick={(e) => st !== "soon" && onSelect(m.key, e.currentTarget)}
