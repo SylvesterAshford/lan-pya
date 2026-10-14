@@ -127,7 +127,7 @@ export async function getRoadmap(trackKey = "frontend-developer"): Promise<Miles
 
 export async function getProofItems(): Promise<ProofItem[]> {
   const supabase = await createClient();
-  const { data } = await supabase.from("proof_items").select("id,state,verified_at,snapshot,data_origin").order("verified_at", { ascending: false });
+  const { data } = await supabase.from("proof_items").select("id,state,verified_at,snapshot,data_origin,submissions(mission_definitions(key))").order("verified_at", { ascending: false });
   return (data ?? []).map((row) => {
     const snapshot = (row.snapshot ?? {}) as UnknownRecord;
     return {
@@ -137,8 +137,17 @@ export async function getProofItems(): Promise<ProofItem[]> {
       repositoryUrl: String(snapshot.repository_url ?? ""), deploymentUrl: String(snapshot.deployment_url ?? ""),
       state: row.state === "invalidated" || row.state === "deleted" ? row.state : "active",
       dataOrigin: row.data_origin === "seeded_demo" ? "seeded_demo" : "live",
+      missionKey: missionKeyOf(row.submissions),
     };
   });
+}
+
+/** proof_items -> submissions -> mission_definitions, however PostgREST shapes the embed. */
+function missionKeyOf(embed: unknown): string | null {
+  const submission = asRecord(Array.isArray(embed) ? embed[0] : embed);
+  const raw = submission.mission_definitions;
+  const mission = asRecord(Array.isArray(raw) ? raw[0] : raw);
+  return typeof mission.key === "string" ? mission.key : null;
 }
 
 export async function getOpportunities(): Promise<OpportunityCard[]> {

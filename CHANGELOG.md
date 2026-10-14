@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.28.1.0] - 2026-10-14
+
+### Fixed
+
+- Your traveller is back on the Missions trail map. Finishing a stage left no stage marked as current, so the map had nowhere to stand you; now you stand on the first stage you have not finished.
+- Mission rows now say which stage they belong to (for example "Stage 3 · CSS and responsive layout"), so each one matches its stop on the map. Work from another path is labelled with that path.
+
 ## [0.28.0.0] - 2026-10-13
 
 ### Added
