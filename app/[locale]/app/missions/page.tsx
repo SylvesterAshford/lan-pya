@@ -7,6 +7,9 @@ import { emblemForStage, resolveProgress } from "@/lib/domain/progress";
 import { requireUser } from "@/lib/auth";
 import { getActivePathDashboard, getProfile, getProofItems, getRoadmap } from "@/lib/data/app-data";
 import { getAppCopy, formatAppDate, localizeCareerTerm, localizeRoadmapMilestone } from "@/lib/i18n/app-copy";
+import { getCareerTrack } from "@/lib/domain/career-tracks";
+import { getMissionStage } from "@/lib/domain/mission-briefs";
+import { toMyanmarDigits } from "@/lib/domain/deadlines";
 import { learnerStatus } from "@/lib/domain/mission-status";
 import type { Milestone, SubmissionState } from "@/lib/domain/types";
 
@@ -51,12 +54,22 @@ export default async function MissionsPage({ params }: { params: Promise<{ local
   }
 
   const pathKey = dashboard.activePath.key;
+  const num = (value: number) => (locale === "my" ? toMyanmarDigits(value) : String(value));
   const roadmap = (await getRoadmap(pathKey) as Milestone[]).map((stage) => localizeRoadmapMilestone(locale, stage));
-  // A mission belongs to the stage the learner is standing on. Showing that
-  // stage on the mission is what keeps this page and the roadmap telling the
-  // same story.
-  const currentStage = roadmap.find((stage) => stage.status === "active") ?? roadmap.find((stage) => stage.status === "next");
   const mission = dashboard.nextMission;
+  // Every row names the stage its mission belongs to, so "Responsive Profile
+  // Card" can be matched to stop 3 ("CSS and responsive layout") on the map
+  // below. The in-progress row used to borrow the learner's current stage,
+  // which once the mission was Completed pointed at a different stop.
+  const stageOf = (missionKey: string | null | undefined) => {
+    const place = getMissionStage(missionKey);
+    if (!place) return null;
+    const stages = place.pathKey === pathKey ? roadmap : getCareerTrack(place.pathKey).milestones.map((stage) => localizeRoadmapMilestone(locale, stage));
+    const stage = stages.find((item) => item.key === place.stageKey);
+    return stage ? { stage, pathKey: place.pathKey, onThisPath: place.pathKey === pathKey } : null;
+  };
+  const currentStage = (mission ? stageOf(mission.key)?.stage : null)
+    ?? roadmap.find((stage) => stage.status === "active") ?? roadmap.find((stage) => stage.status === "next");
   const verified = proof.filter((item) => item.state === "active");
 
   const progress = resolveProgress(dashboard.xp, {
@@ -89,7 +102,7 @@ export default async function MissionsPage({ params }: { params: Promise<{ local
             <Emblem kind={activeEmblem} size={40} className="mission-emblem" />
             <span className="mission-row-copy">
               <span className="mission-tags">
-                {currentStage ? <span className="mission-tag stage">{c.missions.stage} {currentStage.order}</span> : null}
+                {currentStage ? <span className="mission-tag stage">{c.missions.stage} {num(currentStage.order)}</span> : null}
                 <span className="mission-tag path">{localizeCareerTerm(locale, pathKey, dashboard.activePath.title)}</span>
               </span>
               <strong>{localizeCareerTerm(locale, mission.key, mission.title)}</strong>
@@ -117,7 +130,7 @@ export default async function MissionsPage({ params }: { params: Promise<{ local
         </header>
 
         {verified.length ? (
-          verified.map((item) => (
+          verified.map((item) => { const place = stageOf(item.missionKey); return (
             <Link className="mission-row done" href="/app/proof" key={item.id}>
               {/* The rosette, not a check mark: verification is different in
                   kind from "finished", and the shape is what says so. */}
@@ -125,15 +138,17 @@ export default async function MissionsPage({ params }: { params: Promise<{ local
               <span className="mission-row-copy">
                 <span className="mission-tags">
                   <span className="mission-tag verified">{c.missions.verifiedOn} {formatAppDate(locale, item.verifiedAt)}</span>
+                  {place ? <span className="mission-tag stage">{c.missions.stage} {num(place.stage.order)}</span> : null}
+                  {place && !place.onThisPath ? <span className="mission-tag path">{localizeCareerTerm(locale, place.pathKey, getCareerTrack(place.pathKey).title)}</span> : null}
                   {item.dataOrigin === "seeded_demo" ? <span className="mission-tag demo">{c.profile.demo}</span> : null}
                 </span>
                 <strong>{item.title}</strong>
-                <small>{item.competencies.slice(0, 3).join(" · ")}</small>
+                <small>{place ? place.stage.title : item.competencies.slice(0, 3).join(" · ")}</small>
               </span>
               <span className="mission-view">{c.missions.viewProof}</span>
               <ArrowRight className="path-row-chevron" size={16} aria-hidden="true" />
             </Link>
-          ))
+          ); })
         ) : (
           <div className="mission-empty">
             <p>{c.missions.completedNone}</p>

@@ -26,6 +26,7 @@ export const DEMO_PROOF: ProofItem = {
   deploymentUrl: "https://example.vercel.app",
   state: "active",
   dataOrigin: "seeded_demo",
+  missionKey: "responsive-profile-card",
 };
 
 export const DEMO_OPPORTUNITIES: OpportunityCard[] = [

@@ -325,6 +325,27 @@ describe("career-tracks — mergeTrackMilestones", () => {
     expect(result.find((m) => m.key === "spreadsheets")?.status).toBe("next");
   });
 
+  // Completing stage 3 (a link check or a verify) marks it complete and leaves
+  // nothing active. The learner then stood nowhere and the map lost its
+  // traveller. Their position is the first unfinished stage.
+  it("places the learner on the first unfinished stage when nothing is active", () => {
+    const row = (key: string, status: "complete" | "upcoming") => ({ key, status, order: 0, title: "", description: "", proof: "" });
+    const rows = [row("orientation", "complete"), row("semantic-html", "complete"), row("responsive-css", "complete"), row("javascript", "upcoming"), row("git-collaboration", "upcoming")];
+    const result = mergeTrackMilestones("frontend-developer", rows);
+    expect(result.filter((m) => m.status === "active").map((m) => m.key)).toEqual(["javascript"]);
+    expect(result.find((m) => m.key === "git-collaboration")?.status).toBe("next");
+    expect(result.find((m) => m.key === "responsive-css")?.status).toBe("complete");
+  });
+
+  it("leaves a stored active stage where it is", () => {
+    // ai-data-analyst has no hardcoded catalog statuses to blur the result.
+    const rows = [
+      { key: "analytics-foundations", status: "complete" as const, order: 1, title: "", description: "", proof: "" },
+      { key: "spreadsheets", status: "active" as const, order: 2, title: "", description: "", proof: "" },
+    ];
+    expect(mergeTrackMilestones("ai-data-analyst", rows).filter((m) => m.status === "active").map((m) => m.key)).toEqual(["spreadsheets"]);
+  });
+
   it("falls back to catalog when no progress rows are provided", () => {
     // Full-stack track has no hardcoded status overrides — first milestone is 'next' by default
     const result = mergeTrackMilestones("full-stack-developer", []);

@@ -133,6 +133,20 @@ export function getMissionBrief(missionKey: string, locale: string): MissionBrie
  * The rubric a reviewer scores is the deliverables list the learner ticked in
  * step 2. One list, so the two can never drift apart again.
  */
+/**
+ * Where each mission sits on its path. The map draws stages, and the mission
+ * lists name missions; this is what lets a list row say "Stage 3" so it can be
+ * matched to the stop it completed.
+ */
+const MISSION_STAGES: Record<string, { pathKey: string; stageKey: string }> = {
+  "responsive-profile-card": { pathKey: "frontend-developer", stageKey: "responsive-css" },
+  "content-creator-awareness": { pathKey: "content-creator", stageKey: "content-awareness-campaign" },
+};
+
+export function getMissionStage(missionKey: string | null | undefined) {
+  return missionKey ? MISSION_STAGES[missionKey] ?? null : null;
+}
+
 export function getRubricIds(missionKey: string): string[] {
   return BRIEFS[missionKey]?.en.deliverables.map((item) => item.id) ?? [];
 }

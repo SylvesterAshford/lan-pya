@@ -145,7 +145,15 @@ export function mergeTrackMilestones(trackKey: string, rows: Milestone[]) {
     const keepCreatorPilotActive = trackKey === "content-creator" && item.status === "active" && storedStatus !== "complete";
     return { ...item, status: keepCreatorPilotActive ? "active" as const : storedStatus ?? item.status };
   });
-  const activeIndex = merged.findIndex((item) => item.status === "active");
+  let activeIndex = merged.findIndex((item) => item.status === "active");
+  // Finishing a stage marks it complete but never moves "active" on to the
+  // next one, so a learner with finished stages and nothing active had no
+  // position at all: no traveller on the map, no "you are here", no current
+  // stage on Today. Where they stand is the first stage they have not finished.
+  if (activeIndex < 0 && merged.some((item) => item.status === "complete")) {
+    activeIndex = merged.findIndex((item) => item.status !== "complete");
+    if (activeIndex >= 0) merged[activeIndex].status = "active";
+  }
   if (activeIndex >= 0 && merged[activeIndex + 1]?.status === "upcoming") merged[activeIndex + 1].status = "next";
   if (activeIndex < 0 && !merged.some((item) => item.status === "complete") && merged[0]?.status === "upcoming") merged[0].status = "next";
   return merged;

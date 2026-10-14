@@ -148,4 +148,6 @@ export type ProofItem = {
   deploymentUrl: string;
   state: "active" | "invalidated" | "deleted";
   dataOrigin: DataOrigin;
+  /** The mission this proof verified, so a page can name the stage it belongs to. */
+  missionKey: string | null;
 };
