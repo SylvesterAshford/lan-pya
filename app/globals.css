@@ -7715,7 +7715,12 @@ html[lang="my"] .app-page .mission-title h1 {
   font-variant-numeric: tabular-nums;
 }
 
-.runner-dot:disabled { cursor: default; opacity: 0.55; }
+.runner-dot:disabled { cursor: default; }
+/* Only a step still ahead looks unavailable; a finished step never fades. */
+.runner-step.todo .runner-dot:disabled { opacity: 0.55; }
+.submitted-summary { display: grid; gap: var(--s-sm); }
+.submitted-summary > h2 { margin: var(--s-xs) 0 0; font-size: var(--t-h2); line-height: var(--l-h2); letter-spacing: var(--k-h2); font-weight: 700; color: var(--ink); }
+html[lang="my"] .submitted-summary > h2 { letter-spacing: 0; }
 .runner-dot:focus-visible { outline: 2px solid var(--teal-700); outline-offset: 2px; }
 
 .runner-step.done .runner-dot {

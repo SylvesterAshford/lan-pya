@@ -98,10 +98,14 @@ export function MissionRunner({
   // click your way into "completed" or "verified".
   const reachable = (target: Step) => {
     if (target <= 2) return true;
-    if (target === 3) return status.step === null || status.step === 3;
+    // Submit is always open: before the work is in it is the form, after it
+    // is what was sent. Locking it once submitted made a finished step look
+    // skipped on the rail.
+    if (target === 3) return true;
     return status.step !== null && status.step >= target;
   };
-  const forward = step === 2 && !reachable(3) ? (status.step as Step) : ((step + 1) as Step);
+  const forward = (step + 1) as Step;
+  const submitted = status.step === 4 || status.step === 5;
   const eyebrow = (value: Step) => `${labels.stepOf.replace("{a}", num(value)).replace("{b}", num(5))} · ${labels.steps[value - 1]}`;
   const linkName = (check: string) => (check === "repository" ? brief.repositoryLabel : check === "deployment" ? brief.deploymentLabel : check);
 
@@ -110,7 +114,10 @@ export function MissionRunner({
       <ol className="runner-rail">
         {labels.steps.map((label, index) => {
           const value = (index + 1) as Step;
-          const state = value < step ? "done" : value === step ? "now" : "todo";
+          // Done means the mission got there, not that you are looking past
+          // it: reopening Submit on verified work keeps Review and Proof done.
+          const reached = status.kind === "verified" ? 6 : status.step ?? 0;
+          const state = value === step ? "now" : value < step || value < reached ? "done" : "todo";
           return (
             <li key={label} className={`runner-step ${state}`}>
               <button
@@ -189,6 +196,16 @@ export function MissionRunner({
                 {feedback?.review ? <ReviewerNotes review={feedback.review} brief={brief} labels={labels} num={num} /> : null}
               </div>
             ) : null}
+            {submitted && feedback?.version ? (
+              <SubmittedSummary
+                version={feedback.version}
+                brief={brief}
+                labels={labels}
+                verified={status.kind === "verified"}
+                onBack={() => setStep(2)}
+                onNext={() => setStep(status.step as Step)}
+              />
+            ) : (
             <SubmissionForm
               locale={locale}
               userId={userId}
@@ -204,6 +221,7 @@ export function MissionRunner({
               onBack={() => setStep(2)}
               readOnly={readOnly}
             />
+            )}
           </>
         ) : null}
 
@@ -285,6 +303,41 @@ function ReviewerNotes({ review, brief, labels, num }: { review: NonNullable<Mis
           ))}
         </dl>
       ) : null}
+    </div>
+  );
+}
+
+/** Step 3 after the work is in: the version reviewers read, not a form. */
+function SubmittedSummary({ version, brief, labels, verified, onBack, onNext }: {
+  version: NonNullable<MissionFeedback["version"]>;
+  brief: MissionBrief;
+  labels: RunnerLabels;
+  verified: boolean;
+  onBack: () => void;
+  onNext: () => void;
+}) {
+  const link = (url: string) => <a href={url} target="_blank" rel="noreferrer">{url}</a>;
+  return (
+    <div className="submitted-summary">
+      <h2>{labels.submittedTitle}</h2>
+      <p className="submit-help">{verified ? labels.submittedVerified : labels.submittedWaiting}</p>
+      <dl className="detail-list">
+        <div><dt>{brief.repositoryLabel}</dt><dd>{link(version.repositoryUrl)}</dd></div>
+        <div><dt>{brief.deploymentLabel}</dt><dd>{link(version.deploymentUrl)}</dd></div>
+        {version.screenshotUrl ? <div><dt>{labels.screenshotLabel}</dt><dd>{link(version.screenshotUrl)}</dd></div> : null}
+        <div><dt>{labels.reflectionLabel}</dt><dd className="review-reflection">{version.reflection}</dd></div>
+      </dl>
+      <footer className="runner-foot">
+        <span className="runner-saved" />
+        <span className="runner-nav">
+          <button type="button" className="button outline compact" onClick={onBack}>
+            <ArrowLeft size={15} aria-hidden="true" /> {labels.back}
+          </button>
+          <button type="button" className="button primary compact" onClick={onNext}>
+            {labels.next} <ArrowRight size={15} aria-hidden="true" />
+          </button>
+        </span>
+      </footer>
     </div>
   );
 }
