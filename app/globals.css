@@ -9584,11 +9584,12 @@ html[lang="my"] .profile-stats dt { text-transform: none; letter-spacing: 0; }
   transform: translateY(-50%);
   display: flex;
   align-items: center;
-  gap: 7px;
-  padding: 7px 10px;
+  gap: 10px;
+  /* Room to read: the cards are the map's only words. */
+  padding: 11px 14px;
   background: var(--surface);
   border: 1px solid var(--hairline);
-  border-radius: 11px;
+  border-radius: 12px;
   box-shadow: 0 6px 18px rgb(15 23 42 / 0.10);
   text-decoration: none;
   color: inherit;
@@ -9597,10 +9598,10 @@ a.map-card:hover { border-color: var(--navy-500); }
 a.map-card:focus-visible { outline: 2px solid var(--navy-700); outline-offset: 2px; }
 .map-card.locked { background: var(--surface-sunk); box-shadow: none; }
 
-.map-card-copy { display: grid; gap: 1px; min-width: 0; }
+.map-card-copy { display: grid; gap: 4px; min-width: 0; }
 .map-card-copy strong {
-  font-size: var(--t-label);
-  line-height: 1.3;
+  font-size: var(--t-meta);
+  line-height: 1.35;
   font-weight: 700;
   color: var(--ink);
 }
@@ -14130,9 +14131,9 @@ html[lang="my"] .hero-copy h1{
 @media (max-width: 700px){
   .map-card{
     max-width: 44%;
-    gap: 6px;
-    padding: 8px 9px;
-    border-radius: 10px;
+    gap: 8px;
+    padding: 10px 11px;
+    border-radius: 11px;
   }
   .map-card-copy strong{
     font-size: var(--t-meta);
@@ -14144,7 +14145,7 @@ html[lang="my"] .hero-copy h1{
 /* Below the phone breakpoint the trail itself narrows, so the cards take the
    last of the slack rather than the trail. */
 @media (max-width: 480px){
-  .map-card{ max-width: 46%; padding: 7px 8px; }
+  .map-card{ max-width: 46%; padding: 9px 10px; }
 }
 
 @theme inline {
@@ -14641,3 +14642,7 @@ html[lang="my"] .topic-group-label { letter-spacing: 0; text-transform: none; }
 /* The demo account's reset control, at the foot of Missions. */
 .demo-reset { display: flex; flex-wrap: wrap; align-items: center; gap: var(--s-sm); margin-top: var(--s-lg); font-size: var(--t-meta); color: var(--muted-ink); }
 .demo-reset .button { display: inline-flex; align-items: center; gap: 6px; }
+/* The demo's simulated review: a small pulse beside "A reviewer is looking". */
+.runner-pulse { display: inline-block; width: 8px; height: 8px; margin-right: 4px; vertical-align: middle; background: var(--amber-500); border-radius: 50%; animation: runner-pulse 1.2s ease-in-out infinite; }
+@keyframes runner-pulse { 0%, 100% { opacity: 0.35; } 50% { opacity: 1; } }
+@media (prefers-reduced-motion: reduce) { .runner-pulse { animation: none; } }

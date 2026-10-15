@@ -42,6 +42,8 @@ type Stop = {
    *  check, the mark DESIGN.md keeps for verified work. */
   done?: "placed" | "awaiting" | "verified";
   href?: string;
+  /** The stop you are on has no mission yet. */
+  noMission?: boolean;
 };
 
 type Geometry = {
@@ -70,8 +72,8 @@ type Geometry = {
 // wider than the composition and a little shorter, so the map fills the column
 // it sits in rather than leaving ~220px of dead page on either side, and the
 // stops and traveller sit a shade smaller inside it.
-const WIDE: Geometry = { W: 1320, gap: 247.5, tail: 110, art: 923, xs: [0.43, 0.57, 0.41, 0.52, 0.50], top: 300, r: 28, rCurrent: 36, mascot: 176, card: 215 };
-const NARROW: Geometry = { W: 923, gap: 292.5, tail: 234, art: 923, xs: [0.40, 0.58, 0.38, 0.54, 0.50], top: 300, r: 31, rCurrent: 40, mascot: 196, card: 250 };
+const WIDE: Geometry = { W: 1320, gap: 247.5, tail: 110, art: 923, xs: [0.43, 0.57, 0.41, 0.52, 0.50], top: 300, r: 28, rCurrent: 36, mascot: 176, card: 250 };
+const NARROW: Geometry = { W: 923, gap: 292.5, tail: 234, art: 923, xs: [0.40, 0.58, 0.38, 0.54, 0.50], top: 300, r: 31, rCurrent: 40, mascot: 196, card: 270 };
 
 // The width at which the landscape canvas has enough column to be worth it.
 // `.mission-map` in globals.css caps and shapes the box at this same width;
@@ -117,8 +119,9 @@ export function MissionMap({
   mascotVariant,
   pathTitle,
   steps,
-  missionHref,
-  proofHref,
+  stageLinks = {},
+  comingSoonHref,
+  walkFrom,
   labels,
 }: {
   milestones: Milestone[];
@@ -131,12 +134,20 @@ export function MissionMap({
   mascotVariant?: string | null;
   pathTitle: string;
   steps: number;
-  missionHref?: string;
-  proofHref?: string;
+  /** Each stage's own mission page, by stage key. A stop opens its own
+   *  stage: the one you are on opens the work for it, a finished one shows how
+   *  it went. It used to open "the next mission", so the stop you stood on
+   *  could take you to the stage before it. */
+  stageLinks?: Record<string, string>;
+  /** Where the current stop goes when its stage has no mission yet. */
+  comingSoonHref?: string;
+  /** A stage key to walk the traveller up from, overriding what this device
+   *  remembers (the "Back to your trail map" link after a review). */
+  walkFrom?: string;
   labels: {
     stageOf: string; steps: string; youAreHere: string; complete: string;
     placed: string; awaiting: string;
-    locked: string; nextMission: string; continueMission: string;
+    locked: string; nextMission: string; continueMission: string; comingSoon: string;
   };
 }) {
   const my = locale === "my";
@@ -158,9 +169,11 @@ export function MissionMap({
       : m.source === "placement" ? "placed" as const
       : m.source === "checked" ? "awaiting" as const
       : "verified" as const;
+    const own = stageLinks[m.key];
     return {
       key: m.key, order: m.order, title: m.title, state, done,
-      href: state === "current" ? missionHref : state === "done" ? proofHref : undefined,
+      href: state === "current" ? own ?? comingSoonHref : state === "done" ? own : undefined,
+      noMission: state === "current" && !own,
     };
   });
 
@@ -241,7 +254,7 @@ export function MissionMap({
   useEffect(() => {
     if (!pathKey || currentIndex < 0) return;
     const here = stops[currentIndex].key;
-    const from = stops.findIndex((s) => s.key === readStop(pathKey));
+    const from = stops.findIndex((s) => s.key === (walkFrom ?? readStop(pathKey)));
     const figure = traveller.current;
     const svg = scene.current;
     const still = typeof window.matchMedia === "function" && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -288,11 +301,15 @@ export function MissionMap({
       easing: "ease-in-out",
       fill: "backwards",
     });
-    walk.onfinish = () => writeStop(pathKey, here);
+    walk.onfinish = () => {
+      writeStop(pathKey, here);
+      // A walk asked for by the link is shown once; a reload stands still.
+      if (walkFrom) window.history.replaceState(null, "", window.location.pathname);
+    };
     return () => walk.cancel();
     // xAt/yAt/cardOnLeft/side derive from `wide` and the stop list, both in deps.
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [pathKey, currentIndex, wide, n]);
+  }, [pathKey, currentIndex, wide, n, walkFrom]);
 
   if (!stops.length) return null;
 
@@ -554,7 +571,7 @@ export function MissionMap({
             ["--map-card-max" as string]: `${(g.card / g.W) * 100}%`,
           } as React.CSSProperties;
 
-          const status = stop.state === "current" ? labels.youAreHere
+          const status = stop.state === "current" ? (stop.noMission ? `${labels.youAreHere} · ${labels.comingSoon}` : labels.youAreHere)
             : stop.done === "placed" ? labels.placed
             : stop.done === "awaiting" ? labels.awaiting
             : stop.state === "done" ? labels.complete

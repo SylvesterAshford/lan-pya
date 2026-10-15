@@ -8,7 +8,7 @@ import { requireUser } from "@/lib/auth";
 import { getActivePathDashboard, getProfile, getProofItems, getRoadmap } from "@/lib/data/app-data";
 import { getAppCopy, formatAppDate, localizeCareerTerm, localizeRoadmapMilestone } from "@/lib/i18n/app-copy";
 import { getCareerTrack } from "@/lib/domain/career-tracks";
-import { getMissionStage } from "@/lib/domain/mission-briefs";
+import { getMissionStage, getStageMission } from "@/lib/domain/mission-briefs";
 import { DemoResetButton } from "@/components/missions/demo-reset-button";
 import { toMyanmarDigits } from "@/lib/domain/deadlines";
 import { learnerStatus } from "@/lib/domain/mission-status";
@@ -33,8 +33,9 @@ function stateLabel(c: ReturnType<typeof getAppCopy>, workState: string, submiss
   return { text: c.build.available, tone: "op" };
 }
 
-export default async function MissionsPage({ params }: { params: Promise<{ locale: string }> }) {
+export default async function MissionsPage({ params, searchParams }: { params: Promise<{ locale: string }>; searchParams: Promise<{ walk?: string }> }) {
   const { locale } = await params;
+  const { walk } = await searchParams;
   const user = await requireUser(locale);
   const c = getAppCopy(locale);
   const [dashboard, proof, profile] = await Promise.all([
@@ -177,8 +178,12 @@ export default async function MissionsPage({ params }: { params: Promise<{ local
         mascotVariant={profile?.avatar}
         pathTitle={localizeCareerTerm(locale, pathKey, dashboard.activePath.title)}
         steps={progress.xp}
-        missionHref={mission ? (missionHref[mission.key] ?? "/app/paths") : undefined}
-        proofHref="/app/proof"
+        stageLinks={Object.fromEntries(roadmap.flatMap((stage) => {
+          const key = getStageMission(pathKey, stage.key);
+          return key && missionHref[key] ? [[stage.key, missionHref[key]]] : [];
+        }))}
+        comingSoonHref={`/app/roadmap?track=${pathKey}`}
+        walkFrom={walk}
         labels={{
           stageOf: locale === "my" ? "အဆင့် {a} / {b}" : "Stage {a} of {b}",
           steps: locale === "my" ? "အမှတ်" : "points",
@@ -189,6 +194,7 @@ export default async function MissionsPage({ params }: { params: Promise<{ local
           locked: locale === "my" ? "မဖွင့်ရသေးပါ" : "Locked",
           nextMission: locale === "my" ? "နောက်တစ်ခု" : "Next mission",
           continueMission: locale === "my" ? "ဆက်လုပ်မည်" : "Continue mission",
+          comingSoon: locale === "my" ? "လုပ်ငန်း မကြာမီ" : "Mission coming soon",
         }}
       />
 
