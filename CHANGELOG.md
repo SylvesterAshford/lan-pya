@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.35.2.0] - 2026-10-15
+
+### Fixed
+
+- **Home works on phones.** Today's climb card no longer puts its button and text on top of the mountain and your character: the picture now sits below the text. In Free lessons, topic names stay on one line, with the Burmese tag and counts underneath.
+
 ## [0.35.1.0] - 2026-10-15
 
 ### Changed

@@ -91,10 +91,12 @@ export function TopicItem({
         <summary>
           <span className="topic-num" aria-hidden="true">{index}</span>
           <span className="topic-name">{topic}</span>
-          {hasBurmese ? <span className="topic-resource-lang">{labels.burmese}</span> : null}
-          <span className="topic-kinds" aria-hidden="true">
-            {watch ? <span><PlayCircle size={14} />{num(watch)}</span> : null}
-            {read ? <span><BookOpen size={14} />{num(read)}</span> : null}
+          <span className="topic-meta">
+            {hasBurmese ? <span className="topic-resource-lang">{labels.burmese}</span> : null}
+            <span className="topic-kinds" aria-hidden="true">
+              {watch ? <span><PlayCircle size={14} />{num(watch)}</span> : null}
+              {read ? <span><BookOpen size={14} />{num(read)}</span> : null}
+            </span>
           </span>
           <span className="sr-only">{labels.count.replace("{n}", num(resources.length))}</span>
           <ChevronDown className="topic-chevron" size={16} aria-hidden="true" />
