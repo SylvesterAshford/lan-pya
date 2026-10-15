@@ -14581,3 +14581,45 @@ html[lang="my"] .stage-topics-label { letter-spacing: 0; text-transform: none; }
 @media (max-width: 640px) {
   .stage-topics { grid-template-columns: minmax(0, 1fr); }
 }
+
+/* ---- Topic resources ----
+   Each topic on a stage opens onto free videos and guides (components/app/
+   topic-resources.tsx). Used in the roadmap step brief and in Home's stage
+   panel, so the rules below reset the list styles both of those set on their
+   own <ul>/<li>: the brief's two-column grid and Home's topic chips. Rows on
+   hairlines, no cards; links are navy, a Burmese-language lesson carries a
+   navy language chip. */
+.topic-intro { margin: 0 0 var(--s-sm); font-size: var(--t-meta); line-height: var(--l-meta); color: var(--muted-ink); }
+.stage-topics .topic-intro { grid-column: 1 / -1; margin: 0; }
+/* An opened topic needs the panel's full width for its links, so the two
+   topic groups stack instead of sitting side by side. */
+.stage-topics.has-resources { grid-template-columns: minmax(0, 1fr); }
+.roadmap-detail-section .topic-list,
+.stage-topics .topic-list,
+.topic-list { display: grid; grid-template-columns: minmax(0, 1fr); gap: 0; margin: 0; padding: 0; list-style: none; border-top: 1px solid var(--hairline); }
+.roadmap-detail-section .topic-list > li,
+.stage-topics .topic-list > li { padding: 0; font-size: var(--t-meta); line-height: var(--l-meta); color: var(--ink); background: none; border: 0; border-bottom: 1px solid var(--hairline); border-radius: 0; }
+.topic-details > summary { display: flex; align-items: center; gap: var(--s-sm); min-height: 44px; padding: var(--s-xs) var(--s-2xs); font-size: var(--t-meta); font-weight: 600; line-height: var(--l-meta); color: var(--ink); cursor: pointer; list-style: none; }
+.topic-details > summary::-webkit-details-marker { display: none; }
+.topic-details > summary:focus-visible { outline: 2px solid var(--teal-700); outline-offset: 2px; border-radius: var(--r-control); }
+.topic-name { flex: 1; min-width: 0; overflow-wrap: anywhere; }
+.topic-count { flex: none; font-size: var(--t-label); font-weight: 600; color: var(--muted-ink); white-space: nowrap; }
+.topic-chevron { flex: none; color: var(--muted-ink); transition: transform 160ms ease-in-out; }
+.topic-details[open] > summary .topic-chevron { transform: rotate(180deg); }
+.roadmap-detail-section .topic-resources,
+.stage-topics .topic-resources,
+.topic-resources { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--s-xs); margin: 0 0 var(--s-sm); padding: 0; list-style: none; }
+.roadmap-detail-section .topic-resources > li,
+.stage-topics .topic-resources > li { padding: 0; font-size: var(--t-meta); background: none; border: 0; border-radius: 0; }
+.topic-resources a { display: flex; align-items: flex-start; gap: var(--s-sm); min-height: 44px; padding: var(--s-sm); color: var(--ink); text-decoration: none; background: var(--surface-sunk); border-radius: var(--r-control); }
+.topic-resources a:hover { background: var(--navy-050); }
+.topic-resources a:hover .topic-resource-title { text-decoration: underline; }
+.topic-resources a:focus-visible { outline: 2px solid var(--teal-700); outline-offset: 2px; }
+.topic-resources svg { flex: none; margin-top: 2px; color: var(--navy-700); }
+.topic-resource-copy { display: grid; flex: 1; gap: 2px; min-width: 0; }
+.topic-resource-title { font-size: var(--t-meta); font-weight: 600; line-height: var(--l-meta); color: var(--navy-700); overflow-wrap: anywhere; }
+.topic-resource-meta { font-size: var(--t-label); line-height: 1.4; color: var(--muted-ink); overflow-wrap: anywhere; }
+.topic-resource-lang { flex: none; align-self: center; padding: 1px 8px; font-size: var(--t-label); font-weight: 600; line-height: 1.6; color: var(--navy-700); background: var(--navy-100); border-radius: var(--r-chip); }
+@media (prefers-reduced-motion: reduce) {
+  .topic-chevron { transition: none; }
+}

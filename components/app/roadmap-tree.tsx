@@ -4,6 +4,7 @@ import { useCallback, useMemo, useRef, useState } from "react";
 import type { Milestone } from "@/lib/domain/types";
 import { RoadmapCanvas, type ForkConfig } from "@/components/app/roadmap-canvas";
 import { RoadmapDetailDialog } from "@/components/app/roadmap-detail-dialog";
+import type { StageResources } from "@/lib/domain/learning-resources";
 import { getAppCopy } from "@/lib/i18n/app-copy";
 
 /**
@@ -17,10 +18,13 @@ export function RoadmapTree({
   locale = "en",
   milestones,
   fork,
+  resources = {},
 }: {
   locale?: string;
   milestones: Milestone[];
   fork?: ForkConfig;
+  /** Free resources per stage key, for this path only (see resourcesForStages). */
+  resources?: StageResources;
 }) {
   const c = getAppCopy(locale).roadmap;
   const statusLabels: Record<Milestone["status"], string> = {
@@ -149,6 +153,7 @@ export function RoadmapTree({
           locale={locale}
           copy={c}
           milestone={selected}
+          resources={resources[selected.key] ?? null}
           statusLabel={statusOf(selected)}
           totalSteps={milestones.length}
           missionHref={missionsHref}

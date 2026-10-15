@@ -4,7 +4,9 @@ import { X } from "lucide-react";
 import { useEffect, useRef } from "react";
 import { Link } from "@/i18n/navigation";
 import { StatusPill } from "@/components/app/status-pill";
+import { TopicItem } from "@/components/app/topic-resources";
 import { toMyanmarDigits } from "@/lib/domain/deadlines";
+import type { LearningResource } from "@/lib/domain/learning-resources";
 import type { Milestone } from "@/lib/domain/types";
 import type { getAppCopy } from "@/lib/i18n/app-copy";
 
@@ -65,6 +67,7 @@ export function detailFor(c: RoadmapCopy, milestone: Milestone): RoadmapDetail {
 
 /** Everything a keyboard can land on inside the dialog, in DOM order. */
 const FOCUSABLE = [
+  "summary",
   "a[href]",
   "button:not([disabled])",
   "input:not([disabled])",
@@ -79,6 +82,7 @@ export function RoadmapDetailDialog({
   locale = "en",
   copy,
   milestone,
+  resources: stageResources = null,
   statusLabel,
   totalSteps,
   missionHref,
@@ -87,6 +91,8 @@ export function RoadmapDetailDialog({
   locale?: string;
   copy: RoadmapCopy;
   milestone: Milestone;
+  /** One list per topic, in topic order; null when the stage has none. */
+  resources?: LearningResource[][] | null;
   statusLabel: string;
   totalSteps: number;
   missionHref: string;
@@ -121,7 +127,13 @@ export function RoadmapDetailDialog({
       }
       if (event.key !== "Tab") return;
 
-      const items = Array.from(dialog.querySelectorAll<HTMLElement>(FOCUSABLE));
+      // Links inside a closed topic are in the DOM but cannot take focus, so
+      // they never count as first or last. A <summary> is the details' own
+      // child and stays reachable while it is closed.
+      const items = Array.from(dialog.querySelectorAll<HTMLElement>(FOCUSABLE)).filter((item) => {
+        const topic = item.closest("details");
+        return !topic || topic.open || item.parentElement === topic;
+      });
       if (!items.length) {
         // Nothing to move to, so Tab must not walk out to the page behind.
         event.preventDefault();
@@ -145,6 +157,12 @@ export function RoadmapDetailDialog({
   }, [onClose]);
 
   const detail = detailFor(c, milestone);
+  const topics = [...detail.left, ...detail.right];
+  // Only catalogue topics have resources; the fallback brief lists the
+  // description and proof instead, which are not topics.
+  const resources = milestone.left?.length && milestone.right?.length && stageResources?.length === topics.length
+    ? stageResources
+    : null;
   const my = locale === "my";
   const order = my ? toMyanmarDigits(milestone.order).padStart(2, "၀") : String(milestone.order).padStart(2, "0");
   const placement = my
@@ -200,11 +218,22 @@ export function RoadmapDetailDialog({
               list is the only place they appear, so it is not optional. */}
           <div className="roadmap-detail-section">
             <span className="roadmap-detail-label">{c.whatCover}</span>
-            <ul>
-              {[...detail.left, ...detail.right].map((skill) => (
-                <li key={skill}>{skill}</li>
-              ))}
-            </ul>
+            {resources ? (
+              <>
+                <p className="topic-intro">{c.resources.intro}</p>
+                <ul className="topic-list">
+                  {topics.map((skill, index) => (
+                    <TopicItem key={skill} topic={skill} resources={resources[index]} locale={locale} labels={c.resources} />
+                  ))}
+                </ul>
+              </>
+            ) : (
+              <ul>
+                {topics.map((skill) => (
+                  <li key={skill}>{skill}</li>
+                ))}
+              </ul>
+            )}
           </div>
 
           <div className="roadmap-proof-target">

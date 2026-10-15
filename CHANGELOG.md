@@ -1,5 +1,15 @@
 # Changelog
 
+## [0.30.0.0] - 2026-10-15
+
+### Added
+
+- **Free lessons for every topic on every roadmap.** Open a stage on the roadmap, or look at your stage on Home, and each topic (like "Flexbox & Grid" or "Hypothesis tests") opens onto two to four free resources: a video to watch and a guide to read, picked for that topic from sources like freeCodeCamp, Kevin Powell, javascript.info, StatQuest, Kaggle Learn, MDN, StudioBinder and Google Fonts. All 232 topics across the six paths have them, and every link was checked before it went in.
+- **Lessons taught in Burmese** sit beside the English ones where a good one exists (25 so far, from channels like SimonThuta, Layt Lar Mal and Rookie Dev MM), marked "Burmese" and listed first when the app is in Burmese.
+
+### Fixed
+
+- Two Content Creator stages listed different topics in Burmese than in English. They now match.
 ## [0.29.4.0] - 2026-10-14
 
 ### Fixed
