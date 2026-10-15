@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.30.2.0] - 2026-10-15
+
+### Changed
+
+- **Free lessons stand out.** On the roadmap and on Home, a stage's topics now sit under a dark "Free lessons" header with the number of links, and each topic shows its video and guide counts in a pill, so it's clear the topics open onto something to watch and read.
+- **The stage brief is wider** on desktop (680px), so topic names and counts stay on one line.
+
 ## [0.30.1.0] - 2026-10-15
 
 ### Changed

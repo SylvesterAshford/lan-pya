@@ -4,7 +4,7 @@ import { X } from "lucide-react";
 import { useEffect, useRef } from "react";
 import { Link } from "@/i18n/navigation";
 import { StatusPill } from "@/components/app/status-pill";
-import { TopicItem } from "@/components/app/topic-resources";
+import { TopicItem, TopicLessons } from "@/components/app/topic-resources";
 import { toMyanmarDigits } from "@/lib/domain/deadlines";
 import type { LearningResource } from "@/lib/domain/learning-resources";
 import type { Milestone } from "@/lib/domain/types";
@@ -219,14 +219,13 @@ export function RoadmapDetailDialog({
           <div className="roadmap-detail-section">
             <span className="roadmap-detail-label">{c.whatCover}</span>
             {resources ? (
-              <>
-                <p className="topic-intro">{c.resources.intro}</p>
+              <TopicLessons total={resources.flat().length} locale={locale} labels={c.resources}>
                 <ul className="topic-list">
                   {topics.map((skill, index) => (
                     <TopicItem key={skill} topic={skill} number={index + 1} resources={resources[index]} locale={locale} labels={c.resources} />
                   ))}
                 </ul>
-              </>
+              </TopicLessons>
             ) : (
               <ul>
                 {topics.map((skill) => (
