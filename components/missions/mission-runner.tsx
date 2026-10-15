@@ -4,10 +4,10 @@ import { ArrowLeft, ArrowRight, Check, MapPin } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
 import { Link, useRouter } from "@/i18n/navigation";
 import { CheckList } from "@/components/missions/check-list";
-import { JUST_SUBMITTED, SubmissionForm } from "@/components/missions/submission-form";
+import { SubmissionForm } from "@/components/missions/submission-form";
 import { loadDraft, saveDraft } from "@/lib/offline/draft-store";
 import type { MissionFeedback } from "@/lib/data/app-data";
-import type { MissionBrief } from "@/lib/domain/mission-briefs";
+import { getMissionStage, type MissionBrief } from "@/lib/domain/mission-briefs";
 import { toMyanmarDigits } from "@/lib/domain/deadlines";
 import { learnerStatus } from "@/lib/domain/mission-status";
 import type { getAppCopy } from "@/lib/i18n/app-copy";
@@ -40,6 +40,7 @@ export function MissionRunner({
   brief,
   feedback,
   slowCheck = false,
+  demo = false,
   labels,
 }: {
   locale: string;
@@ -48,9 +49,12 @@ export function MissionRunner({
   feedback: MissionFeedback | null;
   /** The link check has run for longer than it usually takes. */
   slowCheck?: boolean;
+  /** The shared demo account, which gets a simulated review. */
+  demo?: boolean;
   labels: RunnerLabels;
 }) {
   const status = learnerStatus(feedback?.state);
+  const stage = getMissionStage(brief.missionKey);
   const num = (value: number) => (locale === "my" ? toMyanmarDigits(value) : String(value));
   const [step, setStep] = useState<Step>(status.step ?? 1);
   const [checked, setChecked] = useState<string[]>([]);
@@ -73,26 +77,22 @@ export function MissionRunner({
     return () => window.clearInterval(timer);
   }, [status.kind, router]);
 
-  // Work sent from this tab goes on to the trail map once the check passes,
-  // where the traveller walks to the next stop. Only straight after
-  // submitting: opening finished work later leaves the learner here.
-  const [leaving, setLeaving] = useState(false);
+  // The demo has no reviewer, so a few seconds after its work is Completed
+  // the page asks for a simulated review (demo_review_my_submission), which
+  // verifies it the way a reviewer would. A pitch then sees the whole loop.
   useEffect(() => {
-    if (status.kind !== "completed") return;
-    let fresh = false;
-    try {
-      fresh = window.sessionStorage.getItem(JUST_SUBMITTED) === brief.missionKey;
-    } catch { /* storage unavailable */ }
-    if (!fresh) return;
-    const notice = window.setTimeout(() => setLeaving(true), 0);
-    // The flag is cleared only as the learner leaves, so a remount part-way
-    // (StrictMode, a refresh) still takes them on.
-    const timer = window.setTimeout(() => {
-      try { window.sessionStorage.removeItem(JUST_SUBMITTED); } catch { /* storage unavailable */ }
-      router.push("/app/missions");
-    }, 1800);
-    return () => { window.clearTimeout(notice); window.clearTimeout(timer); };
-  }, [status.kind, brief.missionKey, router]);
+    if (!demo || status.kind !== "completed") return;
+    let cancelled = false;
+    const timer = window.setTimeout(async () => {
+      await fetch("/api/demo/review", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({ missionKey: brief.missionKey }),
+      }).catch(() => null);
+      if (!cancelled) router.refresh();
+    }, 4000);
+    return () => { cancelled = true; window.clearTimeout(timer); };
+  }, [demo, status.kind, brief.missionKey, router]);
 
   // The checklist rides in the existing mission draft, so it is private, stays
   // on the device, and expires with everything else after 30 days.
@@ -278,8 +278,11 @@ export function MissionRunner({
                 </>
               ) : null}
             </div>
-            <Link className="button primary compact runner-cta" href="/app/missions">{labels.backToTrail} <ArrowRight size={15} aria-hidden="true" /></Link>
-            {leaving ? <p className="runner-leaving" role="status">{labels.openingTrail}</p> : null}
+            {demo ? (
+              <p className="runner-leaving" role="status">
+                <span className="runner-pulse" aria-hidden="true" /> {labels.demoReviewing}
+              </p>
+            ) : null}
           </>
         ) : null}
 
@@ -289,9 +292,13 @@ export function MissionRunner({
               <strong>{labels.verified}</strong>
               <p>{labels.verifiedBody}</p>
             </div>
+            {/* The way on from a finished mission: the trail map, where the
+                traveller walks up from this stage to the next, or the proof. */}
             <div className="runner-ctas">
-              <Link className="button primary compact runner-cta" href="/app/proof">{labels.viewProof}</Link>
-              <Link className="button outline compact runner-cta" href="/app/missions">{labels.seeTrail} <ArrowRight size={15} aria-hidden="true" /></Link>
+              <Link className="button primary compact runner-cta" href={`/app/missions${stage ? `?walk=${stage.stageKey}` : ""}`}>
+                {labels.backToTrail} <ArrowRight size={15} aria-hidden="true" />
+              </Link>
+              <Link className="button outline compact runner-cta" href="/app/proof">{labels.viewProof}</Link>
             </div>
           </>
         ) : null}

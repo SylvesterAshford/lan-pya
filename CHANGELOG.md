@@ -1,5 +1,14 @@
 # Changelog
 
+## [0.34.0.0] - 2026-10-15
+
+### Changed
+
+- **Every stop on the mission map opens its own stage.** The stop you're on opens its mission, or says "Mission coming soon" if it doesn't have one yet. A finished stop opens its mission so you can see how it went. Before, the stop you stood on could open the stage before it.
+- **The map's stop cards have more room to read.**
+- **"Back to your trail map" is on the last step**, beside View in Portfolio, and it always shows your character walking up from the stage you just finished.
+- **The demo account gets a simulated review**: a few seconds after its work is completed, it's approved and becomes proof, so a pitch can show the whole journey from submitting to verified.
+
 ## [0.33.0.0] - 2026-10-15
 
 ### Added

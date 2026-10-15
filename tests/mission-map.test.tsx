@@ -46,8 +46,7 @@ describe("MissionMap current-position landing", () => {
         locale="en"
         pathTitle="Frontend Developer"
         steps={200}
-        missionHref="/app/missions/responsive-profile-card"
-        proofHref="/app/proof"
+        stageLinks={{ current: "/app/missions/responsive-profile-card" }}
         labels={{
           stageOf: "Stage {a} of {b}",
           steps: "points",
@@ -58,6 +57,7 @@ describe("MissionMap current-position landing", () => {
           locked: "Locked",
           nextMission: "Next mission",
           continueMission: "Continue mission",
+          comingSoon: "Mission coming soon",
         }}
       />,
     );
@@ -87,18 +87,18 @@ describe("MissionMap done stops", () => {
     const { container } = render(
       <MissionMap
         milestones={stops} locale="en" pathTitle="Frontend Developer" steps={0}
-        labels={{ stageOf: "Stage {a} of {b}", steps: "points", youAreHere: "You are here", complete: "Verified", placed: "Placed by skills check", awaiting: "Awaiting review", locked: "Locked", nextMission: "Next mission", continueMission: "Continue mission" }}
+        labels={{ stageOf: "Stage {a} of {b}", steps: "points", youAreHere: "You are here", complete: "Verified", placed: "Placed by skills check", awaiting: "Awaiting review", locked: "Locked", nextMission: "Next mission", continueMission: "Continue mission", comingSoon: "Mission coming soon" }}
       />,
     );
     const statuses = [...container.querySelectorAll(".map-card-status")].map((node) => node.textContent);
-    expect(statuses).toEqual(["Placed by skills check", "Awaiting review", "Verified", "You are here"]);
+    expect(statuses).toEqual(["Placed by skills check", "Awaiting review", "Verified", "You are here · Mission coming soon"]);
     expect(container.querySelectorAll(".map-card-check").length).toBe(2);
   });
 });
 
 
 describe("MissionMap traveller walk", () => {
-  const labels = { stageOf: "Stage {a} of {b}", steps: "points", youAreHere: "You are here", complete: "Verified", placed: "Placed by skills check", awaiting: "Awaiting review", locked: "Locked", nextMission: "Next mission", continueMission: "Continue mission" };
+  const labels = { stageOf: "Stage {a} of {b}", steps: "points", youAreHere: "You are here", complete: "Verified", placed: "Placed by skills check", awaiting: "Awaiting review", locked: "Locked", nextMission: "Next mission", continueMission: "Continue mission", comingSoon: "Mission coming soon" };
   let animate: ReturnType<typeof vi.fn>;
 
   beforeEach(() => {
@@ -134,5 +134,31 @@ describe("MissionMap traveller walk", () => {
     render(<MissionMap milestones={milestones} pathKey="fe" locale="en" pathTitle="Frontend Developer" steps={0} labels={labels} />);
     expect(animate).not.toHaveBeenCalled();
     expect(window.localStorage.getItem("lanpya-map-stop:fe")).toBe("current");
+  });
+});
+
+describe("MissionMap stop links", () => {
+  beforeEach(() => {
+    vi.stubGlobal("matchMedia", () => ({ matches: false, addEventListener() {}, removeEventListener() {} }));
+    vi.stubGlobal("scrollTo", vi.fn());
+  });
+  const labels = { stageOf: "Stage {a} of {b}", steps: "points", youAreHere: "You are here", complete: "Verified", placed: "Placed by skills check", awaiting: "Awaiting review", locked: "Locked", nextMission: "Next mission", continueMission: "Continue mission", comingSoon: "Mission coming soon" };
+
+  // The stop you stand on opened "the next mission", which could be the stage
+  // before it while that one waited for review.
+  it("opens each stop's own stage, and says when the current one has no mission", () => {
+    const stops: Milestone[] = [
+      { key: "js", order: 4, title: "JavaScript", description: "", proof: "", status: "complete", source: "checked" },
+      { key: "git", order: 5, title: "Git", description: "", proof: "", status: "active" },
+    ];
+    const { container } = render(
+      <MissionMap milestones={stops} locale="en" pathTitle="Frontend" steps={0} labels={labels}
+        stageLinks={{ js: "/app/missions/interactive-opportunity-tracker" }} comingSoonHref="/app/roadmap?track=fe" />,
+    );
+    const done = container.querySelector(".map-card.done");
+    const current = container.querySelector(".map-card.current");
+    expect(done?.getAttribute("href")).toBe("/app/missions/interactive-opportunity-tracker");
+    expect(current?.getAttribute("href")).toBe("/app/roadmap?track=fe");
+    expect(current).toHaveTextContent("You are here · Mission coming soon");
   });
 });
