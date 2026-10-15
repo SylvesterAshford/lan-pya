@@ -114,7 +114,7 @@ export const DIGITAL_PATH_PREVIEWS: CareerPathPreview[] = [
     shortTitle: "Video Editor",
     description: "Turn raw footage into clear, accessible stories for modern platforms.",
     outcome: "Create a thirty-second vertical story edit with captions and licensed audio.",
-    status: "preview",
+    status: "controlled_pilot",
     device: "Phone or laptop with an editor",
     timeToFirstProof: "2–3 weeks",
     arena: "Visual Craft",

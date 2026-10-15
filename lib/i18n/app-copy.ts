@@ -612,6 +612,7 @@ const careerTerms: Record<string, { en: string; my: string }> = {
   "content-creator": { en: "Content Creator & Social Media Storyteller", my: "ဒစ်ဂျစ်တယ်အကြောင်းအရာ ဖန်တီးသူ" },
   "responsive-profile-card": { en: "Responsive Profile Card", my: "Responsive Profile Card" },
   "content-creator-awareness": { en: "Three-piece awareness campaign", my: "သုံးပိုင်းပါ အသိပညာပေး campaign" },
+  "video-editor-vertical-story": { en: "Thirty-second vertical story edit", my: "စက္ကန့်သုံးဆယ် ဒေါင်လိုက် story edit" },
 };
 
 export function localizeCareerTerm(locale: string, key: string, fallback: string) {

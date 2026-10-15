@@ -10,6 +10,7 @@ type RunnerLabels = ReturnType<typeof getAppCopy>["runner"];
 const missionHref: Record<string, string> = {
   "responsive-profile-card": "/app/missions/responsive-profile-card",
   "content-creator-awareness": "/app/missions/content-creator-awareness",
+  "video-editor-vertical-story": "/app/missions/video-editor-vertical-story",
 };
 
 /**
