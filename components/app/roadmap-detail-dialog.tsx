@@ -223,7 +223,7 @@ export function RoadmapDetailDialog({
                 <p className="topic-intro">{c.resources.intro}</p>
                 <ul className="topic-list">
                   {topics.map((skill, index) => (
-                    <TopicItem key={skill} topic={skill} resources={resources[index]} locale={locale} labels={c.resources} />
+                    <TopicItem key={skill} topic={skill} number={index + 1} resources={resources[index]} locale={locale} labels={c.resources} />
                   ))}
                 </ul>
               </>
