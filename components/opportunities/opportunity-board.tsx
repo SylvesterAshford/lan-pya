@@ -7,7 +7,7 @@ import { FeaturedOpportunity, type FeaturedLabels } from "@/components/opportuni
 import { DeadlineChip } from "@/components/app/deadline-chip";
 import { StatusPill } from "@/components/app/status-pill";
 import { getDeadlineStatus, toMyanmarDigits } from "@/lib/domain/deadlines";
-import { formatAppDate, localizeReadiness } from "@/lib/i18n/app-copy";
+import { formatAppDate, localizeReadiness } from "@/lib/i18n/format";
 import type { OpportunityCard } from "@/lib/domain/types";
 
 /**

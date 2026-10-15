@@ -21,7 +21,7 @@ describe("MissionRunner after the work is in", () => {
   // The Submit dot was disabled once a mission was verified, and the disabled
   // style faded it, so a finished step read as skipped on the rail.
   it("keeps Submit open and shows what was sent instead of a form", () => {
-    render(<MissionRunner locale="en" userId="u1" brief={brief} labels={labels}
+    render(<MissionRunner locale="en" userId="u1" brief={brief} labels={labels} formLabels={getAppCopy("en").mission}
       feedback={{ state: "verified", updatedAt: "2026-10-14T00:00:00Z", version, check: null, review: null }} />);
 
     const submit = screen.getByRole("button", { name: /Step 3 of 5: Submit/ });

@@ -100,7 +100,7 @@ export default async function CareersPage({ params }: { params: Promise<{ locale
           ) : null}
         </div>
         <div className="career-row-actions">
-          {canSwitch ? <PathSwitchButton locale={locale} trackKey={path.key} className="button outline compact">{c.careers.switchTo}</PathSwitchButton> : null}
+          {canSwitch ? <PathSwitchButton labels={c.paths} trackKey={path.key} className="button outline compact">{c.careers.switchTo}</PathSwitchButton> : null}
           <Link className="career-row-roadmap" href={`/app/roadmap?track=${path.key}`} aria-label={`${c.careers.viewRoadmap}: ${title}`}>
             <span className="career-row-roadmap-label">{c.careers.viewRoadmap}</span><ChevronRight size={15} aria-hidden="true" />
           </Link>
@@ -189,7 +189,7 @@ export default async function CareersPage({ params }: { params: Promise<{ locale
                 <small>{c.profile.pausedPath} · {c.profile.lastActive} {path.lastActivatedAt ? formatAppDate(locale, path.lastActivatedAt) : c.profile.recently}</small>
               </span>
               {/* Same action, same words and size as the switch on the list above. */}
-              <PathSwitchButton locale={locale} trackKey={path.key} className="button outline compact">{c.careers.switchTo}</PathSwitchButton>
+              <PathSwitchButton labels={c.paths} trackKey={path.key} className="button outline compact">{c.careers.switchTo}</PathSwitchButton>
             </div>
           ))}
           {dashboard.pausedWork.map((work) => (

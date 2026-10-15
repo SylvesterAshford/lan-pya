@@ -4,6 +4,9 @@ import { RoadmapTree } from "@/components/app/roadmap-tree";
 import { FRONTEND_MILESTONES } from "@/lib/domain/demo-data";
 import { CAREER_TRACKS, mergeTrackMilestones } from "@/lib/domain/career-tracks";
 import { resourcesForStages } from "@/lib/domain/learning-resources";
+import { getAppCopy } from "@/lib/i18n/app-copy";
+
+const labels = getAppCopy("en").roadmap;
 
 vi.mock("@/i18n/navigation", () => ({
   Link: ({ href, children, ...props }: React.AnchorHTMLAttributes<HTMLAnchorElement> & { href: string }) =>
@@ -42,7 +45,7 @@ function openStage(name: RegExp | string) {
 // name, so it survives greyscale and reaches a screen reader.
 describe("RoadmapTree — current position", () => {
   it("marks exactly one stage as active, and it is the active milestone", () => {
-    render(<RoadmapTree milestones={FRONTEND_MILESTONES} />);
+    render(<RoadmapTree labels={labels} milestones={FRONTEND_MILESTONES} />);
     const active = stageNodes().filter((n) => n.classList.contains("active"));
     expect(active).toHaveLength(1);
     const expected = FRONTEND_MILESTONES.find((m) => m.status === "active")!;
@@ -50,14 +53,14 @@ describe("RoadmapTree — current position", () => {
   });
 
   it("says 'You are here' in the current stage's accessible name, and nowhere else", () => {
-    render(<RoadmapTree milestones={FRONTEND_MILESTONES} />);
+    render(<RoadmapTree labels={labels} milestones={FRONTEND_MILESTONES} />);
     const named = stageNodes().filter((n) => /You are here/i.test(n.getAttribute("aria-label") ?? ""));
     expect(named).toHaveLength(1);
     expect(named[0].classList.contains("active")).toBe(true);
   });
 
   it("gives the active, next and upcoming stages three distinct states", () => {
-    render(<RoadmapTree milestones={FRONTEND_MILESTONES} />);
+    render(<RoadmapTree labels={labels} milestones={FRONTEND_MILESTONES} />);
     // Read the attribute, not `.className`: on an SVG element that property is
     // an SVGAnimatedString rather than a string, so `toContain` sees no match.
     const classOf = (status: string) => {
@@ -77,14 +80,14 @@ describe("RoadmapTree — current position", () => {
 
 describe("RoadmapTree — phases", () => {
   it("names the stage's phase in its accessible name", () => {
-    render(<RoadmapTree milestones={FRONTEND_MILESTONES} />);
+    render(<RoadmapTree labels={labels} milestones={FRONTEND_MILESTONES} />);
     const first = FRONTEND_MILESTONES[0];
     expect(stageNode(new RegExp(first.title.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"), "i")).getAttribute("aria-label"))
       .toContain(first.phase!);
   });
 
   it("draws one band per run of consecutive stages sharing a phase", () => {
-    const { container } = render(<RoadmapTree milestones={FRONTEND_MILESTONES} />);
+    const { container } = render(<RoadmapTree labels={labels} milestones={FRONTEND_MILESTONES} />);
     const distinct = new Set(FRONTEND_MILESTONES.map((m) => m.phase));
     expect(container.querySelectorAll(".rm-phase")).toHaveLength(distinct.size);
     // Exactly one band is lit: the one holding the stage you are on.
@@ -96,13 +99,13 @@ describe("RoadmapTree — phases", () => {
 
 describe("RoadmapTree — step brief dialog", () => {
   it("renders no dialog until a node is clicked", () => {
-    render(<RoadmapTree milestones={FRONTEND_MILESTONES} />);
+    render(<RoadmapTree labels={labels} milestones={FRONTEND_MILESTONES} />);
     expect(screen.queryByRole("dialog")).toBeNull();
     expect(stageNodes().every((node) => node.getAttribute("aria-expanded") === "false")).toBe(true);
   });
 
   it("is a modal named by the step title", () => {
-    render(<RoadmapTree milestones={FRONTEND_MILESTONES} />);
+    render(<RoadmapTree labels={labels} milestones={FRONTEND_MILESTONES} />);
     const dialog = openStage(/JavaScript programming/i);
     expect(dialog).toHaveAttribute("aria-modal", "true");
     expect(dialog).toHaveAccessibleName("JavaScript programming");
@@ -110,7 +113,7 @@ describe("RoadmapTree — step brief dialog", () => {
   });
 
   it("moves focus into the dialog on open and back to the node on close", () => {
-    render(<RoadmapTree milestones={FRONTEND_MILESTONES} />);
+    render(<RoadmapTree labels={labels} milestones={FRONTEND_MILESTONES} />);
     const node = stageNode(/JavaScript programming/i);
     fireEvent.click(node);
     const dialog = screen.getByRole("dialog");
@@ -122,7 +125,7 @@ describe("RoadmapTree — step brief dialog", () => {
   });
 
   it("closes on Escape and returns focus to the node", () => {
-    render(<RoadmapTree milestones={FRONTEND_MILESTONES} />);
+    render(<RoadmapTree labels={labels} milestones={FRONTEND_MILESTONES} />);
     const node = stageNode(/Git and collaboration/i);
     fireEvent.click(node);
     expect(screen.getByRole("dialog")).toBeInTheDocument();
@@ -133,14 +136,14 @@ describe("RoadmapTree — step brief dialog", () => {
   });
 
   it("closes when the scrim is clicked", () => {
-    const { container } = render(<RoadmapTree milestones={FRONTEND_MILESTONES} />);
+    const { container } = render(<RoadmapTree labels={labels} milestones={FRONTEND_MILESTONES} />);
     openStage(/JavaScript programming/i);
     fireEvent.click(container.querySelector(".roadmap-detail-overlay")!);
     expect(screen.queryByRole("dialog")).toBeNull();
   });
 
   it("traps Tab inside the dialog", () => {
-    render(<RoadmapTree milestones={FRONTEND_MILESTONES} resources={resourcesForStages(FRONTEND_MILESTONES)} />);
+    render(<RoadmapTree labels={labels} milestones={FRONTEND_MILESTONES} resources={resourcesForStages(FRONTEND_MILESTONES)} />);
     const dialog = openStage(/JavaScript programming/i);
     // A topic's links are in the DOM while it is closed but cannot take focus;
     // its <summary> can.
@@ -163,7 +166,7 @@ describe("RoadmapTree — step brief dialog", () => {
   });
 
   it("locks the page behind the dialog and releases it on close", () => {
-    render(<RoadmapTree milestones={FRONTEND_MILESTONES} />);
+    render(<RoadmapTree labels={labels} milestones={FRONTEND_MILESTONES} />);
     openStage(/JavaScript programming/i);
     expect(document.body.style.overflow).toBe("hidden");
     fireEvent.keyDown(document, { key: "Escape" });
@@ -171,7 +174,7 @@ describe("RoadmapTree — step brief dialog", () => {
   });
 
   it("carries no aria-live region — the dialog announces itself", () => {
-    const { container } = render(<RoadmapTree milestones={FRONTEND_MILESTONES} />);
+    const { container } = render(<RoadmapTree labels={labels} milestones={FRONTEND_MILESTONES} />);
     openStage(/JavaScript programming/i);
     expect(container.querySelector("[aria-live]")).toBeNull();
   });
@@ -181,7 +184,7 @@ describe("RoadmapTree — step brief dialog", () => {
 
 describe("RoadmapTree — learning resources", () => {
   it("opens each topic onto free resources that open in a new tab", () => {
-    render(<RoadmapTree milestones={FRONTEND_MILESTONES} resources={resourcesForStages(FRONTEND_MILESTONES)} />);
+    render(<RoadmapTree labels={labels} milestones={FRONTEND_MILESTONES} resources={resourcesForStages(FRONTEND_MILESTONES)} />);
     const dialog = openStage(/JavaScript programming/i);
     const topic = within(dialog).getByText("DOM & events").closest("details")!;
     expect(topic.open).toBe(false);
@@ -195,7 +198,7 @@ describe("RoadmapTree — learning resources", () => {
   });
 
   it("never wraps Tab onto a link inside a closed topic", () => {
-    render(<RoadmapTree milestones={FRONTEND_MILESTONES} resources={resourcesForStages(FRONTEND_MILESTONES)} />);
+    render(<RoadmapTree labels={labels} milestones={FRONTEND_MILESTONES} resources={resourcesForStages(FRONTEND_MILESTONES)} />);
     const dialog = openStage(/JavaScript programming/i);
     const close = within(dialog).getByRole("button", { name: "Close step details" });
     close.focus();
@@ -213,14 +216,14 @@ describe("RoadmapTree — learning resources", () => {
   });
 
   it("puts lessons taught in Burmese first for a Burmese reader", () => {
-    render(<RoadmapTree locale="my" milestones={FRONTEND_MILESTONES} resources={resourcesForStages(FRONTEND_MILESTONES)} />);
+    render(<RoadmapTree locale="my" labels={getAppCopy("my").roadmap} milestones={FRONTEND_MILESTONES} resources={resourcesForStages(FRONTEND_MILESTONES)} />);
     const dialog = openStage(/JavaScript programming/i);
     const first = dialog.querySelector(".topic-resources a");
     expect(first).toHaveTextContent("မြန်မာ");
   });
 
   it("lists plain topics when the page passes no resources", () => {
-    render(<RoadmapTree milestones={FRONTEND_MILESTONES} />);
+    render(<RoadmapTree labels={labels} milestones={FRONTEND_MILESTONES} />);
     const dialog = openStage(/JavaScript programming/i);
     expect(within(dialog).getByText("DOM & events")).toBeInTheDocument();
     expect(dialog.querySelector("details")).toBeNull();
@@ -231,13 +234,13 @@ describe("RoadmapTree — learning resources", () => {
 
 describe("RoadmapTree — Frontend track", () => {
   it("renders all 12 milestones", () => {
-    render(<RoadmapTree milestones={FRONTEND_MILESTONES} />);
+    render(<RoadmapTree labels={labels} milestones={FRONTEND_MILESTONES} />);
     expect(stageNodes().length).toBe(12);
   });
 
   it("opens milestone details and stores the selected step in the URL", () => {
     window.history.replaceState(null, "", "/en/app/roadmap");
-    render(<RoadmapTree milestones={FRONTEND_MILESTONES} />);
+    render(<RoadmapTree labels={labels} milestones={FRONTEND_MILESTONES} />);
 
     const dialog = openStage(/JavaScript programming/i);
     expect(within(dialog).getByRole("heading", { name: "JavaScript programming" })).toBeInTheDocument();
@@ -247,20 +250,20 @@ describe("RoadmapTree — Frontend track", () => {
   });
 
   it("shows the proof target for the selected milestone", () => {
-    render(<RoadmapTree milestones={FRONTEND_MILESTONES} />);
+    render(<RoadmapTree labels={labels} milestones={FRONTEND_MILESTONES} />);
     const dialog = openStage(/TypeScript and frontend tooling/i);
     expect(within(dialog).getByText("Typed application refactor")).toBeInTheDocument();
   });
 
   it("shows progress bar reflecting completed milestones", () => {
-    render(<RoadmapTree milestones={FRONTEND_MILESTONES} />);
+    render(<RoadmapTree labels={labels} milestones={FRONTEND_MILESTONES} />);
     // Steps 1–2 are complete out of 12 → 17%
     const progressbar = screen.getByRole("progressbar");
     expect(Number(progressbar.getAttribute("aria-valuenow"))).toBe(Math.round((2 / 12) * 100));
   });
 
   it("aria-label on the canvas section is generic (not track-specific)", () => {
-    render(<RoadmapTree milestones={FRONTEND_MILESTONES} />);
+    render(<RoadmapTree labels={labels} milestones={FRONTEND_MILESTONES} />);
     expect(screen.getByRole("region", { name: "Learning roadmap" })).toBeInTheDocument();
   });
 });
@@ -269,7 +272,7 @@ describe("RoadmapTree — Frontend track", () => {
 
 describe("RoadmapTree — Burmese", () => {
   it("labels the close control and renders Myanmar digits in the dialog", () => {
-    render(<RoadmapTree locale="my" milestones={FRONTEND_MILESTONES} />);
+    render(<RoadmapTree locale="my" labels={getAppCopy("my").roadmap} milestones={FRONTEND_MILESTONES} />);
     const dialog = openStage(/JavaScript programming/i);
     expect(within(dialog).getByRole("button", { name: "အဆင့်အသေးစိတ် ပိတ်မည်" })).toBeInTheDocument();
     // Step 4 of 12 → "၄/၁၂", and the eyebrow pads to "၀၄".
@@ -284,24 +287,24 @@ describe("RoadmapTree — Full-Stack track", () => {
   const milestones = trackMilestones("full-stack-developer");
 
   it("renders all 14 milestones", () => {
-    render(<RoadmapTree milestones={milestones} />);
+    render(<RoadmapTree labels={labels} milestones={milestones} />);
     expect(stageNodes().length).toBe(14);
   });
 
   it("shows Server-side programming milestone with correct detail", () => {
-    render(<RoadmapTree milestones={milestones} />);
+    render(<RoadmapTree labels={labels} milestones={milestones} />);
     const dialog = openStage(/Server-side programming/i);
     expect(within(dialog).getByRole("heading", { name: "Server-side programming" })).toBeInTheDocument();
     expect(within(dialog).getByText("Node.js fundamentals")).toBeInTheDocument();
   });
 
   it("shows Identity and application security milestone", () => {
-    render(<RoadmapTree milestones={milestones} />);
+    render(<RoadmapTree labels={labels} milestones={milestones} />);
     expect(within(openStage(/Identity and application security/i)).getByText("OWASP risks")).toBeInTheDocument();
   });
 
   it("shows Observability, performance and scale milestone", () => {
-    render(<RoadmapTree milestones={milestones} />);
+    render(<RoadmapTree labels={labels} milestones={milestones} />);
     expect(within(openStage(/Observability, performance and scale/i)).getByText("Logs, metrics & traces")).toBeInTheDocument();
   });
 });
@@ -312,19 +315,19 @@ describe("RoadmapTree — AI & Data track", () => {
   const milestones = trackMilestones("ai-data-analyst");
 
   it("renders all 13 milestones", () => {
-    render(<RoadmapTree milestones={milestones} />);
+    render(<RoadmapTree labels={labels} milestones={milestones} />);
     expect(stageNodes().length).toBe(13);
   });
 
   it("shows Statistics and probability milestone with correct detail", () => {
-    render(<RoadmapTree milestones={milestones} />);
+    render(<RoadmapTree labels={labels} milestones={milestones} />);
     const dialog = openStage(/Statistics and probability/i);
     expect(within(dialog).getByRole("heading", { name: "Statistics and probability" })).toBeInTheDocument();
     expect(within(dialog).getByText("Hypothesis tests")).toBeInTheDocument();
   });
 
   it("shows Responsible applied AI milestone", () => {
-    render(<RoadmapTree milestones={milestones} />);
+    render(<RoadmapTree labels={labels} milestones={milestones} />);
     const dialog = openStage(/Responsible applied AI/i);
     expect(within(dialog).getByText("LLM-assisted analysis")).toBeInTheDocument();
     expect(within(dialog).getByText("Fairness & privacy")).toBeInTheDocument();
@@ -332,7 +335,7 @@ describe("RoadmapTree — AI & Data track", () => {
   });
 
   it("shows Data workflows and reproducibility milestone", () => {
-    render(<RoadmapTree milestones={milestones} />);
+    render(<RoadmapTree labels={labels} milestones={milestones} />);
     // Long titles wrap across two <text> elements, so textContent has no space
     // at the break. The aria-label carries the whole title — query on that.
     expect(within(openStage(/Data workflows and reproducibility/i)).getByText("ETL/ELT basics")).toBeInTheDocument();
@@ -344,7 +347,7 @@ describe("RoadmapTree — Content Creator track", () => {
   const milestones = trackMilestones("content-creator").map((m, i) => ({ ...m, status: i === 0 ? "active" as const : m.status }));
 
   it("renders the complete five-stage creator journey", () => {
-    render(<RoadmapTree milestones={milestones} />);
+    render(<RoadmapTree labels={labels} milestones={milestones} />);
     expect(stageNodes()).toHaveLength(5);
     expect(within(openStage(/Audience and problem research/i)).getByRole("heading", { name: "Audience and problem research" })).toBeInTheDocument();
   });
@@ -353,7 +356,7 @@ describe("RoadmapTree — Content Creator track", () => {
   // stage on every track landed on one of two hardcoded missions. It now goes
   // to the climb, which centres itself on the learner's current stop.
   it("sends the learner to the climb, not to a guessed mission page", () => {
-    render(<RoadmapTree milestones={milestones} />);
+    render(<RoadmapTree labels={labels} milestones={milestones} />);
     const active = milestones.find((m) => m.status === "active")!;
     const dialog = openStage(new RegExp(active.title.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"), "i"));
     expect(within(dialog).getByRole("link", { name: /Continue current mission/i }))

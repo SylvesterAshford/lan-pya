@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.38.5.0] - 2026-10-16
+
+### Changed
+
+- **Less to download on Roadmaps, Opportunities, Careers and mission pages.** These screens no longer send your phone every English and Burmese sentence in the app before they can respond to a tap; each now gets only the words it shows. That is about 28 KB less on a first visit, which matters most on a slow connection.
+
 ## [0.38.4.0] - 2026-10-16
 
 ### Changed

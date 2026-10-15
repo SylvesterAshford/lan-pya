@@ -3,7 +3,7 @@ import { getActivePathDashboard, getRoadmap } from "@/lib/data/app-data";
 import { getCareerTrack, getTrackFork } from "@/lib/domain/career-tracks";
 import { resourcesForStages } from "@/lib/domain/learning-resources";
 import type { Milestone } from "@/lib/domain/types";
-import { localizeCareerTerm, localizeRoadmapMilestone, localizeTrackOutcome } from "@/lib/i18n/app-copy";
+import { getAppCopy, localizeCareerTerm, localizeRoadmapMilestone, localizeTrackOutcome } from "@/lib/i18n/app-copy";
 
 export default async function RoadmapPage({
   params,
@@ -46,6 +46,7 @@ export default async function RoadmapPage({
 
       <RoadmapTree
         locale={locale}
+        labels={getAppCopy(locale).roadmap}
         milestones={milestones}
         fork={getTrackFork(track.key, locale)}
         resources={resourcesForStages(milestones)}
