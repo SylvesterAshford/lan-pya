@@ -14,7 +14,7 @@ export default async function ProfilePage({ params }: { params: Promise<{ locale
   const { locale } = await params;
   const user = await requireUser(locale);
   const c = getAppCopy(locale);
-  const [profile, dashboard, history, proof, community] = await Promise.all([getProfile(user.id), getActivePathDashboard(), getPathHistory(user.id), getProofItems(), getCommunitySettings(user.id)]);
+  const [profile, dashboard, history, proof, community] = await Promise.all([getProfile(user.id), getActivePathDashboard(), getPathHistory(user.id), getProofItems(user.id), getCommunitySettings(user.id)]);
   if (!profile) return null;
 
   // Levels are path-scoped, so a learner with no active path has no level.

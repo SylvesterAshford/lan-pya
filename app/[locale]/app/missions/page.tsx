@@ -40,7 +40,7 @@ export default async function MissionsPage({ params, searchParams }: { params: P
   const c = getAppCopy(locale);
   const [dashboard, proof, profile] = await Promise.all([
     getActivePathDashboard(),
-    getProofItems(),
+    getProofItems(user.id),
     getProfile(user.id),
   ]);
 

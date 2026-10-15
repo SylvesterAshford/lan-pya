@@ -19,7 +19,7 @@ export default async function TodayPage({ params }: { params: Promise<{ locale: 
     getActivePathDashboard(),
     getOpportunities(),
     getProfile(user.id),
-    getProofItems(),
+    getProofItems(user.id),
     getPathHistory(user.id),
   ]);
   const c = getAppCopy(locale);

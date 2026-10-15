@@ -1,10 +1,15 @@
 import "server-only";
 
+import { cache } from "react";
 import { createClient } from "@/lib/supabase/server";
 import { CAREER_TRACKS, getCareerTrack, mergeTrackMilestones } from "@/lib/domain/career-tracks";
 import { byDeadlineAscending } from "@/lib/domain/deadlines";
 import { parseCommunity, type CommunityData } from "@/lib/domain/community";
 import type { ActivePathDashboard, CareerPreferences, Milestone, OpportunityCard, PausedMissionWork, Profile, ProofItem, SubmissionState } from "@/lib/domain/types";
+
+// The readers that the layout and a page both call are wrapped in React's
+// cache(), so one request asks the database once: the layout and Today used to
+// run get_active_path_dashboard twice per page view.
 
 type UnknownRecord = Record<string, unknown>;
 
@@ -20,7 +25,7 @@ function asNumber(value: unknown): number {
   return typeof value === "number" ? value : Number(value ?? 0) || 0;
 }
 
-export async function getProfile(userId: string): Promise<Profile | null> {
+export const getProfile = cache(async function getProfile(userId: string): Promise<Profile | null> {
   const supabase = await createClient();
   const { data } = await supabase.from("learner_profiles").select("*").eq("user_id", userId).maybeSingle();
   if (!data) return null;
@@ -31,14 +36,14 @@ export async function getProfile(userId: string): Promise<Profile | null> {
     weeklyHours: String(data.weekly_hours ?? "4–6 hours"), onboardingComplete: Boolean(data.onboarding_complete),
     dataOrigin: data.data_origin === "seeded_demo" ? "seeded_demo" : "live",
   };
-}
+});
 
 export type CommunitySettings = {
   visible: boolean; blocked: boolean; telegram: string; facebook: string; linkedin: string; note: string;
 };
 
 /** The learner's own Community settings; RLS lets them read only their row. */
-export async function getCommunitySettings(userId: string): Promise<CommunitySettings> {
+export const getCommunitySettings = cache(async function getCommunitySettings(userId: string): Promise<CommunitySettings> {
   const supabase = await createClient();
   const { data } = await supabase
     .from("learner_profiles")
@@ -50,7 +55,7 @@ export async function getCommunitySettings(userId: string): Promise<CommunitySet
     telegram: String(data?.telegram_url ?? ""), facebook: String(data?.facebook_url ?? ""),
     linkedin: String(data?.linkedin_url ?? ""), note: String(data?.community_note ?? ""),
   };
-}
+});
 
 /** Which paid plans this learner is waiting for, and in which period. */
 export async function getPlanWaitlist(userId: string): Promise<Partial<Record<"pro" | "career_plus", string>>> {
@@ -88,11 +93,11 @@ export async function getCommunity(trackKey: string): Promise<CommunityResult> {
   return { ok: true, data: parseCommunity(data) };
 }
 
-export async function getRoles(userId: string) {
+export const getRoles = cache(async function getRoles(userId: string) {
   const supabase = await createClient();
   const { data } = await supabase.from("memberships").select("role").eq("user_id", userId).eq("status", "active");
   return new Set((data ?? []).map((row) => String(row.role)));
-}
+});
 
 export async function getCareerPreferences(userId: string): Promise<CareerPreferences | null> {
   const supabase = await createClient();
@@ -105,7 +110,7 @@ export async function getCareerPreferences(userId: string): Promise<CareerPrefer
   return { interests: asStringArray(data.interests), preferredWork, immediateGoal, deviceAccess, connectivity, priorExperience: asStringArray(data.prior_experience) };
 }
 
-export async function getActivePathDashboard(): Promise<ActivePathDashboard> {
+export const getActivePathDashboard = cache(async function getActivePathDashboard(): Promise<ActivePathDashboard> {
   const supabase = await createClient();
   const { data } = await supabase.rpc("get_active_path_dashboard");
   const record = asRecord(data);
@@ -139,9 +144,9 @@ export async function getActivePathDashboard(): Promise<ActivePathDashboard> {
     } : null,
     pausedWork,
   };
-}
+});
 
-export async function getPathHistory(userId: string) {
+export const getPathHistory = cache(async function getPathHistory(userId: string) {
   const supabase = await createClient();
   const { data } = await supabase
     .from("learner_path_history")
@@ -160,13 +165,13 @@ export async function getPathHistory(userId: string) {
       availability: String(track.availability ?? "preview"),
     };
   }).filter((item) => item.key);
-}
+});
 
 export async function getTodayDashboard() {
   return getActivePathDashboard();
 }
 
-export async function getRoadmap(trackKey = "frontend-developer"): Promise<Milestone[]> {
+export const getRoadmap = cache(async function getRoadmap(trackKey = "frontend-developer"): Promise<Milestone[]> {
   const supabase = await createClient();
   const { data, error } = await supabase.rpc("get_roadmap", { p_track_key: trackKey });
   if (!error && Array.isArray(data)) {
@@ -180,11 +185,17 @@ export async function getRoadmap(trackKey = "frontend-developer"): Promise<Miles
   }
 
   return getCareerTrack(trackKey).milestones;
-}
+});
 
-export async function getProofItems(): Promise<ProofItem[]> {
+/**
+ * The learner's own verified work. RLS also lets reviewers and admins read
+ * everyone's proof, so without the user filter their Portfolio listed other
+ * learners' work as theirs; the filter also lets Postgres use the
+ * (user_id, state, verified_at) index instead of reading the whole table.
+ */
+export const getProofItems = cache(async function getProofItems(userId: string): Promise<ProofItem[]> {
   const supabase = await createClient();
-  const { data } = await supabase.from("proof_items").select("id,state,verified_at,snapshot,data_origin,submissions(mission_definitions(key))").order("verified_at", { ascending: false });
+  const { data } = await supabase.from("proof_items").select("id,state,verified_at,snapshot,data_origin,submissions(mission_definitions(key))").eq("user_id", userId).order("verified_at", { ascending: false });
   return (data ?? []).map((row) => {
     const snapshot = (row.snapshot ?? {}) as UnknownRecord;
     return {
@@ -197,7 +208,7 @@ export async function getProofItems(): Promise<ProofItem[]> {
       missionKey: missionKeyOf(row.submissions),
     };
   });
-}
+});
 
 /** proof_items -> submissions -> mission_definitions, however PostgREST shapes the embed. */
 function missionKeyOf(embed: unknown): string | null {
@@ -207,7 +218,7 @@ function missionKeyOf(embed: unknown): string | null {
   return typeof mission.key === "string" ? mission.key : null;
 }
 
-export async function getOpportunities(): Promise<OpportunityCard[]> {
+export const getOpportunities = cache(async function getOpportunities(): Promise<OpportunityCard[]> {
   const supabase = await createClient();
   const { data } = await supabase.rpc("get_opportunity_readiness");
   return ((data ?? []) as UnknownRecord[]).map((row): OpportunityCard => ({
@@ -220,7 +231,7 @@ export async function getOpportunities(): Promise<OpportunityCard[]> {
     // The feed heading promises "sorted by deadline"; do not rely on the RPC's
     // ordering to keep that promise. Design Spec §3.5: soonest first.
     .sort(byDeadlineAscending);
-}
+});
 
 export type CheckObservation = { check: string; status: "pass" | "fail" | "inconclusive"; detail: string };
 
@@ -286,11 +297,11 @@ export async function getMissionFeedback(userId: string, missionKey: string): Pr
   };
 }
 
-export async function getReviewQueue() {
+export const getReviewQueue = cache(async function getReviewQueue() {
   const supabase = await createClient();
   const { data } = await supabase.rpc("get_reviewer_queue");
   return (data ?? []) as UnknownRecord[];
-}
+});
 
 export async function getAdminSummary() {
   const supabase = await createClient();

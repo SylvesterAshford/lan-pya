@@ -1,5 +1,15 @@
 # Changelog
 
+## [0.38.2.0] - 2026-10-16
+
+### Changed
+
+- **Every screen after sign-in starts drawing sooner.** Lan Pya now checks who you are on its own server instead of asking Supabase each time, and asks the database for each piece of your progress once per screen instead of twice.
+
+### Fixed
+
+- **Reviewers and admins saw other learners' work as their own.** Their Portfolio, Home and Missions listed every learner's verified projects, because reviewers are allowed to read all proof for reviewing. Each of those screens now shows only your own work.
+
 ## [0.38.1.0] - 2026-10-16
 
 ### Changed
