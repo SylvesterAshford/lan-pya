@@ -1,11 +1,5 @@
 # Changelog
 
-## [0.38.1.0] - 2026-10-16
-
-### Changed
-
-- **Pages load faster.** Lan Pya's server now runs in Mumbai, next to its database, instead of the United States. Every screen after sign-in used to wait for several trips across the world before it could draw; those trips are now local, and the server is also closer to Myanmar.
-
 ## [0.38.0.0] - 2026-10-16
 
 ### Added
