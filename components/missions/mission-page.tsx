@@ -1,7 +1,7 @@
 import { redirect } from "next/navigation";
 import { MissionRunner } from "@/components/missions/mission-runner";
 import { requireUser } from "@/lib/auth";
-import { getActivePathDashboard, getMissionFeedback, getProfile } from "@/lib/data/app-data";
+import { getActivePathDashboard, getMissionFeedback } from "@/lib/data/app-data";
 import { getMissionBrief } from "@/lib/domain/mission-briefs";
 import { isSlowCheck } from "@/lib/domain/mission-status";
 import { getAppCopy } from "@/lib/i18n/app-copy";
@@ -20,7 +20,7 @@ export async function MissionPage({ locale, missionKey, pathKey }: { locale: str
   const brief = getMissionBrief(missionKey, locale);
   if (!brief) redirect(`/${locale}/app/paths`);
 
-  const [feedback, profile] = await Promise.all([getMissionFeedback(user.id, missionKey), getProfile(user.id)]);
+  const feedback = await getMissionFeedback(user.id, missionKey);
 
   return (
     <div className="app-page mission-page">
@@ -37,7 +37,6 @@ export async function MissionPage({ locale, missionKey, pathKey }: { locale: str
         brief={brief}
         feedback={feedback}
         slowCheck={isSlowCheck(feedback?.state, feedback?.updatedAt)}
-        readOnly={profile?.dataOrigin === "seeded_demo"}
         labels={c.runner}
       />
     </div>

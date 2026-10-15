@@ -99,8 +99,20 @@ function stateOf(m: Milestone): Stop["state"] {
   return "locked";
 }
 
+/** Where the traveller last stood on a path, so a move can be walked. */
+const STOP_KEY = "lanpya-map-stop:";
+
+function readStop(pathKey: string) {
+  try { return window.localStorage.getItem(STOP_KEY + pathKey); } catch { return null; }
+}
+
+function writeStop(pathKey: string, stopKey: string) {
+  try { window.localStorage.setItem(STOP_KEY + pathKey, stopKey); } catch { /* storage unavailable */ }
+}
+
 export function MissionMap({
   milestones,
+  pathKey,
   locale,
   mascotVariant,
   pathTitle,
@@ -110,6 +122,8 @@ export function MissionMap({
   labels,
 }: {
   milestones: Milestone[];
+  /** Names the path for remembering where the traveller last stood. */
+  pathKey?: string;
   locale: string;
   /** The account's chosen character. The map draws the same figure the profile
    *  and Home do; hardcoding one here made the choice look like it had not
@@ -129,6 +143,8 @@ export function MissionMap({
   const wide = useWide();
   const art = mascotArt(mascotVariant);
   const stage = useRef<HTMLDivElement | null>(null);
+  const scene = useRef<SVGSVGElement | null>(null);
+  const traveller = useRef<SVGImageElement | null>(null);
   const g = wide ? WIDE : NARROW;
   const num = (v: number) => (my ? toMyanmarDigits(v) : String(v));
 
@@ -214,6 +230,70 @@ export function MissionMap({
     };
   }, []);
 
+  // The traveller walks. When the learner has moved on since they last looked
+  // at this map (a mission was checked, say), the figure starts at the stop
+  // they left and walks the road up to the stop they are on now, so the
+  // progress is something you watch happen rather than a different picture.
+  // Where they last stood is kept on the device; it is written only when a
+  // walk finishes (or when there is nothing to walk), so a re-render that
+  // cancels the walk part-way, or the wide/narrow geometry settling after
+  // hydration, starts it again from the beginning rather than skipping it.
+  useEffect(() => {
+    if (!pathKey || currentIndex < 0) return;
+    const here = stops[currentIndex].key;
+    const from = stops.findIndex((s) => s.key === readStop(pathKey));
+    const figure = traveller.current;
+    const svg = scene.current;
+    const still = typeof window.matchMedia === "function" && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (from < 0 || from >= currentIndex || !figure || !svg || still || typeof figure.animate !== "function") {
+      writeStop(pathKey, here);
+      return;
+    }
+
+    // The same road the scene draws, from the old stop to the new one.
+    const d = stops.slice(from, currentIndex + 1).map((_, k) => {
+      const i = from + k;
+      if (k === 0) return `M${xAt(i)} ${yAt(i)}`;
+      const mid = (yAt(i - 1) + yAt(i)) / 2;
+      return `C${xAt(i - 1)} ${mid}, ${xAt(i)} ${mid}, ${xAt(i)} ${yAt(i)}`;
+    }).join(" ");
+    const road = document.createElementNS("http://www.w3.org/2000/svg", "path");
+    road.setAttribute("d", d);
+    road.setAttribute("fill", "none");
+    road.setAttribute("visibility", "hidden");
+    svg.appendChild(road);
+    const length = road.getTotalLength();
+
+    // The figure stands beside a stop, on the side away from its card. Its
+    // feet travel along the road while that sideways offset eases from the
+    // old stop's side to the new one's.
+    const side = (i: number) => (cardOnLeft(i) ? g.rCurrent + (wide ? 10 : 6) + (g.mascot * art.ratio) / 2 : -g.rCurrent - (wide ? 10 : 6) - (g.mascot * art.ratio) / 2);
+    const endX = xAt(currentIndex) + side(currentIndex);
+    const endY = yAt(currentIndex);
+    const frames: Keyframe[] = [];
+    const STEPS = 48;
+    for (let k = 0; k <= STEPS; k++) {
+      const t = k / STEPS;
+      const p = road.getPointAtLength(t * length);
+      const offset = side(from) + (side(currentIndex) - side(from)) * t;
+      // A small step-bounce, so it reads as walking rather than sliding.
+      const hop = Math.abs(Math.sin(t * Math.PI * 8 * (currentIndex - from))) * (wide ? 6 : 8);
+      frames.push({ transform: `translate(${p.x + offset - endX}px, ${p.y - endY - hop}px)` });
+    }
+    road.remove();
+
+    const walk = figure.animate(frames, {
+      duration: 1600 + 900 * (currentIndex - from),
+      delay: 700,
+      easing: "ease-in-out",
+      fill: "backwards",
+    });
+    walk.onfinish = () => writeStop(pathKey, here);
+    return () => walk.cancel();
+    // xAt/yAt/cardOnLeft/side derive from `wide` and the stop list, both in deps.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [pathKey, currentIndex, wide, n]);
+
   if (!stops.length) return null;
 
   return (
@@ -253,7 +333,7 @@ export function MissionMap({
           "--map-ar-wide": `${WIDE.W} / ${WIDE.top + Math.max(1, n - 1) * WIDE.gap + WIDE.tail}`,
         } as React.CSSProperties}
       >
-        <svg viewBox={`0 0 ${g.W} ${H}`} className="mission-map-scene" aria-hidden="true">
+        <svg viewBox={`0 0 ${g.W} ${H}`} className="mission-map-scene" aria-hidden="true" ref={scene}>
           {/* ---- sky: cool at altitude, warming toward the snowline ---- */}
           <defs>
             <linearGradient id="mapSky" x1="0" y1="0" x2="0" y2="1">
@@ -441,6 +521,8 @@ export function MissionMap({
           {/* ---- the traveller, standing beside the stop you are on ---- */}
           {currentIndex >= 0 ? (
             <image
+              ref={traveller}
+              className="mission-map-traveller"
               href={art.src}
               x={
                 cardOnLeft(currentIndex)

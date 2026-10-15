@@ -7932,7 +7932,6 @@ html[lang="my"] .submit-form > h2 { letter-spacing: 0; }
 .submit-field.has-error input, .submit-field.has-error textarea { border-color: var(--error-500); }
 .submit-error-text { margin: 2px 0 0; font-size: var(--t-label); line-height: var(--l-label); font-weight: 600; color: var(--error-500); }
 
-.submit-demo-note { margin: 0; padding: 10px 12px; font-size: var(--t-meta); line-height: var(--l-meta); color: var(--navy-500); background: var(--surface-sunk); border: 1px solid var(--hairline); border-radius: var(--r-control); }
 .submit-foot-note { margin: 0; font-size: var(--t-meta); line-height: var(--l-meta); color: var(--muted-ink); }
 .submit-server-error {
   margin: 0;
@@ -14635,3 +14634,7 @@ html[lang="my"] .topic-group-label { letter-spacing: 0; text-transform: none; }
 @media (prefers-reduced-motion: reduce) {
   .topic-chevron { transition: none; }
 }
+
+/* The demo account's reset control, at the foot of Missions. */
+.demo-reset { display: flex; flex-wrap: wrap; align-items: center; gap: var(--s-sm); margin-top: var(--s-lg); font-size: var(--t-meta); color: var(--muted-ink); }
+.demo-reset .button { display: inline-flex; align-items: center; gap: 6px; }

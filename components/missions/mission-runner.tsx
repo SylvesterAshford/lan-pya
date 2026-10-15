@@ -2,7 +2,7 @@
 
 import { ArrowLeft, ArrowRight, Check, MapPin } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
-import { Link } from "@/i18n/navigation";
+import { Link, useRouter } from "@/i18n/navigation";
 import { CheckList } from "@/components/missions/check-list";
 import { SubmissionForm } from "@/components/missions/submission-form";
 import { loadDraft, saveDraft } from "@/lib/offline/draft-store";
@@ -40,7 +40,6 @@ export function MissionRunner({
   brief,
   feedback,
   slowCheck = false,
-  readOnly = false,
   labels,
 }: {
   locale: string;
@@ -49,8 +48,6 @@ export function MissionRunner({
   feedback: MissionFeedback | null;
   /** The link check has run for longer than it usually takes. */
   slowCheck?: boolean;
-  /** The shared demo account. */
-  readOnly?: boolean;
   labels: RunnerLabels;
 }) {
   const status = learnerStatus(feedback?.state);
@@ -58,6 +55,23 @@ export function MissionRunner({
   const [step, setStep] = useState<Step>(status.step ?? 1);
   const [checked, setChecked] = useState<string[]>([]);
   const [loaded, setLoaded] = useState(false);
+  const router = useRouter();
+
+  // The link check usually finishes within seconds of submitting. While it
+  // runs, ask the server again every few seconds so the step turns into
+  // "Completed" on its own; the page is keyed on the state, so it remounts on
+  // the step the new state owns. Stops after two minutes; the slow-check note
+  // covers anything longer.
+  useEffect(() => {
+    if (status.kind !== "checking") return;
+    let tries = 0;
+    const timer = window.setInterval(() => {
+      tries += 1;
+      if (tries > 40) { window.clearInterval(timer); return; }
+      router.refresh();
+    }, 3000);
+    return () => window.clearInterval(timer);
+  }, [status.kind, router]);
 
   // The checklist rides in the existing mission draft, so it is private, stays
   // on the device, and expires with everything else after 30 days.
@@ -219,7 +233,6 @@ export function MissionRunner({
               initial={status.kind === "none" ? null : feedback?.version}
               backLabel={labels.back}
               onBack={() => setStep(2)}
-              readOnly={readOnly}
             />
             )}
           </>

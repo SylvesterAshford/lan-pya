@@ -290,7 +290,6 @@ const english = {
     errReflection: "Add {n} more characters.", errReflectionLong: "Keep it under {max} characters.",
     errSummary: "Check the highlighted fields.",
     footNote: "Link checks run first. A trained reviewer gives the final result.",
-    demoReadOnly: "This is the shared demo account, so nothing you enter here is saved. Create your own account to submit work.",
     frontendTitle: "Responsive Profile Card", contentTitle: "Three-piece awareness campaign", backBuild: "Back to Build →",
   },
   review: {
@@ -576,7 +575,6 @@ const myanmar: typeof english = {
     errReflection: "စာလုံး {n} လုံး ထပ်ထည့်ပါ။", errReflectionLong: "စာလုံး {max} အောက်တွင် ထားပါ။",
     errSummary: "အမှတ်အသားပြထားသော အကွက်များကို စစ်ပါ။",
     footNote: "Link စစ်ဆေးမှု ဦးစွာလုပ်သည်။ နောက်ဆုံးရလဒ်ကို လေ့ကျင့်ထားသော သုံးသပ်သူက ပေးမည်။",
-    demoReadOnly: "ဤအကောင့်သည် မျှဝေသုံးသော နမူနာအကောင့်ဖြစ်၍ ဤနေရာတွင် ထည့်သမျှ မသိမ်းဆည်းပါ။ လက်ရာတင်ရန် ကိုယ်ပိုင်အကောင့် ဖွင့်ပါ။",
     frontendTitle: "Responsive Profile Card", contentTitle: "သုံးပိုင်းပါ အသိပညာပေး campaign", backBuild: "Build သို့ ပြန်မည် →",
   },
   review: {

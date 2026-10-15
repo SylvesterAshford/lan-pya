@@ -96,3 +96,43 @@ describe("MissionMap done stops", () => {
   });
 });
 
+
+describe("MissionMap traveller walk", () => {
+  const labels = { stageOf: "Stage {a} of {b}", steps: "points", youAreHere: "You are here", complete: "Verified", placed: "Placed by skills check", awaiting: "Awaiting review", locked: "Locked", nextMission: "Next mission", continueMission: "Continue mission" };
+  let animate: ReturnType<typeof vi.fn>;
+
+  beforeEach(() => {
+    window.localStorage.clear();
+    vi.stubGlobal("matchMedia", () => ({ matches: false, addEventListener() {}, removeEventListener() {} }));
+    vi.stubGlobal("scrollTo", vi.fn());
+    // jsdom draws nothing, so the road has no length of its own.
+    Object.assign(SVGElement.prototype, {
+      getTotalLength: () => 100,
+      getPointAtLength: (at: number) => ({ x: at, y: at }),
+    });
+    animate = vi.fn(() => ({ cancel: vi.fn(), onfinish: null }));
+    Object.assign(Element.prototype, { animate });
+  });
+
+  // Submitting a mission moves the learner on; the map shows the move rather
+  // than a new picture, walking from where they last stood.
+  it("walks the traveller up from the stop the learner last stood at", () => {
+    window.localStorage.setItem("lanpya-map-stop:fe", "done");
+    render(<MissionMap milestones={milestones} pathKey="fe" locale="en" pathTitle="Frontend Developer" steps={0} labels={labels} />);
+    expect(animate).toHaveBeenCalledTimes(1);
+    const [frames] = animate.mock.calls[0] as [Keyframe[]];
+    expect(frames.length).toBeGreaterThan(10);
+    expect(frames.at(-1)?.transform).toMatch(/translate\(/);
+    // Remembered only once the walk has finished.
+    expect(window.localStorage.getItem("lanpya-map-stop:fe")).toBe("done");
+    const walk = animate.mock.results[0].value as { onfinish: (() => void) | null };
+    act(() => { walk.onfinish?.(); });
+    expect(window.localStorage.getItem("lanpya-map-stop:fe")).toBe("current");
+  });
+
+  it("stands still on a first visit and remembers the stop", () => {
+    render(<MissionMap milestones={milestones} pathKey="fe" locale="en" pathTitle="Frontend Developer" steps={0} labels={labels} />);
+    expect(animate).not.toHaveBeenCalled();
+    expect(window.localStorage.getItem("lanpya-map-stop:fe")).toBe("current");
+  });
+});
