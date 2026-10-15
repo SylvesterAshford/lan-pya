@@ -116,6 +116,14 @@ describe("Proof-to-Resume Builder", () => {
     expect(screen.getByRole("dialog").querySelector(".rs-empty-print")).not.toBeNull();
   });
 
+  it("lists each pick as its title and one line: the stage and what the mission asked for", () => {
+    render(<ResumeBuilder locale="en" profile={profile} defaultRole="" labels={c.studio.resume}
+      items={[proof("a", "Responsive Profile Card", { stageTag: "Stage 3", brief: "Make a small interface withstand real constraints." })]} />);
+    const pick = screen.getByLabelText(/Responsive Profile Card/).closest("label") as HTMLElement;
+    expect(within(pick).getByText("Stage 3 · Make a small interface withstand real constraints.")).toBeInTheDocument();
+    expect(within(pick).queryByText(/Semantic HTML/)).not.toBeInTheDocument();
+  });
+
   it("says why it is empty when nothing is verified", () => {
     render(<ResumeBuilder locale="en" profile={profile} defaultRole="" items={[]} labels={c.studio.resume} />);
     expect(screen.getByText(c.studio.resume.empty)).toBeInTheDocument();

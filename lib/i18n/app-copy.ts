@@ -183,7 +183,6 @@ const english = {
     standingLead: "You're #1 on {path}. Everyone else is chasing you.",
     standingBehind: "You're #{rank} · {gap} points behind {name}. One verified mission is 100 points.",
     standingTied: "You're #{rank} · level on points with {name}.",
-    trailLabel: "{n} other learners on {path}. You are at stage {s} of {t}.",
     empty: {
       title: "You're the first one here.",
       body: "No one else on {path} has turned on Community yet. Invite a classmate so you have someone to learn with.",
@@ -298,7 +297,7 @@ const english = {
     },
     resume: {
       title: "Proof-to-Resume Builder",
-      intro: "Pick the verified work you want included. Every line is assembled from your own records, shows the mission it came from, and is yours to edit.",
+      intro: "Pick the verified work you want included. You can edit every line.",
       selected: "{n} selected",
       selectedOne: "{n} selected",
       selectAll: "Select all",
@@ -667,7 +666,6 @@ const myanmar: typeof english = {
     standingLead: "{path} တွင် သင် နံပါတ် ၁ ဖြစ်နေသည်။ အခြားသူများ သင့်နောက်မှ လိုက်နေသည်။",
     standingBehind: "သင် နံပါတ် {rank} · {name} ထက် {gap} မှတ် နောက်ကျနေသည်။ အတည်ပြုထားသော လုပ်ငန်း တစ်ခုလျှင် ၁၀၀ မှတ်။",
     standingTied: "သင် နံပါတ် {rank} · {name} နှင့် အမှတ်တူနေသည်။",
-    trailLabel: "{path} တွင် အခြား သင်ယူသူ {n} ဦး။ သင် အဆင့် {s} / {t} တွင် ရှိသည်။",
     empty: {
       title: "ဒီမှာ သင်က ပထမဆုံးပါ။",
       body: "{path} တွင် အသိုင်းအဝိုင်းကို အခြားမည်သူမျှ မဖွင့်ရသေးပါ။ အတူလေ့လာမည့်သူ ရှိစေရန် အတန်းဖော်တစ်ယောက်ကို ဖိတ်ပါ။",
@@ -778,7 +776,7 @@ const myanmar: typeof english = {
     },
     resume: {
       title: "သက်သေမှ ကိုယ်ရေးရာဇဝင် တည်ဆောက်ကိရိယာ",
-      intro: "ထည့်သွင်းလိုသော အတည်ပြုပြီး လက်ရာကို ရွေးပါ။ စာကြောင်းတိုင်းကို သင့်မှတ်တမ်းများမှ စုစည်းထားပြီး မည်သည့်လုပ်ငန်းမှဖြစ်ကြောင်း ဖော်ပြကာ သင်ကိုယ်တိုင် ပြင်ဆင်နိုင်သည်။",
+      intro: "ထည့်သွင်းလိုသော အတည်ပြုပြီး လက်ရာကို ရွေးပါ။ စာကြောင်းတိုင်းကို သင်ကိုယ်တိုင် ပြင်ဆင်နိုင်သည်။",
       selected: "{n} ခု ရွေးထားသည်",
       selectedOne: "{n} ခု ရွေးထားသည်",
       selectAll: "အားလုံး ရွေးမည်",

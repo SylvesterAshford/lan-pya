@@ -102,26 +102,6 @@ describe("Community game layer", () => {
     ...row(alias, stage, extra), isMe: false, isSample: false, note: null, noteMy: null, telegram: null, facebook: null, linkedin: null, avatar: "traveller",
   });
 
-  it("draws the trail with the viewer on their stage and who stands where", async () => {
-    data.getCommunity.mockResolvedValue({
-      ok: true,
-      data: { viewer: { visible: true, blocked: false, demo: false }, keys: KEYS, rows: [
-        { ...person("Thura", 4), isMe: true },
-        person("Hnin Wai", 4),
-        person("Su Myat", 5),
-        person("Kaung Zaw", 5),
-      ] },
-    });
-    await renderPage();
-    const trail = screen.getByRole("img", { name: "3 other learners on Frontend Developer. You are at stage 4 of 12." });
-    const stops = trail.querySelectorAll(".stage-trail-stops li");
-    expect(stops).toHaveLength(12);
-    expect(stops[3]).toHaveClass("here");
-    expect(stops[2]).toHaveClass("done");
-    expect(stops[3].textContent).toContain("1");
-    expect(stops[4].textContent).toContain("2");
-  });
-
   it("names the next target on the leaderboard", async () => {
     data.getCommunity.mockResolvedValue({
       ok: true,

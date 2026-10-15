@@ -91,6 +91,8 @@ export default async function ProofPage({ params }: { params: Promise<{ locale: 
       verifiedLabel: formatAppDate(locale, item.verifiedAt),
       stageLabel: place ? `${stageTag(place.stage.order)} · ${place.stage.title}` : null,
       stageNumber: place?.stage.order ?? null,
+      stageTag: place ? stageTag(place.stage.order) : null,
+      brief: item.missionKey ? getMissionBrief(item.missionKey, locale)?.intro ?? null : null,
       pathTitle: place?.pathTitle ?? null,
     };
   });

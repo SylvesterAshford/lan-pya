@@ -1,5 +1,16 @@
 # Changelog
 
+## [0.38.3.0] - 2026-10-16
+
+### Changed
+
+- **The Proof-to-Resume Builder is about half as tall.** Each piece of work you can pick is now its title and one line (its stage and what the mission asked for) instead of the full list of skills. The live preview is a smaller page thumbnail beside your choices, so it no longer stretches the section; open the editor to see the page full size.
+- **Community's "You are at" card is simpler.** The mini trail of stops is gone; the card shows your stage, your verified missions and whether others can see you.
+
+### Fixed
+
+- **The mountains behind the leaderboard no longer float.** They now rise from behind the hills instead of sitting on top of them with a flat base.
+
 ## [0.38.2.0] - 2026-10-16
 
 ### Changed
