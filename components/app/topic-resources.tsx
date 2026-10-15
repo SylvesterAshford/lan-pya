@@ -1,4 +1,5 @@
 import { BookOpen, ChevronDown, FileText, GraduationCap, PlayCircle, type LucideIcon } from "lucide-react";
+import type { ReactNode } from "react";
 import { toMyanmarDigits } from "@/lib/domain/deadlines";
 import type { LearningResource, ResourceKind } from "@/lib/domain/learning-resources";
 import type { getAppCopy } from "@/lib/i18n/app-copy";
@@ -11,6 +12,38 @@ const ICONS: Record<ResourceKind, LucideIcon> = {
   docs: BookOpen,
   article: FileText,
 };
+
+/**
+ * The free lessons for a stage, set apart from the rest of the brief: a navy
+ * header that names them and counts the links, over the topic rows. Without
+ * it the resources read as a plain topic list and were easy to miss.
+ */
+export function TopicLessons({
+  total,
+  locale,
+  labels,
+  children,
+}: {
+  total: number;
+  locale: string;
+  labels: ResourceLabels;
+  children: ReactNode;
+}) {
+  const count = locale === "my" ? toMyanmarDigits(total) : String(total);
+  return (
+    <section className="topic-lessons" aria-label={labels.title}>
+      <header className="topic-lessons-head">
+        <span className="topic-lessons-icon" aria-hidden="true"><GraduationCap size={20} /></span>
+        <span className="topic-lessons-copy">
+          <strong>{labels.title}</strong>
+          <small>{labels.intro}</small>
+        </span>
+        <span className="topic-lessons-total">{labels.total.replace("{n}", count)}</span>
+      </header>
+      {children}
+    </section>
+  );
+}
 
 /**
  * One topic on a stage, opening onto the free videos and guides for it.

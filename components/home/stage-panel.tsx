@@ -1,6 +1,6 @@
 import { ArrowRight } from "lucide-react";
 import { Link } from "@/i18n/navigation";
-import { TopicItem, type ResourceLabels } from "@/components/app/topic-resources";
+import { TopicItem, TopicLessons, type ResourceLabels } from "@/components/app/topic-resources";
 import { toMyanmarDigits } from "@/lib/domain/deadlines";
 import { getStageResources } from "@/lib/domain/learning-resources";
 import type { Milestone } from "@/lib/domain/types";
@@ -47,23 +47,27 @@ export function StagePanel({
       <h2 id="stage-panel-title">{stage.title}</h2>
       {stage.description ? <p className="stage-panel-body">{stage.description}</p> : null}
 
-      {groups.length ? (
-        <div className={`stage-topics${resources ? " has-resources" : ""}`}>
-          {resources ? <p className="topic-intro">{resourceLabels.intro}</p> : null}
+      {groups.length && resources ? (
+        <TopicLessons total={resources.flat().length} locale={locale} labels={resourceLabels}>
+          {groups.map((group) => (
+            <div key={group.label ?? group.items[0]} className="topic-group">
+              {group.label ? <span className="topic-group-label">{group.label}</span> : null}
+              <ul className="topic-list">
+                {group.items.map((item, index) => (
+                  <TopicItem key={item} topic={item} number={group.offset + index + 1} resources={resources[group.offset + index]} locale={locale} labels={resourceLabels} />
+                ))}
+              </ul>
+            </div>
+          ))}
+        </TopicLessons>
+      ) : groups.length ? (
+        <div className="stage-topics">
           {groups.map((group) => (
             <div key={group.label ?? group.items[0]}>
               {group.label ? <span className="stage-topics-label">{group.label}</span> : null}
-              {resources ? (
-                <ul className="topic-list">
-                  {group.items.map((item, index) => (
-                    <TopicItem key={item} topic={item} number={group.offset + index + 1} resources={resources[group.offset + index]} locale={locale} labels={resourceLabels} />
-                  ))}
-                </ul>
-              ) : (
-                <ul>
-                  {group.items.map((item) => <li key={item}>{item}</li>)}
-                </ul>
-              )}
+              <ul>
+                {group.items.map((item) => <li key={item}>{item}</li>)}
+              </ul>
             </div>
           ))}
         </div>

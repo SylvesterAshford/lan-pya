@@ -6884,8 +6884,8 @@ html[lang="my"] .mission-focus h2{
   /* Wider and shorter. At 460px the topic list ran one item per line and the
      card grew past the viewport, so it read as a column of text rather than a
      brief and had to scroll to reach its own button. */
-  width: min(580px, 100%);
-  max-height: min(660px, 84vh);
+  width: min(680px, 100%);
+  max-height: min(760px, 88vh);
   overflow: hidden;
   color: var(--ink);
   background: var(--surface);
@@ -14581,22 +14581,31 @@ html[lang="my"] .stage-topics-label { letter-spacing: 0; text-transform: none; }
 /* ---- Topic resources ----
    Each topic on a stage opens onto free videos and guides (components/app/
    topic-resources.tsx), in the roadmap step brief and Home's stage panel.
-   The topics sit in one bordered card, a numbered row each; a closed row
+   The topics sit in one card under a navy "Free lessons" header, a numbered
+   row each; a closed row
    already says what is inside (watch/read counts, a Burmese chip), and an
    opened row lists its links inset under the topic name. The rules reset the
    list styles both hosts set on their own <ul>/<li>. */
-.topic-intro { margin: 0 0 var(--s-sm); font-size: var(--t-meta); line-height: var(--l-meta); color: var(--muted-ink); }
-.stage-topics .topic-intro { grid-column: 1 / -1; margin: 0; }
-/* An opened topic needs the panel's full width for its links, so the two
-   topic groups stack instead of sitting side by side. */
-.stage-topics.has-resources { grid-template-columns: minmax(0, 1fr); }
+/* The lessons block: one card with a navy header naming it, so the free
+   resources stand out from the rest of the brief. */
+.topic-lessons { margin: 0; background: var(--surface); border: 1px solid var(--navy-700); border-radius: var(--r-card); overflow: hidden; }
+.stage-panel .topic-lessons { margin-top: var(--s-xs); }
+.topic-lessons-head { display: flex; align-items: center; gap: var(--s-sm); padding: var(--s-sm) var(--s-md); color: var(--surface); background: var(--navy-700); }
+.topic-lessons-icon { flex: none; display: grid; place-items: center; width: 36px; height: 36px; color: var(--navy-700); background: var(--surface); border-radius: var(--r-control); }
+.topic-lessons-copy { display: grid; flex: 1; gap: 2px; min-width: 0; }
+.topic-lessons-copy strong { font-size: var(--t-title); line-height: var(--l-title, 1.35); font-weight: 700; }
+.topic-lessons-copy small { font-size: var(--t-label); line-height: 1.45; color: var(--navy-100); }
+.topic-lessons-total { flex: none; padding: 2px 10px; font-size: var(--t-label); font-weight: 700; color: var(--navy-700); background: var(--surface); border-radius: var(--r-chip); white-space: nowrap; }
+.topic-group + .topic-group { border-top: 1px solid var(--hairline); }
+.topic-group-label { display: block; padding: 6px var(--s-md); font-size: var(--t-label); font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; color: var(--muted-ink); background: var(--surface-sunk); border-bottom: 1px solid var(--hairline); }
+html[lang="my"] .topic-group-label { letter-spacing: 0; text-transform: none; }
 .roadmap-detail-section .topic-list,
 .stage-topics .topic-list,
-.topic-list { display: grid; grid-template-columns: minmax(0, 1fr); gap: 0; margin: 0; padding: 0; list-style: none; background: var(--surface); border: 1px solid var(--hairline); border-radius: var(--r-card); overflow: hidden; }
+.topic-list { display: grid; grid-template-columns: minmax(0, 1fr); gap: 0; margin: 0; padding: 0; list-style: none; background: var(--surface); }
 .roadmap-detail-section .topic-list > li,
-.stage-topics .topic-list > li { padding: 0; font-size: var(--t-meta); line-height: var(--l-meta); color: var(--ink); background: none; border: 0; border-top: 1px solid var(--hairline); border-radius: 0; }
+.topic-list > li { padding: 0; font-size: var(--t-meta); line-height: var(--l-meta); color: var(--ink); background: none; border: 0; border-top: 1px solid var(--hairline); border-radius: 0; }
 .roadmap-detail-section .topic-list > li:first-child,
-.stage-topics .topic-list > li:first-child { border-top: 0; }
+.topic-list > li:first-child { border-top: 0; }
 .topic-details > summary { display: flex; align-items: center; gap: var(--s-sm); min-height: 52px; padding: var(--s-sm) var(--s-md); font-size: var(--t-meta); font-weight: 600; line-height: var(--l-meta); color: var(--ink); cursor: pointer; list-style: none; }
 .topic-details > summary::-webkit-details-marker { display: none; }
 .topic-details > summary:hover { background: var(--navy-050); }
@@ -14605,7 +14614,7 @@ html[lang="my"] .stage-topics-label { letter-spacing: 0; text-transform: none; }
 .topic-num { flex: none; display: grid; place-items: center; width: 28px; height: 28px; font-size: var(--t-label); font-weight: 700; font-variant-numeric: tabular-nums; color: var(--navy-700); background: var(--navy-050); border: 1px solid var(--navy-100); border-radius: var(--r-control); }
 .topic-details[open] .topic-num { color: var(--surface); background: var(--navy-700); border-color: var(--navy-700); }
 .topic-name { flex: 1; min-width: 0; overflow-wrap: anywhere; }
-.topic-kinds { flex: none; display: inline-flex; gap: var(--s-sm); font-size: var(--t-label); font-weight: 600; font-variant-numeric: tabular-nums; color: var(--muted-ink); }
+.topic-kinds { flex: none; display: inline-flex; gap: var(--s-sm); padding: 2px 10px; font-size: var(--t-label); font-weight: 700; font-variant-numeric: tabular-nums; color: var(--navy-700); background: var(--navy-050); border: 1px solid var(--navy-100); border-radius: var(--r-chip); }
 .topic-kinds > span { display: inline-flex; align-items: center; gap: 3px; }
 .topic-chevron { flex: none; color: var(--muted-ink); transition: transform 160ms ease-in-out; }
 .topic-details[open] > summary .topic-chevron { transform: rotate(180deg); }
