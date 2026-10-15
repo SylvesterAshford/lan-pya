@@ -32,6 +32,10 @@ export type ResumeSource = ProofItem & {
   stageLabel?: string | null;
   /** The stage's number on its path, for the Trail template's stop markers. */
   stageNumber?: number | null;
+  /** "Stage 3", already localised: the short form for the picker. */
+  stageTag?: string | null;
+  /** One sentence on what the mission asked for, shown under its title in the picker. */
+  brief?: string | null;
   pathTitle?: string | null;
   /** The verification date as the reader writes dates; the ISO date if absent. */
   verifiedLabel?: string;

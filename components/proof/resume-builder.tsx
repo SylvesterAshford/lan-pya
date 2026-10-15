@@ -126,10 +126,11 @@ export function ResumeBuilder({
                   <label className={on ? "on" : ""}>
                     <input type="checkbox" checked={on} onChange={() => toggle(item.id)} />
                     <span className="resume-pick-box" aria-hidden="true">{on ? <Check size={13} /> : null}</span>
+                    {/* Title and one line: the stage and what the mission asked
+                        for. The skills and full stage name are on the page. */}
                     <span className="resume-pick-copy">
-                      {item.stageLabel ? <span className="mission-tag stage">{item.stageLabel}</span> : null}
                       <strong>{item.title}</strong>
-                      <small>{item.competencies.join(" · ")}</small>
+                      <small title={item.brief ?? undefined}>{[item.stageTag, item.brief ?? item.competencies.join(" · ")].filter(Boolean).join(" · ")}</small>
                     </span>
                   </label>
                 </li>

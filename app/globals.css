@@ -13742,19 +13742,21 @@ html[lang="my"] .passport-name { letter-spacing: 0; }
 .resume-title svg { flex: none; color: var(--navy-700); }
 html[lang="my"] .resume-title { letter-spacing: 0; }
 .resume-intro, .resume-empty { margin: 6px 0 0; color: var(--muted-ink); font-size: var(--t-meta); line-height: var(--l-meta); }
-.resume-layout { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 6fr); gap: var(--s-xl); align-items: start; }
+/* The preview is a page thumbnail in a fixed column, so the A4 page no
+   longer sets the height of the whole section. */
+.resume-layout { display: grid; grid-template-columns: minmax(0, 1fr) 320px; gap: var(--s-xl); align-items: start; }
 .resume-controls { display: grid; gap: var(--s-md); }
 .resume-picks { display: grid; gap: var(--s-sm); margin: 0; padding: 0; list-style: none; }
-.resume-picks label { position: relative; display: flex; align-items: flex-start; gap: 12px; padding: 12px 14px; background: var(--surface); border: 1px solid var(--hairline); border-radius: var(--r-control); cursor: pointer; transition: border-color 160ms ease, background-color 160ms ease; }
+.resume-picks label { position: relative; display: flex; align-items: flex-start; gap: 12px; padding: 10px 14px; background: var(--surface); border: 1px solid var(--hairline); border-radius: var(--r-control); cursor: pointer; transition: border-color 160ms ease, background-color 160ms ease; }
 .resume-picks label:hover { border-color: var(--navy-100); }
 .resume-picks label.on { background: var(--navy-050); border-color: var(--navy-700); box-shadow: inset 0 0 0 1px var(--navy-700); }
 .resume-picks label:focus-within { outline: 2px solid var(--teal-700); outline-offset: 2px; }
 .resume-picks input { position: absolute; width: 1px; height: 1px; opacity: 0; }
 .resume-pick-box { display: grid; place-items: center; flex: none; width: 20px; height: 20px; margin-top: 2px; color: #fff; border: 1.5px solid var(--muted-ink); border-radius: 6px; }
 .resume-picks label.on .resume-pick-box { background: var(--navy-700); border-color: var(--navy-700); }
-.resume-pick-copy { display: grid; justify-items: start; gap: 4px; min-width: 0; }
+.resume-pick-copy { display: grid; gap: 2px; min-width: 0; }
 .resume-pick-copy strong { color: var(--ink); font-size: var(--t-body); font-weight: 600; line-height: 1.35; }
-.resume-pick-copy small { color: var(--muted-ink); font-size: var(--t-meta); line-height: var(--l-meta); }
+.resume-pick-copy small { overflow: hidden; color: var(--muted-ink); font-size: var(--t-meta); line-height: var(--l-meta); white-space: nowrap; text-overflow: ellipsis; }
 .resume-actions { display: flex; flex-wrap: wrap; align-items: center; gap: var(--s-md); font-size: var(--t-meta); }
 .resume-actions .text-link { margin: 0; padding: 0; color: var(--teal-700); background: none; border: 0; font: inherit; font-weight: 600; cursor: pointer; }
 .resume-selected { color: var(--muted-ink); font-variant-numeric: tabular-nums; }
@@ -13778,7 +13780,7 @@ html[lang="my"] .resume-field-label { letter-spacing: 0; text-transform: none; }
 
 @media (max-width: 1080px) {
   .resume-layout { grid-template-columns: minmax(0, 1fr); }
-  .resume-preview { position: static; }
+  .resume-preview { position: static; justify-self: center; width: 100%; max-width: 360px; }
 }
 @media (max-width: 480px) {
   .resume-block { padding: var(--s-md); }
@@ -14025,21 +14027,9 @@ html[lang="my"] .work-title { letter-spacing: 0; }
 }
 .community-standing svg { flex: none; color: var(--teal-700); }
 
-.stage-trail { margin-top: 14px; }
-.stage-trail-stops { position: relative; display: grid; align-items: end; margin: 0; padding: 0; list-style: none; }
-.stage-trail-stops::before { content: ""; position: absolute; right: 3%; bottom: 7px; left: 3%; border-top: 2px dashed #b6c4c0; }
-.stage-trail-stops li { position: relative; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; gap: 4px; min-width: 0; min-height: 66px; }
-.stage-trail-count { color: var(--navy-700); font-size: var(--t-label); font-weight: 700; line-height: 18px; font-variant-numeric: tabular-nums; }
-.stage-trail-count:not(:empty) { min-width: 18px; padding: 0 5px; text-align: center; background: var(--navy-100); border-radius: 999px; }
-.stage-trail-traveller { display: grid; place-items: end center; line-height: 0; }
-.stage-trail-stop { position: relative; z-index: 1; width: 14px; height: 14px; background: #fff; border: 2px solid #b6c4c0; border-radius: 50%; }
-.stage-trail-stops li.done .stage-trail-stop { background: var(--teal-500); border-color: var(--teal-500); }
-.stage-trail-stops li.here .stage-trail-stop { width: 18px; height: 18px; background: var(--node-stage); border-color: var(--node-border); }
-.stage-trail-ends { display: flex; justify-content: space-between; margin-top: 6px; color: var(--muted-ink); font-size: var(--t-label); }
-
 /* Tags hold whole stage names and paths here ("Content Creator & Social
    Media Storyteller"), so they wrap rather than push a 320px page sideways. */
-.resume-pick-copy .mission-tag, .case-card .mission-tag { white-space: normal; }
+.case-card .mission-tag { white-space: normal; }
 .community-flag { position: absolute; right: 10px; bottom: 100%; width: 18px; height: 26px; overflow: visible; }
 @media (max-width: 480px) {
   .community-flag { right: 3px; width: 13px; height: 19px; }

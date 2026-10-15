@@ -5,7 +5,7 @@ import { ChevronDown, ChevronRight, ExternalLink, Target } from "lucide-react";
 import { Link, useRouter } from "@/i18n/navigation";
 import { SheetDialog } from "@/components/app/sheet-dialog";
 import { Emblem } from "@/components/app/emblem";
-import { StageTrail, SummitScene } from "@/components/app/community-scenes";
+import { SummitScene } from "@/components/app/community-scenes";
 import type { EmblemKey } from "@/lib/domain/progress";
 import { CommunitySettings, type CommunitySettingsValue } from "@/components/app/community-settings";
 import type { CommunityLinkKind, CommunityViewer } from "@/lib/domain/community";
@@ -33,9 +33,6 @@ export type CommunityPersonView = {
   /** The emblem of the stage they stand on, the same mark as on the roadmap. */
   emblem: EmblemKey;
 };
-
-/** The mini trail in the "You are at" card. */
-export type CommunityTrailView = { counts: number[]; current: number; avatar: string; label: string };
 
 export type CommunitySectionView = { key: string; title: string; count: string; people: CommunityPersonView[] };
 export type CommunityBoardView = {
@@ -70,7 +67,6 @@ export function CommunityView({
   board,
   settings,
   initialTab,
-  trail = null,
   standing = null,
 }: {
   locale: string;
@@ -86,7 +82,6 @@ export function CommunityView({
   board: CommunityBoardView;
   settings: CommunitySettingsValue;
   initialTab: Tab;
-  trail?: CommunityTrailView | null;
   /** "You're #4 · 100 points behind Min Khant", already written; null when unranked. */
   standing?: string | null;
 }) {
@@ -164,7 +159,6 @@ export function CommunityView({
             <span className="eyebrow">{labels.youAreAt}</span>
             <strong>{me.title}</strong>
             <small>{me.verifiedLabel}</small>
-            {trail ? <StageTrail locale={locale} counts={trail.counts} current={trail.current} avatar={trail.avatar} label={trail.label} stageLabel={labels.rowStage} /> : null}
             {viewer.blocked ? (
               <p className="community-you-line paused">{labels.settings.paused}</p>
             ) : viewer.visible ? (

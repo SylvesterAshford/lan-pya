@@ -265,12 +265,6 @@ describe("display helpers", () => {
 });
 
 describe("game layer helpers", () => {
-  it("counts others per stage, finished on the last stop", async () => {
-    const { stageCounts } = await import("@/lib/domain/community");
-    const people = [person("Me", 2, { isMe: true }), person("A", 2), person("B", 4), person("C", "finished")];
-    expect(stageCounts(people, 12)).toEqual([0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1]);
-  });
-
   it("finds the viewer's rank and the gap to the next person", async () => {
     const { rankStanding } = await import("@/lib/domain/community");
     const board = leaderboard([

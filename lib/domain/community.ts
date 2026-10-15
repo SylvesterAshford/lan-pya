@@ -201,20 +201,6 @@ export function leaderboard(people: CommunityPerson[]): LeaderboardView {
 }
 
 /**
- * How many other learners stand on each stage, for the mini trail on the
- * Your stage card. Finished learners count on the last stop.
- */
-export function stageCounts(people: CommunityPerson[], totalStages: number) {
-  const counts = Array.from({ length: Math.max(0, totalStages) }, () => 0);
-  for (const person of people) {
-    if (person.isMe || !counts.length) continue;
-    const index = Math.min(counts.length - 1, Math.max(0, person.finished ? counts.length - 1 : person.stageIndex));
-    counts[index] += 1;
-  }
-  return counts;
-}
-
-/**
  * Where the viewer stands on the leaderboard and who is just above them:
  * the next target, in points. Null when the viewer is not ranked (no row on
  * this path, or the board is still filling in).
