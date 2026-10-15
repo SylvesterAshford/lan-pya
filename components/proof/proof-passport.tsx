@@ -91,12 +91,10 @@ export function ProofPassport({
 
   return (
     <section className="passport" aria-labelledby="passport-name">
-      {/* The card is stretched to the height of the résumé builder beside it,
-          which leaves a band of empty navy across its middle. This fills it
-          with the same ridge line the mission map climbs rather than with
-          ornament: the passport is the record of that climb, so the two
-          screens share one piece of visual language. Purely decorative, so it
-          is hidden from assistive technology and sits behind the content. */}
+      {/* A full-width strip: who, the evidence trail and the three counts sit
+          in one row, drawn on the same ridge line the mission map climbs. The
+          passport is the record of that climb, so the two screens share one
+          piece of visual language. Decorative, hidden from assistive tech. */}
       <svg className="passport-ridge" viewBox="0 0 600 400" preserveAspectRatio="none" aria-hidden="true" focusable="false">
         {/* Contours across the upper half and the ridge along the foot, so the
             card is drawn on ground rather than on a slab of flat navy. Same

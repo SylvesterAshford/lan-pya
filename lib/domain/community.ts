@@ -200,6 +200,35 @@ export function leaderboard(people: CommunityPerson[]): LeaderboardView {
   return { podium: null, rows: byProgress.map((person) => ({ person, rank: null })) };
 }
 
+/**
+ * How many other learners stand on each stage, for the mini trail on the
+ * Your stage card. Finished learners count on the last stop.
+ */
+export function stageCounts(people: CommunityPerson[], totalStages: number) {
+  const counts = Array.from({ length: Math.max(0, totalStages) }, () => 0);
+  for (const person of people) {
+    if (person.isMe || !counts.length) continue;
+    const index = Math.min(counts.length - 1, Math.max(0, person.finished ? counts.length - 1 : person.stageIndex));
+    counts[index] += 1;
+  }
+  return counts;
+}
+
+/**
+ * Where the viewer stands on the leaderboard and who is just above them:
+ * the next target, in points. Null when the viewer is not ranked (no row on
+ * this path, or the board is still filling in).
+ */
+export function rankStanding(view: LeaderboardView) {
+  if (!view.podium) return null;
+  const order = [...view.podium, ...view.rows.map((row) => row.person)];
+  const index = order.findIndex((person) => person.isMe);
+  if (index < 0) return null;
+  const me = order[index];
+  const above = index > 0 ? order[index - 1] : null;
+  return { rank: index + 1, points: me.points, above: above ? { alias: above.alias, gap: above.points - me.points } : null };
+}
+
 let segmenter: Intl.Segmenter | null | undefined;
 function firstGrapheme(value: string) {
   if (segmenter === undefined) segmenter = typeof Intl !== "undefined" && "Segmenter" in Intl ? new Intl.Segmenter(undefined, { granularity: "grapheme" }) : null;

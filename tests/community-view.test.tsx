@@ -18,7 +18,7 @@ function view(alias: string, extra: Partial<CommunityPersonView> = {}): Communit
     handle: `5a000000-0000-4000-8000-00000000000${alias.length}`, alias, initials: alias.slice(0, 2).toUpperCase(),
     meta: "Stage 4 · 2 verified", eyebrow: "Frontend Developer · Stage 4", verifiedLabel: "2 verified missions",
     note: "Looking for someone to do the JavaScript mission with.", points: "300 points",
-    links: [{ kind: "telegram", url: "https://t.me/hnin_wai" }], isMe: false, isSample: false, ...extra,
+    links: [{ kind: "telegram", url: "https://t.me/hnin_wai" }], isMe: false, isSample: false, emblem: "build", ...extra,
   };
 }
 

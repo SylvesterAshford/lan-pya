@@ -1,5 +1,18 @@
 # Changelog
 
+## [0.38.0.0] - 2026-10-16
+
+### Added
+
+- **A real résumé.** The Proof-to-Resume Builder now shows a live A4 preview as you pick verified work, in three layouts: **Modern** (a navy sidebar with your contact details, career path and verified skills), **Classic** (one plain column that hiring systems read well) and **Trail** (your projects along the stages you climbed). Each project lists its stage and path, the date it was verified, who reviewed it, and links to the live work and code. Open the editor to change your role, add a short profile and rewrite any line, then save it as a one-page PDF.
+- **Community feels like a game.** The leaderboard podium stands on a summit scene from the mission map, with a flag on the winner's step. Every avatar wears the emblem of the stage its learner is on, and a line tells you how many points you are behind the next person. On Your stage, a mini trail shows every stop on your path, where you stand, and how many learners are at each stop.
+
+### Changed
+
+- **Completed work matches Missions.** Portfolio cards now show when the work was verified, its stage and its own path, and the mission's summary, and they link to the mission. The awareness campaign no longer says "Frontend Developer".
+- **The proof passport is one strip** across the page, with your name, the evidence trail and your counts side by side. The counts no longer break mid-word, and the large empty panel is gone.
+- **"Closed" is no longer struck through** on opportunity cards.
+
 ## [0.37.0.0] - 2026-10-16
 
 ### Added
