@@ -1,60 +1,97 @@
 # Lan Pya — From Map to Proof
 
-Lan Pya is a bilingual, proof-first career platform for Myanmar learners. The alpha ships one operational Frontend Developer path: placement, seven visible milestones, a real responsive-profile-card mission, deterministic checks, human review, revocable proof sharing, and explainable opportunity readiness.
+Lan Pya (လမ်းပြ, "the one who shows the way") is a bilingual, proof-first career platform for Myanmar learners. A learner picks a career path, climbs its roadmap stage by stage, builds real work for each stage's mission, gets it checked and reviewed, and turns verified work into a portfolio and a résumé they can show employers.
 
-The production stack is Next.js 16 on Vercel and Supabase Auth/Postgres/RLS/Queues/Cron/Edge Functions. Google OAuth is handled only through Supabase Auth.
+**Live:** https://lan-pya-rust.vercel.app · English and Burmese (မြန်မာ), one language per screen.
+
+The stack is Next.js 16 (App Router, next-intl) on Vercel, with Supabase Auth, Postgres, RLS, Queues, Cron and Edge Functions. Every Supabase call runs on the server, so the app works in Myanmar without a VPN (see below).
 
 ## What works
 
-- English/Myanmar locale routing, one language at a time, and a responsive PWA shell
-- Google OAuth plus email/password signup and login through Supabase Auth
-- Private Career Compass onboarding with explained path recommendations
-- One active career path at a time, with switching that preserves prior work and proof
-- Connected roadmaps for Frontend, Full-Stack, AI/Data, and the Content Creator controlled pilot, with availability labeled explicitly
-- Offline, per-user mission drafts in IndexedDB with 30-day expiry
-- Transactional submission plus durable PGMQ evaluation jobs
-- Allowlisted URL checks; custom domains are explicitly inconclusive
-- Human reviewer claim, rubric decision, feedback, and proof creation
-- Private proof by default; fragment-token exchange to a short-lived HttpOnly viewing session
-- Readiness cards showing supported evidence, gaps, and unknowns
-- Reviewer/admin roles, audit events, deletion intake, and seeded/live provenance
-- Clearly labeled seeded content that is excluded from live verification metrics
+**Learning**
+
+- **Career Compass** onboarding: private questions that recommend a path and explain why.
+- **Six career paths:**
+  - Frontend Developer: operational, 12 stages.
+  - Content Creator and Video Editor: controlled pilots.
+  - Full-Stack Developer, AI & Data Analyst, Brand & Visual Designer: previews.
+
+  Availability is always labelled. One path is active at a time, and switching keeps earlier work.
+- **Roadmaps:** a connected stage map for every path, with free lessons (232 topics, 555 checked links, some in Burmese) on each stage.
+- **Missions:**
+  - A trail map with the learner's traveller standing on their current stage.
+  - Four authored missions so far: Responsive Profile Card, Interactive opportunity tracker, Three-piece awareness campaign and Vertical story edit.
+  - Each mission runs brief → plan → build → submit → result, with offline drafts.
+
+**Review, in two tiers**
+
+- **Completed:** an automatic link check passes (PGMQ job queue, allowlisted hosts; anything it cannot judge is marked inconclusive). The stage moves on the map.
+- **Verified:** a human reviewer scores the rubric. Only this creates proof and points (100 per verified mission).
+
+**Proof and careers**
+
+- **Portfolio (Evidence Studio):**
+  - A proof passport showing what has been verified.
+  - Completed work named by path and stage, the same way Missions and the roadmap name it.
+  - A **Proof-to-Resume Builder**: pick verified work, choose a template (Modern, Classic or Trail) and watch a live A4 preview. Edit the role, profile and every line, then print or save as PDF on the device. Every line names the mission and the review it came from; nothing is generated.
+- **Private proof sharing:** proof is private by default. A share link's secret travels in the URL fragment and is exchanged once for a short-lived viewing session; links can be revoked.
+- **Opportunities:** a deadline-led feed. Each card shows what the learner's proof supports, what is still missing and what is unknown.
+
+**Community** (v0.36)
+
+- Learners who opt in are listed by path:
+  - **Your stage:** a mini trail of the path, plus who is at your stage, one ahead and one behind.
+  - **Leaderboard:** a podium on the summit and ranked rows. Each avatar wears its stage emblem, and a line says how many points you are behind the next person.
+- Contact links (Telegram, Facebook, LinkedIn) reach only learners who are listed themselves.
+- Report hides a person from the reporter at once.
+- All visibility rules are enforced in SQL (`get_community`).
+
+**Plans and pricing** (v0.37)
+
+- `/pricing` shows Free, Pro Student and Career+, plus a Business tab (employer fees, university and corporate partnerships).
+- There is no payment provider yet: paid plans take a waitlist, the Business tab takes inquiries, and unbuilt features are tagged "Coming soon".
+
+**Operations**
+
+- Reviewer and admin roles, and an audit trail.
+- The Admin page shows review backlog, community reports, waitlist counts and partner inquiries.
+- Seeded demonstration records carry `data_origin = seeded_demo` and are kept out of every live metric.
 
 ## Local setup
 
-Requirements: Node.js 22+, Docker Desktop, and the Supabase CLI included in this project.
+Requirements: Node.js 22+, Docker Desktop and the Supabase CLI.
 
 ```bash
 npm install
 cp .env.example .env.local
 npx supabase start
-npx supabase db reset
+npx supabase db reset      # every migration, then supabase/seed.sql
 npm run dev
 ```
 
-Copy the local Supabase URL and publishable key printed by `supabase start` into `.env.local`. Open `http://localhost:3000/en`; `/en/demo` works without authentication.
+Copy the local Supabase URL and publishable key printed by `supabase start` into `.env.local`, then open `http://localhost:3000/en`.
 
-## Demo Account
+## Demo account
 
-For testing and demonstration purposes, use the seeded demo account:
+Use the shared demo for pitches and testing: open `/en/login?demo=1`, or sign in with **`demo@lanpya.app`** / **`LanPya-Demo-2026!`**.
 
-- **Email:** `demo@lanpya.app`
-- **Password:** `LanPya-Demo-2026!`
+**The demo's story** is defined once, in SQL `public.reset_demo_account()`:
+- Frontend Developer is the active path, with stages 1–3 complete and the learner standing on stage 4 (JavaScript programming).
+- Content Creator is the previous path.
+- There are two seeded verified proofs, and the alias is Thura.
 
-The demo account is pre-populated with:
-- Completed Frontend Developer pathway (stages 1-2 verified, stage 3 active)
-- One verified proof sample for the responsive-profile-card mission
-- Example opportunity readiness assessments
-- Access to all features without payment
+**What the demo can do in a pitch:**
+- **Submit a mission:** the link check always completes for the demo, and a simulated review verifies it a few seconds later.
+- **Walk on:** "Back to your trail map" walks the traveller to the next stop.
+- **Reset:** "Reset the demo story" at the foot of Missions puts everything back. A nightly job also resets it.
+- **Community:** the demo sees labelled **sample learners** (`community_sample_peers`), never real people, and real learners never see the demo.
+- **Pricing:** the demo can press "Join the waitlist", but nothing is recorded.
 
-The demo data is marked with `data_origin: seeded_demo` and is excluded from live human-verification metrics for reporting and analytics purposes. When testing new features, use this account to see realistic data without creating test accounts.
+To create or refresh the demo account in a Supabase project:
 
-To provision the demo account in production, run:
 ```bash
-npm run demo:provision
+npm run demo:provision    # needs NEXT_PUBLIC_SUPABASE_URL and SUPABASE_SECRET_KEY
 ```
-
-This script creates or updates the demo account in Supabase with the learner profile, missions, and proof items. It requires `NEXT_PUBLIC_SUPABASE_URL` and `SUPABASE_SECRET_KEY` environment variables.
 
 ## Sign-in works without a VPN in Myanmar
 
@@ -66,6 +103,8 @@ This script creates or updates the demo account in Supabase with the learner pro
 | Confirmation email link | this site | `GET /auth/confirm` |
 | Google sign-in | `accounts.google.com`, this site | `POST /api/auth/google` (ID token, `signInWithIdToken`) |
 | Profile editor | this site | `POST /api/profile/update` |
+| Community settings and reports | this site | `POST /api/profile/community`, `POST /api/community/report` |
+| Pricing waitlist and partner inquiries | this site | `POST /api/plans/waitlist`, `POST /api/partners/inquiry` |
 
 ### Google sign-in setup
 
@@ -139,15 +178,22 @@ Then deploy normally. The service-role and cron secrets must never use the `NEXT
 ## Verification
 
 ```bash
-npm run test:fast       # lint, TypeScript, unit tests
+npm run test:fast       # lint, TypeScript, unit tests (Vitest)
 npm run test:critical   # fast checks + critical Chromium journeys
-npm run test:db         # pgTAP RLS/workflow checks against local Supabase
+npm run test:db         # pgTAP: RLS, review workflow, Community privacy, waitlist
 npm run test:functions  # Deno URL-policy tests
 npm run test:e2e        # Chromium, Firefox, WebKit + axe
+npm run check:resources # re-check every free-lesson link (slow; pass stage keys to narrow)
 npm run build
 ```
 
-The Google OAuth path requires a manual staging check because browser automation should not own a real Google account.
+For the database tests, a local Postgres is enough: `npx supabase db start`, `npx supabase db reset --local`, then `npm run test:db`.
+
+The Google OAuth path needs a manual staging check, because browser automation should not own a real Google account.
+
+## Releasing
+
+A push to `master` is a production deploy (Vercel Git integration). Database changes ship first: apply the migration to the production project, rename the file in `supabase/migrations` to the version Supabase recorded, then merge. Every release bumps `VERSION` and `package.json` and adds a learner-facing `CHANGELOG.md` entry.
 
 ## Trust boundaries
 
@@ -158,46 +204,16 @@ The Google OAuth path requires a manual staging check because browser automation
 - The service worker never caches authenticated pages, API responses, review/admin screens, or proof views.
 - Seeded demonstration records carry `data_origin = seeded_demo` and are excluded from live human-verification metrics.
 
-## Important Notes
-
-### Responsive Design (v0.25.0.0+)
-
-The application is fully responsive across mobile, tablet, and desktop devices:
-
-- **Mobile breakpoint (480–640px):** Single-column layout, optimized touch targets
-- **Tablet breakpoint (700–920px):** Two-column layout with adjusted spacing
-- **Desktop (1080px+):** Full-width layout with maximum content width
-
-Key responsive components:
-- Mission maps and roadmaps scale dynamically based on viewport width
-- Mission submit step card is centered with improved spacing
-- Login page split-screen adapts to single-column on mobile
-- All form inputs and buttons meet accessibility standards (44px minimum touch target)
-
-### Dynamic Submission Fields (v0.25.0.0+)
-
-Mission submission fields are now dynamic based on career path:
-
-- **Frontend Developer / Full-Stack / AI & Data:** GitHub repository URL + Live deployment URL
-- **Content Creator:** Google Drive link (for content pieces) + Campaign/preview URL
-
-Fields are defined in `lib/domain/mission-briefs.ts` and rendered by `components/missions/submission-form.tsx`. New career paths can add field configurations without code changes.
-
-### Supported Mission Paths
-
-1. **Frontend Developer** (12 stages) — HTML, CSS, JavaScript, React, deployment
-2. **Full-Stack Developer** (14 stages) — Frontend + backend, databases, APIs, cloud
-3. **AI & Data Analyst** (13 stages) — SQL, Python, statistics, visualization, dashboards
-4. **Content Creator** (Controlled pilot) — Audience research, content creation, accessibility
-
 ## Key paths
 
-- `app/[locale]` — localized App Router UI
-- `app/api` — validated workflow endpoints
+- `app/[locale]` — localized App Router UI (`/pricing` is public; `/app/*` needs sign-in)
+- `app/api` — validated workflow endpoints; the browser never calls Supabase
+- `lib/domain` — pure product rules: career tracks, missions and their places, progress and levels, community ranking, plans, résumé assembly
+- `lib/i18n/app-copy.ts` — every English and Burmese string in the app
 - `supabase/migrations` — schema, RLS, RPCs, queue, cron, audit pipeline
 - `supabase/functions/process-evaluations` — deterministic evidence checker
 - `supabase/seed.sql` — versioned curriculum and labeled example opportunities
-- `tests` and `supabase/tests` — unit, E2E, accessibility, and RLS coverage
+- `tests` and `supabase/tests` — unit, E2E, accessibility, RLS and privacy coverage
 - `CHANGELOG.md` — learner-facing release history and known issues
 - `PRODUCT.md` — product purpose, constraints, principles, and brand commitments
 - `PRODUCT_PLAN.md` — product strategy, MVP scope, trust model, and rollout plan

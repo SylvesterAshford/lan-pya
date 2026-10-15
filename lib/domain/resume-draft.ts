@@ -26,15 +26,36 @@ import type { ProofItem } from "@/lib/domain/types";
  * starting draft assembled from their record, not a document about them.
  */
 
+/** Verified proof, placed on its path by the caller (lib/domain/mission-place). */
+export type ResumeSource = ProofItem & {
+  /** "Stage 3 · CSS and responsive layout", already localised; null when unplaced. */
+  stageLabel?: string | null;
+  /** The stage's number on its path, for the Trail template's stop markers. */
+  stageNumber?: number | null;
+  pathTitle?: string | null;
+  /** The verification date as the reader writes dates; the ISO date if absent. */
+  verifiedLabel?: string;
+};
+
 export type ResumeBullet = {
   id: string;
   /** The mission this line was assembled from. Shown beside the line. */
   sourceTitle: string;
   sourceVerifiedAt: string;
+  /** The verification date, formatted for the reader. */
+  sourceVerifiedLabel: string;
   /** Competencies a reviewer confirmed for this mission. */
   competencies: string[];
   /** The assembled starting text. The learner may replace it entirely. */
   text: string;
+  /** Who reviewed it, as stored on the proof ("Trained human reviewer"). */
+  reviewerTier: string;
+  /** The learner's own submitted links, shortened for print; null when absent. */
+  liveUrl: string | null;
+  codeUrl: string | null;
+  stageLabel: string | null;
+  stageNumber: number | null;
+  pathTitle: string | null;
 };
 
 export type ResumeDraft = {
@@ -47,6 +68,23 @@ export type ResumeDraft = {
  *  caller should say so rather than silently dropping it. */
 export function eligibleForResume(items: ProofItem[]): ProofItem[] {
   return items.filter((item) => item.state === "active");
+}
+
+/**
+ * A submitted link, shortened for a printed page: no scheme, no "www.", no
+ * trailing slash. Anything that is not an http(s) URL is dropped rather than
+ * printed, because a résumé link that does not open is worse than none.
+ */
+export function displayUrl(value: string | null | undefined): string | null {
+  if (!value) return null;
+  try {
+    const url = new URL(value);
+    if (url.protocol !== "https:" && url.protocol !== "http:") return null;
+    const path = `${url.host.replace(/^www\./, "")}${url.pathname}`.replace(/\/$/, "");
+    return path || null;
+  } catch {
+    return null;
+  }
 }
 
 function line(locale: string, item: ProofItem): string {
@@ -67,9 +105,9 @@ function line(locale: string, item: ProofItem): string {
  * Order follows the order the learner sees, not verification date: they chose
  * the list, so the draft reads in the order they chose it.
  */
-export function buildResumeDraft(locale: string, items: ProofItem[], selectedIds: string[]): ResumeDraft {
+export function buildResumeDraft(locale: string, items: ResumeSource[], selectedIds: string[]): ResumeDraft {
   const chosen = new Set(selectedIds);
-  const picked = eligibleForResume(items).filter((item) => chosen.has(item.id));
+  const picked = items.filter((item) => item.state === "active" && chosen.has(item.id));
 
   const skills: string[] = [];
   for (const item of picked) {
@@ -83,8 +121,15 @@ export function buildResumeDraft(locale: string, items: ProofItem[], selectedIds
       id: item.id,
       sourceTitle: item.title,
       sourceVerifiedAt: item.verifiedAt,
+      sourceVerifiedLabel: item.verifiedLabel ?? item.verifiedAt.slice(0, 10),
       competencies: item.competencies,
       text: line(locale, item),
+      reviewerTier: item.reviewerTier,
+      liveUrl: displayUrl(item.deploymentUrl),
+      codeUrl: displayUrl(item.repositoryUrl),
+      stageLabel: item.stageLabel ?? null,
+      stageNumber: item.stageNumber ?? null,
+      pathTitle: item.pathTitle ?? null,
     })),
     skills,
   };

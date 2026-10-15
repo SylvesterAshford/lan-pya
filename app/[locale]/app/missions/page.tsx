@@ -7,8 +7,8 @@ import { emblemForStage, resolveProgress } from "@/lib/domain/progress";
 import { requireUser } from "@/lib/auth";
 import { getActivePathDashboard, getProfile, getProofItems, getRoadmap } from "@/lib/data/app-data";
 import { getAppCopy, formatAppDate, localizeCareerTerm, localizeRoadmapMilestone } from "@/lib/i18n/app-copy";
-import { getCareerTrack } from "@/lib/domain/career-tracks";
-import { getMissionStage, getStageMission } from "@/lib/domain/mission-briefs";
+import { getStageMission } from "@/lib/domain/mission-briefs";
+import { missionPlace } from "@/lib/domain/mission-place";
 import { DemoResetButton } from "@/components/missions/demo-reset-button";
 import { toMyanmarDigits } from "@/lib/domain/deadlines";
 import { learnerStatus } from "@/lib/domain/mission-status";
@@ -66,11 +66,11 @@ export default async function MissionsPage({ params, searchParams }: { params: P
   // below. The in-progress row used to borrow the learner's current stage,
   // which once the mission was Completed pointed at a different stop.
   const stageOf = (missionKey: string | null | undefined) => {
-    const place = getMissionStage(missionKey);
+    const place = missionPlace(missionKey, locale);
     if (!place) return null;
-    const stages = place.pathKey === pathKey ? roadmap : getCareerTrack(place.pathKey).milestones.map((stage) => localizeRoadmapMilestone(locale, stage));
-    const stage = stages.find((item) => item.key === place.stageKey);
-    return stage ? { stage, pathKey: place.pathKey, onThisPath: place.pathKey === pathKey } : null;
+    // On the active path, prefer the roadmap row: same key and title, plus status.
+    const stage = place.pathKey === pathKey ? roadmap.find((item) => item.key === place.stage.key) ?? place.stage : place.stage;
+    return { stage, pathKey: place.pathKey, pathTitle: place.pathTitle, onThisPath: place.pathKey === pathKey };
   };
   const currentStage = (mission ? stageOf(mission.key)?.stage : null)
     ?? roadmap.find((stage) => stage.status === "active") ?? roadmap.find((stage) => stage.status === "next");
@@ -145,7 +145,7 @@ export default async function MissionsPage({ params, searchParams }: { params: P
                 <span className="mission-tags">
                   <span className="mission-tag verified">{c.missions.verifiedOn} {formatAppDate(locale, item.verifiedAt)}</span>
                   {place ? <span className="mission-tag stage">{c.missions.stage} {num(place.stage.order)}</span> : null}
-                  {place && !place.onThisPath ? <span className="mission-tag path">{localizeCareerTerm(locale, place.pathKey, getCareerTrack(place.pathKey).title)}</span> : null}
+                  {place && !place.onThisPath ? <span className="mission-tag path">{place.pathTitle}</span> : null}
                   {item.dataOrigin === "seeded_demo" ? <span className="mission-tag demo">{c.profile.demo}</span> : null}
                 </span>
                 <strong>{item.title}</strong>

@@ -14,6 +14,7 @@ vi.mock("@/lib/data/app-data", () => ({
   getCommunity: data.getCommunity,
   getPathHistory: data.getPathHistory,
   getCommunitySettings: async () => ({ visible: true, blocked: false, telegram: "https://t.me/aye_learns", facebook: "", linkedin: "", note: "" }),
+  getProfile: async () => ({ id: "learner-1", alias: "Thura", avatar: "traveller-f", dataOrigin: "live" }),
 }));
 
 import CommunityPage from "@/app/[locale]/app/community/page";
@@ -93,5 +94,45 @@ describe("Community page", () => {
     await renderPage({ tab: "leaderboard", track: "content-creator" });
     expect(screen.getByRole("tab", { name: c.tabs.leaderboard })).toHaveAttribute("aria-selected", "true");
     expect(data.getCommunity).toHaveBeenCalledWith("content-creator");
+  });
+});
+
+describe("Community game layer", () => {
+  const person = (alias: string, stage: number, extra: Record<string, unknown> = {}) => ({
+    ...row(alias, stage, extra), isMe: false, isSample: false, note: null, noteMy: null, telegram: null, facebook: null, linkedin: null, avatar: "traveller",
+  });
+
+  it("draws the trail with the viewer on their stage and who stands where", async () => {
+    data.getCommunity.mockResolvedValue({
+      ok: true,
+      data: { viewer: { visible: true, blocked: false, demo: false }, keys: KEYS, rows: [
+        { ...person("Thura", 4), isMe: true },
+        person("Hnin Wai", 4),
+        person("Su Myat", 5),
+        person("Kaung Zaw", 5),
+      ] },
+    });
+    await renderPage();
+    const trail = screen.getByRole("img", { name: "3 other learners on Frontend Developer. You are at stage 4 of 12." });
+    const stops = trail.querySelectorAll(".stage-trail-stops li");
+    expect(stops).toHaveLength(12);
+    expect(stops[3]).toHaveClass("here");
+    expect(stops[2]).toHaveClass("done");
+    expect(stops[3].textContent).toContain("1");
+    expect(stops[4].textContent).toContain("2");
+  });
+
+  it("names the next target on the leaderboard", async () => {
+    data.getCommunity.mockResolvedValue({
+      ok: true,
+      data: { viewer: { visible: true, blocked: false, demo: false }, keys: KEYS, rows: [
+        { ...person("Thura", 4, { points: 200, verified: 2 }), isMe: true },
+        person("Su Myat", 5, { points: 400, verified: 4 }),
+        person("Hnin Wai", 4, { points: 300, verified: 3 }),
+        person("Min Khant", 6, { points: 300, verified: 2 }),
+      ] },
+    });
+    await renderPage({ tab: "leaderboard" });
+    expect(screen.getByText("You're #4 · 100 points behind Min Khant. One verified mission is 100 points.")).toBeInTheDocument();
   });
 });

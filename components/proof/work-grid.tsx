@@ -48,7 +48,7 @@ export function WorkGrid({
       if (!needle) return true;
       // Competencies are searchable too: "accessibility" is how a learner
       // looks for the thing they proved, not the title they gave it.
-      return [item.title, item.eyebrow, ...item.competencies]
+      return [item.title, item.stageTitle ?? "", item.pathTitle ?? "", ...item.competencies]
         .join(" ")
         .toLowerCase()
         .includes(needle);

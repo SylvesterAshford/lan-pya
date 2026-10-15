@@ -1,9 +1,10 @@
 import { Link } from "@/i18n/navigation";
 import { CommunityPathSelect, CommunityView, type CommunityPersonView } from "@/components/app/community-view";
 import { requireUser } from "@/lib/auth";
-import { getCommunity, getCommunitySettings, getPathHistory } from "@/lib/data/app-data";
+import { getCommunity, getCommunitySettings, getPathHistory, getProfile } from "@/lib/data/app-data";
 import { CAREER_TRACKS, getCareerTrack } from "@/lib/domain/career-tracks";
-import { initialsFor, leaderboard, linksOf, noteFor, stageSections, toPeople, type CommunityPerson, type CommunitySection } from "@/lib/domain/community";
+import { initialsFor, leaderboard, linksOf, noteFor, rankStanding, stageCounts, stageSections, toPeople, type CommunityPerson, type CommunitySection } from "@/lib/domain/community";
+import { emblemForStage } from "@/lib/domain/progress";
 import { toMyanmarDigits } from "@/lib/domain/deadlines";
 import { getAppCopy, localizeCareerTerm, localizeRoadmapMilestone } from "@/lib/i18n/app-copy";
 
@@ -32,7 +33,7 @@ export default async function CommunityPage({
   const my = locale === "my";
   const num = (value: number) => (my ? toMyanmarDigits(value) : String(value));
 
-  const [history, settings] = await Promise.all([getPathHistory(user.id), getCommunitySettings(user.id)]);
+  const [history, settings, profile] = await Promise.all([getPathHistory(user.id), getCommunitySettings(user.id), getProfile(user.id)]);
   const active = history.find((path) => path.state === "active") ?? null;
   const paths = CAREER_TRACKS.map((item) => ({ key: item.key, title: localizeCareerTerm(locale, item.key, item.title) }));
   const titleOf = (key: string) => paths.find((path) => path.key === key)?.title ?? key;
@@ -102,6 +103,7 @@ export default async function CommunityPage({
       links: linksOf(person),
       isMe: person.isMe,
       isSample: person.isSample,
+      emblem: emblemForStage(person.finished ? stages.length - 1 : person.stageIndex, stages.length),
     };
   };
 
@@ -123,6 +125,22 @@ export default async function CommunityPage({
   }));
 
   const ranked = leaderboard(people);
+  // The next target, in points: who is just above the viewer and by how much.
+  const standingFacts = rankStanding(ranked);
+  const standing = standingFacts
+    ? standingFacts.rank === 1
+      ? c.standingLead.replace("{path}", pathTitle)
+      : standingFacts.above && standingFacts.above.gap > 0
+        ? c.standingBehind.replace("{rank}", num(standingFacts.rank)).replace("{gap}", num(standingFacts.above.gap)).replace("{name}", standingFacts.above.alias)
+        : c.standingTied.replace("{rank}", num(standingFacts.rank)).replace("{name}", standingFacts.above?.alias ?? "")
+    : null;
+  const others = people.filter((person) => !person.isMe).length;
+  const trail = me && isActivePath && stages.length ? {
+    counts: stageCounts(people, stages.length),
+    current: me.finished ? stages.length - 1 : me.stageIndex,
+    avatar: profile?.avatar ?? "traveller",
+    label: c.trailLabel.replace("{n}", num(others)).replace("{path}", pathTitle).replace("{s}", num(me.stageIndex + 1)).replace("{t}", num(stages.length)),
+  } : null;
   const board = {
     podium: ranked.podium ? ranked.podium.map(view) : null,
     rows: ranked.rows.map((row) => ({ person: view(row.person), rank: row.rank === null ? null : num(row.rank) })),
@@ -146,6 +164,8 @@ export default async function CommunityPage({
       board={board}
       settings={settings}
       initialTab={tab === "leaderboard" ? "leaderboard" : "stage"}
+      trail={trail}
+      standing={standing}
     />
   );
 }

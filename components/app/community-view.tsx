@@ -1,9 +1,12 @@
 "use client";
 
 import { useId, useState, useSyncExternalStore, type KeyboardEvent } from "react";
-import { ChevronDown, ChevronRight, ExternalLink } from "lucide-react";
+import { ChevronDown, ChevronRight, ExternalLink, Target } from "lucide-react";
 import { Link, useRouter } from "@/i18n/navigation";
 import { SheetDialog } from "@/components/app/sheet-dialog";
+import { Emblem } from "@/components/app/emblem";
+import { StageTrail, SummitScene } from "@/components/app/community-scenes";
+import type { EmblemKey } from "@/lib/domain/progress";
 import { CommunitySettings, type CommunitySettingsValue } from "@/components/app/community-settings";
 import type { CommunityLinkKind, CommunityViewer } from "@/lib/domain/community";
 import type { getAppCopy } from "@/lib/i18n/app-copy";
@@ -27,7 +30,12 @@ export type CommunityPersonView = {
   links: { kind: CommunityLinkKind; url: string }[];
   isMe: boolean;
   isSample: boolean;
+  /** The emblem of the stage they stand on, the same mark as on the roadmap. */
+  emblem: EmblemKey;
 };
+
+/** The mini trail in the "You are at" card. */
+export type CommunityTrailView = { counts: number[]; current: number; avatar: string; label: string };
 
 export type CommunitySectionView = { key: string; title: string; count: string; people: CommunityPersonView[] };
 export type CommunityBoardView = {
@@ -62,6 +70,8 @@ export function CommunityView({
   board,
   settings,
   initialTab,
+  trail = null,
+  standing = null,
 }: {
   locale: string;
   labels: CommunityLabels;
@@ -76,6 +86,9 @@ export function CommunityView({
   board: CommunityBoardView;
   settings: CommunitySettingsValue;
   initialTab: Tab;
+  trail?: CommunityTrailView | null;
+  /** "You're #4 · 100 points behind Min Khant", already written; null when unranked. */
+  standing?: string | null;
 }) {
   const router = useRouter();
   const id = useId();
@@ -151,6 +164,7 @@ export function CommunityView({
             <span className="eyebrow">{labels.youAreAt}</span>
             <strong>{me.title}</strong>
             <small>{me.verifiedLabel}</small>
+            {trail ? <StageTrail locale={locale} counts={trail.counts} current={trail.current} avatar={trail.avatar} label={trail.label} stageLabel={labels.rowStage} /> : null}
             {viewer.blocked ? (
               <p className="community-you-line paused">{labels.settings.paused}</p>
             ) : viewer.visible ? (
@@ -195,27 +209,40 @@ export function CommunityView({
 
       <div id={`${id}-panel-leaderboard`} role="tabpanel" aria-labelledby={`${id}-tab-leaderboard`} hidden={tab !== "leaderboard"} className="community-panel">
         {board.podium ? (
+          <div className="community-summit">
+          <SummitScene />
           <ol className="community-podium" aria-label={labels.podiumLabel}>
             {board.podium.map((item, index) => (
               <li key={item.handle} className={`community-place place-${index + 1}`}>
                 <button type="button" onClick={() => setOpen(item.handle)}>
-                  <span className="community-avatar" aria-hidden="true">{item.initials}</span>
+                  <Avatar person={item} large />
                   <span className="sr-only">{labels.rank.replace("{n}", String(index + 1))}, </span>
                   <span className="community-place-name">{item.alias}</span>
                   <span className="community-place-points">{item.points}</span>
                   {item.isSample ? <span className="community-tag sample">{labels.sample}</span> : null}
                   {item.isMe ? <span className="community-tag you">{labels.you}</span> : null}
-                  <span className="community-step" aria-hidden="true">{index + 1}</span>
+                  <span className="community-step" aria-hidden="true">
+                    {index + 1}
+                    {/* The summit flag, planted on the winner's step. */}
+                    {index === 0 ? (
+                      <svg className="community-flag" viewBox="0 0 24 32" focusable="false">
+                        <line x1="3" y1="32" x2="3" y2="2" className="cs-pole" />
+                        <path d="M3 2 L22 7 L3 13 Z" className="cs-flag" />
+                      </svg>
+                    ) : null}
+                  </span>
                 </button>
               </li>
             ))}
           </ol>
+          </div>
         ) : (
           <div className="community-fills">
             <strong>{labels.fillsTitle}</strong>
             <p>{labels.fillsBody}</p>
           </div>
         )}
+        {standing ? <p className="community-standing"><Target size={18} aria-hidden="true" />{standing}</p> : null}
         {board.rows.filter((row) => keep(row.person)).length ? (
           <ol className="community-list ranked">
             {board.rows.filter((row) => keep(row.person)).map(({ person: item, rank }) => (
@@ -272,6 +299,16 @@ export function CommunityPathSelect({ label, value, paths, tab = "stage" }: { la
   );
 }
 
+/** Initials, with the emblem of the stage the person stands on pinned to the corner. */
+function Avatar({ person, large = false }: { person: CommunityPersonView; large?: boolean }) {
+  return (
+    <span className={`community-avatar-wrap${large ? " large" : ""}`} aria-hidden="true">
+      <span className="community-avatar">{person.initials}</span>
+      <span className="community-avatar-emblem"><Emblem kind={person.emblem} size={large ? 22 : 18} /></span>
+    </span>
+  );
+}
+
 function PersonRow({
   person,
   labels,
@@ -288,7 +325,7 @@ function PersonRow({
   return (
     <button type="button" className={`community-row${person.isMe ? " me" : ""}`} onClick={() => onOpen(person.handle)}>
       {rank ? <span className="community-rank"><span className="sr-only">{labels.rank.replace("{n}", rank)}</span><span aria-hidden="true">{rank}</span></span> : null}
-      <span className="community-avatar" aria-hidden="true">{person.initials}</span>
+      <Avatar person={person} />
       <span className="community-row-main">
         <span className="community-row-name">
           {person.alias}

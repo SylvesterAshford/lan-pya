@@ -3,35 +3,48 @@ import { ProofPassport } from "@/components/proof/proof-passport";
 import { ResumeBuilder } from "@/components/proof/resume-builder";
 import { WorkGrid } from "@/components/proof/work-grid";
 import type { CaseStudyItem, CaseStudyState } from "@/components/proof/case-study-card";
+import type { ResumeProfile } from "@/components/proof/resume-sheet";
 import { learnerStatus } from "@/lib/domain/mission-status";
 import type { SubmissionState } from "@/lib/domain/types";
-import { eligibleForResume } from "@/lib/domain/resume-draft";
+import { displayUrl, eligibleForResume, type ResumeSource } from "@/lib/domain/resume-draft";
+import { getMissionBrief } from "@/lib/domain/mission-briefs";
+import { missionPlace } from "@/lib/domain/mission-place";
+import { toMyanmarDigits } from "@/lib/domain/deadlines";
 import { requireUser } from "@/lib/auth";
-import { getActivePathDashboard, getProfile, getProofItems, getRoadmap } from "@/lib/data/app-data";
+import { getActivePathDashboard, getCommunitySettings, getProfile, getProofItems, getRoadmap } from "@/lib/data/app-data";
 import { localizeLevel, resolveProgress } from "@/lib/domain/progress";
-import { formatAppDate, getAppCopy, localizeCareerTerm } from "@/lib/i18n/app-copy";
+import { formatAppDate, getAppCopy, localizeCareerTerm, localizeReviewTier } from "@/lib/i18n/app-copy";
+
+/** Missions with their own page; anything else opens the Missions list. */
+const MISSION_PAGES = new Set(["responsive-profile-card", "content-creator-awareness", "video-editor-vertical-story", "interactive-opportunity-tracker"]);
 
 /**
  * Evidence Studio.
  *
  * The passport says what has been verified, the builder turns a selection of
- * it into a résumé draft, and the grid is the work itself. Every number on the
- * page is counted from records the learner can open.
+ * it into a résumé, and the grid is the work itself. Every number on the page
+ * is counted from records the learner can open.
  *
  * Two things this page refuses to do. It never shows unreviewed work as
  * evidence: only `state === "active"` proof reaches the passport counts, the
  * skills list, or the builder. And it never writes a sentence about somebody's
- * project — a mission with no authored summary says so.
+ * project: a card's summary is the mission's own authored brief.
+ *
+ * Each piece of work is named the way Missions and the roadmap name it, by
+ * its path and stage (lib/domain/mission-place), so the same work reads the
+ * same on all three screens.
  */
 export default async function ProofPage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
   const user = await requireUser(locale);
   const c = getAppCopy(locale);
+  const num = (value: number) => (locale === "my" ? toMyanmarDigits(value) : String(value));
 
-  const [profile, proofItems, dashboard] = await Promise.all([
+  const [profile, proofItems, dashboard, community] = await Promise.all([
     getProfile(user.id),
     getProofItems(),
     getActivePathDashboard(),
+    getCommunitySettings(user.id),
   ]);
   if (!profile) return null;
 
@@ -41,6 +54,7 @@ export default async function ProofPage({ params }: { params: Promise<{ locale: 
     verifiedCount: dashboard.verifiedCount,
     stagesTouched: roadmap.filter((stage) => stage.status === "complete").length,
   });
+  const levelName = localizeLevel(locale, progress.level);
 
   const verified = eligibleForResume(proofItems);
   const pathTitle = dashboard.activePath
@@ -52,8 +66,6 @@ export default async function ProofPage({ params }: { params: Promise<{ locale: 
   const skillsEvidenced = new Set(verified.flatMap((item) => item.competencies)).size;
 
   // The four phases are marked from what actually exists, not from a plan.
-  // Publish stays false until a proof has been shared, which this page does not
-  // yet record, so it is honestly the one phase nobody can complete here.
   const trail = [
     { key: "research" as const, label: c.studio.passport.research, done: dashboard.completedMilestones >= 1 },
     { key: "design" as const, label: c.studio.passport.design, done: dashboard.completedMilestones >= 2 },
@@ -68,43 +80,79 @@ export default async function ProofPage({ params }: { params: Promise<{ locale: 
     if (kind === "fix_links" || kind === "changes" || kind === "rejected") return c.build.needsChanges;
     return c.studio.work.inReview;
   };
+  const missionHref = (key: string | null | undefined) => (key && MISSION_PAGES.has(key) ? `/app/missions/${key}` : "/app/missions");
+  const stageTag = (order: number) => `${c.missions.stage} ${num(order)}`;
 
+  const placed: ResumeSource[] = verified.map((item) => {
+    const place = missionPlace(item.missionKey, locale);
+    return {
+      ...item,
+      reviewerTier: localizeReviewTier(locale, item.reviewerTier),
+      verifiedLabel: formatAppDate(locale, item.verifiedAt),
+      stageLabel: place ? `${stageTag(place.stage.order)} · ${place.stage.title}` : null,
+      stageNumber: place?.stage.order ?? null,
+      pathTitle: place?.pathTitle ?? null,
+    };
+  });
+
+  const next = dashboard.nextMission;
+  const nextPlace = next ? missionPlace(next.key, locale) : null;
   const cases: CaseStudyItem[] = [
-    ...verified.map((item) => ({
-      id: item.id,
-      eyebrow: pathTitle ?? c.studio.work.title,
-      title: item.title,
-      // The record carries competencies and dates, not prose. Saying so beats
-      // inventing a description of work we did not see.
-      summary: null,
-      competencies: item.competencies,
-      state: "verified" as CaseStudyState,
-      dateLabel: `${c.proof.verified} ${formatAppDate(locale, item.verifiedAt)}`,
-      href: "/app/proof",
-      isDemo: item.dataOrigin === "seeded_demo",
-    })),
+    ...verified.map((item) => {
+      const place = missionPlace(item.missionKey, locale);
+      return {
+        id: item.id,
+        title: item.title,
+        stageTitle: place?.stage.title ?? null,
+        stageTag: place ? stageTag(place.stage.order) : null,
+        pathTitle: place?.pathTitle ?? pathTitle,
+        summary: item.missionKey ? getMissionBrief(item.missionKey, locale)?.intro ?? null : null,
+        competencies: item.competencies,
+        state: "verified" as CaseStudyState,
+        dateLabel: `${c.missions.verifiedOn} ${formatAppDate(locale, item.verifiedAt)}`,
+        href: missionHref(item.missionKey),
+        isDemo: item.dataOrigin === "seeded_demo",
+      };
+    }),
     // A submission that exists but has not been reviewed is work, not proof.
-    ...(dashboard.nextMission && dashboard.nextMission.submissionState && dashboard.nextMission.submissionState !== "verified"
+    ...(next && next.submissionState && next.submissionState !== "verified"
       ? [{
-        id: dashboard.nextMission.key,
-        eyebrow: pathTitle ?? c.studio.work.title,
-        title: localizeCareerTerm(locale, dashboard.nextMission.key, dashboard.nextMission.title),
-        summary: null,
+        id: next.key,
+        title: localizeCareerTerm(locale, next.key, next.title),
+        stageTitle: nextPlace?.stage.title ?? null,
+        stageTag: nextPlace ? stageTag(nextPlace.stage.order) : null,
+        pathTitle: nextPlace?.pathTitle ?? pathTitle,
+        summary: getMissionBrief(next.key, locale)?.intro ?? null,
         competencies: [],
-        state: (dashboard.nextMission.submissionState === "draft" ? "draft" : "in_review") as CaseStudyState,
+        state: (next.submissionState === "draft" ? "draft" : "in_review") as CaseStudyState,
         // Same words as the mission runner: Completed is not Verified.
-        dateLabel: submissionLabel(dashboard.nextMission.submissionState),
-        href: "/app/missions",
+        dateLabel: submissionLabel(next.submissionState),
+        href: missionHref(next.key),
         isDemo: false,
       }]
       : []),
   ];
 
+  // Everything the résumé shows about the learner comes from their own
+  // records: their name, the email they signed in with, the links they chose
+  // to share in Community, and where they stand on their path.
+  const resumeProfile: ResumeProfile = {
+    name: profile.alias,
+    email: user.email ?? null,
+    telegram: displayUrl(community.telegram),
+    linkedin: displayUrl(community.linkedin),
+    facebook: displayUrl(community.facebook),
+    pathTitle,
+    levelLine: c.studio.passport.learnerLine.split("{level}").join(levelName).split("{n}").join(num(progress.level.rank)),
+    stagesDone: roadmap.filter((stage) => stage.status === "complete").length,
+    stagesTotal: roadmap.length,
+  };
+
   return (
     <div className="app-page studio-page">
-      {/* Heading and the two things you can do with this page sit on one line,
-          per the Evidence Studio concept. The actions are on the right because
-          they act on the whole record, not on any one card below. */}
+      {/* Heading and the two things you can do with this page sit on one line.
+          The actions are on the right because they act on the whole record,
+          not on any one card below. */}
       <div className="studio-hero">
         <section className="page-heading compact-heading">
           <span className="eyebrow">{c.studio.heading}</span>
@@ -117,16 +165,15 @@ export default async function ProofPage({ params }: { params: Promise<{ locale: 
         </div>
       </div>
 
-      {/* The passport and the résumé builder are one band: what the record
-          says, and what you can make from it. Reading the first then acting on
-          the second is the whole point of the page, and stacking them put a
-          screen of scrolling between the two halves of that thought. */}
-      <div className="studio-split">
+      {/* Three bands, each full width: what the record says, what you can make
+          from it, and the work itself. Side by side, the passport and the
+          builder were each too narrow and the passport stretched into an empty
+          slab of navy beside the longer builder. */}
       <ProofPassport
         locale={locale}
         alias={profile.alias}
         mascotVariant={profile.avatar}
-        levelName={localizeLevel(locale, progress.level)}
+        levelName={levelName}
         levelRank={progress.level.rank}
         availability={profile.headline}
         completedMissions={dashboard.completedMilestones}
@@ -138,12 +185,11 @@ export default async function ProofPage({ params }: { params: Promise<{ locale: 
 
       <ResumeBuilder
         locale={locale}
-        alias={profile.alias}
-        headline={profile.headline}
-        items={verified}
+        profile={resumeProfile}
+        defaultRole={profile.headline ?? pathTitle ?? ""}
+        items={placed}
         labels={c.studio.resume}
       />
-      </div>
 
       <WorkGrid locale={locale} items={cases} labels={c.studio.work} />
     </div>
