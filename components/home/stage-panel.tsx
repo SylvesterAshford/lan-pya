@@ -56,7 +56,7 @@ export function StagePanel({
               {resources ? (
                 <ul className="topic-list">
                   {group.items.map((item, index) => (
-                    <TopicItem key={item} topic={item} resources={resources[group.offset + index]} locale={locale} labels={resourceLabels} />
+                    <TopicItem key={item} topic={item} number={group.offset + index + 1} resources={resources[group.offset + index]} locale={locale} labels={resourceLabels} />
                   ))}
                 </ul>
               ) : (

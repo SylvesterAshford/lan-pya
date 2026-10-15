@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.30.1.0] - 2026-10-15
+
+### Changed
+
+- **The stage brief's topics are one numbered card.** Each topic shows, before you open it, how many videos and guides it has and whether one is taught in Burmese. Opened, its links sit indented under it. The grey box around pace and placement is gone, so the brief reads lighter.
+
 ## [0.30.0.0] - 2026-10-15
 
 ### Added

@@ -6961,14 +6961,10 @@ html[lang="my"] .mission-focus h2{
 }
 
 .roadmap-detail-meta{
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: var(--s-sm);
-  margin: 0 0 var(--s-md);
-  padding: 10px var(--s-md);
-  background: var(--surface-sunk);
-  border: 1px solid var(--hairline);
-  border-radius: var(--r-control);
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s-sm) var(--s-xl);
+  margin: 0 0 var(--s-lg);
 }
 
 .roadmap-detail-meta dt{
@@ -14584,11 +14580,11 @@ html[lang="my"] .stage-topics-label { letter-spacing: 0; text-transform: none; }
 
 /* ---- Topic resources ----
    Each topic on a stage opens onto free videos and guides (components/app/
-   topic-resources.tsx). Used in the roadmap step brief and in Home's stage
-   panel, so the rules below reset the list styles both of those set on their
-   own <ul>/<li>: the brief's two-column grid and Home's topic chips. Rows on
-   hairlines, no cards; links are navy, a Burmese-language lesson carries a
-   navy language chip. */
+   topic-resources.tsx), in the roadmap step brief and Home's stage panel.
+   The topics sit in one bordered card, a numbered row each; a closed row
+   already says what is inside (watch/read counts, a Burmese chip), and an
+   opened row lists its links inset under the topic name. The rules reset the
+   list styles both hosts set on their own <ul>/<li>. */
 .topic-intro { margin: 0 0 var(--s-sm); font-size: var(--t-meta); line-height: var(--l-meta); color: var(--muted-ink); }
 .stage-topics .topic-intro { grid-column: 1 / -1; margin: 0; }
 /* An opened topic needs the panel's full width for its links, so the two
@@ -14596,25 +14592,32 @@ html[lang="my"] .stage-topics-label { letter-spacing: 0; text-transform: none; }
 .stage-topics.has-resources { grid-template-columns: minmax(0, 1fr); }
 .roadmap-detail-section .topic-list,
 .stage-topics .topic-list,
-.topic-list { display: grid; grid-template-columns: minmax(0, 1fr); gap: 0; margin: 0; padding: 0; list-style: none; border-top: 1px solid var(--hairline); }
+.topic-list { display: grid; grid-template-columns: minmax(0, 1fr); gap: 0; margin: 0; padding: 0; list-style: none; background: var(--surface); border: 1px solid var(--hairline); border-radius: var(--r-card); overflow: hidden; }
 .roadmap-detail-section .topic-list > li,
-.stage-topics .topic-list > li { padding: 0; font-size: var(--t-meta); line-height: var(--l-meta); color: var(--ink); background: none; border: 0; border-bottom: 1px solid var(--hairline); border-radius: 0; }
-.topic-details > summary { display: flex; align-items: center; gap: var(--s-sm); min-height: 44px; padding: var(--s-xs) var(--s-2xs); font-size: var(--t-meta); font-weight: 600; line-height: var(--l-meta); color: var(--ink); cursor: pointer; list-style: none; }
+.stage-topics .topic-list > li { padding: 0; font-size: var(--t-meta); line-height: var(--l-meta); color: var(--ink); background: none; border: 0; border-top: 1px solid var(--hairline); border-radius: 0; }
+.roadmap-detail-section .topic-list > li:first-child,
+.stage-topics .topic-list > li:first-child { border-top: 0; }
+.topic-details > summary { display: flex; align-items: center; gap: var(--s-sm); min-height: 52px; padding: var(--s-sm) var(--s-md); font-size: var(--t-meta); font-weight: 600; line-height: var(--l-meta); color: var(--ink); cursor: pointer; list-style: none; }
 .topic-details > summary::-webkit-details-marker { display: none; }
-.topic-details > summary:focus-visible { outline: 2px solid var(--teal-700); outline-offset: 2px; border-radius: var(--r-control); }
+.topic-details > summary:hover { background: var(--navy-050); }
+.topic-details[open] > summary { background: var(--surface-sunk); }
+.topic-details > summary:focus-visible { outline: 2px solid var(--teal-700); outline-offset: -2px; }
+.topic-num { flex: none; display: grid; place-items: center; width: 28px; height: 28px; font-size: var(--t-label); font-weight: 700; font-variant-numeric: tabular-nums; color: var(--navy-700); background: var(--navy-050); border: 1px solid var(--navy-100); border-radius: var(--r-control); }
+.topic-details[open] .topic-num { color: var(--surface); background: var(--navy-700); border-color: var(--navy-700); }
 .topic-name { flex: 1; min-width: 0; overflow-wrap: anywhere; }
-.topic-count { flex: none; font-size: var(--t-label); font-weight: 600; color: var(--muted-ink); white-space: nowrap; }
+.topic-kinds { flex: none; display: inline-flex; gap: var(--s-sm); font-size: var(--t-label); font-weight: 600; font-variant-numeric: tabular-nums; color: var(--muted-ink); }
+.topic-kinds > span { display: inline-flex; align-items: center; gap: 3px; }
 .topic-chevron { flex: none; color: var(--muted-ink); transition: transform 160ms ease-in-out; }
 .topic-details[open] > summary .topic-chevron { transform: rotate(180deg); }
 .roadmap-detail-section .topic-resources,
 .stage-topics .topic-resources,
-.topic-resources { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--s-xs); margin: 0 0 var(--s-sm); padding: 0; list-style: none; }
+.topic-resources { display: grid; grid-template-columns: minmax(0, 1fr); gap: 0; margin: 0; padding: var(--s-2xs) var(--s-md) var(--s-sm) calc(var(--s-md) + 28px + var(--s-sm)); list-style: none; background: var(--surface-sunk); }
 .roadmap-detail-section .topic-resources > li,
 .stage-topics .topic-resources > li { padding: 0; font-size: var(--t-meta); background: none; border: 0; border-radius: 0; }
-.topic-resources a { display: flex; align-items: flex-start; gap: var(--s-sm); min-height: 44px; padding: var(--s-sm); color: var(--ink); text-decoration: none; background: var(--surface-sunk); border-radius: var(--r-control); }
-.topic-resources a:hover { background: var(--navy-050); }
+.topic-resources a { display: flex; align-items: flex-start; gap: var(--s-sm); min-height: 44px; padding: var(--s-sm); margin: 0 calc(var(--s-sm) * -1); color: var(--ink); text-decoration: none; border-radius: var(--r-control); }
+.topic-resources a:hover { background: var(--surface); }
 .topic-resources a:hover .topic-resource-title { text-decoration: underline; }
-.topic-resources a:focus-visible { outline: 2px solid var(--teal-700); outline-offset: 2px; }
+.topic-resources a:focus-visible { outline: 2px solid var(--teal-700); outline-offset: -2px; }
 .topic-resources svg { flex: none; margin-top: 2px; color: var(--navy-700); }
 .topic-resource-copy { display: grid; flex: 1; gap: 2px; min-width: 0; }
 .topic-resource-title { font-size: var(--t-meta); font-weight: 600; line-height: var(--l-meta); color: var(--navy-700); overflow-wrap: anywhere; }

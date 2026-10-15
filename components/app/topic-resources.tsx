@@ -23,11 +23,14 @@ const ICONS: Record<ResourceKind, LucideIcon> = {
  */
 export function TopicItem({
   topic,
+  number,
   resources,
   locale,
   labels,
 }: {
   topic: string;
+  /** Position in the stage, from 1; drawn as the row's index. */
+  number: number;
   resources: LearningResource[];
   locale: string;
   labels: ResourceLabels;
@@ -36,6 +39,12 @@ export function TopicItem({
 
   const my = locale === "my";
   const num = (value: number) => (my ? toMyanmarDigits(value) : String(value));
+  const index = my ? toMyanmarDigits(number).padStart(2, "၀") : String(number).padStart(2, "0");
+  // The closed row says what is inside without opening it: how many things to
+  // watch, how many to read, and whether one is taught in Burmese.
+  const watch = resources.filter((item) => item.kind === "video" || item.kind === "course").length;
+  const read = resources.length - watch;
+  const hasBurmese = resources.some((item) => item.lang === "my");
   const duration = (minutes: number) =>
     minutes < 60
       ? labels.minutes.replace("{n}", num(minutes))
@@ -47,8 +56,14 @@ export function TopicItem({
     <li className="topic-item">
       <details className="topic-details">
         <summary>
+          <span className="topic-num" aria-hidden="true">{index}</span>
           <span className="topic-name">{topic}</span>
-          <span className="topic-count">{labels.count.replace("{n}", num(resources.length))}</span>
+          {hasBurmese ? <span className="topic-resource-lang">{labels.burmese}</span> : null}
+          <span className="topic-kinds" aria-hidden="true">
+            {watch ? <span><PlayCircle size={14} />{num(watch)}</span> : null}
+            {read ? <span><BookOpen size={14} />{num(read)}</span> : null}
+          </span>
+          <span className="sr-only">{labels.count.replace("{n}", num(resources.length))}</span>
           <ChevronDown className="topic-chevron" size={16} aria-hidden="true" />
         </summary>
         <ul className="topic-resources">
