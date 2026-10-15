@@ -15041,3 +15041,169 @@ html[lang="my"] .community-card-title { letter-spacing: 0; }
 @media (prefers-reduced-motion: reduce) {
   .community-switch > span, .community-switch > span::after { transition: none; }
 }
+
+/* ============================================================
+   PRICING — plans laid out the way subscription apps do: one
+   full page, a close control, Personal | Business, and cards
+   side by side. Chrome palette only: Pro is featured in navy;
+   no amber (urgency only) and no medal or gradient fills.
+   ============================================================ */
+.sidebar-upgrade {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  min-height: 44px;
+  margin-bottom: 4px;
+  padding: 8px 10px;
+  color: #e7eef6;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 9px;
+  font-size: var(--t-meta);
+  font-weight: 600;
+  transition: background-color 160ms ease;
+}
+.sidebar-upgrade:hover { background: rgba(255, 255, 255, 0.06); }
+.sidebar-upgrade svg { width: 18px; height: 18px; flex: none; }
+[data-sidebar-state="collapsed"] .sidebar-upgrade { justify-content: center; padding-left: 0; padding-right: 0; border-color: transparent; }
+[data-sidebar-state="collapsed"] .sidebar-upgrade span { display: none; }
+
+.welcome-nav-links { display: flex; align-items: center; gap: var(--s-md); }
+.welcome-nav-link { color: rgba(255, 255, 255, 0.82); font-size: var(--t-meta); font-weight: 600; }
+.welcome-nav-link:hover { color: #fff; }
+
+.pricing-shell { min-height: 100vh; padding: 0 var(--s-md) var(--s-3xl); background: var(--canvas); color: var(--ink); }
+.pricing-top { display: flex; align-items: center; justify-content: space-between; max-width: 1120px; height: 72px; margin: 0 auto; }
+.pricing-brand { color: var(--ink); }
+.pricing-close { display: grid; place-items: center; width: 44px; height: 44px; color: var(--muted-ink); border-radius: 50%; }
+.pricing-close:hover { color: var(--ink); background: var(--surface-sunk); }
+.pricing-close:focus-visible { outline: 2px solid var(--teal-700); outline-offset: 2px; }
+
+.pricing-head { max-width: 640px; margin: var(--s-md) auto var(--s-lg); text-align: center; }
+.pricing-head h1 { margin: 0; color: var(--ink); font-size: var(--t-display); font-weight: 700; letter-spacing: var(--k-display); line-height: 1.15; }
+html[lang="my"] .pricing-head h1 { letter-spacing: 0; line-height: 1.4; }
+.pricing-head p { margin: var(--s-sm) 0 var(--s-lg); color: var(--muted-ink); font-size: var(--t-body); line-height: var(--l-body); }
+.pricing-tabs button { min-width: 120px; min-height: 40px; font-size: var(--t-body); }
+
+.pricing-notice {
+  max-width: 720px;
+  margin: 0 auto var(--s-lg);
+  padding: 10px 14px;
+  color: var(--ink);
+  background: var(--navy-050);
+  border: 1px solid var(--hairline);
+  border-radius: var(--r-control);
+  font-size: var(--t-meta);
+  line-height: var(--l-meta);
+  text-align: center;
+}
+
+.pricing-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--s-md); max-width: 1120px; margin: 0 auto; align-items: start; }
+.pricing-card { display: flex; flex-direction: column; gap: 14px; padding: var(--s-lg); background: var(--surface); border: 1px solid var(--hairline); border-radius: var(--r-card); }
+.pricing-card.featured { border: 2px solid var(--navy-700); padding: calc(var(--s-lg) - 1px); }
+.pricing-card-head { display: flex; align-items: flex-start; gap: 12px; }
+.pricing-card-head h2 { margin: 0; color: var(--ink); font-size: var(--t-h2); font-weight: 700; letter-spacing: var(--k-h2); line-height: var(--l-h2); }
+html[lang="my"] .pricing-card-head h2 { letter-spacing: 0; }
+.pricing-card-head p { margin: 4px 0 0; color: var(--muted-ink); font-size: var(--t-meta); line-height: var(--l-meta); }
+.pricing-icon { display: grid; place-items: center; flex: none; width: 40px; height: 40px; color: var(--navy-700); background: var(--navy-100); border-radius: var(--r-control); }
+
+.pricing-price { display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px; }
+.pricing-price strong { color: var(--ink); font-size: var(--t-display); font-weight: 700; letter-spacing: var(--k-display); line-height: 1.1; font-variant-numeric: tabular-nums; }
+html[lang="my"] .pricing-price strong { letter-spacing: 0; }
+.pricing-price span { color: var(--muted-ink); font-size: var(--t-meta); }
+.pricing-equiv { margin: -6px 0 0; color: var(--muted-ink); font-size: var(--t-meta); font-variant-numeric: tabular-nums; }
+
+.pricing-periods { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; padding: 3px; background: var(--surface-sunk); border: 1px solid var(--hairline); border-radius: 10px; }
+.pricing-periods button {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  min-height: 44px;
+  padding: 4px 6px;
+  color: var(--muted-ink);
+  background: transparent;
+  border: 0;
+  border-radius: 7px;
+  font: inherit;
+  font-size: var(--t-meta);
+  font-weight: 600;
+  cursor: pointer;
+}
+.pricing-periods button.on { color: var(--navy-900); background: var(--surface); box-shadow: 0 0 0 1px var(--hairline); }
+.pricing-periods button:focus-visible { outline: 2px solid var(--teal-700); outline-offset: 1px; }
+.pricing-save { color: var(--teal-700); font-size: var(--t-label); font-weight: 600; font-variant-numeric: tabular-nums; }
+
+.pricing-cta { width: 100%; min-height: 48px; justify-content: center; }
+.pricing-joined { display: flex; align-items: center; justify-content: center; gap: 8px; min-height: 48px; margin: 0; color: var(--teal-900); background: var(--teal-100); border-radius: var(--r-control); font-size: var(--t-meta); font-weight: 600; text-align: center; }
+.pricing-status { margin: -6px 0 0; color: var(--muted-ink); font-size: var(--t-meta); }
+.pricing-status.error { color: var(--error-500); }
+
+.pricing-includes { margin: 4px 0 0; color: var(--ink); font-size: var(--t-meta); font-weight: 700; }
+.pricing-features { display: grid; gap: 10px; margin: 0; padding: 0; list-style: none; }
+/* The check keeps its own column, so a long Burmese line wraps under the
+   text, never leaving the check alone above it. */
+.pricing-features li { display: grid; grid-template-columns: 16px minmax(0, 1fr); align-items: start; gap: 8px; color: var(--ink); font-size: var(--t-body); line-height: 1.5; }
+.pricing-features li > svg { margin-top: 0.2em; color: var(--teal-500); }
+.pricing-features .pricing-soon { display: inline-block; margin-left: 2px; vertical-align: 1px; }
+.pricing-features li.soon { color: var(--muted-ink); }
+.pricing-features li.soon > svg { color: var(--muted-ink); opacity: 0.6; }
+.pricing-soon { padding: 1px 8px; color: var(--muted-ink); background: var(--surface-sunk); border: 1px solid var(--hairline); border-radius: 999px; font-size: var(--t-label); font-weight: 600; white-space: nowrap; }
+.pricing-note { margin: auto 0 0; padding-top: 12px; color: var(--muted-ink); border-top: 1px solid var(--hairline); font-size: var(--t-meta); }
+
+.pricing-fees { display: grid; margin: 0; }
+.pricing-fees > div { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; padding: 12px 0; border-top: 1px solid var(--hairline); }
+.pricing-fees > div:first-child { border-top: 0; padding-top: 0; }
+/* The global dl/dt rule makes terms uppercase captions; these are row titles. */
+.pricing-fees dt { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 8px; min-width: 0; color: var(--ink); font-size: var(--t-body); font-weight: 600; letter-spacing: 0; text-transform: none; }
+.pricing-fees dt small { flex-basis: 100%; color: var(--muted-ink); font-size: var(--t-meta); font-weight: 400; letter-spacing: 0; text-transform: none; }
+.pricing-fees dd { flex: none; max-width: 45%; margin: 0; color: var(--navy-700); font-size: var(--t-meta); font-weight: 700; text-align: right; }
+
+/* One row per longer period: what it is and what it replaces on the left,
+   the price and the saving on the right. */
+.pricing-longer { display: grid; gap: var(--s-sm); margin: 0; padding: 0; list-style: none; }
+.pricing-longer li {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  grid-template-areas: "name price" "was save";
+  gap: 2px 12px;
+  padding: 10px 12px;
+  background: var(--surface-sunk);
+  border: 1px solid var(--hairline);
+  border-radius: var(--r-control);
+}
+.pricing-longer-name { grid-area: name; color: var(--ink); font-size: var(--t-meta); font-weight: 600; }
+.pricing-longer strong { grid-area: price; color: var(--ink); font-size: var(--t-meta); font-weight: 700; text-align: right; font-variant-numeric: tabular-nums; }
+.pricing-longer small { grid-area: was; color: var(--muted-ink); font-size: var(--t-meta); }
+.pricing-longer .pricing-save { grid-area: save; text-align: right; }
+
+.roadmap-detail-dialog.pricing-dialog { width: min(480px, 100%); }
+.pricing-inquiry { display: grid; gap: 14px; }
+.pricing-inquiry-interest { margin: -8px 0 0; color: var(--muted-ink); font-size: var(--t-meta); }
+.pricing-inquiry textarea { padding: 10px 12px; color: var(--ink); background: var(--surface); border: 1px solid var(--hairline); border-radius: var(--r-control); font: inherit; font-size: var(--t-body); resize: vertical; }
+.pricing-inquiry textarea:focus-visible { outline: 2px solid var(--teal-700); outline-offset: 1px; }
+.pricing-trap { position: absolute; left: -10000px; width: 1px; height: 1px; overflow: hidden; }
+.pricing-sent p { margin: var(--s-sm) 0 var(--s-md); color: var(--ink); }
+
+.admin-inquiries ul { display: grid; gap: 12px; margin: 0; padding: 0; list-style: none; }
+.admin-inquiries li { display: grid; gap: 4px; padding-top: 12px; border-top: 1px solid var(--hairline); }
+.admin-inquiries li:first-child { padding-top: 0; border-top: 0; }
+.admin-inquiries p { margin: 0; }
+.admin-inquiries small { color: var(--muted-ink); }
+
+@media (max-width: 920px) {
+  .pricing-grid { grid-template-columns: minmax(0, 560px); justify-content: center; }
+}
+
+@media (max-width: 480px) {
+  .pricing-head h1 { font-size: var(--t-h1); letter-spacing: var(--k-h1); }
+  .pricing-card { padding: var(--s-md); }
+  .pricing-card.featured { padding: calc(var(--s-md) - 1px); }
+  .pricing-tabs { width: 100%; }
+  .pricing-tabs button { flex: 1; min-width: 0; }
+  .welcome-nav-links { gap: 12px; }
+}
+
+@media (max-width: 860px) {
+  .roadmap-detail-dialog.pricing-dialog { width: 100%; }
+}

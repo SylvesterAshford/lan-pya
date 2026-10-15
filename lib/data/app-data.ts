@@ -52,6 +52,28 @@ export async function getCommunitySettings(userId: string): Promise<CommunitySet
   };
 }
 
+/** Which paid plans this learner is waiting for, and in which period. */
+export async function getPlanWaitlist(userId: string): Promise<Partial<Record<"pro" | "career_plus", string>>> {
+  const supabase = await createClient();
+  const { data } = await supabase.from("plan_waitlist").select("plan,billing").eq("user_id", userId);
+  return Object.fromEntries((data ?? []).map((row) => [String(row.plan), String(row.billing)]));
+}
+
+export type PartnerInquiry = { kind: string; organization: string; contactName: string; contact: string; message: string | null; createdAt: string };
+
+/** The latest partner inquiries, for the Admin page. Empty for anyone else. */
+export async function getPartnerInquiries(): Promise<PartnerInquiry[]> {
+  const supabase = await createClient();
+  const { data } = await supabase.rpc("get_partner_inquiries");
+  return (Array.isArray(data) ? data : []).map((row) => {
+    const item = asRecord(row);
+    return {
+      kind: String(item.kind ?? ""), organization: String(item.organization ?? ""), contactName: String(item.contact_name ?? ""),
+      contact: String(item.contact ?? ""), message: item.message ? String(item.message) : null, createdAt: String(item.created_at ?? ""),
+    };
+  });
+}
+
 export type CommunityResult = { ok: true; data: CommunityData } | { ok: false };
 
 /**

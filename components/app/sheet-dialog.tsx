@@ -6,21 +6,24 @@ import { X } from "lucide-react";
 const FOCUSABLE = ["a[href]", "button:not([disabled])", "input:not([disabled])", "textarea:not([disabled])", "select:not([disabled])", '[tabindex]:not([tabindex="-1"])'].join(",");
 
 /**
- * The Community card's shell: a 480px dialog on desktop and a bottom sheet
- * below 860px, the step brief's two presentations (DESIGN.md "Detail panel").
- * It reuses the step brief's overlay and sheet rules and only narrows the box.
+ * A narrow dialog on desktop and a bottom sheet below 860px: the step brief's
+ * two presentations (DESIGN.md "Detail panel"), reused by the Community card
+ * and the pricing inquiry form. It takes the step brief's overlay and sheet
+ * rules; `className` only narrows the box.
  *
  * Focus moves into the dialog on open, Tab stays inside, Escape and a click on
  * the veil close it, and focus goes back to whatever opened it.
  */
-export function CommunityDialog({
+export function SheetDialog({
   labelledBy,
   eyebrow,
   closeLabel,
   onClose,
+  className = "community-dialog",
   children,
 }: {
   labelledBy: string;
+  className?: string;
   eyebrow: ReactNode;
   closeLabel: string;
   onClose: () => void;
@@ -77,7 +80,7 @@ export function CommunityDialog({
       role="presentation"
       onClick={(event) => { if (event.target === event.currentTarget) onClose(); }}
     >
-      <div className="roadmap-detail-dialog community-dialog" role="dialog" aria-modal="true" aria-labelledby={labelledBy} tabIndex={-1} ref={dialogRef}>
+      <div className={`roadmap-detail-dialog ${className}`} role="dialog" aria-modal="true" aria-labelledby={labelledBy} tabIndex={-1} ref={dialogRef}>
         <div className="roadmap-detail-heading">
           <span className="eyebrow">{eyebrow}</span>
           <button type="button" className="roadmap-detail-close" onClick={onClose} aria-label={closeLabel}>

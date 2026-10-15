@@ -3,6 +3,7 @@
 import {
   BadgeCheck,
   BriefcaseBusiness,
+  CircleArrowUp,
   Home,
   Map,
   ShieldCheck,
@@ -225,6 +226,12 @@ function AppShellContent({ children, profile, roles, locale, reviewCount }: { ch
         </SidebarContent>
 
         <SidebarFooter>
+          {/* Plans live on their own full page, the way subscription apps put
+              "Upgrade" just above the account. Paid plans are a waitlist. */}
+          <Link className="sidebar-upgrade" href="/pricing">
+            <CircleArrowUp aria-hidden="true" />
+            <span>{my ? "မြှင့်တင်မည်" : "Upgrade"}</span>
+          </Link>
           <Link className="sidebar-account" href="/app/profile" title={`${accountLabel}: ${profile.alias}`}>
             <span className="app-avatar" aria-hidden="true">{profile.alias.slice(0, 2).toUpperCase()}</span>
             <span className="sidebar-account-copy">

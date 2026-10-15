@@ -3,7 +3,7 @@
 import { useId, useState, useSyncExternalStore, type KeyboardEvent } from "react";
 import { ChevronDown, ChevronRight, ExternalLink } from "lucide-react";
 import { Link, useRouter } from "@/i18n/navigation";
-import { CommunityDialog } from "@/components/app/community-dialog";
+import { SheetDialog } from "@/components/app/sheet-dialog";
 import { CommunitySettings, type CommunitySettingsValue } from "@/components/app/community-settings";
 import type { CommunityLinkKind, CommunityViewer } from "@/lib/domain/community";
 import type { getAppCopy } from "@/lib/i18n/app-copy";
@@ -245,10 +245,10 @@ export function CommunityView({
       ) : null}
 
       {joining ? (
-        <CommunityDialog labelledBy={`${id}-join`} eyebrow={labels.settings.section} closeLabel={labels.card.close} onClose={() => setJoining(false)}>
+        <SheetDialog labelledBy={`${id}-join`} eyebrow={labels.settings.section} closeLabel={labels.card.close} onClose={() => setJoining(false)}>
           <h2 className="community-card-title" id={`${id}-join`}>{labels.settings.joinTitle}</h2>
           <CommunitySettings initial={settings} labels={labels.settings} mode="join" isDemo={viewer.demo} onSaved={() => setJoining(false)} onCancel={() => setJoining(false)} />
-        </CommunityDialog>
+        </SheetDialog>
       ) : null}
     </div>
   );
@@ -355,7 +355,7 @@ function PersonCard({
       : person.isSample ? labels.card.sampleEyebrow : person.eyebrow;
 
   return (
-    <CommunityDialog labelledBy={`${id}-title`} eyebrow={eyebrow} closeLabel={labels.card.close} onClose={mode === "sent" ? onReported : onClose}>
+    <SheetDialog labelledBy={`${id}-title`} eyebrow={eyebrow} closeLabel={labels.card.close} onClose={mode === "sent" ? onReported : onClose}>
       {mode === "card" ? (
         <>
           <div className="community-card-head">
@@ -439,7 +439,7 @@ function PersonCard({
           <CommunitySettings initial={settings} labels={labels.settings} mode="join" isDemo={viewer.demo} onSaved={() => setMode("card")} onCancel={() => setMode("card")} />
         </>
       ) : null}
-    </CommunityDialog>
+    </SheetDialog>
   );
 }
 

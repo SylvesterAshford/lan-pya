@@ -80,6 +80,12 @@ describe("AppShell", () => {
     expect(screen.getByRole("link", { name: "Community" })).toHaveAttribute("href", "/app/community");
   });
 
+  it("puts Upgrade above the account row, pointing at the plans", () => {
+    pathname = "/en/app/today";
+    render(<AppShell profile={DEMO_PROFILE} roles={new Set()} locale="en"><p>Page</p></AppShell>);
+    expect(screen.getByRole("link", { name: "Upgrade" })).toHaveAttribute("href", "/pricing");
+  });
+
   it("renders only the selected language", () => {
     pathname = "/my/app/paths";
     render(<AppShell profile={{ ...DEMO_PROFILE, locale: "my" }} roles={new Set()} locale="my"><p>Page</p></AppShell>);

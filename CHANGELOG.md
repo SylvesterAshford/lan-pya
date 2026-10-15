@@ -1,5 +1,14 @@
 # Changelog
 
+## [0.37.0.0] - 2026-10-16
+
+### Added
+
+- **Plans and pricing.** A new pricing page, laid out like other subscription apps, with a Personal | Business switch. Personal shows Free, Pro Student (10,000 MMK a month or 55,000 MMK for 6 months) and Career+ (25,000 MMK a month or 70,000 MMK for 3 months), with the saving for the longer period worked out for you. Business shows employer fees, the university partnership and the corporate partnership.
+- **Join the waitlist.** Paid plans aren't on sale yet, so "Join the waitlist" saves the plan and period you'd choose and nothing is charged. You can switch periods later. Features that don't exist yet are marked "Coming soon".
+- **Partner inquiries.** Employers, universities and companies can send an inquiry from the Business tab without an account.
+- **Where to find it:** "Upgrade" just above your account in the sidebar, "Pricing" on the home page, and Plan in Profile. The Admin page counts waitlist sign-ups and lists partner inquiries.
+
 ## [0.36.0.0] - 2026-10-15
 
 ### Added
