@@ -79,7 +79,10 @@ on conflict (track_id,key) do update set
 insert into public.mission_definitions(id,milestone_id,key,version,title,brief,rubric) values
 ('12000000-0000-0000-0000-000000000001','11000000-0000-0000-0000-000000000003','responsive-profile-card',1,'Responsive Profile Card',
   '{"goal":"Build an accessible responsive learner card"}',
-  '{"semantic":30,"responsive":30,"accessibility":25,"explanation":15}')
+  '{"semantic":30,"responsive":30,"accessibility":25,"explanation":15}'),
+('12000000-0000-0000-0000-000000000002','11000000-0000-0000-0000-000000000004','interactive-opportunity-tracker',1,'Interactive opportunity tracker',
+  '{"goal":"Build a small tracker that filters, saves and explains opportunities with plain JavaScript"}',
+  '{"interaction":35,"data":25,"errors":20,"explanation":20}')
 on conflict do nothing;
 
 -- ─── Competencies ─────────────────────────────────────────────────────────────

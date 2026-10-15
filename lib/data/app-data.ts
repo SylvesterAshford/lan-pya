@@ -3,6 +3,7 @@ import "server-only";
 import { createClient } from "@/lib/supabase/server";
 import { CAREER_TRACKS, getCareerTrack, mergeTrackMilestones } from "@/lib/domain/career-tracks";
 import { byDeadlineAscending } from "@/lib/domain/deadlines";
+import { parseCommunity, type CommunityData } from "@/lib/domain/community";
 import type { ActivePathDashboard, CareerPreferences, Milestone, OpportunityCard, PausedMissionWork, Profile, ProofItem, SubmissionState } from "@/lib/domain/types";
 
 type UnknownRecord = Record<string, unknown>;
@@ -30,6 +31,39 @@ export async function getProfile(userId: string): Promise<Profile | null> {
     weeklyHours: String(data.weekly_hours ?? "4–6 hours"), onboardingComplete: Boolean(data.onboarding_complete),
     dataOrigin: data.data_origin === "seeded_demo" ? "seeded_demo" : "live",
   };
+}
+
+export type CommunitySettings = {
+  visible: boolean; blocked: boolean; telegram: string; facebook: string; linkedin: string; note: string;
+};
+
+/** The learner's own Community settings; RLS lets them read only their row. */
+export async function getCommunitySettings(userId: string): Promise<CommunitySettings> {
+  const supabase = await createClient();
+  const { data } = await supabase
+    .from("learner_profiles")
+    .select("community_visible,community_blocked,telegram_url,facebook_url,linkedin_url,community_note")
+    .eq("user_id", userId)
+    .maybeSingle();
+  return {
+    visible: Boolean(data?.community_visible), blocked: Boolean(data?.community_blocked),
+    telegram: String(data?.telegram_url ?? ""), facebook: String(data?.facebook_url ?? ""),
+    linkedin: String(data?.linkedin_url ?? ""), note: String(data?.community_note ?? ""),
+  };
+}
+
+export type CommunityResult = { ok: true; data: CommunityData } | { ok: false };
+
+/**
+ * Who is on a path. Unlike the other readers here, a failure is reported, not
+ * turned into an empty list: on this page "nobody is here" is itself a
+ * message, and an outage must not say it (eng review D6).
+ */
+export async function getCommunity(trackKey: string): Promise<CommunityResult> {
+  const supabase = await createClient();
+  const { data, error } = await supabase.rpc("get_community", { p_track_key: trackKey });
+  if (error || !data) return { ok: false };
+  return { ok: true, data: parseCommunity(data) };
 }
 
 export async function getRoles(userId: string) {
