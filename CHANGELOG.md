@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.35.1.0] - 2026-10-15
+
+### Changed
+
+- **Mission cards are less padded at the sides**, so the content uses more of the card.
+
 ## [0.35.0.0] - 2026-10-15
 
 ### Changed
