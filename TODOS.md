@@ -85,6 +85,14 @@ Design debt deferred from the 2026-08-16 design review. Everything here was foun
 **Context:** `npm run check:resources` re-checks every link (YouTube through oEmbed, pages by loading them). Running it on a schedule (GitHub Actions, weekly) would find dead links before learners do.
 **Depends on:** Nothing.
 
+### Missions for Video Editor stages 2-5
+
+**What:** Author a mission for each later Video Editor stage (cuts and pacing, sound and colour, captions and motion, client-ready delivery), with briefs in both languages and rubric competencies.
+
+**Why:** v0.31.0.0 opened the path as a controlled pilot with one mission on stage 1, the same shape Content Creator launched with. Learners who verify it have no next mission yet.
+**Context:** A mission needs a `mission_definitions` row, a brief in `lib/domain/mission-briefs.ts`, a page under `app/[locale]/app/missions/`, the key in `app/api/submissions/route.ts` and the two `missionHref` maps, and its competencies in `record_review_decision`. `tests/career-recommendations.test.ts` checks a switchable path has at least one.
+**Depends on:** Nothing.
+
 ## P3 — worth doing, no urgency
 
 ### Logo as SVG

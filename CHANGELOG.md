@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.31.0.0] - 2026-10-15
+
+### Added
+
+- **You can switch to Video Editor & Motion Content.** It joins "Ready to start" on Careers as a pilot path, with its first mission: a **thirty-second vertical story edit** with a clear hook, clean sound, licensed music and accurate captions, made in CapCut, DaVinci Resolve or any editor. It's reviewed by a person like every other mission, and a verified edit becomes proof with three skills: editing workflow, story editing, and sound and captions.
+
 ## [0.30.2.0] - 2026-10-15
 
 ### Changed

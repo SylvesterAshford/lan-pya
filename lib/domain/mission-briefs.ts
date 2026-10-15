@@ -121,6 +121,50 @@ const BRIEFS: Record<string, { en: MissionBrief; my: MissionBrief }> = {
       localNote: "ပြည်တွင်းအလုပ်ရှင်များသည် portfolio site ထက် Facebook page link ကို ပိုမေးလေ့ရှိသည်။ နှစ်ခုစလုံး ထည့်ပါ — page က ရောက်ရှိမှုကို၊ site က အရည်အသွေးကို သက်သေပြသည်။",
     },
   },
+  "video-editor-vertical-story": {
+    en: {
+      missionKey: "video-editor-vertical-story",
+      eyebrow: "Controlled pilot · Mission 1",
+      title: "Thirty-second vertical story edit",
+      intro: "Turn raw footage into a thirty-second vertical story someone would watch to the end: a clear hook, clean sound, licensed music and accurate captions.",
+      premise: "Film your own clips on a phone or use footage you have permission to use. Edit in CapCut, DaVinci Resolve or any editor you have. What matters is the story, the sound and how carefully the edit is organised and delivered.",
+      deliverables: [
+        { id: "workflow", weight: "20%", title: "Organised project", hint: "Footage, music and exports in named folders; a 9:16 export at the right settings." },
+        { id: "story", weight: "35%", title: "Story and pacing", hint: "A hook in the first three seconds, a clear beginning, middle and end, cuts on purpose." },
+        { id: "sound_captions", weight: "25%", title: "Sound and captions", hint: "Clear dialogue, music you are allowed to use, and accurate, readable captions." },
+        { id: "reflection", weight: "20%", title: "Reflection", hint: "Explain one edit you changed after watching it back, and why." },
+      ],
+      guardrailTitle: "Controlled-pilot note",
+      guardrail: "This mission uses the same trusted-link submission and reviewer workflow as the other paths. A reviewer watches the edit itself. Credit every clip and track you did not make.",
+      repositoryLabel: "Project folder or source URL",
+      repositoryHint: "A shared folder with your footage, project file and music licences, such as Google Drive.",
+      deploymentLabel: "Watchable video URL",
+      deploymentHint: "Where the finished edit plays, such as YouTube (unlisted is fine), TikTok or Facebook.",
+      reflectionPlaceholder: "Which cut did you change after watching it back, and what did it fix?",
+      localNote: "Local clients often judge an editor by a short reel on Facebook or TikTok. A tight thirty-second edit with Burmese captions is exactly what they ask to see.",
+    },
+    my: {
+      missionKey: "video-editor-vertical-story",
+      eyebrow: "ထိန်းချုပ်စမ်းသပ်အဆင့် · လုပ်ငန်း ၁",
+      title: "စက္ကန့်သုံးဆယ် ဒေါင်လိုက် story edit",
+      intro: "ရိုက်ထားသော footage များကို အဆုံးထိ ကြည့်ချင်စရာ စက္ကန့်သုံးဆယ် ဒေါင်လိုက် story တစ်ခုအဖြစ် ပြောင်းပါ — ရှင်းလင်းသော hook၊ ကြည်လင်သော အသံ၊ ခွင့်ပြုချက်ရှိသော music နှင့် မှန်ကန်သော caption။",
+      premise: "ဖုန်းဖြင့် ကိုယ်တိုင်ရိုက်ပါ သို့မဟုတ် သုံးခွင့်ရှိသော footage ကို သုံးပါ။ CapCut၊ DaVinci Resolve သို့မဟုတ် ရှိသည့် editor တစ်ခုခုဖြင့် edit လုပ်ပါ။ အရေးကြီးသည်မှာ story၊ အသံနှင့် edit ကို စနစ်တကျ စီစဉ်ပေးပို့ပုံ ဖြစ်သည်။",
+      deliverables: [
+        { id: "workflow", weight: "၂၀%", title: "စနစ်တကျ project", hint: "Footage၊ music နှင့် export များကို နာမည်ပါ folder များတွင် ထားပြီး 9:16 export ကို မှန်ကန်သော setting ဖြင့် ထုတ်ပါ။" },
+        { id: "story", weight: "၃၅%", title: "Story နှင့် pacing", hint: "ပထမ သုံးစက္ကန့်အတွင်း hook၊ ရှင်းလင်းသော အစ အလယ် အဆုံးနှင့် ရည်ရွယ်ချက်ရှိသော cut များ။" },
+        { id: "sound_captions", weight: "၂၅%", title: "အသံနှင့် caption", hint: "ကြည်လင်သော စကားသံ၊ သုံးခွင့်ရှိသော music နှင့် မှန်ကန်ဖတ်ရလွယ်သော caption။" },
+        { id: "reflection", weight: "၂၀%", title: "ပြန်လည်သုံးသပ်ချက်", hint: "ပြန်ကြည့်ပြီးနောက် ပြောင်းခဲ့သော edit တစ်ခုနှင့် အကြောင်းရင်းကို ရှင်းပြပါ။" },
+      ],
+      guardrailTitle: "Pilot မှတ်ချက်",
+      guardrail: "ဤလုပ်ငန်းသည် အခြားလမ်းကြောင်းများနည်းတူ trusted-link submission နှင့် reviewer workflow ကို သုံးသည်။ Reviewer က edit ကို ကိုယ်တိုင် ကြည့်မည်။ ကိုယ်တိုင်မဖန်တီးသော clip နှင့် track တိုင်းကို credit ပေးပါ။",
+      repositoryLabel: "Project folder သို့မဟုတ် source URL",
+      repositoryHint: "Footage၊ project file နှင့် music licence များပါသော shared folder၊ ဥပမာ Google Drive။",
+      deploymentLabel: "ကြည့်နိုင်သော video URL",
+      deploymentHint: "ပြီးဆုံးသော edit ကြည့်နိုင်သောနေရာ၊ ဥပမာ YouTube (unlisted ဖြစ်လည်းရ)၊ TikTok သို့မဟုတ် Facebook။",
+      reflectionPlaceholder: "ပြန်ကြည့်ပြီးနောက် ဘယ် cut ကို ပြောင်းခဲ့သလဲ၊ ဘာကို ပြင်ပေးခဲ့သလဲ?",
+      localNote: "ပြည်တွင်း client များသည် editor တစ်ယောက်ကို Facebook သို့မဟုတ် TikTok ပေါ်ရှိ reel တိုဖြင့် အကဲဖြတ်လေ့ရှိသည်။ မြန်မာ caption ပါသော စက္ကန့်သုံးဆယ် edit သည် သူတို့ကြည့်ချင်သည့်အရာ ဖြစ်သည်။",
+    },
+  },
 };
 
 export function getMissionBrief(missionKey: string, locale: string): MissionBrief | null {
@@ -141,6 +185,7 @@ export function getMissionBrief(missionKey: string, locale: string): MissionBrie
 const MISSION_STAGES: Record<string, { pathKey: string; stageKey: string }> = {
   "responsive-profile-card": { pathKey: "frontend-developer", stageKey: "responsive-css" },
   "content-creator-awareness": { pathKey: "content-creator", stageKey: "content-awareness-campaign" },
+  "video-editor-vertical-story": { pathKey: "video-editor", stageKey: "video-editing-workflow" },
 };
 
 export function getMissionStage(missionKey: string | null | undefined) {
