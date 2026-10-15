@@ -92,7 +92,7 @@ Every size in the app resolves to one of these tokens. A hardcoded `font-size` t
 | `--t-title` | 17px | 1.35 | −0.2px | 600 | Card and list title |
 | `--t-body` | 16px | 1.60 | 0 | 400 | Body copy, **and button labels at 600** |
 | `--t-meta` | 14px | 1.50 | 0 | 400 | Supporting text, maintainer line |
-| `--t-label` | 12px | 1.40 | +0.08em | 600 | Uppercase label, chip, eyebrow |
+| `--t-label` | 12px | 1.40 | +0.08em (`--k-label`) | 700 eyebrow · 600 tag | Uppercase eyebrow; sentence-case tag, chip and status |
 | `--t-node` | 13px | 1.35 | 0 | 600 | Roadmap node label |
 
 Proportions are taken from Zapier: tight display leading, negative tracking on headings, and a display weight of 700 rather than 800, which at 32px reads confident instead of loud. The ladder sits one step below Zapier's own numbers because that is a desktop marketing site and this is a dense app read on budget phones.
@@ -107,11 +107,18 @@ Letter spacing is part of the scale, not an afterthought: negative on every head
 
 **Stage node labels** use 14px/700 — one step above `--t-node` — because they sit on the spine and lead the reading order.
 
+**Two label roles, never a third.** An *eyebrow* is uppercase, 700, tracked by `--k-label` (0.08em), leading `--l-label`; every eyebrow in the app is this, whatever component it sits in. A *tag* (chips, statuses, small metadata) is sentence case, 600, untracked. Before 2026-10-15 the 12px size carried 25 variants: five weights and seven trackings.
+
+**App weights are 400, 600 and 700.** Padauk ships only 400 and 700, so 750, 800 and 850 set the two languages apart; marketing surfaces keep their heavier display weights. Figures that change as a learner moves (points, stage counts, link counts) use tabular numerals.
+
 ### Bilingual rules
 
 - Burmese body runs 17px/1.7 and Burmese meta 15px, one step larger than English for optical balance. This is the only permitted deviation from the scale.
 - English and Burmese preserve equivalent hierarchy and perceived size. Burmese never uses a different structural scale.
 - Burmese must be Unicode, never Zawgyi.
+- **The Burmese stack starts with the UI face:** `var(--font-ui), var(--font-myanmar)`. Plus Jakarta Sans has no Myanmar glyphs, so Burmese falls through to Padauk while English words in a Burmese screen (stage and topic names, product terms) set in the same face as the English app. With Padauk first they took its wide Latin. `font-size-adjust` stays off, or Padauk is scaled up to Jakarta's x-height.
+- Burmese labels run 13px with 1.6 leading, untracked and never capitalised; node labels stay 13px because the canvas geometry is built around it.
+- Size and leading aliases (`--app-body-size`, `--app-heading-leading`, …) are restated on the Burmese body; declared only on `:root` they resolve to the English values.
 - Never expose duplicate English and Burmese labels in one hierarchy.
 - Never letterspace Burmese. Never all-caps a Burmese string.
 
@@ -690,3 +697,4 @@ not consent or the learner's route into the prepared account.
 | 2026-10-15 | **A fresh submission goes to the trail map; Proof links there too** | The founder pitches on Frontend, where the demo stands on stage 4. That stage had no mission, so "You are here" opened the finished stage-3 mission with nothing to submit. Stage 4 now has its proof-target mission (Interactive opportunity tracker), and the next mission is the first unverified one. Work sent from the tab goes on to the Missions map by itself once the check passes (a short "Opening your trail map…" line, then the walk); opening finished work later does not redirect. The Proof step carries a secondary "See your trail map" beside View in Portfolio. For the shared demo only, a broken link counts as Completed, so placeholder links in a pitch still move the map. |
 | 2026-10-15 | **Each stop opens its own stage; the way on lives on Proof** | Clicking stop 5 opened stage 4's mission while stage 4 awaited review, because every current stop linked to "the next mission". Each stop now opens its own stage: the one you are on opens its mission or says "You are here · Mission coming soon" and opens the roadmap; a finished stop opens its mission to show how it went. Map cards got room (11×14 padding, 4px between title and status, titles at `--t-meta`). The founder moved "Back to your trail map" from step 4 to step 5, beside View in Portfolio; it carries `?walk=<stage>` so the traveller always walks up from the stage just finished. The demo gets a simulated review a few seconds after Completed (a pulsing "A reviewer is looking at your work…" line), so a pitch shows submit → check → review → proof → walk. |
 | 2026-10-15 | **A mission is one centred column** | The mission page capped its heading, step rail and card at about 700px from the left of the content column, so a wide screen left most of the page blank to the right and it read as unfinished. A mission is a single task, so the three now share one centred 720px column. The form keeps its width: wider inputs and reflection lines would read worse. Other screens still fill their column. |
+| 2026-10-15 | **Typeset: one eyebrow, three weights, the UI face first in Burmese** | An audit of eight screens in both languages found the size scale intact (seven sizes per language) but each size carrying drift: 25 variants at 12px, eyebrows in five weights and seven trackings, weights up to 850 that Burmese cannot render, and Burmese headings at 1.15 leading because aliases froze English values on `:root`. The largest visible fault was English words in Burmese screens setting in Padauk's wide Latin. Now: one eyebrow and one tag role, app weights 400/600/700, Burmese stack `--font-ui` then `--font-myanmar` with no size adjust, Burmese labels 13px, aliases restated for Burmese, tabular figures on moving numbers. Distinct styles dropped from 51 to 37 (English) and 44 to 38 (Burmese). |

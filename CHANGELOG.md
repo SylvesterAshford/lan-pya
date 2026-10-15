@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.35.0.0] - 2026-10-15
+
+### Changed
+
+- **Cleaner type across the app.** Small uppercase labels (like "YOUR STAGE" or "PATHS") now look the same everywhere instead of varying in weight and spacing, and numbers that change (points, stage counts) no longer shift width.
+- **Burmese reads better.** English words inside Burmese screens, such as stage and topic names, now use the same typeface as the English app instead of a wide, loosely spaced one. Burmese labels are a little larger, and Burmese headings get the line spacing they were meant to have.
+
 ## [0.34.1.0] - 2026-10-15
 
 ### Changed

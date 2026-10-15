@@ -173,6 +173,8 @@
   --t-body: 16px;      --l-body: 1.6;
   --t-meta: 14px;      --l-meta: 1.5;
   --t-label: 12px;     --l-label: 1.4;
+  /* Uppercase eyebrows: one tracking for all of them (DESIGN.md "Eyebrow"). */
+  --k-label: 0.08em;
   --t-node: 13px;      --l-node: 1.35;
 
   /* Marketing surfaces only. DESIGN.md scopes these to the landing page; an
@@ -304,11 +306,24 @@ body{
    it — DESIGN.md "Bilingual rules". This is the only sanctioned
    deviation from the eight-step scale. */
 html[lang="my"] body{
-  font-family: var(--font-myanmar), "Myanmar Text", sans-serif;
+  font-family: var(--font-ui), var(--font-myanmar), "Myanmar Text", sans-serif;
   --t-body: 17px;   --l-body: 1.7;
   --t-meta: 15px;   --l-meta: 1.6;
   --t-title: 18px;
-  --t-node: 14px;
+  /* Node labels stay at 13px: the canvas geometry is built around it, and
+     most topic names on it are English, which now set in the UI face. */
+  /* Labels too: Padauk at 12px loses its stacked marks, and the labels
+     carry stage numbers and statuses. Burmese is never tracked or capitalised. */
+  --t-label: 13px;   --l-label: 1.6;
+  --k-label: 0;
+  /* These aliases are resolved where they are declared, so on :root they
+     froze the English values: Burmese body text that read --app-body-size was
+     16px, and Burmese headings got 1.15 leading instead of 1.34. Restating
+     them here resolves them against the Burmese scale. */
+  --app-body-size: var(--t-body);
+  --app-body-leading: var(--l-body);
+  --app-heading-leading: var(--l-h1);
+  --app-label-size: var(--t-label);
   /* Marketing surfaces. Burmese words are longer and the glyphs are taller, so
      72px ran the hero to five lines and pushed the paragraph below the fold. */
   --t-hero: clamp(30px, 4.4vw, 46px);
@@ -317,7 +332,10 @@ html[lang="my"] body{
   --l-h2: 1.45;
   /* Burmese letterforms carry their own rhythm; negative tracking damages them. */
   --k-display: 0;   --k-h1: 0;   --k-h2: 0;   --k-title: 0;
-  font-size-adjust: from-font;
+  /* No size adjustment: the stack now starts with the Latin UI face, and
+     matching Padauk to its x-height enlarged every Burmese glyph. Both faces
+     keep the sizes the scale sets for them. */
+  font-size-adjust: none;
   line-height: var(--l-body);
 }
 
@@ -341,13 +359,13 @@ h1, h2, h3, h4, p{
 h1, h2, h3, h4{
   color: var(--navy);
   font-family: var(--font-ui), "Avenir Next", "Segoe UI", sans-serif;
-  font-weight: 750;
+  font-weight: 700;
   text-wrap: balance;
   line-height: var(--app-heading-leading);
 }
 
 html[lang="my"] h1, html[lang="my"] h2, html[lang="my"] h3, html[lang="my"] h4{
-  font-family: var(--font-myanmar), "Myanmar Text", sans-serif;
+  font-family: var(--font-ui), var(--font-myanmar), "Myanmar Text", sans-serif;
   font-weight: 700;
   letter-spacing: 0;
   line-height: var(--app-heading-leading);
@@ -433,14 +451,14 @@ html[lang="my"] h1, html[lang="my"] h2, html[lang="my"] h3, html[lang="my"] h4{
   display: block;
   color: var(--teal);
   font-size: var(--app-label-size);
-  font-weight: 800;
-  letter-spacing: 0.12em;
-  line-height: 1.3;
+  font-weight: 700;
+  letter-spacing: var(--k-label);
+  line-height: var(--l-label);
   text-transform: uppercase;
 }
 
 html[lang="my"] .eyebrow{
-  letter-spacing: 0.03em;
+  letter-spacing: 0;
   line-height: 1.5;
   text-transform: none;
 }
@@ -458,7 +476,7 @@ html[lang="my"] .button, html[lang="my"] input, html[lang="my"] textarea, html[l
   padding: 0 20px;
   color: var(--navy);
   font-size: var(--t-body);
-  font-weight: 750;
+  font-weight: 700;
   line-height: 1;
   background: var(--surface);
   border: 1px solid transparent;
@@ -800,7 +818,7 @@ fieldset{
   flex: 0 0 58px;
   place-items: center;
   color: var(--navy);
-  font-weight: 800;
+  font-weight: 700;
   background: var(--yellow);
   border-radius: 10px;
 }
@@ -902,7 +920,7 @@ fieldset{
 .nav-number{
   color: #718096;
   font-size: var(--t-label);
-  font-weight: 800;
+  font-weight: 700;
   letter-spacing: 0.08em;
 }
 
@@ -923,8 +941,9 @@ fieldset{
   color: #d7e0ea;
   font-size: var(--t-label);
   font-weight: 700;
-  letter-spacing: 0.04em;
+  letter-spacing: var(--k-label);
   text-transform: uppercase;
+  line-height: var(--l-label);
 }
 
 .demo-note small{
@@ -999,7 +1018,7 @@ fieldset{
 .progress-label{
   color: var(--slate);
   font-size: var(--t-label);
-  font-weight: 800;
+  font-weight: 700;
 }
 
 .avatar{
@@ -1010,7 +1029,7 @@ fieldset{
   margin-left: 8px;
   color: var(--on-solid);
   font-size: var(--t-label);
-  font-weight: 800;
+  font-weight: 700;
   background: var(--navy);
   border: 2px solid var(--on-solid);
   border-radius: 50%;
@@ -1096,7 +1115,7 @@ fieldset{
   padding: 0;
   color: var(--teal);
   font-size: var(--t-meta);
-  font-weight: 800;
+  font-weight: 700;
   background: transparent;
   border: 0;
 }
@@ -1135,9 +1154,10 @@ fieldset{
   margin-bottom: 8px;
   color: var(--muted);
   font-size: var(--t-label);
-  font-weight: 800;
-  letter-spacing: 0.08em;
+  font-weight: 700;
+  letter-spacing: var(--k-label);
   text-transform: uppercase;
+  line-height: var(--l-label);
 }
 
 .stat-strip strong{
@@ -1174,7 +1194,7 @@ fieldset{
 .card-topline{
   color: var(--muted);
   font-size: var(--t-label);
-  font-weight: 800;
+  font-weight: 700;
   letter-spacing: 0.13em;
 }
 
@@ -1220,7 +1240,7 @@ fieldset{
 .aside-label{
   color: #986507;
   font-size: var(--t-label);
-  font-weight: 800;
+  font-weight: 700;
   letter-spacing: 0.12em;
 }
 
@@ -1314,7 +1334,7 @@ fieldset{
 .mini-roadmap span{
   color: var(--navy);
   font-size: var(--t-label);
-  font-weight: 750;
+  font-weight: 700;
 }
 
 .mini-roadmap small{
@@ -1349,7 +1369,7 @@ fieldset{
   margin-top: 22px;
   color: var(--teal);
   font-size: var(--t-label);
-  font-weight: 800;
+  font-weight: 700;
   letter-spacing: 0.11em;
 }
 
@@ -1425,7 +1445,7 @@ fieldset{
   place-items: center;
   color: var(--on-solid);
   font-size: var(--t-meta);
-  font-weight: 850;
+  font-weight: 700;
   background: var(--navy);
   border: 3px solid var(--on-solid);
   border-radius: 50%;
@@ -1478,7 +1498,7 @@ fieldset{
   color: var(--navy);
   font-size: var(--t-h2);
   letter-spacing: var(--k-h2);
-  font-weight: 800;
+  font-weight: 700;
   background: var(--yellow);
   border-radius: 9px;
 }
@@ -1506,7 +1526,7 @@ fieldset{
   align-items: center;
   padding: 5px 8px;
   font-size: var(--t-label);
-  font-weight: 800;
+  font-weight: 700;
   border-radius: 999px;
 }
 
@@ -1585,7 +1605,7 @@ fieldset{
   place-items: center;
   color: var(--muted);
   font-size: var(--t-label);
-  font-weight: 800;
+  font-weight: 700;
   background: var(--surface);
   border: 2px solid var(--line-strong);
   border-radius: 50%;
@@ -1631,7 +1651,7 @@ fieldset{
 .milestone-heading > div > span{
   color: var(--muted);
   font-size: var(--t-label);
-  font-weight: 800;
+  font-weight: 700;
   letter-spacing: 0.11em;
 }
 
@@ -1652,7 +1672,7 @@ fieldset{
   padding: 5px 8px;
   color: var(--muted);
   font-size: var(--t-label);
-  font-weight: 800;
+  font-weight: 700;
   background: #f1f5f9;
   border-radius: 999px;
 }
@@ -1749,7 +1769,7 @@ fieldset{
   padding: 9px 12px;
   color: var(--slate);
   font-size: var(--t-label);
-  font-weight: 800;
+  font-weight: 700;
   background: var(--surface);
   border: 1px solid var(--line);
   border-radius: 7px;
@@ -1808,9 +1828,10 @@ fieldset{
 .brief-callout span{
   color: #9a6505;
   font-size: var(--t-label);
-  font-weight: 800;
-  letter-spacing: 0.1em;
+  font-weight: 700;
+  letter-spacing: var(--k-label);
   text-transform: uppercase;
+  line-height: var(--l-label);
 }
 
 .brief-callout p{
@@ -1839,17 +1860,19 @@ fieldset{
 .requirement-list li span{
   color: var(--teal);
   font-size: var(--t-label);
-  font-weight: 800;
+  font-weight: 700;
 }
 
 .private-label, .visibility-badge{
   padding: 5px 8px;
   color: var(--slate);
   font-size: var(--t-label);
-  font-weight: 800;
+  font-weight: 700;
   background: #f1f5f9;
   border-radius: 999px;
   text-transform: uppercase;
+  letter-spacing: var(--k-label);
+  line-height: var(--l-label);
 }
 
 .section-help{
@@ -2055,6 +2078,9 @@ fieldset{
   color: #8291a4;
   font-size: var(--t-label);
   text-transform: uppercase;
+  font-weight: 700;
+  letter-spacing: var(--k-label);
+  line-height: var(--l-label);
 }
 
 .demo-disclaimer{
@@ -2087,7 +2113,7 @@ fieldset{
   place-items: center;
   color: var(--navy);
   font-size: var(--t-label);
-  font-weight: 800;
+  font-weight: 700;
   background: var(--yellow);
   border-radius: 5px;
 }
@@ -2162,7 +2188,7 @@ fieldset{
 .rubric-card > div span{
   color: var(--teal);
   font-size: var(--t-label);
-  font-weight: 800;
+  font-weight: 700;
 }
 
 .rubric-card > div p{
@@ -2229,7 +2255,7 @@ fieldset{
   place-items: center;
   margin-bottom: 20px;
   color: var(--navy);
-  font-weight: 800;
+  font-weight: 700;
   background: var(--yellow);
   border-radius: 12px;
 }
@@ -2296,7 +2322,7 @@ fieldset{
   place-items: center;
   color: var(--on-solid);
   font-size: var(--t-body);
-  font-weight: 800;
+  font-weight: 700;
   background: var(--teal);
   border: 4px solid var(--on-solid);
   border-radius: 50%;
@@ -2376,7 +2402,7 @@ fieldset{
   left: 12px;
   color: #8ba0b5;
   font-size: var(--t-label);
-  font-weight: 800;
+  font-weight: 700;
 }
 
 .project-visual > div{
@@ -2407,7 +2433,7 @@ fieldset{
   bottom: 10px;
   color: var(--yellow);
   font-size: var(--t-label);
-  font-weight: 800;
+  font-weight: 700;
 }
 
 .project-copy{
@@ -2449,7 +2475,7 @@ fieldset{
   height: 40px;
   place-items: center;
   color: var(--on-solid);
-  font-weight: 800;
+  font-weight: 700;
   background: var(--teal);
   border-radius: 8px;
 }
@@ -2470,7 +2496,7 @@ fieldset{
   padding: 8px 0;
   color: var(--teal);
   font-size: var(--t-label);
-  font-weight: 800;
+  font-weight: 700;
   background: transparent;
   border: 0;
 }
@@ -2497,9 +2523,10 @@ fieldset{
 .evidence-detail span{
   color: var(--muted);
   font-size: var(--t-label);
-  font-weight: 800;
-  letter-spacing: 0.12em;
+  font-weight: 700;
+  letter-spacing: var(--k-label);
   text-transform: uppercase;
+  line-height: var(--l-label);
 }
 
 .evidence-detail strong{
@@ -2600,7 +2627,7 @@ fieldset{
   padding: 0 13px;
   color: var(--muted);
   font-size: var(--t-label);
-  font-weight: 750;
+  font-weight: 700;
   background: var(--surface);
   border: 1px solid var(--line);
   border-radius: 7px;
@@ -2671,12 +2698,15 @@ fieldset{
 .opportunity-date span{
   font-size: var(--t-title);
   letter-spacing: var(--k-title);
-  font-weight: 800;
+  font-weight: 700;
 }
 
 .opportunity-date strong{
   font-size: var(--t-label);
   text-transform: uppercase;
+  font-weight: 700;
+  letter-spacing: var(--k-label);
+  line-height: var(--l-label);
 }
 
 .opportunity-date small{
@@ -2740,7 +2770,7 @@ fieldset{
   padding: 4px;
   color: var(--muted);
   font-size: var(--t-label);
-  font-weight: 750;
+  font-weight: 700;
   background: transparent;
   border: 0;
 }
@@ -2786,7 +2816,7 @@ fieldset{
   flex: 0 0 auto;
   color: var(--yellow);
   font-size: var(--t-label);
-  font-weight: 800;
+  font-weight: 700;
 }
 
 .opportunity-principle p{
@@ -3279,7 +3309,7 @@ fieldset{
   color: var(--teal);
   font-size: var(--t-meta);
   font-style: normal;
-  font-weight: 750;
+  font-weight: 700;
 }
 
 .empty-path-state{
@@ -3365,7 +3395,7 @@ fieldset{
   padding: 5px 9px;
   color: var(--teal);
   font-size: var(--t-meta);
-  font-weight: 750;
+  font-weight: 700;
   background: var(--teal-soft);
   border-radius: 999px;
 }
@@ -3493,7 +3523,7 @@ fieldset{
   flex: 0 0 auto;
   color: var(--teal);
   font-size: var(--t-meta);
-  font-weight: 750;
+  font-weight: 700;
 }
 
 .catalog-groups{
@@ -3865,7 +3895,7 @@ fieldset{
 .career-identity small{
   color: var(--teal);
   font-size: var(--t-meta);
-  font-weight: 750;
+  font-weight: 700;
 }
 
 .career-profile-grid{
@@ -4473,7 +4503,7 @@ a{ color: inherit; text-decoration: none; }
 .next-mission > p, .trust-panel p, .roadmap-aside p{ color:var(--muted); line-height:1.65; }
 .check-list, .plain-list{ padding:0; margin:20px 0; list-style:none; }
 .check-list li, .plain-list li{ position:relative; padding:7px 0 7px 24px; }
-.check-list li::before, .plain-list li::before{ position:absolute; left:0; color:var(--teal); content:"✓"; font-weight:800; }
+.check-list li::before, .plain-list li::before{ position:absolute; left:0; color:var(--teal); content:"✓"; font-weight: 700; }
 .evidence-loop{ padding:14px 0 0; margin:0; list-style:none; }
 .evidence-loop li{ position:relative; display:flex; gap:13px; padding:0 0 22px; }
 .evidence-loop li:not(:last-child)::after{ position:absolute; top:27px; bottom:2px; left:13px; width:1px; background:var(--line); content:""; }
@@ -4484,7 +4514,7 @@ a{ color: inherit; text-decoration: none; }
 .evidence-loop small{ margin-top:3px; color:var(--muted); }
 .trust-panel{ display:flex; align-items:center; justify-content:space-between; gap:30px; margin-top:18px; background:linear-gradient(100deg,var(--surface),var(--teal-soft)); }
 .trust-panel p{ max-width:520px; margin:0; }
-.status-pill{ display:inline-flex; padding:5px 9px; border-radius:999px; font-size:var(--t-label); font-weight:800; white-space:nowrap; text-transform:capitalize; }
+.status-pill{ display:inline-flex; padding:5px 9px; border-radius:999px; font-size:var(--t-label); font-weight: 700; white-space:nowrap; text-transform:capitalize; }
 .status-pill.success{ color:#087443; background:var(--success-soft); }
 .status-pill.warning{ color:#9a5a00; background:var(--yellow-soft); }
 .status-pill.danger{ color:#9f1d1d; background:var(--error-soft); }
@@ -4496,16 +4526,20 @@ a{ color: inherit; text-decoration: none; }
 .track-switcher a:hover{ border-color:var(--teal); }
 .track-switcher a:focus-visible{ outline:3px solid rgba(15,118,110,.25); outline-offset:3px; }
 .track-switcher a.active{ background:linear-gradient(115deg,var(--teal-soft),var(--surface) 70%); border-color:var(--teal); box-shadow:inset 0 3px var(--teal),var(--shadow-sm); }
-.track-switcher span{ color:var(--navy); font-size:var(--t-body); font-weight:850; }
-.track-switcher strong{ color:var(--teal); font-size:var(--t-label); font-weight:800; letter-spacing:.06em; text-transform:uppercase; }
+.track-switcher span{ color:var(--navy); font-size:var(--t-body); font-weight: 700; }
+.track-switcher strong{ color:var(--teal); font-size:var(--t-label); font-weight: 700; letter-spacing: var(--k-label); text-transform:uppercase;
+  line-height: var(--l-label);
+}
 .track-switcher small{ color:var(--muted); font-size:var(--t-label); line-height:1.45; }
 .selected-track-heading{ display:flex; align-items:end; justify-content:space-between; gap:24px; padding:0 2px 17px; }
 .selected-track-heading h2{ margin:5px 0 3px; color:var(--navy); font-size: var(--t-display);
  letter-spacing: var(--k-display); letter-spacing:-.035em; }
 .selected-track-heading p{ margin:0; color:var(--muted); font-size:var(--t-meta); }
-.selected-track-heading > span{ color:var(--teal); font-size:var(--t-label); font-weight:800; white-space:nowrap; }
+.selected-track-heading > span{ color:var(--teal); font-size:var(--t-label); font-weight: 700; white-space:nowrap; }
 .mission-layout, .review-layout{ display:grid; grid-template-columns:minmax(0,.9fr) minmax(380px,1.1fr); gap:18px; align-items:start; }
-.brief-tag, .origin-label{ display:inline-flex; padding:5px 8px; color:#8c5500; font-size:var(--t-label); font-weight:800; letter-spacing:.07em; background:var(--yellow-soft); border-radius:4px; text-transform:uppercase; }
+.brief-tag, .origin-label{ display:inline-flex; padding:5px 8px; color:#8c5500; font-size:var(--t-label); font-weight: 700; letter-spacing: var(--k-label); background:var(--yellow-soft); border-radius:4px; text-transform:uppercase;
+  line-height: var(--l-label);
+}
 .mission-brief h2{ margin:14px 0 7px; color:var(--navy); }
 .mission-brief > p{ color:var(--muted); line-height:1.6; }
 .rubric-list{ padding:0; margin:17px 0; list-style:none; }
@@ -4529,7 +4563,10 @@ a{ color: inherit; text-decoration: none; }
 .proof-seal.muted{ margin:0 auto; color:var(--muted); background:var(--surface); border-color:#eef2f7; }
 .proof-card dl, .public-proof-card dl{ display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:10px; margin:20px 0; }
 .proof-card dl div, .public-proof-card dl div{ padding:11px; background:#f8fafc; border-radius:6px; }
-dt{ color:var(--muted); font-size:var(--t-label); font-weight:800; text-transform:uppercase; } dd{ margin:4px 0 0; overflow-wrap:anywhere; color:var(--navy); font-size:var(--t-meta); font-weight:700; }
+dt{ color:var(--muted); font-size:var(--t-label); font-weight: 700; text-transform:uppercase;
+  letter-spacing: var(--k-label);
+  line-height: var(--l-label);
+} dd{ margin:4px 0 0; overflow-wrap:anywhere; color:var(--navy); font-size:var(--t-meta); font-weight:700; }
 .competency-list{ display:flex; flex-wrap:wrap; gap:7px; margin:14px 0; }
 .competency-list span{ padding:6px 9px; color:var(--teal); font-size:var(--t-label); font-weight:700; background:var(--teal-soft); border-radius:4px; }
 .share-action{ display:flex; align-items:center; gap:10px; margin-top:18px; }
@@ -4564,7 +4601,7 @@ dt{ color:var(--muted); font-size:var(--t-label); font-weight:800; text-transfor
 .danger-zone{ display:flex; align-items:center; justify-content:space-between; gap:25px; margin-top:18px; border-color:#fecaca; }
 .danger-zone p{ margin:0; color:var(--muted); }
 .button.danger{ color:var(--surface); background:var(--error); border-color:var(--error); }
-.text-link{ display:inline-block; margin-top:20px; color:var(--teal); font-weight:800; }
+.text-link{ display:inline-block; margin-top:20px; color:var(--teal); font-weight: 700; }
 .queue-list{ margin:18px 0 0; padding:0; list-style:none; border-top:1px solid var(--line); }
 .queue-list a{ display:flex; align-items:center; justify-content:space-between; gap:12px; min-height:44px; padding:15px 5px; border-bottom:1px solid var(--line); color:inherit; text-decoration:none; }
 .queue-list a > span:first-child, .queue-list small{ display:block; }
@@ -4650,14 +4687,14 @@ dt{ color:var(--muted); font-size:var(--t-label); font-weight:800; text-transfor
 .path-preview{ display:flex; flex-direction:column; min-height:280px; padding:21px; }
 .path-card-top{ display:flex; align-items:center; justify-content:space-between; gap:10px; }
 .path-icon{ display:grid; width:34px; height:34px; place-items:center; color:var(--surface); background:var(--teal); border-radius:9px; font-size: var(--t-h2);
- letter-spacing: var(--k-h2); font-weight:800; }
+ letter-spacing: var(--k-h2); font-weight: 700; }
 .path-preview h3{ margin:18px 0 8px; color:var(--navy); font-size: var(--t-h2);
  letter-spacing: var(--k-h2); letter-spacing:-.02em; }
 .path-preview p{ margin:0; color:var(--muted); font-size:var(--t-meta); line-height:1.55; }
 .path-meta{ display:flex; flex-wrap:wrap; gap:7px; margin:18px 0; color:var(--muted); font-size:var(--t-label); font-weight:700; }
 .path-meta span{ padding:5px 8px; background:var(--canvas); border-radius:999px; }
 .path-preview .button{ width:100%; margin-top:auto; }
-.status-tag{ display:inline-flex; align-items:center; width:max-content; padding:5px 8px; border-radius:999px; font-size:var(--t-label); font-weight:800; }
+.status-tag{ display:inline-flex; align-items:center; width:max-content; padding:5px 8px; border-radius:999px; font-size:var(--t-label); font-weight: 700; }
 .status-tag.success{ color:#166534; background:#dcfce7; }
 .status-tag.pilot{ color:#8a5300; background:var(--yellow-soft); }
 .status-tag.preview{ color:var(--muted); background:#eef2f7; }
@@ -4667,8 +4704,8 @@ dt{ color:var(--muted); font-size:var(--t-label); font-weight:800; text-transfor
  letter-spacing: var(--k-display); letter-spacing:-.04em; }
 .build-hero p{ max-width:700px; margin:0; color:var(--muted); }
 .quest-tags{ display:flex; flex-wrap:wrap; gap:8px; margin-top:17px; }
-.quest-tags span{ padding:6px 9px; color:var(--teal); background:var(--teal-soft); border-radius:999px; font-size:var(--t-label); font-weight:800; }
-.quest-footer{ display:flex; align-items:center; justify-content:space-between; gap:12px; padding-top:15px; margin-top:18px; border-top:1px solid var(--line); color:var(--muted); font-size:var(--t-label); font-weight:800; }
+.quest-tags span{ padding:6px 9px; color:var(--teal); background:var(--teal-soft); border-radius:999px; font-size:var(--t-label); font-weight: 700; }
+.quest-footer{ display:flex; align-items:center; justify-content:space-between; gap:12px; padding-top:15px; margin-top:18px; border-top:1px solid var(--line); color:var(--muted); font-size:var(--t-label); font-weight: 700; }
 .pilot-layout{ display:grid; grid-template-columns:minmax(0,1.3fr) minmax(280px,.7fr); gap:14px; }
 .pilot-brief, .pilot-note{ padding:24px; }
 .pilot-brief h3, .pilot-note h3{ margin:14px 0 7px; color:var(--navy); font-size: var(--t-h1);
@@ -4676,7 +4713,7 @@ dt{ color:var(--muted); font-size:var(--t-label); font-weight:800; text-transfor
 .pilot-brief > p, .pilot-note > p{ color:var(--muted); line-height:1.6; }
 .quest-list{ display:grid; gap:0; padding:0; margin:22px 0; list-style:none; border-top:1px solid var(--line); }
 .quest-list li{ display:flex; gap:13px; align-items:center; padding:13px 0; border-bottom:1px solid var(--line); }
-.quest-list li > span{ color:var(--teal); font-size:var(--t-label); font-weight:900; }
+.quest-list li > span{ color:var(--teal); font-size:var(--t-label); font-weight: 700; }
 .quest-list li div{ display:grid; gap:3px; }
 .quest-list strong{ color:var(--navy); font-size:var(--t-meta); }
 .quest-list small{ color:var(--muted); font-size:var(--t-label); }
@@ -4915,7 +4952,7 @@ dt{ color:var(--muted); font-size:var(--t-label); font-weight:800; text-transfor
 .sidebar-brand-copy strong{
   font-size: var(--t-title);
   letter-spacing: var(--k-title);
-  font-weight: 750;
+  font-weight: 700;
   letter-spacing: -0.02em;
 }
 
@@ -4941,9 +4978,10 @@ dt{ color:var(--muted); font-size:var(--t-label); font-weight:800; text-transfor
   color: #73849a;
   font-size: var(--t-label);
   font-weight: 700;
-  letter-spacing: 0.08em;
+  letter-spacing: var(--k-label);
   text-transform: uppercase;
   white-space: nowrap;
+  line-height: var(--l-label);
 }
 
 .sidebar-menu{
@@ -5031,7 +5069,7 @@ dt{ color:var(--muted); font-size:var(--t-label); font-weight:800; text-transfor
   place-items: center;
   color: var(--navy);
   font-size: var(--t-meta);
-  font-weight: 800;
+  font-weight: 700;
   background: var(--yellow);
   border-radius: 9px;
 }
@@ -5130,7 +5168,7 @@ dt{ color:var(--muted); font-size:var(--t-label); font-weight:800; text-transfor
 .app-topbar-context strong{
   color: var(--navy);
   font-size: var(--t-body);
-  font-weight: 750;
+  font-weight: 700;
 }
 
 .app-topbar-context span{
@@ -5148,7 +5186,7 @@ dt{ color:var(--muted); font-size:var(--t-label); font-weight:800; text-transfor
   place-items: center;
   color: var(--on-solid);
   font-size: var(--t-label);
-  font-weight: 750;
+  font-weight: 700;
   background: var(--navy);
   border: 2px solid var(--on-solid);
   border-radius: 50%;
@@ -5202,7 +5240,7 @@ dt{ color:var(--muted); font-size:var(--t-label); font-weight:800; text-transfor
 .sidebar-inset .page-heading h1, .sidebar-inset .page-intro h1, .sidebar-inset .mission-title h1{
   margin: 0 0 10px;
   font-size: clamp(32px, 3.4vw, 44px);
-  font-weight: 750;
+  font-weight: 700;
   letter-spacing: -0.035em;
   line-height: 1.1;
 }
@@ -5233,7 +5271,7 @@ dt{ color:var(--muted); font-size:var(--t-label); font-weight:800; text-transfor
 .sidebar-inset .section-heading h2{
   font-size: var(--t-display);
   letter-spacing: var(--k-display);
-  font-weight: 750;
+  font-weight: 700;
   letter-spacing: -0.025em;
 }
 
@@ -5254,7 +5292,7 @@ dt{ color:var(--muted); font-size:var(--t-label); font-weight:800; text-transfor
 .sidebar-inset .path-preview h3{
   font-size: var(--t-h2);
   letter-spacing: var(--k-h2);
-  font-weight: 750;
+  font-weight: 700;
   line-height: 1.25;
 }
 
@@ -5477,7 +5515,7 @@ dt{ color:var(--muted); font-size:var(--t-label); font-weight:800; text-transfor
 .app-brand strong{
   font-size: var(--t-title);
   letter-spacing: var(--k-title);
-  font-weight: 800;
+  font-weight: 700;
   letter-spacing: -0.02em;
 }
 
@@ -5528,7 +5566,7 @@ dt{ color:var(--muted); font-size:var(--t-label); font-weight:800; text-transfor
   padding: 0 9px;
   color: var(--muted);
   font-size: var(--t-label);
-  font-weight: 750;
+  font-weight: 700;
   background: #f1f5f9;
   border-radius: 999px;
   white-space: nowrap;
@@ -5542,7 +5580,7 @@ dt{ color:var(--muted); font-size:var(--t-label); font-weight:800; text-transfor
   padding: 0 9px;
   color: var(--muted);
   font-size: var(--t-label);
-  font-weight: 750;
+  font-weight: 700;
   border-radius: 7px;
 }
 
@@ -5564,7 +5602,7 @@ dt{ color:var(--muted); font-size:var(--t-label); font-weight:800; text-transfor
   overflow: hidden;
   color: var(--on-solid);
   font-size: var(--t-label);
-  font-weight: 850;
+  font-weight: 700;
   letter-spacing: 0.02em;
   background: var(--navy);
   border: 2px solid var(--on-solid);
@@ -5713,7 +5751,7 @@ html[lang="my"] .app-workspace .button{
   color: var(--navy);
   font-size: var(--t-title);
   letter-spacing: var(--k-title);
-  font-weight: 800;
+  font-weight: 700;
   line-height: 1.2;
 }
 
@@ -5721,9 +5759,10 @@ html[lang="my"] .app-workspace .button{
   margin-top: 2px;
   color: var(--muted);
   font-size: var(--t-label);
-  font-weight: 750;
-  letter-spacing: 0.03em;
+  font-weight: 700;
+  letter-spacing: var(--k-label);
   text-transform: uppercase;
+  line-height: var(--l-label);
 }
 
 html[lang="my"] .home-stats dt{
@@ -5752,9 +5791,10 @@ html[lang="my"] .home-stats dt{
 .continue-copy > span{
   color: var(--teal);
   font-size: var(--t-label);
-  font-weight: 850;
-  letter-spacing: 0.08em;
+  font-weight: 700;
+  letter-spacing: var(--k-label);
   text-transform: uppercase;
+  line-height: var(--l-label);
 }
 
 html[lang="my"] .continue-copy > span{
@@ -5842,7 +5882,7 @@ html[lang="my"] .continue-copy h2{
 .home-section > header > a{
   color: var(--teal);
   font-size: var(--t-label);
-  font-weight: 800;
+  font-weight: 700;
 }
 
 .home-list > a{
@@ -5907,7 +5947,7 @@ html[lang="my"] .home-list small{
   place-items: center;
   color: var(--muted);
   font-size: var(--t-label);
-  font-weight: 800;
+  font-weight: 700;
   background: #f1f5f9;
   border: 1px solid var(--line);
   border-radius: 50%;
@@ -6054,7 +6094,7 @@ html[lang="my"] .active-path-copy p, html[lang="my"] .career-identity p, html[la
   margin-bottom: 18px;
   color: var(--teal);
   font-size: var(--t-label);
-  font-weight: 800;
+  font-weight: 700;
 }
 
 .roadmap-title-row{
@@ -6072,7 +6112,7 @@ html[lang="my"] .active-path-copy p, html[lang="my"] .career-identity p, html[la
   flex: 0 0 auto;
   color: var(--teal);
   font-size: var(--t-label);
-  font-weight: 800;
+  font-weight: 700;
 }
 
 /* Compact opportunities */
@@ -6145,9 +6185,10 @@ html[lang="my"] .active-path-copy p, html[lang="my"] .career-identity p, html[la
   gap: 8px;
   color: var(--teal);
   font-size: var(--t-label);
-  font-weight: 800;
-  letter-spacing: 0.03em;
+  font-weight: 700;
+  letter-spacing: var(--k-label);
   text-transform: uppercase;
+  line-height: var(--l-label);
 }
 
 .opportunity-meta > span{
@@ -6212,7 +6253,7 @@ html[lang="my"] .active-path-copy p, html[lang="my"] .career-identity p, html[la
   gap: 7px;
   color: var(--muted);
   font-size: var(--t-label);
-  font-weight: 750;
+  font-weight: 700;
 }
 
 .me-nav svg{
@@ -6938,10 +6979,11 @@ html[lang="my"] .mission-focus h2{
 
 .roadmap-detail-dialog .eyebrow{
   font-size: var(--t-label);
-  font-weight: 600;
-  letter-spacing: 0.04em;
+  font-weight: 700;
+  letter-spacing: var(--k-label);
   text-transform: uppercase;
   color: var(--teal-700);
+  line-height: var(--l-label);
 }
 
 .roadmap-detail-dialog h2{
@@ -6969,10 +7011,11 @@ html[lang="my"] .mission-focus h2{
 
 .roadmap-detail-meta dt{
   font-size: var(--t-label);
-  font-weight: 600;
-  letter-spacing: 0.04em;
+  font-weight: 700;
+  letter-spacing: var(--k-label);
   text-transform: uppercase;
   color: var(--muted-ink);
+  line-height: var(--l-label);
 }
 
 .roadmap-detail-meta dd{
@@ -6988,10 +7031,11 @@ html[lang="my"] .mission-focus h2{
   display: block;
   margin-bottom: var(--s-sm);
   font-size: var(--t-label);
-  font-weight: 600;
-  letter-spacing: 0.04em;
+  font-weight: 700;
+  letter-spacing: var(--k-label);
   text-transform: uppercase;
   color: var(--muted-ink);
+  line-height: var(--l-label);
 }
 
 .roadmap-detail-section ul{
@@ -7019,10 +7063,11 @@ html[lang="my"] .mission-focus h2{
 .roadmap-proof-target > span{
   display: block;
   font-size: var(--t-label);
-  font-weight: 600;
-  letter-spacing: 0.04em;
+  font-weight: 700;
+  letter-spacing: var(--k-label);
   text-transform: uppercase;
   color: var(--teal-700);
+  line-height: var(--l-label);
 }
 
 .roadmap-proof-target > strong{
@@ -7286,9 +7331,10 @@ html[lang="my"] .mission-focus h2{
   margin: 0;
   font-size: var(--t-label);
   font-weight: 700;
-  letter-spacing: 0.06em;
+  letter-spacing: var(--k-label);
   text-transform: uppercase;
   color: var(--ink);
+  line-height: var(--l-label);
 }
 
 .arena-count {
@@ -7780,9 +7826,10 @@ html[lang="my"] .submitted-summary > h2 { letter-spacing: 0; }
   margin-bottom: 2px;
   font-size: var(--t-label);
   font-weight: 700;
-  letter-spacing: 0.04em;
+  letter-spacing: var(--k-label);
   text-transform: uppercase;
   color: var(--amber-800);
+  line-height: var(--l-label);
 }
 
 .runner-guardrail p { margin: 0; font-size: var(--t-meta); line-height: var(--l-meta); color: var(--amber-800); }
@@ -7892,9 +7939,10 @@ html[lang="my"] .submitted-summary > h2 { letter-spacing: 0; }
   margin-bottom: 2px;
   font-size: var(--t-label);
   font-weight: 700;
-  letter-spacing: 0.04em;
+  letter-spacing: var(--k-label);
   text-transform: uppercase;
   color: var(--teal-700);
+  line-height: var(--l-label);
 }
 
 /* ---- Submit step (step 3) ----
@@ -7960,9 +8008,10 @@ html[lang="my"] .submit-form > h2 { letter-spacing: 0; }
   margin-top: var(--s-sm);
   font-size: var(--t-label);
   font-weight: 700;
-  letter-spacing: 0.04em;
+  letter-spacing: var(--k-label);
   text-transform: uppercase;
   color: var(--muted-ink);
+  line-height: var(--l-label);
 }
 html[lang="my"] .runner-checks-title { letter-spacing: 0; text-transform: none; }
 .runner-checks { display: grid; gap: 4px; margin: 6px 0 0; padding: 0; list-style: none; }
@@ -8364,9 +8413,10 @@ html[lang="my"] .runner-checks-title { letter-spacing: 0; text-transform: none; 
 .opp-kind {
   font-size: var(--t-label);
   font-weight: 700;
-  letter-spacing: 0.06em;
+  letter-spacing: var(--k-label);
   text-transform: uppercase;
   color: var(--teal-700);
+  line-height: var(--l-label);
 }
 
 .opp-loc {
@@ -8402,9 +8452,10 @@ html[lang="my"] .runner-checks-title { letter-spacing: 0; text-transform: none; 
   margin-bottom: 5px;
   font-size: var(--t-label);
   font-weight: 700;
-  letter-spacing: 0.04em;
+  letter-spacing: var(--k-label);
   text-transform: uppercase;
   color: var(--muted-ink);
+  line-height: var(--l-label);
 }
 
 .opp-evidence ul { margin: 0; padding-left: var(--s-md); }
@@ -8479,9 +8530,10 @@ html[lang="my"] .runner-checks-title { letter-spacing: 0; text-transform: none; 
 .opp-card-kind {
   font-size: var(--t-label);
   font-weight: 700;
-  letter-spacing: 0.06em;
+  letter-spacing: var(--k-label);
   text-transform: uppercase;
   color: var(--muted-ink);
+  line-height: var(--l-label);
 }
 
 .opp-card strong { font-size: var(--t-title); line-height: var(--l-title); font-weight: 600; }
@@ -8622,8 +8674,8 @@ html[lang="my"] .runner-checks-title { letter-spacing: 0; text-transform: none; 
 .level-path {
   font-size: var(--t-label);
   line-height: var(--l-label);
-  letter-spacing: 0.08em;
-  font-weight: 600;
+  letter-spacing: var(--k-label);
+  font-weight: 700;
   text-transform: uppercase;
   color: var(--muted-ink);
 }
@@ -8782,8 +8834,8 @@ html[lang="my"] .runner-checks-title { letter-spacing: 0; text-transform: none; 
 .levelup-lead {
   font-size: var(--t-label);
   line-height: var(--l-label);
-  letter-spacing: 0.08em;
-  font-weight: 600;
+  letter-spacing: var(--k-label);
+  font-weight: 700;
   text-transform: uppercase;
   color: var(--muted-ink);
   margin-top: 20px;
@@ -8842,8 +8894,8 @@ html[lang="my"] .runner-checks-title { letter-spacing: 0; text-transform: none; 
 .changelog-rail .changelog-version {
   font-size: var(--t-label);
   line-height: var(--l-label);
-  letter-spacing: 0.08em;
-  font-weight: 600;
+  letter-spacing: var(--k-label);
+  font-weight: 700;
   text-transform: uppercase;
   color: var(--muted-ink);
   font-variant-numeric: tabular-nums;
@@ -8960,8 +9012,8 @@ html[lang="my"] .runner-checks-title { letter-spacing: 0; text-transform: none; 
   padding: 0 8px 8px;
   font-size: var(--t-label);
   line-height: var(--l-label);
-  letter-spacing: 0.08em;
-  font-weight: 600;
+  letter-spacing: var(--k-label);
+  font-weight: 700;
   text-transform: uppercase;
   color: var(--muted-ink);
 }
@@ -9306,10 +9358,11 @@ html[lang="my"] .sidebar-menu-button > a { font-size: var(--t-body); }
 .opp-row-detail .opp-evidence > div { display: grid; gap: 6px; align-content: start; }
 .opp-row-detail .opp-evidence strong {
   font-size: var(--t-label);
-  letter-spacing: 0.08em;
-  font-weight: 600;
+  letter-spacing: var(--k-label);
+  font-weight: 700;
   text-transform: uppercase;
   color: var(--muted-ink);
+  line-height: var(--l-label);
 }
 html[lang="my"] .opp-row-detail .opp-evidence strong { text-transform: none; letter-spacing: 0; }
 .opp-row-detail .opp-evidence ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 4px; }
@@ -9386,8 +9439,8 @@ html[lang="my"] .mission-trail text { font-family: var(--font-my), sans-serif; }
 .mission-trail figcaption {
   font-size: var(--t-label);
   line-height: var(--l-label);
-  letter-spacing: 0.08em;
-  font-weight: 600;
+  letter-spacing: var(--k-label);
+  font-weight: 700;
   text-transform: uppercase;
   color: var(--muted-ink);
 }
@@ -9476,18 +9529,19 @@ html[lang="my"] .steps-ring text { font-family: var(--font-my), sans-serif; }
 .profile-stats dd {
   font-size: var(--t-h2);
   line-height: 1.15;
-  font-weight: 800;
+  font-weight: 700;
   color: var(--ink);
   font-variant-numeric: tabular-nums;
   margin: 0;
 }
 .profile-stats dt {
   font-size: var(--t-label);
-  letter-spacing: 0.06em;
-  font-weight: 600;
+  letter-spacing: var(--k-label);
+  font-weight: 700;
   text-transform: uppercase;
   color: var(--muted-ink);
   margin-top: 3px;
+  line-height: var(--l-label);
 }
 html[lang="my"] .profile-stats dt { text-transform: none; letter-spacing: 0; }
 
@@ -9663,7 +9717,7 @@ a.map-card:focus-visible { outline: 2px solid var(--navy-700); outline-offset: 2
   gap: 7px;
   font-size: var(--t-label);
   line-height: var(--l-label);
-  letter-spacing: 0.09em;
+  letter-spacing: var(--k-label);
   font-weight: 700;
   text-transform: uppercase;
   color: var(--teal-500);
@@ -9809,10 +9863,11 @@ html[lang="my"] .partner-band-eyebrow { text-transform: none; letter-spacing: 0;
 
 .featured-opp-kind {
   font-size: var(--t-label);
-  letter-spacing: 0.09em;
+  letter-spacing: var(--k-label);
   font-weight: 700;
   text-transform: uppercase;
   color: var(--teal-700);
+  line-height: var(--l-label);
 }
 html[lang="my"] .featured-opp-kind { text-transform: none; letter-spacing: 0; }
 
@@ -9853,7 +9908,7 @@ html[lang="my"] .featured-opp-kind { text-transform: none; letter-spacing: 0; }
 }
 .featured-opp-evidence dt {
   font-size: var(--t-label);
-  font-weight: 600;
+  font-weight: 700;
   color: var(--muted-ink);
   white-space: nowrap;
 }
@@ -10028,10 +10083,11 @@ html[lang="my"] .featured-opp-kind { text-transform: none; letter-spacing: 0; }
    the eye reads them as siblings instead of four competing titles. */
 .profile-section-label {
   font-size: var(--t-label);
-  letter-spacing: 0.09em;
+  letter-spacing: var(--k-label);
   font-weight: 700;
   text-transform: uppercase;
   color: var(--muted-ink);
+  line-height: var(--l-label);
 }
 html[lang="my"] .profile-section-label { text-transform: none; letter-spacing: 0; }
 
@@ -10231,8 +10287,8 @@ html[lang="my"] .profile-section-label { text-transform: none; letter-spacing: 0
   color: var(--teal-500);
   font-size: var(--t-label);
   line-height: var(--l-label);
-  letter-spacing: 0.08em;
-  font-weight: 600;
+  letter-spacing: var(--k-label);
+  font-weight: 700;
   text-transform: uppercase;
 }
 
@@ -11221,8 +11277,8 @@ html[lang="my"] .oppsig-skills-head {
   min-width: 0;
   font-size: var(--t-label);
   line-height: var(--l-label);
-  letter-spacing: 0.08em;
-  font-weight: 600;
+  letter-spacing: var(--k-label);
+  font-weight: 700;
   text-transform: uppercase;
   color: var(--muted-ink);
   overflow-wrap: anywhere;
@@ -11814,10 +11870,11 @@ html[lang="my"] .oppsig-skills-head {
 .track-card-copy > * { margin: 0; }
 .track-card-eyebrow {
   font-size: var(--t-label);
-  letter-spacing: 0.09em;
+  letter-spacing: var(--k-label);
   font-weight: 700;
   text-transform: uppercase;
   color: var(--teal-700);
+  line-height: var(--l-label);
 }
 html[lang="my"] .track-card-eyebrow { text-transform: none; letter-spacing: 0; }
 .track-card-copy h2 {
@@ -12091,9 +12148,9 @@ a.paused-row:hover { background: var(--surface-sunk); }
   margin: 0;
   color: var(--teal-500);
   font-size: var(--t-label);
-  font-weight: 800;
+  font-weight: 700;
   line-height: var(--l-label);
-  letter-spacing: 0.12em;
+  letter-spacing: var(--k-label);
   text-transform: uppercase;
   overflow-wrap: anywhere;
 }
@@ -12204,9 +12261,9 @@ a.paused-row:hover { background: var(--surface-sunk); }
 .passport-trail-title{
   color: var(--teal-500);
   font-size: var(--t-label);
-  font-weight: 800;
+  font-weight: 700;
   line-height: var(--l-label);
-  letter-spacing: 0.12em;
+  letter-spacing: var(--k-label);
   text-transform: uppercase;
   overflow-wrap: anywhere;
 }
@@ -12218,7 +12275,7 @@ a.paused-row:hover { background: var(--surface-sunk); }
   margin-left: auto;
   color: var(--surface);
   font-size: var(--t-label);
-  font-weight: 800;
+  font-weight: 700;
   line-height: var(--l-label);
   font-variant-numeric: tabular-nums;
 }
@@ -12267,7 +12324,7 @@ a.paused-row:hover { background: var(--surface-sunk); }
   width: 22px;
   height: 22px;
   font-size: var(--t-label);
-  font-weight: 800;
+  font-weight: 700;
   line-height: 1;
   border-radius: var(--r-chip);
 }
@@ -12588,10 +12645,11 @@ html[lang="my"] .passport-count dd{
 
 .case-eyebrow {
   font-size: var(--t-label);
-  letter-spacing: 0.08em;
+  letter-spacing: var(--k-label);
   font-weight: 700;
   text-transform: uppercase;
   color: var(--muted-ink);
+  line-height: var(--l-label);
 }
 html[lang="my"] .case-eyebrow { text-transform: none; letter-spacing: 0; }
 .case-title { font-size: var(--t-title); line-height: 1.3; font-weight: 700; color: var(--ink); }
@@ -12707,11 +12765,12 @@ html[lang="my"] .case-eyebrow { text-transform: none; letter-spacing: 0; }
 .resume-sheet header p { font-size: var(--t-meta); color: var(--muted-ink); margin: 2px 0 0; }
 .resume-sheet h4 {
   font-size: var(--t-label);
-  letter-spacing: 0.08em;
+  letter-spacing: var(--k-label);
   font-weight: 700;
   text-transform: uppercase;
   color: var(--muted-ink);
   margin: 0 0 6px;
+  line-height: var(--l-label);
 }
 html[lang="my"] .resume-sheet h4 { text-transform: none; letter-spacing: 0; }
 .resume-skills { font-size: var(--t-meta); line-height: var(--l-meta); color: var(--ink); margin: 0; }
@@ -12833,9 +12892,9 @@ html[lang="my"] .resume-sheet h4 { text-transform: none; letter-spacing: 0; }
   margin: 0;
   color: var(--teal-500);
   font-size: var(--t-label);
-  font-weight: 800;
+  font-weight: 700;
   line-height: var(--l-label);
-  letter-spacing: 0.12em;
+  letter-spacing: var(--k-label);
   text-transform: uppercase;
   overflow-wrap: anywhere;
 }
@@ -12946,9 +13005,9 @@ html[lang="my"] .resume-sheet h4 { text-transform: none; letter-spacing: 0; }
 .passport-trail-title{
   color: var(--teal-500);
   font-size: var(--t-label);
-  font-weight: 800;
+  font-weight: 700;
   line-height: var(--l-label);
-  letter-spacing: 0.12em;
+  letter-spacing: var(--k-label);
   text-transform: uppercase;
   overflow-wrap: anywhere;
 }
@@ -12960,7 +13019,7 @@ html[lang="my"] .resume-sheet h4 { text-transform: none; letter-spacing: 0; }
   margin-left: auto;
   color: var(--surface);
   font-size: var(--t-label);
-  font-weight: 800;
+  font-weight: 700;
   line-height: var(--l-label);
   font-variant-numeric: tabular-nums;
 }
@@ -13009,7 +13068,7 @@ html[lang="my"] .resume-sheet h4 { text-transform: none; letter-spacing: 0; }
   width: 22px;
   height: 22px;
   font-size: var(--t-label);
-  font-weight: 800;
+  font-weight: 700;
   line-height: 1;
   border-radius: var(--r-chip);
 }
@@ -13205,11 +13264,12 @@ html[lang="my"] .passport-count dd{
 
 .case-eyebrow {
   font-size: var(--t-label);
-  letter-spacing: 0.08em;
+  letter-spacing: var(--k-label);
   font-weight: 700;
   text-transform: uppercase;
   color: var(--muted-ink);
   margin-top: 4px;
+  line-height: var(--l-label);
 }
 html[lang="my"] .case-eyebrow { text-transform: none; letter-spacing: 0; }
 .case-title { font-size: var(--t-title); line-height: 1.25; font-weight: 700; color: var(--ink); }
@@ -13320,11 +13380,12 @@ html[lang="my"] .case-eyebrow { text-transform: none; letter-spacing: 0; }
 .resume-sheet header p { font-size: var(--t-meta); color: var(--muted-ink); margin: 2px 0 0; }
 .resume-sheet h4 {
   font-size: var(--t-label);
-  letter-spacing: 0.09em;
+  letter-spacing: var(--k-label);
   font-weight: 700;
   text-transform: uppercase;
   color: var(--muted-ink);
   margin: 0 0 6px;
+  line-height: var(--l-label);
 }
 html[lang="my"] .resume-sheet h4 { text-transform: none; letter-spacing: 0; }
 .resume-skills { font-size: var(--t-meta); line-height: var(--l-meta); color: var(--ink); margin: 0; }
@@ -14539,7 +14600,9 @@ html[lang="my"] .hero-copy h1{
 .you-id small { font-size: var(--t-meta); line-height: var(--l-meta); color: var(--muted-ink); }
 .you-facts { display: grid; gap: var(--s-sm); margin: 0; }
 .you-facts > div { display: grid; gap: 6px; padding-top: var(--s-sm); border-top: 1px solid var(--hairline); }
-.you-facts dt { font-size: var(--t-label); font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; color: var(--muted-ink); }
+.you-facts dt { font-size: var(--t-label); font-weight: 700; letter-spacing: var(--k-label); text-transform: uppercase; color: var(--muted-ink);
+  line-height: var(--l-label);
+}
 html[lang="my"] .you-facts dt { letter-spacing: 0; text-transform: none; }
 .you-facts dd { margin: 0; font-size: var(--t-meta); line-height: var(--l-meta); color: var(--ink); }
 .you-paths, .you-skills { margin: 0; padding: 0; list-style: none; }
@@ -14564,13 +14627,17 @@ html[lang="my"] .you-facts dt { letter-spacing: 0; text-transform: none; }
 .home-main { display: grid; gap: var(--s-xl); min-width: 0; }
 .home-main > .home-block { margin-top: 0; }
 .stage-panel { display: grid; gap: var(--s-sm); padding: var(--s-md) var(--s-lg); background: var(--surface); border: 1px solid var(--hairline); border-radius: var(--r-card); }
-.stage-panel-eyebrow { font-size: var(--t-label); font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; color: var(--teal-700); }
+.stage-panel-eyebrow { font-size: var(--t-label); font-weight: 700; letter-spacing: var(--k-label); text-transform: uppercase; color: var(--teal-700);
+  line-height: var(--l-label);
+}
 html[lang="my"] .stage-panel-eyebrow { letter-spacing: 0; text-transform: none; }
 .stage-panel h2 { margin: 0; font-size: var(--t-h2); line-height: var(--l-h2); letter-spacing: var(--k-h2); font-weight: 700; color: var(--ink); }
 html[lang="my"] .stage-panel h2 { letter-spacing: 0; }
 .stage-panel-body { margin: 0; max-width: 62ch; font-size: var(--t-meta); line-height: var(--l-meta); color: var(--muted-ink); }
 .stage-topics { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--s-md); padding-top: var(--s-sm); border-top: 1px solid var(--hairline); }
-.stage-topics-label { display: block; margin-bottom: 6px; font-size: var(--t-label); font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; color: var(--muted-ink); }
+.stage-topics-label { display: block; margin-bottom: 6px; font-size: var(--t-label); font-weight: 700; letter-spacing: var(--k-label); text-transform: uppercase; color: var(--muted-ink);
+  line-height: var(--l-label);
+}
 html[lang="my"] .stage-topics-label { letter-spacing: 0; text-transform: none; }
 .stage-topics ul { display: flex; flex-wrap: wrap; gap: 6px; margin: 0; padding: 0; list-style: none; }
 .stage-topics li { padding: 3px 10px; font-size: var(--t-label); line-height: 1.6; color: var(--ink); background: var(--surface-sunk); border: 1px solid var(--hairline); border-radius: var(--r-chip); }
@@ -14607,7 +14674,9 @@ html[lang="my"] .stage-topics-label { letter-spacing: 0; text-transform: none; }
 .topic-lessons-copy small { font-size: var(--t-label); line-height: 1.45; color: var(--navy-100); }
 .topic-lessons-total { flex: none; padding: 2px 10px; font-size: var(--t-label); font-weight: 700; color: var(--navy-700); background: var(--surface); border-radius: var(--r-chip); white-space: nowrap; }
 .topic-group + .topic-group { border-top: 1px solid var(--hairline); }
-.topic-group-label { display: block; padding: 6px var(--s-md); font-size: var(--t-label); font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; color: var(--muted-ink); background: var(--surface-sunk); border-bottom: 1px solid var(--hairline); }
+.topic-group-label { display: block; padding: 6px var(--s-md); font-size: var(--t-label); font-weight: 700; letter-spacing: var(--k-label); text-transform: uppercase; color: var(--muted-ink); background: var(--surface-sunk); border-bottom: 1px solid var(--hairline);
+  line-height: var(--l-label);
+}
 html[lang="my"] .topic-group-label { letter-spacing: 0; text-transform: none; }
 .roadmap-detail-section .topic-list,
 .stage-topics .topic-list,
@@ -14653,3 +14722,17 @@ html[lang="my"] .topic-group-label { letter-spacing: 0; text-transform: none; }
 .runner-pulse { display: inline-block; width: 8px; height: 8px; margin-right: 4px; vertical-align: middle; background: var(--amber-500); border-radius: 50%; animation: runner-pulse 1.2s ease-in-out infinite; }
 @keyframes runner-pulse { 0%, 100% { opacity: 0.35; } 50% { opacity: 1; } }
 @media (prefers-reduced-motion: reduce) { .runner-pulse { animation: none; } }
+
+/* ---- Figures ----
+   Counts, points and stage numbers sit in rows and pills that change as the
+   learner moves on; tabular figures keep them from shifting width. */
+.level-strip-xp, .mission-map-pill, .mission-map-steps, .topic-num, .topic-kinds,
+.topic-lessons-total, .climb-foot, .stage-panel-eyebrow, .track-card-step,
+.you-facts dd, .home-stats dd, .profile-stats dd, .stage-next-num, .runner-rail,
+.passport-trail-ratio, .roadmap-progress-copy, .map-card-status {
+  font-variant-numeric: tabular-nums;
+}
+
+/* Burmese stacks marks above and below the line; a control set at line-height
+   1 clips them. */
+html[lang="my"] :is(.button, .btn, .climb-cta) { line-height: 1.5; }
