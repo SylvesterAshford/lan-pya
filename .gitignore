@@ -49,3 +49,6 @@ yarn-error.log*
 
 # scroll-craft verification screenshots
 scrollcraft/builds/*/lab/
+
+# scripts/perf.mjs output
+perf-*.json

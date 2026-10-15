@@ -42,7 +42,7 @@ export default async function ProofPage({ params }: { params: Promise<{ locale: 
 
   const [profile, proofItems, dashboard, community] = await Promise.all([
     getProfile(user.id),
-    getProofItems(),
+    getProofItems(user.id),
     getActivePathDashboard(),
     getCommunitySettings(user.id),
   ]);
