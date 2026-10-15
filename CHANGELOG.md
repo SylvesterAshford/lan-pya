@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.38.4.0] - 2026-10-16
+
+### Changed
+
+- **Screens answer the moment you tap.** On a slow connection, tapping Roadmaps, Missions, Portfolio or any other screen used to leave the old screen sitting still until the new one arrived. Now the new screen's outline appears straight away and fills in when its content arrives.
+
 ## [0.38.3.0] - 2026-10-16
 
 ### Changed

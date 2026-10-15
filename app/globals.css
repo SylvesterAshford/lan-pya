@@ -13477,6 +13477,15 @@ html[lang="my"] .community-card-title { letter-spacing: 0; }
 .community-skeleton.tabs { width: 260px; height: 46px; margin-bottom: var(--s-md); }
 .community-skeleton.row { height: 64px; border-radius: 0; background: var(--surface); }
 
+/* The shared loading state for app screens (app/[locale]/app/loading.tsx):
+   the page heading's outline, one panel and two rows, in the sunk surface. */
+.page-skeleton { display: block; background: var(--surface-sunk); border-radius: var(--r-control); }
+.page-skeleton-eyebrow { width: 96px; height: 12px; }
+.page-skeleton-title { width: min(320px, 70%); height: 34px; margin-top: var(--s-sm); }
+.page-skeleton-line { width: min(560px, 90%); height: 16px; margin-top: var(--s-sm); }
+.page-skeleton-panel { height: 180px; margin-bottom: var(--s-md); }
+.page-skeleton-row { height: 64px; margin-bottom: var(--s-sm); }
+
 @media (min-width: 480px) {
   .place-1 .community-step { height: 96px; }
   .place-2 .community-step { height: 72px; }
