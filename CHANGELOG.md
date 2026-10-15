@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.32.0.0] - 2026-10-15
+
+### Changed
+
+- **The demo account can submit a mission**, so the whole flow can be shown in a pitch: fill in the two links and a reflection, submit, and watch it reach "Completed · awaiting review". A "Reset the demo story" button at the foot of Missions (demo account only) puts everything back for the next run-through; it also resets every night.
+- **Missions update on their own.** The link check now starts the moment you submit, and the mission page refreshes itself while it runs, so you don't have to reload.
+- **The traveller walks to the next stop.** When you come back to the Missions map after finishing a stage, your character walks the trail from the stop you left to the one you're on now. The roadmap shows the finished stage and your new position too.
+
 ## [0.31.0.0] - 2026-10-15
 
 ### Added

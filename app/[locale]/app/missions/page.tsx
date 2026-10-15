@@ -9,6 +9,7 @@ import { getActivePathDashboard, getProfile, getProofItems, getRoadmap } from "@
 import { getAppCopy, formatAppDate, localizeCareerTerm, localizeRoadmapMilestone } from "@/lib/i18n/app-copy";
 import { getCareerTrack } from "@/lib/domain/career-tracks";
 import { getMissionStage } from "@/lib/domain/mission-briefs";
+import { DemoResetButton } from "@/components/missions/demo-reset-button";
 import { toMyanmarDigits } from "@/lib/domain/deadlines";
 import { learnerStatus } from "@/lib/domain/mission-status";
 import type { Milestone, SubmissionState } from "@/lib/domain/types";
@@ -170,6 +171,7 @@ export default async function MissionsPage({ params }: { params: Promise<{ local
           greyed circles looked good. */}
       <MissionMap
         milestones={roadmap}
+        pathKey={pathKey}
         locale={locale}
         mascotVariant={profile?.avatar}
         pathTitle={localizeCareerTerm(locale, pathKey, dashboard.activePath.title)}
@@ -188,6 +190,15 @@ export default async function MissionsPage({ params }: { params: Promise<{ local
           continueMission: locale === "my" ? "ဆက်လုပ်မည်" : "Continue mission",
         }}
       />
+
+      {profile?.dataOrigin === "seeded_demo" ? (
+        <DemoResetButton
+          label={locale === "my" ? "နမူနာ ဇာတ်လမ်းကို ပြန်စမည်" : "Reset the demo story"}
+          busyLabel={locale === "my" ? "ပြန်စနေသည်…" : "Resetting…"}
+          doneLabel={locale === "my" ? "နမူနာအကောင့်ကို မူလအတိုင်း ပြန်ထားပြီး" : "The demo is back to its starting story."}
+          errorLabel={locale === "my" ? "ပြန်မစနိုင်ပါ။ ထပ်ကြိုးစားပါ။" : "Could not reset. Try again."}
+        />
+      ) : null}
     </div>
   );
 }
