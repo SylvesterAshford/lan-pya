@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.34.1.0] - 2026-10-15
+
+### Changed
+
+- **Mission pages are centred.** The title, step bar and card now sit together in the middle of the page instead of hugging the left edge on wide screens.
+
 ## [0.34.0.0] - 2026-10-15
 
 ### Changed
