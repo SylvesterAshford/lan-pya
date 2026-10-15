@@ -86,7 +86,10 @@ export default async function MarketingPage({
           <span className="brand-mark">လ</span>
           <span><strong>Lan Pya</strong><small>လမ်းပြ</small></span>
         </Link>
-        <Link href="/login" className="prototype-pill"><i /> {my ? "အကောင့်ဝင်ရန်" : "Sign in"}</Link>
+        <nav className="welcome-nav-links" aria-label={my ? "စာမျက်နှာများ" : "Pages"}>
+          <Link href="/pricing" className="welcome-nav-link">{my ? "စျေးနှုန်း" : "Pricing"}</Link>
+          <Link href="/login" className="prototype-pill"><i /> {my ? "အကောင့်ဝင်ရန်" : "Sign in"}</Link>
+        </nav>
       </header>
 
       <TheClimb

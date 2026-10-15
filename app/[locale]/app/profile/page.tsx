@@ -100,6 +100,13 @@ export default async function ProfilePage({ params }: { params: Promise<{ locale
           </div>
           <div className="settings-row">
             <span className="settings-row-main">
+              <span className="settings-row-label">{c.pricing.profile.plan}</span>
+              <span className="settings-row-value">{c.pricing.free}</span>
+            </span>
+            <Link className="button outline compact settings-row-control" href="/pricing">{c.pricing.profile.seePlans}</Link>
+          </div>
+          <div className="settings-row">
+            <span className="settings-row-main">
               <span className="settings-row-label">{c.profile.language}</span>
               <span className="settings-row-value">{locale === "my" ? "မြန်မာ" : "English"}</span>
             </span>
