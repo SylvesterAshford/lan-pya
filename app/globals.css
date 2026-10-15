@@ -7795,7 +7795,9 @@ html[lang="my"] .submitted-summary > h2 { letter-spacing: 0; }
 .runner-step.now > span { color: var(--ink); }
 
 .runner-panel {
-  padding: var(--s-lg);
+  /* Tighter at the sides than top and bottom: the card sits in a narrow
+     centred column, and 24px on each side left the content looking inset. */
+  padding: var(--s-lg) var(--s-md);
   background: var(--surface);
   border: 1px solid var(--hairline);
   border-radius: var(--r-card);
@@ -7894,7 +7896,7 @@ html[lang="my"] .submitted-summary > h2 { letter-spacing: 0; }
 .runner-check.on .runner-check-copy strong { color: var(--muted-ink); text-decoration: line-through; }
 
 .runner-state {
-  padding: var(--s-md);
+  padding: 14px var(--s-md) 14px 14px;
   margin-bottom: var(--s-md);
   background: var(--surface-sunk);
   border: 1px solid var(--hairline);
