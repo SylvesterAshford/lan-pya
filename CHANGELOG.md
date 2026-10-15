@@ -1,5 +1,15 @@
 # Changelog
 
+## [0.38.1.0] - 2026-10-16
+
+### Changed
+
+- **Pages load faster.** Lan Pya's server now runs in Mumbai, next to its database, instead of the United States. Every screen after sign-in used to wait for several trips across the world before it could draw; those trips are now local, and the server is also closer to Myanmar.
+
+### Fixed
+
+- A few minutes after the first attempt at this change, the site showed "404" on every page. The settings file that tells Vercel this is a Next.js app had been replaced rather than edited; it is restored and the move is redone.
+
 ## [0.38.0.0] - 2026-10-16
 
 ### Added
