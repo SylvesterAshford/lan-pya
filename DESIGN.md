@@ -33,7 +33,7 @@ Where this file and those documents disagree, this file wins and the disagreemen
 
 ### Deliberate risks
 
-- **Five primary destinations:** Home, Roadmaps, Missions, Portfolio, Opportunities. Missions were contextual under Roadmaps until 2026-08-17; learners could not find the work, so it earned a destination. Portfolio later took the slot previously held by Me; profile, careers, privacy, language, and account controls now open from the account row.
+- **Six primary destinations:** Home, Roadmaps, Missions, Portfolio, then Community and Opportunities under **Connect**. Missions were contextual under Roadmaps until 2026-08-17; learners could not find the work, so it earned a destination. Portfolio later took the slot previously held by Me; profile, careers, privacy, language, and account controls now open from the account row. Community joined on 2026-10-15; the group heading changed from Apply to Connect so it no longer read as something to apply for.
 - **A real node graph, not a card grid.** Connected SVG nodes with a dotted spine carry the core experience. No percentage bar substitutes for it.
 - **Two palettes that never touch.** Canvas amber is a node fill on the graph. Chrome amber is a small urgency pill. Mixing them destroys both meanings.
 
@@ -47,7 +47,8 @@ Where this file and those documents disagree, this file wins and the disagreemen
 2. **Roadmaps:** active path first, browse all paths on demand, then the connected roadmap canvas.
 3. **Missions:** the work. Active mission tagged with the stage it belongs to, and completed missions with their verification date.
 4. **Portfolio:** verified work, provenance, résumé drafting, and proof sharing.
-5. **Opportunities:** deadline-led feed with compact provenance and readiness detail.
+5. **Community:** learners on a path who chose to be found. Your stage (at, ahead, behind) and a Leaderboard; a card per person with their contact links. See "Community" below.
+6. **Opportunities:** deadline-led feed with compact provenance and readiness detail.
 
 Career profile, path switching, language, privacy, and account controls open from the account row rather than taking a primary navigation slot.
 
@@ -215,7 +216,7 @@ These five hues never appear in chrome: not on a button, chip, border, backgroun
 ## Layout
 
 - **Approach:** Grid-disciplined application workspace.
-- **Desktop shell:** Collapsible left sidebar with learner navigation, a separate Opportunities group, role-gated staff links, and the account row at its foot. The collapsed rail keeps its icons and accessible labels.
+- **Desktop shell:** Collapsible left sidebar with learner navigation, a separate Connect group (Community, Opportunities), role-gated staff links, and the account row at its foot. The collapsed rail keeps its icons and accessible labels.
 - **Phone shell:** The slim top bar carries the brand and one menu trigger. The same sidebar content opens as the only mobile navigation drawer, so destinations are not duplicated in the tab order or accessibility tree.
 - **Primary screen content column: fluid, `clamp(820px, 78vw, 1280px)`.** A fixed 820px cap reads well at 1440px but strands the content in the middle of a wide monitor. It resolves to 820 at 1024px, 1123 at 1440px, and 1280 from 1920px up. The header shares the token, so brand and content stay aligned at every width. Originally specified as a flat 820px maximum: Home, Opportunities, Paths, and Portfolio are short-content screens. A 1100px column holding three list rows reads as abandoned; an 820px column reads as composed and gives a better line length. Only the roadmap canvas and reviewer/admin tables may exceed it.
 - **Pages end honestly.** Never pad a short screen with filler cards to fill the viewport.
@@ -559,6 +560,17 @@ values are inserted into the visible fields. The demo action and the privacy
 helper never disappear; compacting this surface may remove redundant preview,
 not consent or the learner's route into the prepared account.
 
+## Community
+
+Learners on a path who chose to be found (founder, 2026-10-15). The job is finding study partners; ranking is second, so **Your stage** is the default tab.
+
+- **Your stage:** a "You are at" card (stage, verified missions, and whether others can see you), then sections *At your stage*, *A stage ahead · can help you*, *A stage behind · you can help*, *Finished this path*, and *Elsewhere on this path*. The viewer is never a row in these lists. No points here. On a path the viewer is not on, people are grouped *Stage N · title* instead.
+- **Leaderboard:** a podium drawn in chrome navy and grey only (1st `--navy-700`, 2nd `--navy-100`, 3rd `--surface-sunk`), never medal colours, and only once three people have points; until then "The leaderboard fills in as missions are verified" and people are listed by progress. DOM order is 1-2-3; CSS draws 2-1-3.
+- **Rows:** one tappable row each inside a hairline list, with an initials disc (two Latin initials, or a Myanmar name's first grapheme), never a mascot: two drawings cannot tell people apart.
+- **Card:** the step brief's dialog and bottom sheet, narrowed to 480px. Exactly one primary button: the first link in the order Telegram, Facebook, LinkedIn. Lucide `ExternalLink` only, no brand icons. Report is a second step inside the card.
+- **Privacy:** opt-in with at least one link; links are shown only to people who are listed themselves; the demo sees labelled sample learners and never real ones.
+- **Points**, never "pts" or "XP".
+
 ## Accessibility
 
 - Target WCAG 2.2 AA across learner, reviewer, and proof-sharing flows.
@@ -699,3 +711,4 @@ not consent or the learner's route into the prepared account.
 | 2026-10-15 | **A mission is one centred column** | The mission page capped its heading, step rail and card at about 700px from the left of the content column, so a wide screen left most of the page blank to the right and it read as unfinished. A mission is a single task, so the three now share one centred 720px column. The form keeps its width: wider inputs and reflection lines would read worse. Other screens still fill their column. |
 | 2026-10-15 | **Typeset: one eyebrow, three weights, the UI face first in Burmese** | An audit of eight screens in both languages found the size scale intact (seven sizes per language) but each size carrying drift: 25 variants at 12px, eyebrows in five weights and seven trackings, weights up to 850 that Burmese cannot render, and Burmese headings at 1.15 leading because aliases froze English values on `:root`. The largest visible fault was English words in Burmese screens setting in Padauk's wide Latin. Now: one eyebrow and one tag role, app weights 400/600/700, Burmese stack `--font-ui` then `--font-myanmar` with no size adjust, Burmese labels 13px, aliases restated for Burmese, tabular figures on moving numbers. Distinct styles dropped from 51 to 37 (English) and 44 to 38 (Burmese). |
 | 2026-10-15 | **On phones the climb card stacks; topic rows take two lines** | Below 860px the climb card was meant to put its scene under the copy, but a later full-bleed rule kept the scene absolutely positioned, so the button and copy sat on the traveller and the stage marker. It is now a 2:1 band under the copy, run to the card's edges and faded into the navy at its top; the button takes the full row and wraps cleanly at 320px. Topic rows in Free lessons put the Burmese tag and counts on a second line under the name below 560px, so names no longer break one word per line. |
+| 2026-10-15 | **Community: Your stage first, a navy podium second, Connect in the sidebar** | Learners asked to find study partners, so the default tab groups people around your stage and shows no points. The leaderboard the founder asked for is drawn with the chrome navy and grey (no medal colours, which would be a fourth palette) and waits for three people with points. Rows use initials because only two mascot drawings exist. The "Apply" heading became "Connect" because "Apply › Community" read as something to apply for. Reviewed in /plan-design-review (mockup A-final). |

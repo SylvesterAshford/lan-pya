@@ -1,5 +1,19 @@
 # Changelog
 
+## [0.36.0.0] - 2026-10-15
+
+### Added
+
+- **Community: find learners on your path to learn with.** A new Community page (in the sidebar under Connect, above Opportunities) shows who else is on your path. **Your stage** groups them as at your stage, a stage ahead (who can help you) and a stage behind (whom you can help). **Leaderboard** ranks them by points, with a 1st/2nd/3rd podium once three people have points. Tap someone to see their note and message them on Telegram, Facebook or LinkedIn.
+- **You choose to appear.** Nobody is listed until they turn on "Show me in Community" and add at least one link, on Profile or right from someone's card. You see other people's links only once you've shared yours, and turning it off removes you immediately.
+- **Report, and you won't see them again.** Reporting someone hides them from you straight away, without telling them who reported. Reports are counted on the Admin page.
+- **When you're the first on your path,** Community offers to invite a classmate on Telegram or copy an invite link.
+- **The demo shows sample learners,** clearly labelled "Sample", so a pitch has a full page without exposing real learners. Real learners never see the demo, and the demo never sees them.
+
+### Changed
+
+- **The sidebar heading "Apply" is now "Connect",** because it holds Community as well as Opportunities.
+
 ## [0.35.2.0] - 2026-10-15
 
 ### Fixed

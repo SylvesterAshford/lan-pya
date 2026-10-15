@@ -10,15 +10,18 @@
 -- an unverified one exists on the path: the demo's verified profile card was
 -- still its "active" work, so it won the ordering.
 
+-- The Frontend stages come from seed.sql, which runs after the migrations on a
+-- fresh local database, so the insert waits for the stage to exist; seed.sql
+-- adds the same mission there. Production already had the stage.
 insert into public.mission_definitions(id, milestone_id, key, version, title, brief, rubric)
-values (
+select
   '12000000-0000-0000-0000-000000000002',
   '11000000-0000-0000-0000-000000000004',
   'interactive-opportunity-tracker', 1,
   'Interactive opportunity tracker',
   '{"goal":"Build a small tracker that filters, saves and explains opportunities with plain JavaScript"}',
   '{"interaction":35,"data":25,"errors":20,"explanation":20}'
-)
+where exists (select 1 from public.roadmap_milestones where id = '11000000-0000-0000-0000-000000000004')
 on conflict (key, version) do update
   set milestone_id = excluded.milestone_id, title = excluded.title, brief = excluded.brief, rubric = excluded.rubric, active = true;
 

@@ -1,19 +1,20 @@
 import { Globe2, ShieldCheck } from "lucide-react";
 import { Link } from "@/i18n/navigation";
+import { CommunitySettings } from "@/components/app/community-settings";
 import { MeNav } from "@/components/app/me-nav";
 import { ProfileEditor } from "@/components/app/profile-editor";
 import { ProfileHero } from "@/components/app/profile-hero";
 import { resolveProgress } from "@/lib/domain/progress";
 import { CAREER_PATH_CATALOG } from "@/lib/domain/career-recommendations";
 import { requireUser } from "@/lib/auth";
-import { getActivePathDashboard, getPathHistory, getProfile, getProofItems, getRoadmap } from "@/lib/data/app-data";
+import { getActivePathDashboard, getCommunitySettings, getPathHistory, getProfile, getProofItems, getRoadmap } from "@/lib/data/app-data";
 import { formatAppDate, getAppCopy, localizeCareerTerm } from "@/lib/i18n/app-copy";
 
 export default async function ProfilePage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
   const user = await requireUser(locale);
   const c = getAppCopy(locale);
-  const [profile, dashboard, history, proof] = await Promise.all([getProfile(user.id), getActivePathDashboard(), getPathHistory(user.id), getProofItems()]);
+  const [profile, dashboard, history, proof, community] = await Promise.all([getProfile(user.id), getActivePathDashboard(), getPathHistory(user.id), getProofItems(), getCommunitySettings(user.id)]);
   if (!profile) return null;
 
   // Levels are path-scoped, so a learner with no active path has no level.
@@ -71,6 +72,19 @@ export default async function ProfilePage({ params }: { params: Promise<{ locale
         rhythm. Four eyebrow-plus-headline blocks all shouted at the same
         volume, and the layout changed shape twice on the way down. */}
     <div className="profile-sections">
+      {/* Community settings live here in full; the Community page opens the
+          same form in a sheet when a hidden learner wants someone's links. */}
+      <section className="profile-section" id="community">
+        <h2 className="profile-section-label">{c.community.settings.section}</h2>
+        <div className="settings-list community-settings-panel">
+          <CommunitySettings
+            initial={community}
+            labels={c.community.settings}
+            mode="profile"
+            isDemo={profile.dataOrigin === "seeded_demo"}
+          />
+        </div>
+      </section>
       <section className="profile-section">
         <h2 className="profile-section-label">{c.profile.account}</h2>
         {/* One row per setting: what it is and its value on the left, the

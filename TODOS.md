@@ -155,6 +155,39 @@ Design debt deferred from the 2026-08-16 design review. Everything here was foun
 **Context:** See the `appeals` table in `supabase/migrations/20260811160000_lan_pya_alpha.sql` and the reviewer lead row in the Career Quest plan's roles table.
 **Depends on:** More than one reviewer existing.
 
+### Community moderation v2
+
+**What:** Hide a Community member automatically after N reports from distinct, established visible learners, and give Admin a screen to read reports and lift blocks.
+
+**Why:** v1 moderation is a report count on Admin plus the founder setting `community_blocked` by SQL. That is right for a handful of members, but it does not scale, and a block lifted by SQL leaves no record.
+
+**Pros:** Moderation keeps working when nobody is watching, and lifting a block becomes an audited action.
+**Cons:** Automatic hiding is a griefing tool. The 2026-10-15 eng review cut a 3-report auto-hide from v1 because three throwaway accounts could silence a real learner. Weight reporters by account age or verified work before turning it back on.
+**Context:** v1 has `community_reports` (reason, unique per reporter and reported member), the admin-only `community_blocked` flag, a reporter-only hide in `get_community`, and a report count in `get_admin_summary`. Start from those.
+**Depends on:** Community v1 shipped and roughly 50+ visible members.
+
+### Community leaderboard at scale
+
+**What:** Add a "This month" leaderboard and pin the viewer's own rank to the bottom of the screen when it is scrolled out of view.
+
+**Why:** An all-time board freezes once about 30 learners have points: the early learners hold the podium for good, and the research cited in the Community design doc says that discourages everyone below them. The pinned rank was cut from v1 because the board fits on one screen.
+
+**Pros:** Keeps the board winnable for new learners and shows each learner where they stand.
+**Cons:** A monthly view needs a month boundary that respects Asia/Yangon and a second ranking query.
+**Context:** Points come from `career_quest_xp` per path (use each row's `created_at` for the month). The Yangon month rule already exists in `lib/domain/deadlines.ts`; ranking lives in `lib/domain/community.ts`.
+**Depends on:** Community v1 and about 30 learners with points, which in turn needs active reviewers.
+
+### Community entry point on Home
+
+**What:** One line on Home's stage panel (and possibly the roadmap step brief), such as "2 learners are at this stage · See who", opening Community's Your stage tab.
+
+**Why:** In v1 Community is reachable only from the sidebar. Learners think about who else is at their stage when they are looking at that stage, not when they scan the navigation.
+
+**Pros:** The cheapest way to grow Community use once there are people to find.
+**Cons:** One more number on Home, and a count query on a page that should stay fast.
+**Context:** Count visible learners at the viewer's current stage on their active path (from `get_community` or a light count function). Hide the line entirely at 0, so Home never says "0 learners". Deferred in the 2026-10-15 design review because at launch it would show 0 almost everywhere.
+**Depends on:** Community v1 and about 10+ visible learners.
+
 ## Completed
 
 ### Learning resources on roadmap topics

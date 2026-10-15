@@ -8,6 +8,7 @@ import {
   ShieldCheck,
   SlidersHorizontal,
   Sparkles,
+  Users,
   type LucideIcon,
 } from "lucide-react";
 import { usePathname } from "next/navigation";
@@ -31,7 +32,7 @@ import {
 } from "@/components/ui/sidebar";
 
 /**
- * Learner shell — sidebar on desktop, bottom tab bar on phones.
+ * Learner shell — sidebar on desktop, the same sidebar as a drawer on phones.
  *
  * Returns to the sidebar layout used before 2026-08-13, when it was replaced
  * by a 60px top navigation. The information architecture does NOT revert with
@@ -40,9 +41,10 @@ import {
  * founder asked for. Missions is its own destination and the catalog lives
  * under Me. Restoring the chrome should not undo those decisions.
  *
- * Below 860px the sidebar does not render at all and the bottom bar owns
- * navigation. Rendering both and hiding one with CSS would put five duplicate
- * links in the tab order and read every destination twice to a screen reader.
+ * Below 860px the sidebar opens as a drawer from the top bar's menu button
+ * (MobileNavTrigger). There is no separate bottom bar: two navigations would
+ * put every destination in the tab order twice and read each one twice to a
+ * screen reader.
  */
 
 type NavItem = {
@@ -95,13 +97,23 @@ const LEARNER_NAV: NavItem[] = [
 ];
 
 /**
- * Opportunities sits apart, under its own heading.
+ * Community and Opportunities sit apart, under "Connect".
  *
- * The four above are the loop inside Lan Pya: learn, build, prove, keep. This
- * one points out of the app at real openings somebody else owns. Grouping it
- * with the loop implied it was another place to practise.
+ * The four above are the loop inside Lan Pya: learn, build, prove, keep. These
+ * two point out of the app: Community at other learners, reached on Telegram,
+ * Facebook or LinkedIn, and Opportunities at real openings somebody else owns.
+ * Grouping them with the loop implied they were more places to practise. The
+ * heading read "Apply" until Community joined it (design review DR6, 2026-10-15),
+ * when "Apply › Community" read as something to apply for.
  */
-const APPLY_NAV: NavItem[] = [
+const CONNECT_NAV: NavItem[] = [
+  {
+    href: "/app/community",
+    en: "Community",
+    my: "အသိုင်းအဝိုင်း",
+    icon: Users,
+    matches: (pathname) => pathname.includes("/app/community"),
+  },
   {
     href: "/app/opportunities",
     en: "Opportunities",
@@ -170,9 +182,9 @@ function AppShellContent({ children, profile, roles, locale, reviewCount }: { ch
           </SidebarGroup>
 
           <SidebarGroup>
-            <SidebarGroupLabel>{my ? "လျှောက်ထားရန်" : "Apply"}</SidebarGroupLabel>
+            <SidebarGroupLabel>{my ? "ချိတ်ဆက်ရန်" : "Connect"}</SidebarGroupLabel>
             <SidebarMenu>
-              {APPLY_NAV.map((item) => {
+              {CONNECT_NAV.map((item) => {
                 const active = item.matches(pathname);
                 const Icon = item.icon;
                 return (

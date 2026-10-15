@@ -21,6 +21,7 @@ describe("AppShell", () => {
     ["/en/app/missions", "Missions"],
     ["/en/app/missions/responsive-profile-card", "Missions"],
     ["/en/app/opportunities", "Opportunities"],
+    ["/en/app/community", "Community"],
     // Portfolio took this destination from "Me": the account row in the sidebar
     // footer already opens the profile, so the nav item was a second door to
     // the same room while the learner's evidence had none.
@@ -54,16 +55,29 @@ describe("AppShell", () => {
     expect(screen.getByRole("link", { name: "Portfolio" })).not.toHaveAttribute("aria-current");
   });
 
-  it("renders the five learner destinations", () => {
+  it("renders the six learner destinations", () => {
     pathname = "/en/app/today";
     render(<AppShell profile={DEMO_PROFILE} roles={new Set()} locale="en"><p>Page</p></AppShell>);
 
-    // Five destinations, once each. One navigation, one tab stop apiece.
-    expect(screen.getAllByRole("link", { name: /Home|Roadmaps|Missions|Opportunities|Portfolio/ })).toHaveLength(5);
+    // Six destinations, once each. One navigation, one tab stop apiece.
+    expect(screen.getAllByRole("link", { name: /Home|Roadmaps|Missions|Community|Opportunities|Portfolio/ })).toHaveLength(6);
     // Build is reached from a mission, never from the nav. "Me" is gone: the
     // account row in the footer is the way to the profile now.
     expect(screen.queryByRole("link", { name: "Build" })).not.toBeInTheDocument();
     expect(screen.queryByRole("link", { name: "Me" })).not.toBeInTheDocument();
+  });
+
+  // Community joined Opportunities under one heading (design review DR6):
+  // "Apply" over "Community" read as something to apply for.
+  it("groups Community above Opportunities under Connect", () => {
+    pathname = "/en/app/today";
+    render(<AppShell profile={DEMO_PROFILE} roles={new Set()} locale="en"><p>Page</p></AppShell>);
+
+    expect(screen.getByText("Connect")).toBeInTheDocument();
+    expect(screen.queryByText("Apply")).not.toBeInTheDocument();
+    const names = screen.getAllByRole("link").map((link) => link.textContent);
+    expect(names.indexOf("Community")).toBeLessThan(names.indexOf("Opportunities"));
+    expect(screen.getByRole("link", { name: "Community" })).toHaveAttribute("href", "/app/community");
   });
 
   it("renders only the selected language", () => {
