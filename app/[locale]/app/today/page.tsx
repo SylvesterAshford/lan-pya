@@ -181,6 +181,7 @@ export default async function TodayPage({ params }: { params: Promise<{ locale: 
               upcoming={roadmap.filter((stage) => stage.order > currentStage.order).slice(0, 2)}
               trackKey={path.key}
               labels={c.home.stage}
+              resourceLabels={c.roadmap.resources}
             />
           ) : null}
         </div>

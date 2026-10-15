@@ -1,6 +1,6 @@
 {
   "name": "lan-pya",
-  "version": "0.29.4.0",
+  "version": "0.30.0.0",
   "private": true,
   "engines": {
     "node": "22.x"
@@ -20,6 +20,7 @@
     "test:critical": "npm run test:fast && playwright test --project=chromium --grep @critical",
     "test:release": "npm run test:fast && npm run test:functions && npm run test:e2e",
     "demo:provision": "node scripts/provision-demo-account.mjs",
+    "check:resources": "node scripts/check-learning-resources.mjs",
     "db:types": "supabase gen types typescript --local > lib/supabase/database.types.ts"
   },
   "dependencies": {

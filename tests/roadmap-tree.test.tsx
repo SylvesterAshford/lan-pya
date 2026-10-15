@@ -3,6 +3,7 @@ import { afterEach, describe, expect, it, vi } from "vitest";
 import { RoadmapTree } from "@/components/app/roadmap-tree";
 import { FRONTEND_MILESTONES } from "@/lib/domain/demo-data";
 import { CAREER_TRACKS, mergeTrackMilestones } from "@/lib/domain/career-tracks";
+import { resourcesForStages } from "@/lib/domain/learning-resources";
 
 vi.mock("@/i18n/navigation", () => ({
   Link: ({ href, children, ...props }: React.AnchorHTMLAttributes<HTMLAnchorElement> & { href: string }) =>
@@ -139,9 +140,12 @@ describe("RoadmapTree — step brief dialog", () => {
   });
 
   it("traps Tab inside the dialog", () => {
-    render(<RoadmapTree milestones={FRONTEND_MILESTONES} />);
+    render(<RoadmapTree milestones={FRONTEND_MILESTONES} resources={resourcesForStages(FRONTEND_MILESTONES)} />);
     const dialog = openStage(/JavaScript programming/i);
-    const focusables = Array.from(dialog.querySelectorAll<HTMLElement>("a[href], button:not([disabled])"));
+    // A topic's links are in the DOM while it is closed but cannot take focus;
+    // its <summary> can.
+    const focusables = Array.from(dialog.querySelectorAll<HTMLElement>("summary, a[href], button:not([disabled])"))
+      .filter((item) => !item.matches("details:not([open]) > :not(summary), details:not([open]) > :not(summary) *"));
     expect(focusables.length).toBeGreaterThan(0);
 
     // From the dialog container, Tab lands on the first control inside it.
@@ -170,6 +174,56 @@ describe("RoadmapTree — step brief dialog", () => {
     const { container } = render(<RoadmapTree milestones={FRONTEND_MILESTONES} />);
     openStage(/JavaScript programming/i);
     expect(container.querySelector("[aria-live]")).toBeNull();
+  });
+});
+
+// ─── learning resources ───────────────────────────────────────────────────────
+
+describe("RoadmapTree — learning resources", () => {
+  it("opens each topic onto free resources that open in a new tab", () => {
+    render(<RoadmapTree milestones={FRONTEND_MILESTONES} resources={resourcesForStages(FRONTEND_MILESTONES)} />);
+    const dialog = openStage(/JavaScript programming/i);
+    const topic = within(dialog).getByText("DOM & events").closest("details")!;
+    expect(topic.open).toBe(false);
+    const links = within(topic).getAllByRole("link", { hidden: true });
+    expect(links.length).toBeGreaterThanOrEqual(2);
+    for (const link of links) {
+      expect(link).toHaveAttribute("target", "_blank");
+      expect(link.getAttribute("rel")).toContain("noopener");
+      expect(link).toHaveTextContent("opens in a new tab");
+    }
+  });
+
+  it("never wraps Tab onto a link inside a closed topic", () => {
+    render(<RoadmapTree milestones={FRONTEND_MILESTONES} resources={resourcesForStages(FRONTEND_MILESTONES)} />);
+    const dialog = openStage(/JavaScript programming/i);
+    const close = within(dialog).getByRole("button", { name: "Close step details" });
+    close.focus();
+    fireEvent.keyDown(document, { key: "Tab", shiftKey: true });
+    expect(document.activeElement).not.toBe(close);
+    expect(document.activeElement?.matches("details:not([open]) a")).toBe(false);
+
+    // Opened, the topic's links join the cycle.
+    const last = Array.from(dialog.querySelectorAll<HTMLDetailsElement>("details")).at(-1)!;
+    last.open = true;
+    close.focus();
+    fireEvent.keyDown(document, { key: "Tab", shiftKey: true });
+    expect(document.activeElement?.closest("details")).toBe(last);
+    expect(document.activeElement?.tagName).toBe("A");
+  });
+
+  it("puts lessons taught in Burmese first for a Burmese reader", () => {
+    render(<RoadmapTree locale="my" milestones={FRONTEND_MILESTONES} resources={resourcesForStages(FRONTEND_MILESTONES)} />);
+    const dialog = openStage(/JavaScript programming/i);
+    const first = dialog.querySelector(".topic-resources a");
+    expect(first).toHaveTextContent("မြန်မာ");
+  });
+
+  it("lists plain topics when the page passes no resources", () => {
+    render(<RoadmapTree milestones={FRONTEND_MILESTONES} />);
+    const dialog = openStage(/JavaScript programming/i);
+    expect(within(dialog).getByText("DOM & events")).toBeInTheDocument();
+    expect(dialog.querySelector("details")).toBeNull();
   });
 });
 

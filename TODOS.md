@@ -75,15 +75,14 @@ Design debt deferred from the 2026-08-16 design review. Everything here was foun
 **Context:** Rubric criteria live in `lib/domain/mission-briefs.ts` (`deliverables`). Store the examples as seeded `data_origin = 'seeded_demo'` submissions that never enter the live queue.
 **Depends on:** Nothing.
 
-### Learning resources on roadmap topics
+### Learning resources editable without a deploy
 
-**What:** Attach YouTube videos and blog posts to each roadmap topic (the chips beside a stage, such as "Flexbox & Grid"), shown when a learner opens a stage.
+**What:** Move the catalogue in `lib/domain/learning-resources.ts` into a `learning_resources` table (stage key, topic position, title, URL, source, kind, language, minutes, last checked), readable by signed-in learners, writable by admins, with an editor on the admin screens.
 
-**Why:** The founder asked for it on 2026-10-14. Learners can see what to learn, but not where to learn it.
-
-**Pros:** Turns the roadmap from a map into a study plan, using free material that already exists.
-**Cons:** Content curation for six tracks, plus link rot. Every link needs a title, source, language (English/Burmese), and a "last checked" date, so stale links can be found.
-**Context:** Topics live in `lib/domain/career-tracks.ts` (`left` and `right` arrays per stage). A `learning_resources` table keyed by track key, stage key and topic, with RLS read for authenticated users and admin-only writes, keeps it out of code. Render it in `components/app/roadmap-detail-dialog.tsx`.
+**Why:** v0.30.0.0 shipped the resources as a typed data file so every link could be reviewed in a pull request. Changing one link now needs a deploy.
+**Pros:** Reviewers or the founder can swap a dead link the day it dies. Per-link "last checked" dates instead of one for the whole catalogue.
+**Cons:** Migration, RLS, an admin form, and moving the coverage test to the database. Not worth it until links start dying or non-developers need to edit.
+**Context:** `npm run check:resources` re-checks every link (YouTube through oEmbed, pages by loading them). Running it on a schedule (GitHub Actions, weekly) would find dead links before learners do.
 **Depends on:** Nothing.
 
 ## P3 — worth doing, no urgency
@@ -149,6 +148,18 @@ Design debt deferred from the 2026-08-16 design review. Everything here was foun
 **Depends on:** More than one reviewer existing.
 
 ## Completed
+
+### Learning resources on roadmap topics
+
+**What:** Attach YouTube videos and blog posts to each roadmap topic (the chips beside a stage, such as "Flexbox & Grid"), shown when a learner opens a stage.
+
+**Why:** The founder asked for it on 2026-10-14. Learners can see what to learn, but not where to learn it.
+
+**Pros:** Turns the roadmap from a map into a study plan, using free material that already exists.
+**Cons:** Content curation for six tracks, plus link rot. Every link needs a title, source, language (English/Burmese), and a "last checked" date, so stale links can be found.
+**Context (as planned):** Topics live in `lib/domain/career-tracks.ts` (`left` and `right` arrays per stage). A `learning_resources` table keyed by track key, stage key and topic, with RLS read for authenticated users and admin-only writes, keeps it out of code. Render it in `components/app/roadmap-detail-dialog.tsx`.
+
+**Completed:** v0.30.0.0 (2026-10-15). 232 topics across the six paths, 555 links (290 videos), each one checked, 25 of them lessons taught in Burmese. Stored as a typed file rather than a table (see "Learning resources editable without a deploy").
 
 ### Opportunity filter chips
 

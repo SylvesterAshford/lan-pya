@@ -1,6 +1,7 @@
 import { RoadmapTree } from "@/components/app/roadmap-tree";
 import { getActivePathDashboard, getRoadmap } from "@/lib/data/app-data";
 import { getCareerTrack, getTrackFork } from "@/lib/domain/career-tracks";
+import { resourcesForStages } from "@/lib/domain/learning-resources";
 import type { Milestone } from "@/lib/domain/types";
 import { localizeCareerTerm, localizeRoadmapMilestone, localizeTrackOutcome } from "@/lib/i18n/app-copy";
 
@@ -43,7 +44,12 @@ export default async function RoadmapPage({
         </div>
       </section>
 
-      <RoadmapTree locale={locale} milestones={milestones} fork={getTrackFork(track.key, locale)} />
+      <RoadmapTree
+        locale={locale}
+        milestones={milestones}
+        fork={getTrackFork(track.key, locale)}
+        resources={resourcesForStages(milestones)}
+      />
     </div>
   );
 }

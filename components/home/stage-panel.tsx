@@ -1,6 +1,8 @@
 import { ArrowRight } from "lucide-react";
 import { Link } from "@/i18n/navigation";
+import { TopicItem, type ResourceLabels } from "@/components/app/topic-resources";
 import { toMyanmarDigits } from "@/lib/domain/deadlines";
+import { getStageResources } from "@/lib/domain/learning-resources";
 import type { Milestone } from "@/lib/domain/types";
 import type { getAppCopy } from "@/lib/i18n/app-copy";
 
@@ -10,7 +12,8 @@ import type { getAppCopy } from "@/lib/i18n/app-copy";
  * to hold only "Up next", which is often empty, leaving a blank half-page
  * beside the card about the learner. This is never empty while a path is
  * chosen, and every line comes from the roadmap the learner is following.
- * Topics are the natural place to hang learning resources later (TODOS.md).
+ * Each topic opens onto free videos and guides for it, the same rows the
+ * roadmap's step brief shows, so the stage you are on is also where you start.
  */
 export function StagePanel({
   locale,
@@ -19,6 +22,7 @@ export function StagePanel({
   upcoming,
   trackKey,
   labels,
+  resourceLabels,
 }: {
   locale: string;
   stage: Milestone;
@@ -26,11 +30,15 @@ export function StagePanel({
   upcoming: Milestone[];
   trackKey: string;
   labels: ReturnType<typeof getAppCopy>["home"]["stage"];
+  resourceLabels: ResourceLabels;
 }) {
   const num = (value: number) => (locale === "my" ? toMyanmarDigits(value) : String(value));
+  const left = stage.left ?? [];
+  const right = stage.right ?? [];
+  const resources = getStageResources(stage.key, left.length + right.length);
   const groups = [
-    { label: stage.leftLabel, items: stage.left ?? [] },
-    { label: stage.rightLabel, items: stage.right ?? [] },
+    { label: stage.leftLabel, items: left, offset: 0 },
+    { label: stage.rightLabel, items: right, offset: left.length },
   ].filter((group) => group.items.length);
 
   return (
@@ -40,13 +48,22 @@ export function StagePanel({
       {stage.description ? <p className="stage-panel-body">{stage.description}</p> : null}
 
       {groups.length ? (
-        <div className="stage-topics">
+        <div className={`stage-topics${resources ? " has-resources" : ""}`}>
+          {resources ? <p className="topic-intro">{resourceLabels.intro}</p> : null}
           {groups.map((group) => (
             <div key={group.label ?? group.items[0]}>
               {group.label ? <span className="stage-topics-label">{group.label}</span> : null}
-              <ul>
-                {group.items.map((item) => <li key={item}>{item}</li>)}
-              </ul>
+              {resources ? (
+                <ul className="topic-list">
+                  {group.items.map((item, index) => (
+                    <TopicItem key={item} topic={item} resources={resources[group.offset + index]} locale={locale} labels={resourceLabels} />
+                  ))}
+                </ul>
+              ) : (
+                <ul>
+                  {group.items.map((item) => <li key={item}>{item}</li>)}
+                </ul>
+              )}
             </div>
           ))}
         </div>
