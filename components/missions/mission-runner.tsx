@@ -4,7 +4,7 @@ import { ArrowLeft, ArrowRight, Check, MapPin } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
 import { Link, useRouter } from "@/i18n/navigation";
 import { CheckList } from "@/components/missions/check-list";
-import { SubmissionForm } from "@/components/missions/submission-form";
+import { JUST_SUBMITTED, SubmissionForm } from "@/components/missions/submission-form";
 import { loadDraft, saveDraft } from "@/lib/offline/draft-store";
 import type { MissionFeedback } from "@/lib/data/app-data";
 import type { MissionBrief } from "@/lib/domain/mission-briefs";
@@ -72,6 +72,27 @@ export function MissionRunner({
     }, 3000);
     return () => window.clearInterval(timer);
   }, [status.kind, router]);
+
+  // Work sent from this tab goes on to the trail map once the check passes,
+  // where the traveller walks to the next stop. Only straight after
+  // submitting: opening finished work later leaves the learner here.
+  const [leaving, setLeaving] = useState(false);
+  useEffect(() => {
+    if (status.kind !== "completed") return;
+    let fresh = false;
+    try {
+      fresh = window.sessionStorage.getItem(JUST_SUBMITTED) === brief.missionKey;
+    } catch { /* storage unavailable */ }
+    if (!fresh) return;
+    const notice = window.setTimeout(() => setLeaving(true), 0);
+    // The flag is cleared only as the learner leaves, so a remount part-way
+    // (StrictMode, a refresh) still takes them on.
+    const timer = window.setTimeout(() => {
+      try { window.sessionStorage.removeItem(JUST_SUBMITTED); } catch { /* storage unavailable */ }
+      router.push("/app/missions");
+    }, 1800);
+    return () => { window.clearTimeout(notice); window.clearTimeout(timer); };
+  }, [status.kind, brief.missionKey, router]);
 
   // The checklist rides in the existing mission draft, so it is private, stays
   // on the device, and expires with everything else after 30 days.
@@ -258,6 +279,7 @@ export function MissionRunner({
               ) : null}
             </div>
             <Link className="button primary compact runner-cta" href="/app/missions">{labels.backToTrail} <ArrowRight size={15} aria-hidden="true" /></Link>
+            {leaving ? <p className="runner-leaving" role="status">{labels.openingTrail}</p> : null}
           </>
         ) : null}
 
@@ -267,7 +289,10 @@ export function MissionRunner({
               <strong>{labels.verified}</strong>
               <p>{labels.verifiedBody}</p>
             </div>
-            <Link className="button primary compact runner-cta" href="/app/proof">{labels.viewProof}</Link>
+            <div className="runner-ctas">
+              <Link className="button primary compact runner-cta" href="/app/proof">{labels.viewProof}</Link>
+              <Link className="button outline compact runner-cta" href="/app/missions">{labels.seeTrail} <ArrowRight size={15} aria-hidden="true" /></Link>
+            </div>
           </>
         ) : null}
 

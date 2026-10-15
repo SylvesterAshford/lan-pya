@@ -165,6 +165,48 @@ const BRIEFS: Record<string, { en: MissionBrief; my: MissionBrief }> = {
       localNote: "ပြည်တွင်း client များသည် editor တစ်ယောက်ကို Facebook သို့မဟုတ် TikTok ပေါ်ရှိ reel တိုဖြင့် အကဲဖြတ်လေ့ရှိသည်။ မြန်မာ caption ပါသော စက္ကန့်သုံးဆယ် edit သည် သူတို့ကြည့်ချင်သည့်အရာ ဖြစ်သည်။",
     },
   },
+  "interactive-opportunity-tracker": {
+    en: {
+      missionKey: "interactive-opportunity-tracker",
+      eyebrow: "Stage 4 · Required proof",
+      title: "Interactive opportunity tracker",
+      intro: "Make a page that does something when you use it: a tracker for scholarships, jobs or events that filters, remembers and explains itself.",
+      premise: "Start from a list of five or more opportunities in a JavaScript array. Let the reader filter them by type, mark the ones they are applying to, and keep those marks after a reload. Plain JavaScript, no framework.",
+      deliverables: [
+        { id: "interaction", weight: "35%", title: "Working interactions", hint: "Filtering and marking update the page at once, by mouse and by keyboard." },
+        { id: "data", weight: "25%", title: "Data that holds", hint: "Marks survive a reload (localStorage) and the list stays sorted by deadline." },
+        { id: "errors", weight: "20%", title: "Empty and broken states", hint: "No results, no saved data and bad data each show a clear message, not a blank page." },
+        { id: "explanation", weight: "20%", title: "Explanation", hint: "Your reflection names one bug you found in DevTools and how you fixed it." },
+      ],
+      guardrailTitle: "Ground-truth rule",
+      guardrail: "A passing automated scan is never enough. A reviewer uses the tracker and reads your code and explanation.",
+      repositoryLabel: "GitHub repository URL",
+      repositoryHint: "The repository with your HTML, CSS and JavaScript.",
+      deploymentLabel: "Live deployment URL",
+      deploymentHint: "Where the tracker runs, for example on Vercel or GitHub Pages.",
+      reflectionPlaceholder: "Which bug did you find in DevTools, and how did you fix it?",
+    },
+    my: {
+      missionKey: "interactive-opportunity-tracker",
+      eyebrow: "အဆင့် ၄ · လိုအပ်သော သက်သေ",
+      title: "Interactive opportunity tracker",
+      intro: "အသုံးပြုသည့်အခါ တုံ့ပြန်သော page တစ်ခု တည်ဆောက်ပါ — ပညာသင်ဆု၊ အလုပ် သို့မဟုတ် event များကို filter လုပ်၊ မှတ်ထားပြီး ရှင်းပြနိုင်သော tracker တစ်ခု။",
+      premise: "JavaScript array ထဲရှိ အခွင့်အလမ်း ငါးခု သို့မဟုတ် ထို့ထက်ပိုသော စာရင်းမှ စတင်ပါ။ အမျိုးအစားအလိုက် filter လုပ်ခြင်း၊ လျှောက်မည့်အရာများကို မှတ်ခြင်းနှင့် reload ပြီးနောက်တွင်လည်း မှတ်ထားမှု ကျန်ရှိခြင်း ပါဝင်ရမည်။ Framework မသုံးဘဲ plain JavaScript ဖြင့်သာ။",
+      deliverables: [
+        { id: "interaction", weight: "၃၅%", title: "အလုပ်လုပ်သော interaction", hint: "Filter နှင့် မှတ်သားမှုက page ကို ချက်ချင်း ပြောင်းစေရမည်၊ mouse နှင့် keyboard နှစ်မျိုးလုံးဖြင့်။" },
+        { id: "data", weight: "၂၅%", title: "တည်မြဲသော data", hint: "မှတ်ထားမှုများ reload ပြီးနောက် ကျန်ရှိရမည် (localStorage)၊ စာရင်းကို deadline အလိုက် စီထားရမည်။" },
+        { id: "errors", weight: "၂၀%", title: "ဗလာနှင့် ပျက်သော အခြေအနေ", hint: "ရလဒ်မရှိ၊ သိမ်းထားသော data မရှိ၊ data မှားသည့်အခါ ရှင်းလင်းသော message ပြရမည်။" },
+        { id: "explanation", weight: "၂၀%", title: "ရှင်းလင်းချက်", hint: "DevTools ဖြင့် တွေ့ခဲ့သော bug တစ်ခုနှင့် ပြင်ပုံကို reflection တွင် ဖော်ပြပါ။" },
+      ],
+      guardrailTitle: "Ground-truth စည်းမျဉ်း",
+      guardrail: "Automated scan အောင်မြင်ရုံဖြင့် မလုံလောက်ပါ။ Reviewer က tracker ကို အသုံးပြုပြီး သင့် code နှင့် ရှင်းလင်းချက်ကို ဖတ်မည်။",
+      repositoryLabel: "GitHub repository URL",
+      repositoryHint: "သင့် HTML၊ CSS နှင့် JavaScript ပါသော repository။",
+      deploymentLabel: "Live deployment URL",
+      deploymentHint: "Tracker ကို run ထားသောနေရာ၊ ဥပမာ Vercel သို့မဟုတ် GitHub Pages။",
+      reflectionPlaceholder: "DevTools ဖြင့် ဘယ် bug ကို တွေ့ခဲ့ပြီး ဘယ်လို ပြင်ခဲ့သလဲ?",
+    },
+  },
 };
 
 export function getMissionBrief(missionKey: string, locale: string): MissionBrief | null {
@@ -186,6 +228,7 @@ const MISSION_STAGES: Record<string, { pathKey: string; stageKey: string }> = {
   "responsive-profile-card": { pathKey: "frontend-developer", stageKey: "responsive-css" },
   "content-creator-awareness": { pathKey: "content-creator", stageKey: "content-awareness-campaign" },
   "video-editor-vertical-story": { pathKey: "video-editor", stageKey: "video-editing-workflow" },
+  "interactive-opportunity-tracker": { pathKey: "frontend-developer", stageKey: "javascript" },
 };
 
 export function getMissionStage(missionKey: string | null | undefined) {

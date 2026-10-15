@@ -7965,6 +7965,9 @@ html[lang="my"] .runner-checks-title { letter-spacing: 0; text-transform: none; 
 .runner-checks .is-pass .runner-check-icon { color: var(--teal-700); border-color: var(--teal-100); }
 .runner-checks .is-fail .runner-check-icon { color: var(--error-500); border-color: rgba(180, 35, 24, 0.25); }
 .runner-cta { margin-top: var(--s-md); }
+.runner-ctas { display: flex; flex-wrap: wrap; gap: var(--s-sm); margin-top: var(--s-md); }
+.runner-ctas .runner-cta { margin-top: 0; }
+.runner-leaving { margin: var(--s-sm) 0 0; font-size: var(--t-meta); color: var(--muted-ink); }
 
 .runner-review { margin-top: var(--s-sm); }
 .runner-review-notes { margin: 4px 0 0; white-space: pre-line; }

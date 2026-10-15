@@ -3,7 +3,7 @@ import { createClient } from "@/lib/supabase/server";
 import { demoReadOnly, ok, problem } from "@/lib/http";
 
 const schema = z.object({
-  missionKey: z.enum(["responsive-profile-card", "content-creator-awareness", "video-editor-vertical-story"]),
+  missionKey: z.enum(["responsive-profile-card", "content-creator-awareness", "video-editor-vertical-story", "interactive-opportunity-tracker"]),
   repositoryUrl: z.string().url().max(500),
   deploymentUrl: z.string().url().max(500),
   screenshotUrl: z.union([z.literal(""), z.string().url().max(500)]),

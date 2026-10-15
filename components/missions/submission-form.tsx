@@ -8,6 +8,9 @@ import { toMyanmarDigits } from "@/lib/domain/deadlines";
 import { REFLECTION_MAX, REFLECTION_MIN } from "@/lib/domain/mission-status";
 import { getAppCopy } from "@/lib/i18n/app-copy";
 
+/** Session key naming the mission just sent from this tab. */
+export const JUST_SUBMITTED = "lanpya-just-submitted";
+
 type Fields = { repositoryUrl: string; deploymentUrl: string; screenshotUrl: string; reflection: string };
 type FieldName = keyof Fields;
 type Errors = Partial<Record<FieldName, string>>;
@@ -150,6 +153,9 @@ export function SubmissionForm({
       return;
     }
     await clearDraft(userId, missionKey);
+    // The runner takes a fresh submission on to the trail map once it is
+    // checked, so the move is seen; a revisit of finished work stays put.
+    try { window.sessionStorage.setItem(JUST_SUBMITTED, missionKey); } catch { /* storage unavailable */ }
     router.refresh();
   }
 

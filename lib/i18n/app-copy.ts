@@ -191,6 +191,7 @@ const english = {
     completedTitle: "Completed · awaiting review",
     completedBody: "Your work is in and your trail map has moved on. A trained reviewer will score it against the {n} criteria from step 2. XP and Proof come with verification.",
     backToTrail: "Back to your trail map",
+    seeTrail: "See your trail map", openingTrail: "Opening your trail map…",
     checksTitle: "Link check", checkPass: "Opens", checkUnsure: "A reviewer will open this one",
     checkHttp: "Returned error {code}", checkMalformed: "Not a full link", checkFail: "Could not open",
     fixTitle: "Fix a link and submit again",
@@ -479,6 +480,7 @@ const myanmar: typeof english = {
     completedTitle: "ပြီးစီးပြီ · သုံးသပ်ရန် စောင့်နေသည်",
     completedBody: "သင့်လက်ရာ ရောက်ရှိပြီး လမ်းကြောင်းမြေပုံ ရှေ့ဆက်သွားပြီ။ အဆင့် ၂ ရှိ စံနှုန်း {n} ခုဖြင့် လေ့ကျင့်ထားသော သုံးသပ်သူက အမှတ်ပေးမည်။ XP နှင့် သက်သေသည် အတည်ပြုပြီးမှ ရမည်။",
     backToTrail: "လမ်းကြောင်းမြေပုံသို့ ပြန်မည်",
+    seeTrail: "လမ်းကြောင်းမြေပုံ ကြည့်မည်", openingTrail: "လမ်းကြောင်းမြေပုံကို ဖွင့်နေသည်…",
     checksTitle: "Link စစ်ဆေးမှု", checkPass: "ဖွင့်ရသည်", checkUnsure: "သုံးသပ်သူက ဖွင့်ကြည့်မည်",
     checkHttp: "Error {code} ပြန်လာသည်", checkMalformed: "Link အပြည့်အစုံ မဟုတ်ပါ", checkFail: "ဖွင့်၍မရပါ",
     fixTitle: "Link ကို ပြင်ပြီး ထပ်တင်ပါ",
@@ -611,6 +613,7 @@ const careerTerms: Record<string, { en: string; my: string }> = {
   "responsive-profile-card": { en: "Responsive Profile Card", my: "Responsive Profile Card" },
   "content-creator-awareness": { en: "Three-piece awareness campaign", my: "သုံးပိုင်းပါ အသိပညာပေး campaign" },
   "video-editor-vertical-story": { en: "Thirty-second vertical story edit", my: "စက္ကန့်သုံးဆယ် ဒေါင်လိုက် story edit" },
+  "interactive-opportunity-tracker": { en: "Interactive opportunity tracker", my: "Interactive opportunity tracker" },
 };
 
 export function localizeCareerTerm(locale: string, key: string, fallback: string) {

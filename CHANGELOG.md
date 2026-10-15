@@ -1,5 +1,17 @@
 # Changelog
 
+## [0.33.0.0] - 2026-10-15
+
+### Added
+
+- **Frontend stage 4 has a mission: the Interactive opportunity tracker.** Filter, mark and save opportunities in plain JavaScript, with empty and broken states handled and a bug you fixed in DevTools explained. "You are here" on the Frontend map now opens it instead of the finished stage-3 mission.
+
+### Changed
+
+- **After you submit, you're taken to your trail map** as soon as the link check passes, so you see your character walk to the next stop. The roadmap shows the finished stage too.
+- **The Proof step has a "See your trail map" button** next to View in Portfolio.
+- **The demo account's submissions always count as Completed**, even with placeholder links, so the flow can be shown in a pitch.
+
 ## [0.32.0.0] - 2026-10-15
 
 ### Changed
