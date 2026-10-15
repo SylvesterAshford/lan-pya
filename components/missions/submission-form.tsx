@@ -6,7 +6,9 @@ import { useRouter } from "@/i18n/navigation";
 import { clearDraft, loadDraft, saveDraft } from "@/lib/offline/draft-store";
 import { toMyanmarDigits } from "@/lib/domain/deadlines";
 import { REFLECTION_MAX, REFLECTION_MIN } from "@/lib/domain/mission-status";
-import { getAppCopy } from "@/lib/i18n/app-copy";
+import type { getAppCopy } from "@/lib/i18n/app-copy";
+
+export type MissionFormLabels = ReturnType<typeof getAppCopy>["mission"];
 
 type Fields = { repositoryUrl: string; deploymentUrl: string; screenshotUrl: string; reflection: string };
 type FieldName = keyof Fields;
@@ -29,7 +31,7 @@ function isLink(value: string) {
  * every problem at once, in their language, next to the field it belongs to.
  * The server still validates; this only spares a round trip.
  */
-export function validateSubmission(form: Fields, c: ReturnType<typeof getAppCopy>["mission"]): Errors {
+export function validateSubmission(form: Fields, c: MissionFormLabels): Errors {
   const errors: Errors = {};
   for (const name of ["repositoryUrl", "deploymentUrl"] as const) {
     const value = form[name].trim();
@@ -53,6 +55,7 @@ export function validateSubmission(form: Fields, c: ReturnType<typeof getAppCopy
  */
 export function SubmissionForm({
   locale = "en",
+  labels,
   userId,
   missionKey,
   repositoryLabel,
@@ -66,6 +69,8 @@ export function SubmissionForm({
   onBack,
 }: {
   locale?: string;
+  /** The form's copy, passed from the server so the dictionary stays there. */
+  labels: MissionFormLabels;
   userId: string;
   missionKey: string;
   repositoryLabel: string;
@@ -79,7 +84,7 @@ export function SubmissionForm({
   backLabel: string;
   onBack: () => void;
 }) {
-  const c = getAppCopy(locale).mission;
+  const c = labels;
   const num = (value: number) => (locale === "my" ? toMyanmarDigits(value) : String(value));
   const router = useRouter();
   const [form, setForm] = useState<Fields>(initial ?? EMPTY);

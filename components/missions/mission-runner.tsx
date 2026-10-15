@@ -4,7 +4,7 @@ import { ArrowLeft, ArrowRight, Check, MapPin } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
 import { Link, useRouter } from "@/i18n/navigation";
 import { CheckList } from "@/components/missions/check-list";
-import { SubmissionForm } from "@/components/missions/submission-form";
+import { SubmissionForm, type MissionFormLabels } from "@/components/missions/submission-form";
 import { loadDraft, saveDraft } from "@/lib/offline/draft-store";
 import type { MissionFeedback } from "@/lib/data/app-data";
 import { getMissionStage, type MissionBrief } from "@/lib/domain/mission-briefs";
@@ -42,6 +42,7 @@ export function MissionRunner({
   slowCheck = false,
   demo = false,
   labels,
+  formLabels,
 }: {
   locale: string;
   userId: string;
@@ -52,6 +53,7 @@ export function MissionRunner({
   /** The shared demo account, which gets a simulated review. */
   demo?: boolean;
   labels: RunnerLabels;
+  formLabels: MissionFormLabels;
 }) {
   const status = learnerStatus(feedback?.state);
   const stage = getMissionStage(brief.missionKey);
@@ -243,6 +245,7 @@ export function MissionRunner({
             ) : (
             <SubmissionForm
               locale={locale}
+              labels={formLabels}
               userId={userId}
               missionKey={brief.missionKey}
               repositoryLabel={brief.repositoryLabel}

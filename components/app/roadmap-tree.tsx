@@ -5,7 +5,9 @@ import type { Milestone } from "@/lib/domain/types";
 import { RoadmapCanvas, type ForkConfig } from "@/components/app/roadmap-canvas";
 import { RoadmapDetailDialog } from "@/components/app/roadmap-detail-dialog";
 import type { StageResources } from "@/lib/domain/learning-resources";
-import { getAppCopy } from "@/lib/i18n/app-copy";
+import type { getAppCopy } from "@/lib/i18n/app-copy";
+
+export type RoadmapLabels = ReturnType<typeof getAppCopy>["roadmap"];
 
 /**
  * The roadmap workspace: canvas at full content width, step brief on demand.
@@ -16,17 +18,20 @@ import { getAppCopy } from "@/lib/i18n/app-copy";
  */
 export function RoadmapTree({
   locale = "en",
+  labels,
   milestones,
   fork,
   resources = {},
 }: {
   locale?: string;
+  /** The roadmap copy, passed from the server so the dictionary stays there. */
+  labels: RoadmapLabels;
   milestones: Milestone[];
   fork?: ForkConfig;
   /** Free resources per stage key, for this path only (see resourcesForStages). */
   resources?: StageResources;
 }) {
-  const c = getAppCopy(locale).roadmap;
+  const c = labels;
   const statusLabels: Record<Milestone["status"], string> = {
     complete: c.verified,
     active: c.inProgress,

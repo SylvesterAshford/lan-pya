@@ -1090,10 +1090,6 @@ export function localizeOpportunity(locale: string, opportunity: OpportunityCard
   return { ...opportunity, ...(opportunityTranslations[opportunity.title] ?? {}) };
 }
 
-export function localizeReadiness(locale: string, readiness: OpportunityCard["readiness"]) {
-  if (locale !== "my") return readiness;
-  return ({ "Ready now": "ယခုအဆင်သင့်", "Build toward": "ပြင်ဆင်ရန်လို", Explore: "စူးစမ်းရန်", "Cannot determine": "မသတ်မှတ်နိုင်" } as const)[readiness];
-}
 
 export function localizeRecommendationReason(locale: string, fallback: string) {
   return locale === "my" ? "သင်ရွေးချယ်ထားသော စိတ်ဝင်စားမှု၊ လက်ရာပုံစံနှင့် လက်ရှိကိရိယာတို့နှင့် ကိုက်ညီသောကြောင့် အကြံပြုထားခြင်းဖြစ်သည်။" : fallback;
@@ -1125,6 +1121,6 @@ export function localizeReviewTier(locale: string, tier: string) {
   return known ? (locale === "my" ? known.my : known.en) : tier;
 }
 
-export function formatAppDate(locale: string, value: string | Date) {
-  return new Intl.DateTimeFormat(locale === "my" ? "my-MM" : "en-US", { dateStyle: "medium" }).format(new Date(value));
-}
+// Kept in a dictionary-free module so client components can format without
+// shipping both languages' copy to the browser; re-exported for server code.
+export { formatAppDate, localizeReadiness } from "@/lib/i18n/format";

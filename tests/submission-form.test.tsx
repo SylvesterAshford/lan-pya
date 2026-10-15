@@ -24,7 +24,7 @@ const valid = {
 function renderForm(initial = null as typeof valid | null) {
   return render(
     <SubmissionForm
-      locale="en" userId="u1" missionKey="responsive-profile-card"
+      locale="en" labels={c} userId="u1" missionKey="responsive-profile-card"
       repositoryLabel="GitHub repository URL" repositoryHint="The repository with your HTML and CSS."
       deploymentLabel="Live deployment URL" deploymentHint="Where the card runs."
       reflectionPlaceholder="What trade-off did you make?" criteriaCount={4}

@@ -39,6 +39,7 @@ export async function MissionPage({ locale, missionKey, pathKey }: { locale: str
         slowCheck={isSlowCheck(feedback?.state, feedback?.updatedAt)}
         demo={profile?.dataOrigin === "seeded_demo"}
         labels={c.runner}
+        formLabels={c.mission}
       />
     </div>
   );
