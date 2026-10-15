@@ -7660,6 +7660,13 @@ html[lang="my"] .app-page .mission-title h1 {
    ============================================================ */
 
 .runner { max-width: 700px; }
+/* A mission is one task, so its heading, step rail and card share one centred
+   column. Capped at the left of the content column it left most of a wide
+   screen blank to the right and read as unfinished. */
+.mission-page > .page-heading,
+.mission-page > .runner,
+.sidebar-inset .mission-page > .page-heading,
+.sidebar-inset .mission-page > .runner { width: 100%; max-width: 720px; margin-inline: auto; }
 
 .runner-rail {
   display: flex;
