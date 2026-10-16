@@ -13492,11 +13492,6 @@ html[lang="my"] .community-card-title { letter-spacing: 0; }
 .community-empty-actions .community-path { display: flex; }
 .community-empty-browse { margin: 0; padding: var(--s-md) 0; color: var(--muted-ink); font-size: var(--t-meta); }
 
-.community-skeleton { display: block; background: var(--surface-sunk); border-radius: var(--r-control); }
-.community-skeleton.title { width: 180px; height: 28px; }
-.community-skeleton.line { width: 70%; height: 16px; margin-top: var(--s-sm); }
-.community-skeleton.tabs { width: 260px; height: 46px; margin-bottom: var(--s-md); }
-.community-skeleton.row { height: 64px; border-radius: 0; background: var(--surface); }
 
 /* The page outline shown while a sidebar tap waits on the server
    (components/app/nav-pending.tsx): the heading, one panel and two rows, in

@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.38.8.0] - 2026-10-16
+
+### Changed
+
+- **Community opens sooner.** Like the other screens, Community now draws its content as soon as it arrives instead of holding it behind a loading outline. Changing the path still shows the outline at once.
+
 ## [0.38.7.0] - 2026-10-16
 
 ### Changed

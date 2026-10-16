@@ -23,15 +23,22 @@ export function NavPendingReporter({ report, children }: { report: (pending: boo
   return <ReportPending.Provider value={report}>{children}</ReportPending.Provider>;
 }
 
-/** Renders nothing; tells the shell while this link's navigation is pending. */
-export function PendingMark() {
-  const { pending } = useLinkStatus();
+/**
+ * Tells the shell while a navigation is pending. For a router.push, pass the
+ * isPending of the useTransition that wraps it.
+ */
+export function useReportNavPending(pending: boolean) {
   const report = useContext(ReportPending);
   useEffect(() => {
     if (!pending) return;
     report(true);
     return () => report(false);
   }, [pending, report]);
+}
+
+/** Renders nothing; tells the shell while this link's navigation is pending. */
+export function PendingMark() {
+  useReportNavPending(useLinkStatus().pending);
   return null;
 }
 
