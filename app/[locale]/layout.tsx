@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
-import { Padauk, Plus_Jakarta_Sans } from "next/font/google";
+import { Plus_Jakarta_Sans } from "next/font/google";
+import { preload } from "react-dom";
 import { NextIntlClientProvider, hasLocale } from "next-intl";
 import { getMessages, setRequestLocale } from "next-intl/server";
 import { notFound } from "next/navigation";
@@ -13,12 +14,13 @@ const plusJakartaSans = Plus_Jakarta_Sans({
   variable: "--font-ui",
 });
 
-const padauk = Padauk({
-  subsets: ["myanmar"],
-  weight: ["400", "700"],
-  display: "swap",
-  variable: "--font-myanmar",
-});
+// Padauk (Myanmar glyphs only) is self-hosted in public/fonts and declared in
+// globals.css rather than loaded with next/font: next/font preloads a font on
+// every page of the layout, so English pages fetched 80 KB of Burmese font
+// that competed with the CSS on slow connections (PERF.md #6). Only Burmese
+// pages preload it now. The files are versioned by name: replace a file under
+// a new name, because /fonts is cached for a year.
+const PADAUK = ["/fonts/padauk-myanmar-400.v1.woff2", "/fonts/padauk-myanmar-700.v1.woff2"];
 
 export const metadata: Metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000"),
@@ -56,10 +58,11 @@ export default async function LocaleLayout({
   if (!hasLocale(routing.locales, locale)) notFound();
   setRequestLocale(locale);
   const messages = await getMessages();
+  if (locale === "my") PADAUK.forEach((href) => preload(href, { as: "font", type: "font/woff2", crossOrigin: "anonymous" }));
 
   return (
     <html lang={locale} data-scroll-behavior="smooth">
-      <body className={`${plusJakartaSans.variable} ${padauk.variable} ${locale === "my" ? padauk.className : plusJakartaSans.className}`}>
+      <body className={`${plusJakartaSans.variable} ${plusJakartaSans.className}`}>
         <NextIntlClientProvider messages={messages}>
           {children}
           <ServiceWorkerRegistration />

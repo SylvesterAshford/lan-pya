@@ -29,7 +29,8 @@ self.addEventListener("fetch", (event) => {
     url.pathname.includes("/proof/view/")
   ) return;
 
-  const cacheable = PUBLIC_ASSETS.includes(url.pathname) || url.pathname.startsWith("/_next/static/");
+  // /fonts holds the self-hosted Padauk files, named by version like /_next/static.
+  const cacheable = PUBLIC_ASSETS.includes(url.pathname) || url.pathname.startsWith("/_next/static/") || url.pathname.startsWith("/fonts/");
   if (!cacheable) return;
   event.respondWith(
     caches.match(request).then((cached) => cached || fetch(request).then((response) => {
