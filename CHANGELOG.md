@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.38.9.0] - 2026-10-16
+
+### Changed
+
+- **Every page downloads less before it can draw.** About a third of Lan Pya's stylesheet styled screens that no longer exist. It is gone, so each page's styles arrive about 25% smaller, which helps most on a slow connection. Nothing looks different.
+
 ## [0.38.8.0] - 2026-10-16
 
 ### Changed
