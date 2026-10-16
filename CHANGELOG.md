@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.38.10.0] - 2026-10-16
+
+### Fixed
+
+- **Dates on Burmese screens stay in Burmese.** On Opportunities and on shared proof pages, dates arrived in Burmese and then switched to English ("Oct 1, 2026") a moment later, because phone browsers do not carry Burmese date formats. Lan Pya now writes them itself, so they stay "၂၀၂၆ အောက် ၁", and the page no longer has to be rebuilt in your browser when that happens.
+- **Dates follow Myanmar time.** A date near midnight could show the day before, because the server counts in UTC. Dates are now written on Myanmar's calendar everywhere.
+
 ## [0.38.9.0] - 2026-10-16
 
 ### Changed
