@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.38.12.0] - 2026-10-16
+
+### Changed
+
+- **Pictures appear straight away when you come back.** Your character, the logo and partner logos are kept on your phone for a day instead of being checked with the server on every page, so a return visit on a slow connection shows them without waiting.
+
 ## [0.38.11.0] - 2026-10-16
 
 ### Changed
