@@ -13477,8 +13477,10 @@ html[lang="my"] .community-card-title { letter-spacing: 0; }
 .community-skeleton.tabs { width: 260px; height: 46px; margin-bottom: var(--s-md); }
 .community-skeleton.row { height: 64px; border-radius: 0; background: var(--surface); }
 
-/* The shared loading state for app screens (app/[locale]/app/loading.tsx):
-   the page heading's outline, one panel and two rows, in the sunk surface. */
+/* The page outline shown while a sidebar tap waits on the server
+   (components/app/nav-pending.tsx): the heading, one panel and two rows, in
+   the sunk surface. The old page is hidden, not unmounted. */
+.app-workspace[data-navigating] > .app-page:not(.page-loading) { display: none; }
 .page-skeleton { display: block; background: var(--surface-sunk); border-radius: var(--r-control); }
 .page-skeleton-eyebrow { width: 96px; height: 12px; }
 .page-skeleton-title { width: min(320px, 70%); height: 34px; margin-top: var(--s-sm); }

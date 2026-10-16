@@ -16,6 +16,7 @@ import { usePathname } from "next/navigation";
 import { Link } from "@/i18n/navigation";
 import type { Profile } from "@/lib/domain/types";
 import { MobileNavTrigger } from "@/components/app/mobile-nav-trigger";
+import { NavPendingReporter, PageOutline, PendingMark, useNavPending } from "@/components/app/nav-pending";
 import {
   Sidebar,
   SidebarContent,
@@ -134,6 +135,7 @@ export function AppShell({ children, profile, roles, locale, reviewCount = 0 }: 
 
 function AppShellContent({ children, profile, roles, locale, reviewCount }: { children: React.ReactNode; profile: Profile; roles: Set<string>; locale: string; reviewCount: number }) {
   const pathname = usePathname();
+  const { navigating, report } = useNavPending();
   const my = locale === "my";
   const labelFor = (item: NavItem) => (my ? item.my : item.en);
   const accountLabel = profile.dataOrigin === "seeded_demo"
@@ -152,12 +154,14 @@ function AppShellContent({ children, profile, roles, locale, reviewCount }: { ch
   ];
 
   return (
+    <NavPendingReporter report={report}>
     <div className="app-frame">
       <Sidebar>
         <SidebarHeader>
           <Link className="app-brand" href="/app/today" aria-label={brandLabel}>
             <span className="brand-mark" aria-hidden="true" />
             <strong>{brandLabel}</strong>
+            <PendingMark />
           </Link>
           <SidebarTrigger />
         </SidebarHeader>
@@ -174,6 +178,7 @@ function AppShellContent({ children, profile, roles, locale, reviewCount }: { ch
                       <Link href={item.href} aria-current={active ? "page" : undefined}>
                         <Icon aria-hidden="true" />
                         <span>{labelFor(item)}</span>
+                        <PendingMark />
                       </Link>
                     </SidebarMenuButton>
                   </SidebarMenuItem>
@@ -194,6 +199,7 @@ function AppShellContent({ children, profile, roles, locale, reviewCount }: { ch
                       <Link href={item.href} aria-current={active ? "page" : undefined}>
                         <Icon aria-hidden="true" />
                         <span>{labelFor(item)}</span>
+                        <PendingMark />
                       </Link>
                     </SidebarMenuButton>
                   </SidebarMenuItem>
@@ -215,6 +221,7 @@ function AppShellContent({ children, profile, roles, locale, reviewCount }: { ch
                           <Icon aria-hidden="true" />
                           <span>{label}</span>
                           {count ? <><span className="sidebar-count" aria-hidden="true">{count}</span><span className="sr-only">{my ? `, ${count} စောင့်နေသည်` : `, ${count} waiting`}</span></> : null}
+                          <PendingMark />
                         </Link>
                       </SidebarMenuButton>
                     </SidebarMenuItem>
@@ -238,13 +245,14 @@ function AppShellContent({ children, profile, roles, locale, reviewCount }: { ch
               <strong>{profile.alias}</strong>
               <small>{accountLabel}</small>
             </span>
+            <PendingMark />
           </Link>
         </SidebarFooter>
 
         <SidebarRail />
       </Sidebar>
 
-      <SidebarInset className="app-workspace">
+      <SidebarInset className="app-workspace" data-navigating={navigating || undefined} aria-busy={navigating || undefined}>
         {/* The slim bar carries the brand and the trigger that opens the
             drawer, which is now the only navigation on a phone. */}
         <div className="app-mobile-bar">
@@ -252,11 +260,16 @@ function AppShellContent({ children, profile, roles, locale, reviewCount }: { ch
           <Link className="app-brand" href="/app/today" aria-label={brandLabel}>
             <span className="brand-mark" aria-hidden="true" />
             <strong>{brandLabel}</strong>
+            <PendingMark />
           </Link>
         </div>
         {children}
+        {/* While a sidebar tap waits on the server, the old page is hidden
+            and its outline shown (see nav-pending.tsx). */}
+        {navigating ? <PageOutline /> : null}
       </SidebarInset>
 
     </div>
+    </NavPendingReporter>
   );
 }

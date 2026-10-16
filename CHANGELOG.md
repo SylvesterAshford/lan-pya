@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.38.6.0] - 2026-10-16
+
+### Changed
+
+- **Opening the app draws your screen sooner again.** The loading outline added in 0.38.4.0 made every full page load wait about a third of a second longer before showing its content. The outline now comes from the sidebar instead: tap a screen and its outline still appears at once, but opening or refreshing a page shows the content straight away.
+
 ## [0.38.5.0] - 2026-10-16
 
 ### Changed
