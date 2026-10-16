@@ -21,6 +21,12 @@ const nextConfig: NextConfig = {
   },
 };
 
-const withNextIntl = createNextIntlPlugin("./i18n/request.ts");
+// Messages are compiled at build time, so the browser gets next-intl's small
+// format-only runtime instead of the ICU message parser, which every page
+// loaded for the two sign-in forms (PERF.md #13).
+const withNextIntl = createNextIntlPlugin({
+  requestConfig: "./i18n/request.ts",
+  experimental: { messages: { path: "./messages", format: "json", locales: "infer", precompile: true } },
+});
 
 export default withNextIntl(nextConfig);

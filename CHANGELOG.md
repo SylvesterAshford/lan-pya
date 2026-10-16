@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.39.1.0] - 2026-10-16
+
+### Changed
+
+- **Every page downloads a little less code.** The sign-in and home-page wording is now prepared when Lan Pya is built instead of on your phone, so each page needs about 8 KB less JavaScript before it responds.
+
 ## [0.39.0.0] - 2026-10-16
 
 ### Added
