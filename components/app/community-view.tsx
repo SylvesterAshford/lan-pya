@@ -1,8 +1,9 @@
 "use client";
 
-import { useId, useState, useSyncExternalStore, type KeyboardEvent } from "react";
+import { useId, useState, useSyncExternalStore, useTransition, type KeyboardEvent } from "react";
 import { ChevronDown, ChevronRight, ExternalLink, Target } from "lucide-react";
 import { Link, useRouter } from "@/i18n/navigation";
+import { PendingMark, useReportNavPending } from "@/components/app/nav-pending";
 import { SheetDialog } from "@/components/app/sheet-dialog";
 import { Emblem } from "@/components/app/emblem";
 import { SummitScene } from "@/components/app/community-scenes";
@@ -175,7 +176,7 @@ export function CommunityView({
           <section className="community-you browsing" aria-label={labels.pathLabel}>
             <strong>{labels.browsing.replace("{path}", pathTitle)}</strong>
             {activePath && activePath.key !== trackKey ? (
-              <Link className="community-back" href={`/app/community?track=${activePath.key}`}>{labels.backTo.replace("{path}", activePath.title)}</Link>
+              <Link className="community-back" href={`/app/community?track=${activePath.key}`}>{labels.backTo.replace("{path}", activePath.title)}<PendingMark /></Link>
             ) : null}
           </section>
         )}
@@ -278,12 +279,18 @@ export function CommunityView({
 /** The path chip: a native select, so it is keyboard and screen-reader ready. */
 export function CommunityPathSelect({ label, value, paths, tab = "stage" }: { label: string; value: string; paths: { key: string; title: string }[]; tab?: Tab }) {
   const router = useRouter();
+  // The page outline shows while the other path loads (see nav-pending.tsx).
+  const [switching, startSwitch] = useTransition();
+  useReportNavPending(switching);
   return (
     <label className="community-path">
       <span className="sr-only">{label}</span>
       <select
         value={value}
-        onChange={(event) => router.push(`/app/community?track=${event.target.value}${tab === "leaderboard" ? "&tab=leaderboard" : ""}`)}
+        onChange={(event) => {
+          const track = event.target.value;
+          startSwitch(() => router.push(`/app/community?track=${track}${tab === "leaderboard" ? "&tab=leaderboard" : ""}`));
+        }}
       >
         {value ? null : <option value="">{label}</option>}
         {paths.map((path) => <option key={path.key} value={path.key}>{path.title}</option>)}
