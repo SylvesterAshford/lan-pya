@@ -1,0 +1,1135 @@
+/* Styles that only public pages use: the landing page, login, pricing, the
+   demo and shared proof pages. Split from app/globals.css so signed-in screens
+   do not download them (PERF.md #10). Imported by those pages, so it loads
+   after globals.css: a rule here wins a tie with a global rule. */
+.button.quiet-light{
+  color: var(--on-solid);
+  background: transparent;
+  border-color: rgba(255, 255, 255, 0.34);
+}
+.button.quiet-light:hover{
+  border-color: var(--on-solid);
+}
+.welcome-nav{
+  position: relative;
+  z-index: 2;
+  display: flex;
+  max-width: 1220px;
+  height: 84px;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 28px;
+  margin: 0 auto;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+.prototype-pill{
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  color: rgba(255, 255, 255, 0.76);
+  font-size: var(--t-label);
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 999px;
+}
+.prototype-pill i {
+  width: 7px;
+  height: 7px;
+  flex: 0 0 7px;
+  background: #53d6c8;
+  border-radius: 50%;
+  box-shadow: 0 0 0 4px rgba(83, 214, 200, 0.12);
+}
+
+@media (max-width: 640px) {
+  .welcome-nav{
+    height: 72px;
+    padding: 0 18px;
+  }
+  .prototype-pill{
+    padding: 7px 9px;
+    font-size: var(--t-label);
+  }
+}
+/* ─── Auth / Login ─── */
+.auth-shell{
+  display: grid;
+  min-height: 100svh;
+  /* Equal halves. The panels carry equal weight — a promise and a door — so
+     giving one of them 60% of the screen made the split look accidental. */
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  background: var(--surface);
+}
+/* Brand panel */
+.auth-brand-panel{
+  position: relative;
+  display: flex;
+  overflow: hidden;
+  flex-direction: column;
+  justify-content: center;
+  gap: 0;
+  padding: clamp(32px, 4vw, 60px);
+  color: var(--on-solid);
+  background: var(--navy);
+}
+/* Concentric decorative rings */
+.auth-brand-panel::before{
+  display: none;
+}
+/* Ambient glow — centered, large, soft */
+.auth-brand-panel::after{
+  display: none;
+}
+.auth-brand-panel > *{ position: relative; z-index: 1; }
+/* Brand lockup — top of the centered content */
+.auth-brand-panel > .brand-lockup{
+  margin-bottom: 0;
+}
+.auth-brand-panel .brand-lockup::after{
+  display: inline-block;
+  width: 7px;
+  height: 7px;
+  margin-left: 8px;
+  vertical-align: middle;
+  background: var(--yellow);
+  border-radius: 50%;
+  content: "";
+}
+/* Hero copy block — directly below logo, tight spacing */
+.auth-brand-panel > div{
+  max-width: 480px;
+  margin-top: 32px;
+}
+.auth-brand-panel .hero-kicker{
+  color: #73d4ca;
+  font-size: var(--t-label);
+  letter-spacing: .2em;
+}
+.auth-brand-panel h1{
+  margin: 16px 0 0;
+  color: var(--on-solid);
+  font-size: clamp(34px, 4.5vw, 62px);
+  font-weight: 800;
+  letter-spacing: -.055em;
+  line-height: 1.0;
+  text-shadow: 0 4px 40px rgba(0, 0, 0, .3);
+}
+.auth-brand-panel h1 em{
+  color: var(--yellow);
+  font-style: normal;
+  text-shadow: 0 0 50px rgba(245, 158, 11, .3);
+}
+/* Form panel — scrollable, centered */
+.auth-form-panel{
+  display: grid;
+  min-width: 0;
+  padding: clamp(12px, 1.6vw, 22px) clamp(24px, 4vw, 60px);
+  place-items: center;
+  overflow-y: auto;
+  background: var(--canvas);
+}
+/* Auth card — clean elevated card */
+.auth-card{
+  width: min(100%, 460px);
+}
+.auth-card > .eyebrow{
+  margin-bottom: 8px;
+}
+.auth-card > h1{
+  margin: 0 0 8px;
+  color: var(--navy);
+  font-size: clamp(24px, 2.5vw, 30px);
+  letter-spacing: -.03em;
+  line-height: 1.15;
+}
+.auth-card > p{
+  color: var(--muted);
+  font-size: var(--t-body);
+  line-height: 1.6;
+  margin-bottom: 4px;
+}
+.auth-action-stack{
+  display: grid;
+  gap: 10px;
+  margin-top: 24px;
+}
+/* Google's own button (Google Identity Services), rendered into this slot.
+   The slot reserves the button's height so the form does not jump while the
+   script loads, and centres it the way the old full-width button sat. */
+.google-gis-slot{
+  display: flex;
+  min-height: 44px;
+  align-items: center;
+  justify-content: center;
+}
+/* Google sign-in mark */
+.google-mark{
+  display: grid;
+  width: 24px;
+  height: 24px;
+  place-items: center;
+  color: var(--on-solid);
+  font-size: var(--t-label);
+  font-weight: 900;
+  background: rgba(255, 255, 255, .15);
+  border: 1px solid rgba(255, 255, 255, .25);
+  border-radius: 50%;
+  transition: background-color 160ms ease;
+}
+.auth-action-stack .button:hover .google-mark{
+  background: rgba(255, 255, 255, .28);
+}
+.provider-note{
+  padding: 10px 12px;
+  margin: 0;
+  color: #8a5a00;
+  font-size: var(--t-label);
+  line-height: 1.5;
+  background: var(--yellow-soft);
+  border: 1px solid #f4d997;
+  border-radius: 5px;
+}
+.auth-card .form-error{ margin: 0; }
+.privacy-copy{
+  padding-top: 14px;
+  margin: 14px 0 0;
+  color: var(--muted);
+  font-size: var(--t-meta);
+  line-height: 1.5;
+  border-top: 1px solid var(--line);
+}
+.configuration-note{
+  padding: 14px;
+  margin-top: 20px;
+  color: var(--slate);
+  background: var(--yellow-soft);
+  border: 1px solid #f4d997;
+  border-radius: 6px;
+}
+.configuration-note strong, .configuration-note p{ display: block; }
+.configuration-note p{ margin: 4px 0 0; color: var(--muted); font-size: var(--t-meta); line-height: 1.5; }
+/* Email auth block — tighter spacing */
+.email-auth-block{
+  display: grid;
+  gap: 10px;
+  margin-top: 12px;
+}
+/* Mode switch — polished pill toggle */
+.auth-mode-switch{
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  padding: 3px;
+  background: #eef2f7;
+  border: 1px solid rgba(226, 232, 240, .6);
+  border-radius: 10px;
+}
+.auth-mode-switch button{
+  min-height: 40px;
+  color: var(--slate);
+  font-size: var(--t-meta);
+  font-weight: 750;
+  background: transparent;
+  border: 0;
+  border-radius: 7px;
+  transition: color 200ms ease, background-color 200ms ease, box-shadow 200ms ease, transform 100ms ease;
+}
+.auth-mode-switch button:hover:not(.active){
+  color: var(--slate);
+  background: rgba(255, 255, 255, .5);
+}
+.auth-mode-switch button.active{
+  color: var(--navy);
+  background: var(--surface);
+}
+.auth-mode-switch button:active:not(:disabled){
+  transform: scale(.97);
+}
+/* Form inputs */
+.email-auth-form{
+  display: grid;
+  gap: 6px;
+}
+.email-auth-form label{
+  margin-top: 2px;
+  color: var(--navy);
+  font-size: var(--t-meta);
+  font-weight: 750;
+}
+.email-auth-form .button{
+  margin-top: 4px;
+}
+.auth-action-stack{
+  margin-top: 10px;
+}
+/* Demo card — compact */
+.demo-login-card{
+  display: grid;
+  gap: 8px;
+  padding: 12px;
+  margin-top: 2px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  transition: border-color 160ms ease, box-shadow 160ms ease;
+}
+.demo-login-card:hover{
+  border-color: rgba(15, 118, 110, .2);
+}
+.demo-login-card strong{
+  display: block;
+  margin-top: 2px;
+  color: var(--navy);
+  font-size: var(--t-meta);
+}
+.demo-login-card p{
+  margin: 2px 0 0;
+  color: var(--muted);
+  font-size: var(--t-label);
+  line-height: 1.45;
+}
+.demo-login-card dl{
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 6px;
+  margin: 0;
+}
+.demo-login-card dl div{
+  min-width: 0;
+  padding: 8px 10px;
+  background: rgba(255, 255, 255, .9);
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  transition: border-color 160ms ease;
+}
+.demo-login-card dl div:hover{
+  border-color: var(--teal);
+}
+.demo-login-card dd{ overflow-wrap: anywhere; }
+.origin-label { display:inline-flex; padding:5px 8px; color:#8c5500; font-size:var(--t-label); font-weight: 700; letter-spacing: var(--k-label); background:var(--yellow-soft); border-radius:4px; text-transform:uppercase;
+  line-height: var(--l-label);
+}
+.public-proof-seal { display:grid; width:46px; height:46px; flex:0 0 46px; place-items:center; color:var(--on-solid); font-size: var(--t-h2);
+ letter-spacing: var(--k-h2); font-weight:800; background:var(--teal); border:5px solid var(--teal-soft); border-radius:50%; }
+.public-proof-card dl { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:10px; margin:20px 0; }
+.public-proof-card dl div { padding:11px; background:#f8fafc; border-radius:6px; }
+.competency-list{ display:flex; flex-wrap:wrap; gap:7px; margin:14px 0; }
+.competency-list span{ padding:6px 9px; color:var(--teal); font-size:var(--t-label); font-weight:700; background:var(--teal-soft); border-radius:4px; }
+.public-proof-page{ min-height:100vh; padding:35px 20px 70px; background:linear-gradient(160deg,var(--navy),#10354a); }
+.public-proof-page > header{ display:flex; align-items:center; justify-content:center; gap:9px; color:var(--on-solid); }
+.public-proof-page > header small{ color:#9fb0c3; }
+.public-proof-card{ max-width:650px; padding:40px; margin:45px auto 0; text-align:center; background:var(--surface); border:1px solid rgba(255,255,255,.3); border-radius:16px; box-shadow:var(--shadow-lg); }
+.public-proof-seal{ margin:-65px auto 18px; width:58px; height:58px; }
+.public-proof-card h1{ margin:9px 0 5px; color:var(--navy); font-size: var(--t-display);
+ letter-spacing: var(--k-display); }
+.proof-owner{ color:var(--muted); }
+.public-proof-card .origin-label{ margin:10px; }
+.public-proof-actions{ display:flex; justify-content:center; gap:10px; margin:22px 0; }
+.public-proof-card footer{ padding-top:18px; color:var(--muted); font-size:var(--t-label); border-top:1px solid var(--line); }
+.public-proof-card.error-state{ border-top:5px solid var(--error); }
+
+@media (max-width: 920px) {
+  /* Auth — stack vertically */
+  .auth-shell{ grid-template-columns: 1fr; }
+  .auth-brand-panel{
+    padding: 40px 28px 36px;
+    text-align: center;
+    align-items: center;
+  }
+  .auth-brand-panel > div{
+    margin-top: 24px;
+    max-width: 500px;
+  }
+  .auth-brand-panel h1{
+    font-size: clamp(30px, 8vw, 48px);
+  }
+  .auth-brand-panel::before{
+    width: 280px;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+  .auth-brand-panel::after{
+    top: 20%;
+    right: -10%;
+    width: 180px;
+  }
+  .auth-form-panel{
+    padding: 36px 24px 48px;
+  }
+  .auth-card{
+    width: min(100%, 440px);
+  }
+}
+
+@media (max-width: 640px) {
+  /* Auth — compact for mobile */
+  .auth-brand-panel{
+    padding: 28px 20px 24px;
+  }
+  .auth-brand-panel > div{
+    margin-top: 18px;
+  }
+  .auth-brand-panel h1{
+    font-size: clamp(26px, 8vw, 38px);
+  }
+  .auth-form-panel{
+    padding: 28px 16px 40px;
+  }
+  .auth-card > h1{
+    font-size: clamp(24px, 7vw, 32px);
+  }
+  .auth-mode-switch button{
+    min-height: 44px;
+    font-size: var(--t-meta);
+  }
+  .demo-login-card dl{ grid-template-columns: 1fr; }
+  .public-proof-card{ padding: 30px 20px; }
+  .public-proof-actions{ flex-direction: column; }
+}
+
+@media (max-width: 480px) {
+  .auth-brand-panel {
+    padding: 22px 14px 18px;
+  }
+  .auth-brand-panel > div {
+    margin-top: 14px;
+  }
+  .auth-brand-panel h1 {
+    font-size: var(--t-h1);
+    letter-spacing: var(--k-h1);
+  }
+  .auth-form-panel {
+    padding: 22px 12px 36px;
+  }
+  .auth-card > h1 {
+    font-size: var(--t-h1);
+    letter-spacing: var(--k-h1);
+  }
+  .demo-login-card {
+    padding: 12px;
+  }
+}
+/* A retryable proof failure is our fault, not the learner's. It reads as a
+   service notice rather than a verdict on their evidence. */
+.public-proof-card .retry-note {
+  font-size: var(--t-meta);
+  line-height: var(--l-meta);
+  color: var(--muted-ink);
+  margin: 8px 0 16px;
+}
+/* The drawer's own close control. On desktop this button collapses the rail;
+   on a phone it dismisses the drawer, so it has to be reachable inside it. */
+
+/* Asked for less transparency: give them a solid fill instead of a thinner
+   one, so contrast goes up rather than down. */
+
+/* ============================================================
+   LANDING PAGE
+   A marketing surface, governed by DESIGN.md "Marketing surfaces"
+   rather than by the app's eight-step scale. Nothing in this block
+   is used behind /app.
+   ============================================================ */
+
+.welcome-shell{
+  position: relative;
+  min-height: 100vh;
+  /* clip, not hidden: the climb's scenery is wider than the viewport on
+     purpose, and `hidden` would create a scroll container that breaks the
+     climb's sticky stage. */
+  overflow: clip;
+  color: var(--on-solid);
+  background: var(--navy-900);
+}
+/* ---- hero copy (sits inside the climb, components/marketing/climb.css) ---- */
+
+.hero-copy{
+  position: relative;
+  z-index: 1;
+}
+.hero-kicker{
+  display: block;
+  margin-bottom: 20px;
+  color: var(--teal-500);
+  font-size: var(--t-label);
+  font-weight: 800;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+.hero-copy h1{
+  max-width: 13ch;
+  margin: 0 0 24px;
+  color: var(--on-solid);
+  font-size: var(--t-hero);
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  line-height: 1.02;
+}
+/* `ch` measures the width of a zero, which says nothing useful about Burmese,
+   and 1.02 leading collides the stacked marks Burmese sets above and below the
+   line. Both get their own values here rather than being scaled down. */
+html[lang="my"] .hero-copy h1{
+  max-width: 20ch;
+  letter-spacing: 0;
+  line-height: 1.38;
+}
+.hero-copy > p{
+  max-width: 46ch;
+  margin: 0 0 32px;
+  color: #b9c6d8;
+  font-size: var(--t-hero-sub);
+  line-height: 1.55;
+}
+.hero-actions{
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+.hero-trust{
+  display: flex;
+  flex-wrap: wrap;
+  gap: 22px;
+  margin-top: 30px;
+  color: #93a5bd;
+  font-size: var(--t-label);
+  font-weight: 650;
+}
+.hero-trust span::before{
+  margin-right: 7px;
+  color: var(--teal-500);
+  content: "✓";
+}
+/* ---- the rotating word ---- */
+
+.rotator{
+  /* Inline-block with a floor under it: the word grows from "a job" to
+     "an interview" as it types, and without a reserved width the line it sits
+     on re-breaks on almost every keystroke. The floor covers the short words,
+     so only the genuinely long ones move anything. */
+  display: inline-block;
+  min-width: 6.4ch;
+  color: var(--amber-500);
+}
+.rotator-caret{
+  display: inline-block;
+  width: 0.055em;
+  min-width: 3px;
+  height: 0.78em;
+  margin-left: 0.05em;
+  vertical-align: baseline;
+  background: var(--amber-500);
+  animation: rotator-blink 1s steps(1, end) infinite;
+}
+
+@media (max-width: 640px) {
+  .hero-copy h1{
+    /* The headline stops trying to hold one line once there is no line to
+       hold; the rotating word wraps with the rest. */
+    text-wrap: balance;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .site-foot{ scroll-behavior: auto; }
+  /* The word never types, so there is nothing for a caret to sit after. */
+  .rotator-caret{ display: none; }
+}
+/* ---- site footer ----
+   The page ends on light ground, so the footer returns to navy and bookends
+   the hero. It reuses .partner-mark from the opportunities board rather than
+   restyling the same two marks a second time. */
+
+.site-foot{
+  padding: 64px 28px 40px;
+  color: #c8d4e6;
+  background: var(--navy-900);
+  border-top: 1px solid rgb(255 255 255 / 0.08);
+}
+.foot-inner{
+  display: grid;
+  max-width: 1220px;
+  gap: 44px;
+  margin: 0 auto;
+}
+/* No bottom rule here. With the links band gone, this section's underline and
+   the legal row's top border became two lines a few pixels apart, drawing a
+   stripe across the footer. One divider between two blocks is one divider. */
+.foot-partners{
+  display: grid;
+  gap: 16px;
+  justify-items: start;
+}
+.foot-eyebrow{
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--teal-500);
+  font-size: var(--t-label);
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+.foot-marks{
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.foot-checked{
+  margin: 0;
+  color: rgb(255 255 255 / 0.62);
+  font-size: var(--t-label);
+  font-variant-numeric: tabular-nums;
+}
+.foot-legal{
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 12px;
+  padding-top: 26px;
+  border-top: 1px solid rgb(255 255 255 / 0.09);
+}
+.foot-legal small{
+  color: rgb(255 255 255 / 0.62);
+  font-size: var(--t-label);
+  line-height: 1.5;
+}
+
+@media (max-width: 860px) {
+  .site-foot{ padding: 44px 20px 30px; }
+}
+/* ---- sign in ----
+   The left panel is the promise, the right is the door. It carries the same
+   summit the landing page does, so the two screens are one product. */
+
+.auth-brand-panel{
+  justify-content: flex-start;
+  gap: clamp(24px, 3.4vw, 40px);
+  padding-bottom: clamp(150px, 20vw, 250px);
+  background: var(--navy-900);
+}
+.auth-brand-copy{ display: grid; gap: 14px; }
+.auth-brand-panel h1{
+  margin: 0;
+  font-size: clamp(28px, 2.9vw, 40px);
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  line-height: 1.14;
+}
+.auth-brand-panel h1 em{ color: var(--amber-500); font-style: normal; }
+.auth-brand-panel .auth-brand-copy p{
+  max-width: 38ch;
+  margin: 0;
+  color: #a8b8cd;
+  font-size: var(--t-body);
+  line-height: 1.6;
+}
+/* ---- the form side ---- */
+
+.auth-form-panel{
+  align-content: start;
+  gap: 28px;
+  place-items: start center;
+}
+/* Desktop already carries the identity in the promise panel. Narrow layouts
+   put the sign-in task first, so they get a compact mark with the form. */
+.auth-mobile-brand{ display: none; }
+.auth-back{
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  min-height: 44px;
+  color: var(--teal-700);
+  font-size: var(--t-meta);
+  font-weight: 700;
+}
+.auth-lang{
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--muted-ink);
+  font-size: var(--t-meta);
+}
+.auth-lang a{
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  color: var(--muted-ink);
+  font-weight: 600;
+}
+.auth-lang a.on{ color: var(--navy-900); font-weight: 700; }
+.privacy-copy{
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-start;
+  gap: 8px;
+  margin-top: 4px;
+  text-align: left;
+}
+.privacy-copy svg{
+  flex: none;
+  margin-top: 2px;
+  color: var(--muted-ink);
+}
+
+@media (max-width: 920px) {
+  .auth-shell{ grid-template-columns: minmax(0, 1fr); }
+  .auth-brand-panel{
+    order: 2;
+    /* The climb and the promises are the argument; on a phone the scenery
+       would push the form itself off the first screen. */
+    gap: 20px;
+    padding: 28px 20px 34px;
+  }
+  .auth-brand-panel > .brand-lockup{ display: none; }
+  .auth-form-panel{
+    order: 1;
+    min-height: 100svh;
+    padding: max(24px, env(safe-area-inset-top)) 20px 44px;
+  }
+  .auth-mobile-brand{
+    display: flex;
+    width: min(100%, 460px);
+    min-height: 44px;
+    align-items: center;
+  }
+}
+
+@media (max-width: 640px) {
+  /* The desktop promise is supporting material, not part of signing in. On a
+     phone it disappears instead of becoming a full screen above the form. */
+  .auth-brand-panel{ display: none; }
+  .auth-form-panel{ padding-right: 16px; padding-left: 16px; }
+}
+.foot-lang{ display: inline-flex; align-items: center; gap: 14px; }
+.foot-lang a{ color: rgb(255 255 255 / 0.62); font-size: var(--t-label); font-weight: 600; }
+.foot-lang a.on{ color: #fff; }
+/* The sign-in screen has one job, and making somebody scroll to reach the
+   button that does it is the cheapest way to lose them. Everything below
+   trims space rather than content: the same fields, the same demo card, the
+   same copy, in a column that fits a laptop without moving. */
+.auth-card > p{ margin-bottom: 0; }
+.auth-card > .eyebrow{ margin-bottom: 6px; }
+.auth-card > h1{ margin: 0 0 6px; }
+.auth-card{ display: grid; gap: 10px; }
+.email-auth-form label{ margin-top: 0; }
+.demo-login-card p{ margin: 0; }
+.demo-login-card dl div{ padding: 6px 10px; }
+.privacy-copy{ margin-top: 0; }
+/* Second pass on the same principle: the sign-in column has to reach its
+   button inside one screen on a laptop. All of this is rhythm, not content —
+   every field, the demo card and its credentials are still here. Controls
+   keep a 44px target; only the space between them gives. */
+.auth-card{ gap: 8px; }
+.auth-card > h1{ font-size: clamp(22px, 2.1vw, 27px); }
+.auth-card > p{ line-height: 1.45; }
+.email-auth-block{ gap: 8px; margin-top: 8px; }
+.email-auth-form{ gap: 4px; }
+.demo-login-card{ gap: 6px; padding: 10px 12px; }
+.demo-login-card p{ line-height: 1.4; }
+.demo-login-card dl{ gap: 5px; }
+.demo-login-card dl div{ padding: 5px 10px; }
+.privacy-copy{ font-size: var(--t-label); line-height: 1.45; }
+/* The left panel, not the form, was setting the page's height: it reserved up
+   to 250px of clear space under its content for a drawing 587px tall. The
+   scene is now a band cropped to its lower slopes, anchored to the foot of the
+   panel, and the panel's own rhythm tightens to match. The climb's rows are
+   list items rather than controls, so they do not owe a 44px target. */
+.auth-brand-panel{
+  gap: clamp(16px, 2vw, 26px);
+  padding-top: clamp(24px, 2.6vw, 40px);
+  padding-bottom: clamp(78px, 10.5vh, 128px);
+}
+.auth-brand-panel h1{ font-size: clamp(24px, 2.4vw, 34px); }
+/* Final trim, with margin so the column still fits a shorter laptop rather
+   than only just clearing 900px. */
+.auth-form-panel{
+  padding-top: clamp(10px, 1.1vw, 16px);
+  padding-bottom: clamp(10px, 1.1vw, 16px);
+  gap: 10px;
+}
+.auth-card{ gap: 6px; }
+.demo-login-card{ gap: 5px; }
+/* ---- the ground behind the sign-in promise ----
+   The panel had a dead band between the last chip and the scenery. It carries
+   elevation contours now: one closed curve repeated at increasing scale, which
+   is how a map draws ground, and a single warm light where the summit sits. */
+.auth-brand-panel > *:not(.auth-terrain):not(.auth-scene){ position: relative; z-index: 2; }
+
+@media (max-width: 920px) {
+  /* Keep the form clear of phone notches and restore breathing room after the
+     compact desktop-height overrides above. */
+  .auth-form-panel{
+    padding-top: max(24px, env(safe-area-inset-top));
+    padding-bottom: 44px;
+  }
+}
+/* ---- shadcn login-02, translated into Lan Pya's existing auth world ---- */
+.auth-shell-login02{
+  height: 100svh;
+  min-height: 0;
+  grid-template-columns: 50% 50%;
+  overflow: hidden;
+}
+.auth-form-panel-login02{
+  position: relative;
+  display: flex;
+  min-width: 0;
+  height: 100svh;
+  min-height: 0;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 0;
+  padding: 0 clamp(28px, 4vw, 64px);
+  overflow-y: auto;
+  background: var(--canvas);
+}
+.auth-login-brand-row{
+  position: absolute;
+  top: max(24px, env(safe-area-inset-top));
+  right: clamp(28px, 4vw, 64px);
+  left: clamp(28px, 4vw, 64px);
+  z-index: 3;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+  align-items: center;
+  gap: 16px;
+}
+.auth-desktop-brand{ display: flex; }
+.auth-header-back{ justify-self: center; }
+.auth-login-brand-row .auth-lang{ justify-self: end; }
+.auth-login-form-wrap{
+  display: grid;
+  width: min(100%, 480px);
+  min-height: 100%;
+  flex: none;
+  grid-template-columns: minmax(0, 1fr);
+  align-content: center;
+  justify-items: stretch;
+  margin: 0 auto;
+  /* Top clears the absolute header row (it ends 68px down); the bottom only
+     needs breathing room. 104px on both sides overflowed every laptop under
+     about 860px tall, which is what put a scrollbar on a form that fits. */
+  padding: 96px 0 40px;
+}
+.auth-card-shadcn{
+  display: block;
+  width: 100%;
+}
+.auth-form-heading h1{
+  margin: 0;
+  color: var(--navy-900);
+  font-size: var(--t-h1);
+  line-height: var(--l-h1);
+}
+.auth-form-heading p{
+  max-width: 42ch;
+  margin-right: auto;
+  margin-left: auto;
+  color: var(--muted-ink);
+}
+.auth-action-stack{
+  display: grid;
+  gap: 8px;
+  margin: 0;
+}
+.auth-action-stack [data-slot="button"]{
+  color: var(--navy-900);
+  background: var(--surface);
+  border-color: var(--hairline);
+}
+.auth-action-stack [data-slot="button"]:hover{
+  color: var(--navy-900);
+  background: var(--navy-050);
+}
+.google-mark{
+  color: var(--navy-700);
+  background: var(--navy-050);
+  border-color: var(--hairline);
+}
+.auth-shadcn-separator [data-slot="separator"]{ background: var(--hairline); }
+.auth-shadcn-separator [data-slot="field-separator-content"]{ background: var(--canvas); }
+.auth-mode-switch{
+  display: flex;
+  gap: 4px;
+  padding: 4px;
+  background: var(--navy-050);
+  border: 1px solid var(--hairline);
+  border-radius: var(--r-control);
+}
+.auth-mode-switch [data-slot="button"]{
+  min-height: 44px;
+  color: var(--muted-ink);
+  background: transparent;
+  border: 0;
+  box-shadow: none;
+}
+.auth-mode-switch [data-variant="default"]{
+  color: var(--navy-900);
+  background: var(--surface);
+  box-shadow: 0 1px 2px rgb(15 23 42 / 0.08);
+}
+.email-auth-block{ gap: 16px; margin-top: 0; }
+.email-auth-form{ display: block; margin: 0; }
+.email-auth-form [data-slot="field-label"]{ color: var(--navy-900); font-size: var(--t-meta); }
+.email-auth-form [data-slot="input"]{ color: var(--ink); border-color: var(--hairline); }
+.email-auth-form [data-slot="input"]:hover{ border-color: var(--navy-500); }
+.email-auth-form [data-slot="input"]:focus-visible{ border-color: var(--teal-700); }
+.email-auth-form [data-slot="button"]{ background: var(--navy-700); }
+.email-auth-form [data-slot="button"]:hover{ background: var(--navy-900); }
+.auth-demo-callout{
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 0 0;
+  background: transparent;
+  border: 0;
+  border-top: 1px solid var(--hairline);
+  border-radius: 0;
+  box-shadow: none;
+}
+.auth-demo-callout:hover{ background: transparent; border-color: var(--hairline); box-shadow: none; transform: none; }
+.auth-demo-copy{ min-width: 0; }
+.auth-demo-copy p{ display: none; }
+.auth-demo-callout [data-slot="button"]{ color: var(--navy-900); background: var(--surface); border-color: var(--hairline); }
+.auth-demo-callout [data-slot="button"]:hover{ background: var(--navy-050); }
+.auth-card-shadcn .privacy-copy{
+  align-items: flex-start;
+  justify-content: flex-start;
+  gap: 8px;
+  padding-top: 16px;
+  margin: 0;
+  color: var(--muted-ink);
+  font-size: var(--t-meta);
+  line-height: 1.5;
+  text-align: left;
+  border-top: 1px solid var(--hairline);
+}
+.auth-card-shadcn .privacy-copy svg{ margin-top: 2px; }
+.auth-brand-panel-login02{
+  position: relative;
+  display: flex;
+  min-width: 0;
+  height: 100svh;
+  min-height: 0;
+  align-items: center;
+  justify-content: center;
+  gap: 0;
+  padding: clamp(32px, 4vw, 64px);
+  overflow: hidden;
+  background: var(--navy-900);
+}
+.auth-brand-panel-login02 > div{
+  max-width: none;
+  margin-top: 0;
+}
+/* The summit panel: copy on the night sky at the top, the landing page's
+   summit at dawn filling everything below it. */
+.auth-brand-summit{
+  flex-direction: column;
+  align-items: stretch;
+  justify-content: flex-start;
+  padding: 0;
+}
+.auth-brand-summit .auth-brand-copy{
+  position: relative;
+  z-index: 1;
+  width: min(100%, 600px);
+  padding: clamp(48px, 9vh, 104px) clamp(32px, 5vw, 72px) 0;
+}
+.summit-still{
+  display: block;
+  width: 100%;
+  min-height: 0;
+  flex: 1;
+}
+.auth-brand-panel-login02 .auth-brand-copy{
+  display: grid;
+  gap: 14px;
+}
+.auth-brand-panel-login02 h1{
+  max-width: 13ch;
+  margin: 0;
+  font-size: clamp(34px, 3vw, 52px);
+  letter-spacing: -0.045em;
+  line-height: 1.03;
+  text-wrap: balance;
+}
+.auth-brand-panel-login02 .auth-brand-copy p{
+  max-width: 43ch;
+  font-size: clamp(16px, 1.2vw, 19px);
+  line-height: 1.55;
+}
+
+@media (max-height: 820px) and (min-width: 921px) {
+  /* Short laptop screens: the phone layout's tighter rhythm, so the whole
+     form fits down to 720px tall without the panel scrolling. */
+  .auth-login-form-wrap{ align-content: center; padding: 84px 0 16px; }
+  .auth-card-shadcn > [data-slot="field-group"]{ gap: 14px; }
+  .auth-form-heading p{ margin-top: 4px; line-height: 1.45; }
+  .email-auth-block{ gap: 12px; }
+  .auth-card-shadcn .privacy-copy{ padding-top: 12px; }
+  .auth-brand-panel-login02 h1{ font-size: clamp(32px, 2.5vw, 44px); }
+}
+
+@media (max-width: 920px) {
+  .auth-shell-login02{ height: auto; min-height: 100svh; grid-template-columns: minmax(0, 1fr); overflow: visible; }
+  .auth-form-panel-login02{
+    height: auto;
+    min-height: 100svh;
+    padding: max(24px, env(safe-area-inset-top)) 20px 44px;
+    overflow: visible;
+  }
+  .auth-login-brand-row{
+    position: static;
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+  .auth-desktop-brand{ display: none; }
+  .auth-login-brand-row .auth-mobile-brand{ width: auto; min-height: 44px; }
+  .auth-header-back{ grid-column: 1 / -1; justify-self: start; }
+  .auth-login-form-wrap{ min-height: 0; flex: 1; padding: 28px 0 16px; }
+  .auth-brand-panel-login02{ display: none; }
+}
+
+@media (max-width: 640px) {
+  .auth-form-panel-login02{ padding-right: 16px; padding-left: 16px; }
+  .auth-login-brand-row{ row-gap: 8px; }
+  .auth-login-form-wrap{ width: 100%; padding-top: 18px; }
+  .auth-card-shadcn > [data-slot="field-group"]{ gap: 14px; }
+  .auth-form-heading p{ margin-top: 4px; line-height: 1.45; }
+  .email-auth-block{ gap: 12px; }
+  .auth-demo-callout{ grid-template-columns: minmax(0, 1fr); gap: 8px; padding-top: 12px; }
+  .auth-demo-callout [data-slot="button"]{ width: 100%; }
+  .auth-card-shadcn .privacy-copy{ padding-top: 12px; }
+}
+
+@media (max-height: 720px) and (max-width: 920px) {
+  .auth-login-form-wrap{ align-content: start; }
+}
+.welcome-nav-links { display: flex; align-items: center; gap: var(--s-md); }
+.welcome-nav-link { color: rgba(255, 255, 255, 0.82); font-size: var(--t-meta); font-weight: 600; }
+.welcome-nav-link:hover { color: #fff; }
+.pricing-shell { min-height: 100vh; padding: 0 var(--s-md) var(--s-3xl); background: var(--canvas); color: var(--ink); }
+.pricing-top { display: flex; align-items: center; justify-content: space-between; max-width: 1120px; height: 72px; margin: 0 auto; }
+.pricing-brand { color: var(--ink); }
+.pricing-close { display: grid; place-items: center; width: 44px; height: 44px; color: var(--muted-ink); border-radius: 50%; }
+.pricing-close:hover { color: var(--ink); background: var(--surface-sunk); }
+.pricing-close:focus-visible { outline: 2px solid var(--teal-700); outline-offset: 2px; }
+.pricing-head { max-width: 640px; margin: var(--s-md) auto var(--s-lg); text-align: center; }
+.pricing-head h1 { margin: 0; color: var(--ink); font-size: var(--t-display); font-weight: 700; letter-spacing: var(--k-display); line-height: 1.15; }
+html[lang="my"] .pricing-head h1 { letter-spacing: 0; line-height: 1.4; }
+.pricing-head p { margin: var(--s-sm) 0 var(--s-lg); color: var(--muted-ink); font-size: var(--t-body); line-height: var(--l-body); }
+.pricing-tabs button { min-width: 120px; min-height: 40px; font-size: var(--t-body); }
+.pricing-notice {
+  max-width: 720px;
+  margin: 0 auto var(--s-lg);
+  padding: 10px 14px;
+  color: var(--ink);
+  background: var(--navy-050);
+  border: 1px solid var(--hairline);
+  border-radius: var(--r-control);
+  font-size: var(--t-meta);
+  line-height: var(--l-meta);
+  text-align: center;
+}
+.pricing-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--s-md); max-width: 1120px; margin: 0 auto; align-items: start; }
+.pricing-card { display: flex; flex-direction: column; gap: 14px; padding: var(--s-lg); background: var(--surface); border: 1px solid var(--hairline); border-radius: var(--r-card); }
+.pricing-card.featured { border: 2px solid var(--navy-700); padding: calc(var(--s-lg) - 1px); }
+.pricing-card-head { display: flex; align-items: flex-start; gap: 12px; }
+.pricing-card-head h2 { margin: 0; color: var(--ink); font-size: var(--t-h2); font-weight: 700; letter-spacing: var(--k-h2); line-height: var(--l-h2); }
+html[lang="my"] .pricing-card-head h2 { letter-spacing: 0; }
+.pricing-card-head p { margin: 4px 0 0; color: var(--muted-ink); font-size: var(--t-meta); line-height: var(--l-meta); }
+.pricing-icon { display: grid; place-items: center; flex: none; width: 40px; height: 40px; color: var(--navy-700); background: var(--navy-100); border-radius: var(--r-control); }
+.pricing-price { display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px; }
+.pricing-price strong { color: var(--ink); font-size: var(--t-display); font-weight: 700; letter-spacing: var(--k-display); line-height: 1.1; font-variant-numeric: tabular-nums; }
+html[lang="my"] .pricing-price strong { letter-spacing: 0; }
+.pricing-price span { color: var(--muted-ink); font-size: var(--t-meta); }
+.pricing-equiv { margin: -6px 0 0; color: var(--muted-ink); font-size: var(--t-meta); font-variant-numeric: tabular-nums; }
+.pricing-periods { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; padding: 3px; background: var(--surface-sunk); border: 1px solid var(--hairline); border-radius: 10px; }
+.pricing-periods button {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  min-height: 44px;
+  padding: 4px 6px;
+  color: var(--muted-ink);
+  background: transparent;
+  border: 0;
+  border-radius: 7px;
+  font: inherit;
+  font-size: var(--t-meta);
+  font-weight: 600;
+  cursor: pointer;
+}
+.pricing-periods button.on { color: var(--navy-900); background: var(--surface); box-shadow: 0 0 0 1px var(--hairline); }
+.pricing-periods button:focus-visible { outline: 2px solid var(--teal-700); outline-offset: 1px; }
+.pricing-save { color: var(--teal-700); font-size: var(--t-label); font-weight: 600; font-variant-numeric: tabular-nums; }
+.pricing-cta { width: 100%; min-height: 48px; justify-content: center; }
+.pricing-joined { display: flex; align-items: center; justify-content: center; gap: 8px; min-height: 48px; margin: 0; color: var(--teal-900); background: var(--teal-100); border-radius: var(--r-control); font-size: var(--t-meta); font-weight: 600; text-align: center; }
+.pricing-status { margin: -6px 0 0; color: var(--muted-ink); font-size: var(--t-meta); }
+.pricing-status.error { color: var(--error-500); }
+.pricing-includes { margin: 4px 0 0; color: var(--ink); font-size: var(--t-meta); font-weight: 700; }
+.pricing-features { display: grid; gap: 10px; margin: 0; padding: 0; list-style: none; }
+/* The check keeps its own column, so a long Burmese line wraps under the
+   text, never leaving the check alone above it. */
+.pricing-features li { display: grid; grid-template-columns: 16px minmax(0, 1fr); align-items: start; gap: 8px; color: var(--ink); font-size: var(--t-body); line-height: 1.5; }
+.pricing-features li > svg { margin-top: 0.2em; color: var(--teal-500); }
+.pricing-features .pricing-soon { display: inline-block; margin-left: 2px; vertical-align: 1px; }
+.pricing-features li.soon { color: var(--muted-ink); }
+.pricing-features li.soon > svg { color: var(--muted-ink); opacity: 0.6; }
+.pricing-soon { padding: 1px 8px; color: var(--muted-ink); background: var(--surface-sunk); border: 1px solid var(--hairline); border-radius: 999px; font-size: var(--t-label); font-weight: 600; white-space: nowrap; }
+.pricing-note { margin: auto 0 0; padding-top: 12px; color: var(--muted-ink); border-top: 1px solid var(--hairline); font-size: var(--t-meta); }
+.pricing-fees { display: grid; margin: 0; }
+.pricing-fees > div { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; padding: 12px 0; border-top: 1px solid var(--hairline); }
+.pricing-fees > div:first-child { border-top: 0; padding-top: 0; }
+/* The global dl/dt rule makes terms uppercase captions; these are row titles. */
+.pricing-fees dt { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 8px; min-width: 0; color: var(--ink); font-size: var(--t-body); font-weight: 600; letter-spacing: 0; text-transform: none; }
+.pricing-fees dt small { flex-basis: 100%; color: var(--muted-ink); font-size: var(--t-meta); font-weight: 400; letter-spacing: 0; text-transform: none; }
+.pricing-fees dd { flex: none; max-width: 45%; margin: 0; color: var(--navy-700); font-size: var(--t-meta); font-weight: 700; text-align: right; }
+/* One row per longer period: what it is and what it replaces on the left,
+   the price and the saving on the right. */
+.pricing-longer { display: grid; gap: var(--s-sm); margin: 0; padding: 0; list-style: none; }
+.pricing-longer li {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  grid-template-areas: "name price" "was save";
+  gap: 2px 12px;
+  padding: 10px 12px;
+  background: var(--surface-sunk);
+  border: 1px solid var(--hairline);
+  border-radius: var(--r-control);
+}
+.pricing-longer-name { grid-area: name; color: var(--ink); font-size: var(--t-meta); font-weight: 600; }
+.pricing-longer strong { grid-area: price; color: var(--ink); font-size: var(--t-meta); font-weight: 700; text-align: right; font-variant-numeric: tabular-nums; }
+.pricing-longer small { grid-area: was; color: var(--muted-ink); font-size: var(--t-meta); }
+.pricing-longer .pricing-save { grid-area: save; text-align: right; }
+.roadmap-detail-dialog.pricing-dialog { width: min(480px, 100%); }
+.pricing-inquiry { display: grid; gap: 14px; }
+.pricing-inquiry-interest { margin: -8px 0 0; color: var(--muted-ink); font-size: var(--t-meta); }
+.pricing-inquiry textarea { padding: 10px 12px; color: var(--ink); background: var(--surface); border: 1px solid var(--hairline); border-radius: var(--r-control); font: inherit; font-size: var(--t-body); resize: vertical; }
+.pricing-inquiry textarea:focus-visible { outline: 2px solid var(--teal-700); outline-offset: 1px; }
+.pricing-trap { position: absolute; left: -10000px; width: 1px; height: 1px; overflow: hidden; }
+.pricing-sent p { margin: var(--s-sm) 0 var(--s-md); color: var(--ink); }
+
+@media (max-width: 920px) {
+  .pricing-grid { grid-template-columns: minmax(0, 560px); justify-content: center; }
+}
+
+@media (max-width: 480px) {
+  .pricing-head h1 { font-size: var(--t-h1); letter-spacing: var(--k-h1); }
+  .pricing-card { padding: var(--s-md); }
+  .pricing-card.featured { padding: calc(var(--s-md) - 1px); }
+  .pricing-tabs { width: 100%; }
+  .pricing-tabs button { flex: 1; min-width: 0; }
+  .welcome-nav-links { gap: 12px; }
+}
+
+@media (max-width: 860px) {
+  .roadmap-detail-dialog.pricing-dialog { width: 100%; }
+}

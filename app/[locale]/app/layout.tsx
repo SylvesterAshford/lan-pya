@@ -5,6 +5,7 @@ import { requireUser } from "@/lib/auth";
 import { getActivePathDashboard, getProfile, getReviewQueue, getRoles } from "@/lib/data/app-data";
 import { getTutorScript } from "@/lib/domain/tutor-script";
 import { getAppCopy, localizeCareerTerm } from "@/lib/i18n/app-copy";
+import "./app.css";
 
 export const dynamic = "force-dynamic";
 

@@ -1,3 +1,4 @@
+import "../../../public.css";
 import { ShareViewer } from "@/components/proof/share-viewer";
 
 export const dynamic = "force-dynamic";

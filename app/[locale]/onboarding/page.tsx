@@ -1,6 +1,7 @@
 import { OnboardingForm } from "@/components/onboarding/onboarding-form";
 import { requireUser } from "@/lib/auth";
 import { getActivePathDashboard, getCareerPreferences, getProfile } from "@/lib/data/app-data";
+import "../app/app.css";
 
 export const dynamic = "force-dynamic";
 
