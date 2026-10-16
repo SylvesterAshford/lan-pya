@@ -36,6 +36,26 @@ closer to Mumbai and see more of every server-side gain.
 - A cold signed-in page on Fast 3G downloads ~400 KB: 165–200 KB JS, 62 KB CSS,
   108 KB fonts.
 
+## Where it stands (v0.38.8.0, 2026-10-16)
+
+Baseline is v0.38.0.0. Warm LCP and taps are medians from the runs logged below; Fast 3G is one cold load per page per run, so read it to the nearest few hundred milliseconds.
+
+| Screen | Warm LCP | Sidebar tap → first response, Fast 3G | Fast 3G FCP | Fast 3G LCP | Cold bytes |
+|---|---|---|---|---|---|
+| Today | 2,168 → ~800 ms | – | 4.8 → 2.3 s | 6.7 → 3.7 s | 395 → 314 KB |
+| Roadmap | 1,512 → 804 ms | 765 → 84 ms | 3.4 → 2.4 s | 3.4 → 2.4 s | 410 → 300 KB |
+| Missions | 2,112 → 736 ms | 731 → 80 ms | 3.9 → 2.4 s | 3.9 → 2.4 s | 400 → 319 KB |
+| Portfolio | 1,816 → ~730 ms | 785 → 82 ms | 3.5 → 2.8 s | 3.5 → 2.8 s | 398 → 316 KB |
+| Community | 2,008 → 860 ms | – | 3.8 → 3.1 s | 3.8 → 3.1 s | 397 → 296 KB |
+| Opportunities | 1,540 → 768 ms | 700 → 73 ms | 3.5 → 2.4 s | 5.3 → 3.9 s | 421 → 311 KB |
+| Profile | 1,708 → ~790 ms | 750 → 82 ms | 4.5 → 2.4 s | 6.1 → 4.0 s | 392 → 310 KB |
+
+What is left, in order of expected gain on a slow connection:
+
+- **The main stylesheet is 62 KB compressed (318 KB raw) and blocks every page.** FCP on Fast 3G is the moment it finishes. Splitting it by route or removing dead rules is the largest remaining lever. It needs a careful audit; class names are built in templates, so a naive unused-CSS pass would break pages.
+- **Images in `public/` are served `max-age=0, must-revalidate`,** so every full load revalidates them (one round trip each). A day of caching with `stale-while-revalidate` would remove that on repeat visits.
+- **Offline:** the service worker caches static assets but shows the browser's error page when a navigation fails. An offline page would help on flaky connections; signed-in pages must stay uncached, because phones are shared.
+
 ## Attempts
 
 | # | Idea | Before → after | Verdict | Why |
@@ -46,7 +66,7 @@ closer to Mumbai and see more of every server-side gain.
 | 4 | Keep the bilingual dictionary (`lib/i18n/app-copy.ts`, 111 KB raw, 28 KB brotli) out of client bundles: labels passed from the server to `RoadmapTree`, `SubmissionForm` (via `MissionRunner`) and `PathSwitchButton`; `formatAppDate`/`localizeReadiness` moved to `lib/i18n/format.ts` (v0.38.5.0) | JS per cold load: Roadmap 201.6 → 171.7 KB, Opportunities 198.8 → 169.1 KB; other routes unchanged. `next build` references the dictionary chunk only from `/onboarding` | **kept** | 30 KB less to download and parse on two of the most used screens. Timing on Fast 3G could not be separated from noise in the same run (see #5); the byte saving is deterministic. |
 | 5 | Replace the route-level `loading.tsx` from #3 with a pending outline driven by the sidebar links (`useLinkStatus` in `components/app/nav-pending.tsx`) (v0.38.6.0) | Warm LCP before #3 / with #3 / now: Today 840 / 980 / 760, Roadmap 780 / 968 / 804, Missions 716 / 980 / 736, Portfolio 712 / 1,220 / 708, Opportunities 752 / 1,064 / 768, Profile 700 / 1,104 / 764 ms. Fast 3G tap → outline 73–84 ms, finished page 760–846 ms | **kept** | Full loads are back to their pre-#3 speed and taps keep #3's instant response. A route `loading.tsx` makes React stream every full load as a hidden block revealed after ~300 ms of batching (trace: in DOM hidden at 2,789 ms, visible at 3,121 ms); #3 had been measured on taps only. Community's own `loading.tsx` (since v0.36) has the same cost and is left for its own measurement. |
 | 6 | Preload Padauk on Burmese pages only: the same Myanmar-subset files, self-hosted in `public/fonts` with the same unicode-range and `swap`, instead of `next/font`, which preloaded them on every page (v0.38.7.0) | Interleaved A/B on prod after deploy (Fast 3G + 4× CPU, old arm injects the two preloads, median of 5 each): FCP `/en` 3,908 → 2,760, Today 4,484 → 3,328, Profile 3,388 → 2,780, Roadmap 3,528 → 3,012 ms; render-blocking CSS done earlier by the same margins. Burmese pages preload the same three fonts as before (checked in the Link header and `<head>`) | **kept** | English pages fetched 80 KB of Burmese font at high priority next to the render-blocking CSS. A plain before/after across two time windows was inconclusive: the network drifted (CSS on unchanged Burmese pages finished 0.3–1 s later in the second window), so the decision rests on the interleaved run, which agrees with the earlier abort experiment (−0.4 to −0.8 s). English pages still fetch the 400 weight lazily for the little Burmese they show. |
-| 7 | Remove Community's own `loading.tsx` (since v0.36): the path picker wraps `router.push` in `useTransition` and reports to the shell outline, the back link carries a `PendingMark` (v0.38.8.0) | Before: warm LCP 972 ms against 708–804 for the other screens. Local production build: full load has no hidden Suspense block; path change → outline 7 ms | pending | Same cause as #5. |
+| 7 | Remove Community's own `loading.tsx` (since v0.36): the path picker wraps `router.push` in `useTransition` and reports to the shell outline, the back link carries a `PendingMark` (v0.38.8.0) | Community's warm LCP gap to the mean of Today, Portfolio and Profile, each measured in one window: +228 ms before (972 vs 744), +59 ms after (860 vs 801). Full load has no hidden Suspense block; path change → outline 7 ms on prod | **kept** | Same cause as #5. The final run's warm numbers drifted (TTFB 300–930 ms even on the static landing), so this compares Community with its neighbours inside one interleaved run (`scripts/perf-gap.mjs`: every page in every round). |
 | – | Rewrite the 17 RLS policies the advisor flags to `(select auth.uid())` | not tried | skipped | RPCs bypass RLS and every direct read filters by an indexed `user_id`, so the per-row policy cost covers a handful of rows. No measured query would move. Revisit if a read without a `user_id` filter appears. |
 | – | Add the 26 foreign-key indexes the advisor lists | not tried | skipped | None is on a measured hot query; tables hold tens of rows; each index taxes every write. |
 | – | Change the once-a-minute `dequeue_evaluation_jobs` cron | not tried | skipped | It is the largest total database time (94k calls, 2.9 ms each) but runs in the background; no learner waits on it. |
