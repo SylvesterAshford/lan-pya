@@ -1,5 +1,15 @@
 # Changelog
 
+## [0.39.0.0] - 2026-10-16
+
+### Added
+
+- **A page for when the connection drops.** If a screen cannot load because you are offline, Lan Pya now says so, in your language, instead of your browser's error page. It reminds you that mission drafts are kept on your phone, offers Try again, and loads the screen you wanted as soon as you are back online. Nothing about you is stored for it.
+
+### Changed
+
+- **Lan Pya takes less space on your phone.** It used to keep a copy of every version of the app it had ever downloaded. It now keeps only recent ones.
+
 ## [0.38.12.0] - 2026-10-16
 
 ### Changed
