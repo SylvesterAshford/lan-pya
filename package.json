@@ -1,6 +1,6 @@
 {
   "name": "lan-pya",
-  "version": "0.38.6.0",
+  "version": "0.38.7.0",
   "private": true,
   "engines": {
     "node": "22.x"

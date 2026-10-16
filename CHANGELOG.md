@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.38.7.0] - 2026-10-16
+
+### Changed
+
+- **English screens draw sooner on a slow connection.** Every page used to download Lan Pya's Burmese font (80 KB) even when it showed no Burmese, and on a slow connection that held up the rest of the page. English pages now skip it; Burmese pages still load it first, as before.
+
 ## [0.38.6.0] - 2026-10-16
 
 ### Changed
