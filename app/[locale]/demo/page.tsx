@@ -1,3 +1,4 @@
+import "../public.css";
 import { redirect } from "next/navigation";
 
 export default async function DemoPage({ params }: { params: Promise<{ locale: string }> }) {

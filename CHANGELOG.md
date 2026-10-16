@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.38.11.0] - 2026-10-16
+
+### Changed
+
+- **The home page and sign-in load half the styles they used to.** Pages before you sign in no longer download the styles of the app's own screens, and the app no longer downloads the home page's. The first visit, usually on a phone, needs about half as much before it can draw.
+
 ## [0.38.10.0] - 2026-10-16
 
 ### Fixed

@@ -1,3 +1,6 @@
+// Public styles first, so component stylesheets (the climb) still follow them
+// as they did when these rules lived in globals.css.
+import "./public.css";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 import { RotatingWord } from "@/components/marketing/rotating-word";

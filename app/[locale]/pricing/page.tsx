@@ -1,3 +1,4 @@
+import "../public.css";
 import { setRequestLocale } from "next-intl/server";
 import { PricingView } from "@/components/pricing/pricing-view";
 import { getUser } from "@/lib/auth";
